@@ -1,3 +1,4 @@
+--○ 테이블 강제 삭제(초기에만 사용하고 이후 삭제 필요)
 drop table HOT_POST_LOG cascade constraints purge
 /
 
@@ -251,7 +252,19 @@ drop table INSPEC_RESULT_ACTION_TYPE cascade constraints purge
 drop table RENTER_PROBLEM_TYPE cascade constraints purge
 /
 
+drop table BOOST_LOG cascade constraints purge
+/
 
+drop table EVENT_WIN cascade constraints purge
+/
+
+---------------------------------------------
+--○ 시퀀스 삭제
+DROP SEQUENCE SEQ;
+
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 --○ 전체 테이블 수 확인
 SELECT *
 FROM TAB;
@@ -334,269 +347,6 @@ FROM USER_CONSTRAINTS
 WHERE TABLE_NAME = 'DIARY_OPEN_LOG'
 ORDER BY TABLE_NAME, CONSTRAINT_TYPE, CONSTRAINT_NAME;
 
-
------------------------------------------------------------------------------------------
----------------------------------------------
---○ 테이블 강제 삭제(초기에만 사용하고 이후 삭제 필요)
-DROP SEQUENCE SEQ;
-
----------------------------------------------
---○ 테이블 강제 삭제(초기에만 사용하고 이후 삭제 필요)
-drop table HOT_POST_LOG cascade constraints purge
-/
-drop table RECOMMEND cascade constraints purge
-/
-drop table BOOKMARK cascade constraints purge
-/
-drop table EVENT_ENTRY cascade constraints purge
-/
-drop table NOTI_CHECK_LOG cascade constraints purge
-/
-drop table NOTI cascade constraints purge
-/
-drop table NOTI_TYPE cascade constraints purge
-/
-drop table STATISTICS cascade constraints purge
-/
-drop table STAT_TYPE cascade constraints purge
-/
-drop table STAT_PERIOD cascade constraints purge
-/
-drop table POST_VIEW_LOG cascade constraints purge
-/
-drop table POST_REPORT_ACTION cascade constraints purge
-/
-drop table POST_REPORT cascade constraints purge
-/
-drop table REPLY_REPORT_ACTION cascade constraints purge
-/
-drop table REPLY_REPORT cascade constraints purge
-/
-drop table RENTAL_REPLY_REPORT_ACTION cascade constraints purge
-/
-drop table REPORT_ACTION_TYPE cascade constraints purge
-/
-drop table RENTAL_REPLY_REPORT cascade constraints purge
-/
-drop table REPORT_TYPE cascade constraints purge
-/
-drop table OWNED_COUPON cascade constraints purge
-/
-drop table ISSUED_COUPON cascade constraints purge
-/
-drop table COUPON_TYPE cascade constraints purge
-/
-drop table POINT_LOG cascade constraints purge
-/
-drop table POINT_CHANGE_TYPE cascade constraints purge
-/
-drop table RANK cascade constraints purge
-/
-drop table ADDRESS_LOG cascade constraints purge
-/
-drop table WISHLIST cascade constraints purge
-/
-drop table SATISFACTION_LOG cascade constraints purge
-/
-drop table NICKNAME_LOG cascade constraints purge
-/
-drop table USERS cascade constraints purge
-/
-drop table SIGNUP_TYPE cascade constraints purge
-/
-drop table SUSPENDED_USER cascade constraints purge
-/
-drop table ATTACHMENT_POST cascade constraints purge
-/
-drop table ATTACHMENT_REPLY cascade constraints purge
-/
-drop table REPLY cascade constraints purge
-/
-drop table POST cascade constraints purge
-/
-drop table POST_LABEL cascade constraints purge
-/
-drop table BOARD cascade constraints purge
-/
-drop table WRITE_GRADE cascade constraints purge
-/
-drop table BOARD_CATEGORY cascade constraints purge
-/
-drop table ATTACHMENT_CAMPING_DIARY cascade constraints purge
-/
-drop table DIARY cascade constraints purge
-/
-drop table ATTACHMENT_RENTAL_REPLY cascade constraints purge
-/
-drop table ATTACHMENT_EVENT cascade constraints purge
-/
-drop table EVENT cascade constraints purge
-/
-drop table ATTACHMENT_EQUIP_REG cascade constraints purge
-/
-drop table EQUIP_CODE cascade constraints purge
-/
-drop table EQUIPMENT_REGISTRATION cascade constraints purge
-/
-drop table EQUIP_NAME cascade constraints purge
-/
-drop table BRAND cascade constraints purge
-/
-alter table STOREN_MATCHING_REQ
-    drop constraint SMR_INSPEC_RESULT_ACTION_ID_FK cascade
-/
-drop table RENTAL_REPLY cascade constraints purge
-/
-drop table PAY_CANCEL cascade constraints purge
-/
-drop table PAY_CANCEL_REASON cascade constraints purge
-/
-drop table USERS_DELIVERY_RETURN cascade constraints purge
-/
-drop table USERS_DELIVERY cascade constraints purge
-/
-drop table STORAGE_LAST_RETURN cascade constraints purge
-/
-drop table STOREN_LAST_RETURN cascade constraints purge
-/
-drop table INSPEC_LIST cascade constraints purge
-/
-drop table ADMINS cascade constraints purge
-/
-drop table CATE_INSPEC cascade constraints purge
-/
-drop table CATEGORY cascade constraints purge
-/
-drop table INSPEC_ITEM cascade constraints purge
-/
-drop table INSPEC_GRADE cascade constraints purge
-/
-drop table RENTER_ADD_PAY cascade constraints purge
-/
-drop table RENTER_PROBLEM cascade constraints purge
-/
-drop table INSPEC_RESULT_ACTION cascade constraints purge
-/
-drop table INSPEC_RESULT cascade constraints purge
-/
-drop table PLATFORM_DELIVERY_RETURN cascade constraints purge
-/
-drop table PLATFORM_DELIVERY cascade constraints purge
-/
-drop table PAY cascade constraints purge
-/
-drop table STOREN cascade constraints purge
-/
-drop table STORAGE cascade constraints purge
-/
-drop table EQUIP_SIZE cascade constraints purge
-/
-drop table STOREN_MATCHING_DONE cascade constraints purge
-/
-drop table STOREN_MATCHING_REQ cascade constraints purge
-/
-drop table RENTAL_MATCHING_DONE cascade constraints purge
-/
-drop table RENTAL_MATCHING_REQ cascade constraints purge
-/
-drop table USER_CODE cascade constraints purge
-/
-drop table RENTAL cascade constraints purge
-/
-drop table PAY_METHOD cascade constraints purge
-/
-drop table EQUIP_GRADE cascade constraints purge
-/
-drop table INSPEC_RESULT_ACTION_TYPE cascade constraints purge
-/
-drop table RENTER_PROBLEM_TYPE cascade constraints purge
-/
-
----------------------------------------------
---○ 테이블 삭제
-DROP TABLE ATTACHMENT_RENTAL_REPLY;
-DROP TABLE RENTAL_REPLY_REPORT;
-DROP TABLE RENTAL_REPLY;
-DROP TABLE RENTAL_REPLY_REPORT_ACTION;
-DROP TABLE STAT_TYPE;
-DROP TABLE CATEGORY;
-DROP TABLE EVENT;
-DROP TABLE EQUIP_CODE;
-DROP TABLE PAY_CANCEL_REASON;
-DROP TABLE RANK;
-DROP TABLE ATTACHMENT_CAMPING_DIARY;
-DROP TABLE REPORT_ACTION_TYPE;
-DROP TABLE STOREN_MATCHING_DONE;
-DROP TABLE STOREN_LAST_RETURN;
-DROP TABLE INSPEC_RESULT;
-DROP TABLE OWNED_COUPON;
-DROP TABLE EQUIP_SIZE;
-DROP TABLE USERS;
-DROP TABLE NICKNAME_LOG;
-DROP TABLE RENTER_PROBLEM;
-DROP TABLE STOREN_MATCHING_REQ;
-DROP TABLE EVENT_ENTRY;
-DROP TABLE STORAGE;
-DROP TABLE REPLY_REPORT_ACTION;
-DROP TABLE INSPEC_RESULT_ACTION;
-DROP TABLE DIARY;
-DROP TABLE ISSUED_COUPON;
-DROP TABLE RENTER_PROBLEM_TYPE;
-DROP TABLE POST_VIEW_LOG;
-DROP TABLE BRAND;
-DROP TABLE RENTAL_MATCHING_REQ;
-DROP TABLE USERS_DELIVERY_RETURN;
-DROP TABLE SIGNUP_TYPE;
-DROP TABLE USER_CODE;
-DROP TABLE PLATFORM_DELIVERY;
-DROP TABLE USERS_DELIVERY;
-DROP TABLE INSPEC_LIST;
-DROP TABLE SUSPENDED_USER;
-DROP TABLE NOTI;
-DROP TABLE STORAGE_LAST_RETURN;
-DROP TABLE POINT_LOG;
-DROP TABLE REPLY;
-DROP TABLE EQUIP_NAME;
-DROP TABLE PAY;
-DROP TABLE NOTI_TYPE;
-DROP TABLE REPLY_REPORT;
-DROP TABLE HOT_POST_LOG;
-DROP TABLE STOREN;
-DROP TABLE ATTACHMENT_EVENT;
-DROP TABLE RENTER_ADD_PAY;
-DROP TABLE ADDRESS_LOG;
-DROP TABLE RECOMMEND;
-DROP TABLE REPORT_TYPE;
-DROP TABLE POST_REPORT_ACTION;
-DROP TABLE RENTAL;
-DROP TABLE SATISFACTION_LOG;
-DROP TABLE BOARD_CATEGORY;
-DROP TABLE NOTI_CHECK_LOG;
-DROP TABLE POST_REPORT;
-DROP TABLE EQUIP_GRADE;
-DROP TABLE PLATFORM_DELIVERY_RETURN;
-DROP TABLE ATTACHMENT_REPLY;
-DROP TABLE ATTACHMENT_POST;
-DROP TABLE STAT_PERIOD;
-DROP TABLE INSPEC_ITEM;
-DROP TABLE RENTAL_MATCHING_DONE;
-DROP TABLE STATISTICS;
-DROP TABLE WRITE_GRADE;
-DROP TABLE INSPEC_GRADE;
-DROP TABLE BOOKMARK;
-DROP TABLE WISHLIST;
-DROP TABLE POINT_CHANGE_TYPE;
-DROP TABLE BOARD;
-DROP TABLE COUPON_TYPE;
-DROP TABLE PAY_CANCEL;
-DROP TABLE EQUIPMENT_REGISTRATION;
-DROP TABLE ADMINS;
-DROP TABLE POST;
-DROP TABLE INSPEC_RESULT_ACTION_TYPE;
-DROP TABLE ATTACHMENT_EQUIP_REG;
-DROP TABLE CATE_INSPEC;
-DROP TABLE POST_LABEL;
-DROP TABLE PAY_METHOD;
 
 -------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------
@@ -697,6 +447,13 @@ CREATE TABLE EVENT_ENTRY
 , CONSTRAINT EVENT_ENTRY_ID_PK PRIMARY KEY(EVENT_ENTRY_ID)
 );
 
+--○ '이벤트_당첨' 테이블
+CREATE TABLE EVENT_WIN
+( EVENT_WIN_ID    NUMBER
+, EVENT_ENTRY_ID  NUMBER  CONSTRAINT EW_EVENT_ENTRY_ID_NN NOT NULL
+, CONSTRAINT EVENT_WIN_ID_PK PRIMARY KEY(EVENT_WIN_ID)
+);
+
 --○ '알림_유형' 테이블
 CREATE TABLE NOTI_TYPE
 ( NOTI_TYPE_ID    NUMBER
@@ -772,7 +529,7 @@ CREATE TABLE POST
 , POST_LABEL_ID NUMBER          CONSTRAINT POS_POST_LABEL_ID_NN NOT NULL
 , POST_TITLE    VARCHAR2(90)    CONSTRAINT POS_POST_TITLE_NN NOT NULL
 , POST_CONTENT  VARCHAR2(3000)
-, CREATED_DATE  DATE
+, CREATED_DATE  DATE            CONSTRAINT POS_CREATED_DATE_NN NOT NULL
 , CONSTRAINT POST_ID_PK PRIMARY KEY(POST_ID)
 );
 
@@ -924,8 +681,17 @@ CREATE TABLE RANK
 , MAX_CREDIT            NUMBER(3,0)     CONSTRAINT RAN_MAX_CREDIT_NN NOT NULL
 , MAX_NICKNAME_CHANGE   NUMBER(1,0)     CONSTRAINT RAN_MAX_NICKNAME_CHANGE_NN NOT NULL
 , DISCOUNT_COUPON_QTY   NUMBER(1,0)     CONSTRAINT RAN_DISCOUNT_COUPON_QTY_NN NOT NULL
-, BOOST_COUPON_QTY      NUMBER(1,0)     CONSTRAINT RAN_BOOT_COUPON_QTY_NN NOT NULL
+, BOOST_QTY             NUMBER(1,0)     CONSTRAINT RAN_BOOT_QTY_NN NOT NULL
 , CONSTRAINT RANK_ID_PK PRIMARY KEY(RANK_ID)
+);
+
+--○ '끌어올리기_로그' 테이블
+CREATE TABLE BOOST_LOG
+( BOOST_LOG_ID      NUMBER
+, STOREN_ID         NUMBER 
+, RENTAL_ID         NUMBER
+, BOOST_LOG_DATE    DATE    CONSTRAINT BL_BOOST_LOG_DATE_NN NOT NULL
+, CONSTRAINT BOOST_LOG_ID_PK PRIMARY KEY(BOOST_LOG_ID)
 );
 
 --○ '주소_로그' 테이블
@@ -964,7 +730,7 @@ CREATE TABLE SATISFACTION_LOG
 CREATE TABLE NICKNAME_LOG
 ( NICKNAME_LOG_ID       NUMBER
 , USER_CODE             NUMBER          CONSTRAINT NL_USER_CODE_NN NOT NULL
-, NEW_NICKNAME          VARCHAR2(30)    CONSTRAINT NL_NEW_NICKNAME_NN NOT NULL
+, NICKNAME              VARCHAR2(30)    CONSTRAINT NL_NICKNAME_NN NOT NULL
 , LAST_UPDATED_DATE     DATE            CONSTRAINT NL_LAST_UPDATED_DATE NOT NULL
 , CONSTRAINT NICKNAME_LOG_ID_PK PRIMARY KEY(NICKNAME_LOG_ID)
 );
@@ -984,7 +750,6 @@ CREATE TABLE USERS
 , USER_PW          VARCHAR2(128)   CONSTRAINT USE_USER_PW_NN NOT NULL
 , USER_NAME          VARCHAR2(30)   CONSTRAINT USE_USER_NAME_NN NOT NULL
 , USER_TEL          VARCHAR2(30)   CONSTRAINT USE_USER_TEL_NN NOT NULL
-, USER_NICKNAME      VARCHAR2(30)   CONSTRAINT USE_USER_NICKNAME_NN NOT NULL
 , USER_EMAIL      VARCHAR2(40)   
 , EMAIL_CONSENT      NUMBER(1,0)
 , CREATED_DATE      DATE          CONSTRAINT USE_CREATED_DATE NOT NULL
@@ -1115,10 +880,10 @@ CREATE TABLE STOREN
 ( STOREN_ID         NUMBER
 , EQUIP_CODE        NUMBER          CONSTRAINT STOREN_EQUIP_CODE_NN NOT NULL
 , SIZE_ID           NUMBER          CONSTRAINT STOREN_SIZE_ID_NN NOT NULL
-, STOREN_TITLE      VARCHAR2(90)    CONSTRAINT STOREN_STOREN_TITLE_NN NOT NULL
-, RENT_CONTENT      VARCHAR2(1000)          
 , STORE_MONTH       NUMBER(2,0)     CONSTRAINT STOREN_STORE_MONTH_NN NOT NULL
-, DAILY_RENT_PRICE  NUMBER(8,0)     
+, STOREN_TITLE      VARCHAR2(90)
+, RENT_CONTENT      VARCHAR2(1000)
+, DAILY_RENT_PRICE  NUMBER(8,0)  
 , CREATED_DATE      DATE            CONSTRAINT STOREN_CREATED_DATE_NN NOT NULL
 , CONSTRAINT STOREN_ID_PK PRIMARY KEY(STOREN_ID)
 );
@@ -1360,8 +1125,6 @@ CREATE TABLE INSPEC_ITEM
     INSPEC_ITEM_ID      NUMBER
 ,   INSPEC_ITEM_NAME    VARCHAR2(60)    CONSTRAINT II_INSPEC_ITEM_NAME_NN   NOT NULL
 ,   INSPEC_ITEM_DESC    VARCHAR2(300)
-,   MID_DEDUCTION       NUMBER(2,0)     CONSTRAINT II_MID_DEDUCTION_NN   NOT NULL
-,   LOW_DEDUCTION       NUMBER(2,0)     CONSTRAINT II_LOW_DEDUCTION_NN   NOT NULL
 ,   CONSTRAINT INSPEC_ITEM_ID_PK    PRIMARY KEY (INSPEC_ITEM_ID)
 );
 
@@ -1370,6 +1133,7 @@ CREATE TABLE INSPEC_GRADE
 (
     INSPEC_GRADE_ID         NUMBER
 ,   INSPEC_GRADE_NAME       CHAR(3)     CONSTRAINT IG_INSPEC_GRADE_NAME_NN  NOT NULL
+,   INSPEC_GRADE_DEDUCTION  NUMBER(2,0) CONSTRAINT IG_INSPEC_GRADE_DEDUCTION_NN NOT NULL
 ,   CONSTRAINT INSPEC_GRADE_ID_PK   PRIMARY KEY (INSPEC_GRADE_ID)
 );
 
@@ -1568,6 +1332,15 @@ CHECK (EVENT_ENTRY_POINT >= 0);
 
 
 
+
+--○ '이벤트_당첨' 테이블
+ALTER TABLE EVENT_WIN
+ADD CONSTRAINT EW_EVENT_ENTRY_ID_FK FOREIGN KEY(EVENT_ENTRY_ID)
+REFERENCES EVENT_ENTRY(EVENT_ENTRY_ID);
+
+
+
+
 --○ '알림' 테이블
 ALTER TABLE NOTI
 MODIFY CREATED_DATE DEFAULT SYSDATE;
@@ -1622,6 +1395,9 @@ REFERENCES WRITE_GRADE(WRITE_GRADE_ID);
 
 
 --○ '게시물' 테이블
+ALTER TABLE POST
+MODIFY CREATED_DATE DEFAULT SYSDATE;
+
 ALTER TABLE POST
 ADD CONSTRAINT POS_USER_CODE_FK FOREIGN KEY(USER_CODE)
 REFERENCES USER_CODE(USER_CODE);
@@ -1831,7 +1607,23 @@ ALTER TABLE RANK
 ADD CONSTRAINT RAN_DISCOUNT_COUPON_QTY_CK CHECK(DISCOUNT_COUPON_QTY >= 0);
 
 ALTER TABLE RANK
-ADD CONSTRAINT RAN_BOOST_COUPON_QTY_CK CHECK(BOOST_COUPON_QTY >= 0);
+ADD CONSTRAINT RAN_BOOST_QTY_CK CHECK(BOOST_QTY >= 0);
+
+
+
+
+--○ '회원_등급' 테이블
+ALTER TABLE BOOST_LOG
+MODIFY BOOST_LOG_DATE DEFAULT SYSDATE;
+
+ALTER TABLE BOOST_LOG
+ADD CONSTRAINT BL_STOREN_ID_FK FOREIGN KEY(STOREN_ID)
+REFERENCES STOREN(STOREN_ID);
+
+ALTER TABLE BOOST_LOG
+ADD CONSTRAINT BL_RENTAL_ID_FK FOREIGN KEY(RENTAL_ID)
+REFERENCES RENTAL(RENTAL_ID);
+
 
 
 
@@ -1903,6 +1695,10 @@ ALTER TABLE NICKNAME_LOG
 ADD CONSTRAINT NL_USER_CODE_FK FOREIGN KEY(USER_CODE)
 REFERENCES USER_CODE(USER_CODE);
 
+-- UK (유저 닉네임 고유해야함)
+ALTER TABLE NICKNAME_LOG
+ADD CONSTRAINT NL_NICKNAME_UK UNIQUE(NICKNAME);
+
 
 
 --○ '회원_코드' 테이블
@@ -1916,10 +1712,6 @@ REFERENCES USER_CODE(USER_CODE);
 ALTER TABLE USERS
 ADD CONSTRAINT USE_SIGNUP_TYPE_ID_FK FOREIGN KEY(SIGNUP_TYPE_ID)
 REFERENCES SIGNUP_TYPE(SIGNUP_TYPE_ID);
-
--- UK (유저 닉네임 고유해야함)
-ALTER TABLE USERS
-ADD CONSTRAINT USE_USER_NICKNAME_UK UNIQUE(USER_NICKNAME);
 
 -- UK (유저 이메일주소 고유해야함)
 ALTER TABLE USERS
@@ -2377,14 +2169,10 @@ REFERENCES INSPEC_ITEM(INSPEC_ITEM_ID);
 
 
 
---○ '검수항목' 테이블 생성
--- CK(중_감점 >= 0)
-ALTER TABLE INSPEC_ITEM
-ADD CONSTRAINT II_MID_DEDUCTION_CK CHECK(MID_DEDUCTION >= 0);
-
--- CK(하_감점 >= 0)
-ALTER TABLE INSPEC_ITEM
-ADD CONSTRAINT II_LOW_DEDUCTION_CK CHECK(LOW_DEDUCTION >= 0);
+--○ '검수항목_등급' 테이블 생성
+-- CK(감점 >= 0)
+ALTER TABLE INSPEC_GRADE
+ADD CONSTRAINT IG_INSPEC_GRADE_DEDUCTION_CK CHECK(INSPEC_GRADE_DEDUCTION >= 0);
 
 
 
