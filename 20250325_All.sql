@@ -2257,3 +2257,535 @@ REFERENCES RENTER_PROBLEM_LOST(RENTER_PROBLEM_LOST_ID);
 ALTER TABLE RENTER_ADD_PAY
 ADD CONSTRAINT RAP_RENTER_ADD_PAY_AMOUNT_CK CHECK (RENTER_ADD_PAY_AMOUNT >= 0);
 
+
+
+
+
+
+제훈작업 0328 (주요통계뷰,회원 상세정보 뷰)
+=====================================================================================================
+
+/*
+      ████████
+     ██▓▓▓▓▓▓██    Lv.0 박제훈
+     █▓▓▓██▓▓▓█
+     █▓▓▓██▓▓▓█
+     █▓██████▓█
+      █▓▓▓▓▓▓█
+    ██▒▒▒▒▒▒▒▒██
+   █▒▒██▒▒▒▒██▒▒█
+   █▒▒▒▒████▒▒▒▒█
+   █▒▒▒▒▒▒▒▒▒▒▒▒█
+   █▒▒████████▒▒█
+    ███▓▓██▓▓███
+    █▓▓▓▓██▓▓▓▓█
+    ███████████
+    ███████████
+     █▓▓█  █▓▓█
+    ██▓▓██ ██▓▓██
+   ██▓▓███ ███▓▓██
+  ██▓▓██     ██▓▓██
+  █████       █████
+
+ */
+
+
+
+
+--○ 주요 통계 뷰
+CREATE OR REPLACE VIEW V_ALL_USER_VIEW
+AS
+SELECT VTW.회원_코드, 스토렌_ID, 스토렌_매칭_완료_ID, 스토렌_결제_금액, 보관_결제_금액, 보관_결제_일자, 렌탈_결제_금액, 렌탈_결제_일자, 회원가입일, 검수_결과_ID, 검수_결과_처리일, 게시글_신고접수_ID, 게시글_신고일, 댓글_신고_접수_ID, 댓글_신고일, 렌탈_댓글_신고_접수_ID, 렌탈_댓글_신고일
+        , U.USER_ID AS 회원_ID
+FROM V_TODAY_USER_WARRING VTW JOIN USERS U
+ON VTW.회원_코드 = U.USER_CODE;
+-- 일일 신규 사용자 수,(USER_COUNT)
+-- 일일 거래(결제) 건수 및 금액(TODAY_RICE_ALL)
+-- 일일 검수 건수(IR_STOREN), 진행 중인 배송현황(스토렌,보관)(PDR_STOREN)
+-- 신규 신고 건수 (V_TODAY_WARRING)
+-- , 활성 사용자 수, 회원 수(USER_CODE) , 사유별 탈퇴 회원 수(USER_CODE)
+
+
+------------------------------------------------------------------------------------------------------------------------
+-- 단계별 뷰문 작성
+
+
+DROP VIEW USER_COUNT;
+-- 회원_가입 = 회원_코드
+CREATE OR REPLACE VIEW USER_COUNT
+AS
+SELECT UC.USER_CODE AS 회원_코드,US.CREATED_DATE,US.USER_ID AS 회원_ID
+FROM USERS US JOIN USER_CODE UC
+ON US.USER_CODE = UC.USER_CODE;
+
+
+
+--일일 신규 사용자수 + 일일 거래(결제) 건수 및 금액
+CREATE OR REPLACE VIEW TODAY_USER_SUM
+AS
+SELECT TPA.회원_코드, 스토렌_ID, 스토렌_매칭_완료_ID, 스토렌_결제_금액, 보관_결제_금액, 보관_결제_일자, 렌탈_결제_금액, 렌탈_결제_일자
+        ,UC.CREATED_DATE AS 회원가입일
+FROM USER_COUNT UC JOIN TODAY_PRICE_ALL TPA
+ON UC.회원_코드 = TPA.회원_코드;
+
+
+DROP VIEW V_TODAY_USER_RESTORE;
+--일일 신규 사용자수 + 일일 거래(결제) 건수 및 금액 + 일일 검수 건수
+CREATE OR REPLACE VIEW V_TODAY_USER_RESTORE
+AS
+SELECT TUS.회원_코드, TUS.스토렌_ID, 스토렌_매칭_완료_ID, 스토렌_결제_금액, 보관_결제_금액, 보관_결제_일자, 렌탈_결제_금액, 렌탈_결제_일자, 회원가입일
+        ,IST.검수_결과_ID, IST.검수_결과_처리일
+FROM IRA_STOREN IST JOIN TODAY_USER_SUM TUS
+ON IST.회원_코드 = TUS.회원_코드;
+
+
+DROP VIEW V_TODAY_USER_RESOTR_DELIVERY;
+--일일 신규 사용자수 + 일일 거래(결제) 건수 및 금액 + 일일 검수 건수 + 진행중인 배송 현황
+CREATE OR REPLACE VIEW V_TODAY_USER_RESOTR_DELIVERY
+AS
+SELECT VT.회원_코드, VT.스토렌_ID, 스토렌_매칭_완료_ID, 스토렌_결제_금액, 보관_결제_금액, 보관_결제_일자, 렌탈_결제_금액, 렌탈_결제_일자, 회원가입일, 검수_결과_ID,검수_결과_처리일
+        ,PS.배송_시작일,PS.배송_종료일
+FROM V_TODAY_USER_RESTORE VT JOIN PDR_STOREN PS
+ON VT.회원_코드 = PS.회원_코드;
+
+
+DROP VIEW V_TODAY_USER_RESTORE;
+--일일 신규 사용자수 + 일일 거래(결제) 건수 및 금액 + 일일 검수 건수 + 신규 신고건수
+CREATE OR REPLACE VIEW V_TODAY_USER_WARRING
+AS
+SELECT VT.회원_코드, 스토렌_ID, 스토렌_매칭_완료_ID, 스토렌_결제_금액, 보관_결제_금액, 보관_결제_일자, 렌탈_결제_금액, 렌탈_결제_일자, 회원가입일, 검수_결과_ID, 검수_결과_처리일
+        ,VTW.게시글_신고접수_ID, VTW.게시글_신고일,VTW.댓글_신고_접수_ID,VTW.댓글_신고일,VTW.렌탈_댓글_신고_접수_ID,VTW.렌탈_댓글_신고일
+FROM V_TODAY_USER_RESTORE VT JOIN V_TODAY_WARRING VTW
+ON VT.회원_코드 = VTW.회원코드;
+
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드
+CREATE OR REPLACE VIEW T_PRICE
+AS
+SELECT UC.회원_코드, ER.EQUIP_CODE AS 장비등록_장비코드
+FROM USER_COUNT UC JOIN EQUIPMENT_REGISTRATION ER
+                        ON UC.회원_코드 = ER.USER_CODE;
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록
+CREATE OR REPLACE VIEW USER_STOREN
+AS
+SELECT TP.회원_코드, TP.장비등록_장비코드, ST.STOREN_ID AS 스토렌_ID
+FROM T_PRICE TP JOIN STOREN ST
+                     ON TP.장비등록_장비코드 = ST.EQUIP_CODE;
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 보관_장비등록
+CREATE OR REPLACE VIEW USER_STORAGE
+AS
+SELECT TP.회원_코드, TP.장비등록_장비코드, SR.STORAGE_ID AS 보관_ID
+FROM T_PRICE TP JOIN STORAGE SR
+                     ON TP.장비등록_장비코드 = SR.EQUIP_CODE;
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 렌탈_장비등록
+CREATE OR REPLACE VIEW USER_RENTAL
+AS
+SELECT TP.회원_코드, TP.장비등록_장비코드, RT.RENTAL_ID AS 렌탈_ID
+FROM T_PRICE TP JOIN RENTAL RT
+                     ON TP.장비등록_장비코드 = RT.EQUIP_CODE;
+
+
+
+
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 (스토렌 일일 결제 건수)
+CREATE OR REPLACE VIEW PAY_STOREN
+AS
+SELECT US.회원_코드,US.장비등록_장비코드,US.스토렌_ID,PAY_AMOUNT AS 결제_금액, PAY_DATE AS 결제_일자, PAY_ID AS 결제_ID
+FROM USER_STOREN US JOIN PAY P
+                         ON US.스토렌_ID = P.STOREN_ID;
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 보관_장비등록 + 결제 (보관 일일 결제 건수)
+CREATE OR REPLACE VIEW PAY_STORAGE
+AS
+SELECT US.보관_ID, US.장비등록_장비코드, US.회원_코드, P.PAY_AMOUNT AS 결제_금액, P.PAY_DATE AS 결제_일자, PAY_ID AS 결제_ID
+FROM USER_STORAGE US JOIN PAY P
+                          ON US.보관_ID = P.PAY_ID;
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 렌탈_장비등록 + 결제 (렌탈 일일 결제 건수)
+CREATE OR REPLACE VIEW PAY_RENTAL
+AS
+SELECT UR.회원_코드, UR.장비등록_장비코드, UR.렌탈_ID, P.PAY_AMOUNT AS 결제_금액, P.PAY_DATE AS 결제_일자, PAY_ID AS 결제_ID
+FROM USER_RENTAL UR JOIN PAY P
+ON UR.렌탈_ID = P.PAY_ID;
+
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송
+CREATE OR REPLACE VIEW PD_STOREN
+AS
+SELECT PS.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, PLATFORM_DELIVERY_ID AS 플랫폼_배송_ID
+     ,DELIVERY_START_DATE AS 배송_시작일, DELIVERY_END_DATE AS 배송_종료일
+FROM PAY_STOREN PS JOIN PLATFORM_DELIVERY PD
+                        ON PS.결제_ID = PD.PAY_ID;
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송 + 플랫폼_배송_반환
+CREATE OR REPLACE VIEW PDR_STOREN
+AS
+SELECT PS.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일
+     ,PLATFORM_DELIVERY_RETURN_ID AS 플랫폼_배송_반환_ID, DELIVERY_START_DATE AS PS_배송_시작일, DELIVERY_END_DATE AS PS_배송_종료일
+FROM PD_STOREN PS JOIN PLATFORM_DELIVERY_RETURN PDR
+ON PS.플랫폼_배송_ID = PDR.PLATFORM_DELIVERY_ID;
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송 + 플랫폼_배송_반환 + 검수_리스트
+CREATE OR REPLACE VIEW IL_STOREN
+AS
+SELECT PS.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일, 플랫폼_배송_반환_ID, PS_배송_시작일, PS_배송_종료일
+     ,IL.INSPEC_LIST_ID AS 검수리스트_ID
+FROM PDR_STOREN PS JOIN INSPEC_LIST IL
+                        ON PS.플랫폼_배송_ID = IL.PLATFORM_DELIVERY_ID;
+
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송 + 플랫폼_배송_반환 + 검수_리스트 + 검수_결과(일일 검사 견수)
+CREATE OR REPLACE VIEW IR_STOREN
+AS
+SELECT IST.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일, 플랫폼_배송_반환_ID, PS_배송_시작일, PS_배송_종료일, 검수리스트_ID
+     ,IR.INSPEC_RESULT_ID AS 검수_결과_ID
+FROM IL_STOREN IST JOIN INSPEC_RESULT IR
+ON IST.플랫폼_배송_ID = IR.PLATFORM_DELIVERY_ID;
+
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송 + 플랫폼_배송_반환 + 검수_리스트 + 검수_결과 + 검수_결과_처리
+CREATE OR REPLACE VIEW IRA_STOREN
+AS
+SELECT IST.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일, 플랫폼_배송_반환_ID, PS_배송_시작일, PS_배송_종료일, 검수리스트_ID, 검수_결과_ID
+        ,INSPEC_RESULT_ACTION_ID AS 검수_결과_처리_ID, COMPLETED_DATE AS 검수_결과_처리일
+FROM IR_STOREN IST JOIN INSPEC_RESULT_ACTION IRA
+ON IST.검수_결과_ID = IRA.INSPEC_RESULT_ID;
+
+
+-- 일일 신규 사용자 수 + 장비_코드 + 스토렌_장비등록 + 결제 + 플랫폼 배송 + 플랫폼_배송_반환 + 검수_리스트 + 검수_결과 + 검수_결과_처리 + 스토렌_매칭_신청
+CREATE OR REPLACE VIEW SMR_STOREN
+AS
+SELECT IST.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일, 플랫폼_배송_반환_ID, PS_배송_시작일, PS_배송_종료일, 검수리스트_ID, 검수_결과_ID, 검수_결과_처리_ID
+        ,STOREN_MATCHING_REQ_ID AS 스토렌_매칭_신청_ID,RENTAL_START_DATE AS 렌탈_시작일,RENTAL_END_DATE AS 렌탈_종료일,REQUESTED_DATE AS 신청일
+FROM IRA_STOREN IST JOIN STOREN_MATCHING_REQ SMR
+ON IST.검수_결과_처리_ID = SMR.INSPEC_RESULT_ACTION_ID;
+
+
+
+
+
+
+
+
+
+
+
+
+-- 일일 거래(결제) 건수 및 금액(스토렌)
+CREATE OR REPLACE VIEW STOREN_PAY
+AS
+SELECT SS.회원_코드, 장비등록_장비코드, 스토렌_ID, 결제_금액, 결제_일자, 결제_ID, 플랫폼_배송_ID, 배송_시작일, 배송_종료일, 플랫폼_배송_반환_ID, PS_배송_시작일, PS_배송_종료일, 검수리스트_ID, 검수_결과_ID, 검수_결과_처리_ID, 스토렌_매칭_신청_ID, 렌탈_시작일, 렌탈_종료일, 신청일
+        , STOREN_MATCHING_DONE_ID AS 스토렌_매칭_완료_ID,APPROVED_DATE AS 승인_일자
+FROM SMR_STOREN SS JOIN STOREN_MATCHING_DONE SMD
+ON SS.스토렌_매칭_신청_ID = SMD.STOREN_MATCHING_REQ_ID;
+
+
+
+
+
+-- 렌탈 일일 결제 건수 + 렌탈_매칭_신청
+CREATE OR REPLACE VIEW P_RENTAL
+AS
+SELECT PR.회원_코드, PR.장비등록_장비코드, PR.렌탈_ID, PR.결제_금액, PR.결제_일자, PR.결제_ID
+        ,RMR.RENTAL_MATCHING_REQ_ID AS 렌탈_매칭_신청_ID,RMR.RENTAL_START_DATE AS 매칭_렌탈_시작일,RMR.RENTAL_END_DATE AS 매칭_렌탈_종료일,RMR.REQUESTED_DATE AS 렌탈_매칭_신청일
+FROM PAY_RENTAL PR JOIN RENTAL_MATCHING_REQ RMR
+ON PR.렌탈_ID = RMR.RENTAL_ID;
+
+
+
+
+
+-- 렌탈 일일 결제 건수 + 렌탈_매칭_신청 +. 렌탈_매칭_완료
+CREATE OR REPLACE VIEW RENTAL_MATCHING
+AS
+SELECT PR.회원_코드, 장비등록_장비코드, 렌탈_ID, 결제_금액, 결제_일자, 결제_ID, 렌탈_매칭_신청_ID, 매칭_렌탈_시작일, 매칭_렌탈_종료일, 렌탈_매칭_신청일
+     ,RENTAL_MATCHING_DONE_ID AS 렌탈_매칭_완료_ID,APPROVED_DATE AS 승인_일자
+FROM P_RENTAL PR JOIN RENTAL_MATCHING_DONE RMD
+ON PR.렌탈_매칭_신청_ID = RMD.RENTAL_MATCHING_REQ_ID;
+
+
+
+
+
+
+
+
+--회원_가입 + 회원_코드
+CREATE OR REPLACE VIEW USER_CODE_SUM
+AS
+SELECT U.USER_CODE AS 회원코드
+FROM USERS U JOIN USER_CODE UC
+ON U.USER_CODE = UC.USER_CODE;
+
+--회원_가입 + 회원_코드 + 관리자_등록
+CREATE OR REPLACE VIEW ADMIN_CODE_SUM
+AS
+SELECT U.회원코드, A.ADMIN_ID AS 관리자_ID
+FROM USER_CODE_SUM U JOIN ADMINS A
+ON U.회원코드 = A.USER_CODE;
+
+
+
+
+
+
+-- 일일 신고 건수 확인
+CREATE OR REPLACE VIEW V_TODAY_WARRING
+AS
+SELECT PRS.회원코드,PRS.게시글_신고접수_ID, PRS.게시글_신고일,RRS.댓글_신고_접수_ID,RRS.신고일 AS 댓글_신고일,RRSS.렌탈_댓글_신고_접수_ID,RRSS.렌탈_댓글_신고일
+FROM POST_REPORT_SUM PRS JOIN REPLY_REPORT_SUM RRS
+ON PRS.회원코드 = RRS.회원코드
+JOIN RENTAL_REPLY_SUM RRSS
+ON RRSS.회원코드 = RRS.회원코드;
+
+
+
+
+
+
+
+
+
+--회원_가입 + 회원_코드 + 관리자_등록 + 게시글_신고_접수
+CREATE OR REPLACE VIEW POST_REPORT_SUM
+AS
+SELECT ACS.회원코드, 관리자_ID, PR.POST_REPORT_ID AS 게시글_신고접수_ID,PR.REPORTER_ID AS 게시글_신고접수자_ID,PR.POST_ID AS 게시물_ID,PR.REPORT_TYPE_ID AS 게시글_신고유형_ID,PR.REPORT_CONTENT AS 게시글_신고_내용_ID,PR.REPORTED_DATE AS 게시글_신고일
+FROM ADMIN_CODE_SUM ACS JOIN POST_REPORT PR
+ON ACS.회원코드 = PR.REPORTER_ID;
+
+
+--회원_가입 + 회원_코드 + 관리자_등록 + 게시글_신고_접수 + 게시글_신고_처리
+CREATE OR REPLACE VIEW POST_REPORT_SUM2
+AS
+SELECT PRS.회원코드, 관리자_ID, 게시글_신고접수_ID, 게시글_신고접수자_ID, 게시물_ID, 게시글_신고유형_ID, 게시글_신고_내용_ID, 게시글_신고일
+        ,PRA.POST_REPORT_ACTION_ID AS 신고_처리_ID,PRA.ADMIN_ID AS 처리_관리자_ID,PRA.POST_REPORT_ID AS 게시글_신고_접수_ID,PRA.REPORT_ACTION_TYPE_ID AS 신고_처리_유형_ID,PRA.COMPLETED_DATE AS 처리일
+FROM POST_REPORT_SUM PRS JOIN POST_REPORT_ACTION PRA
+ON PRS.관리자_ID = PRA.ADMIN_ID;
+
+
+DROP VIEW REPLY_REPORT_SUM;
+--회원_가입 + 회원_코드 + 댓글_신고_접수
+CREATE OR REPLACE VIEW REPLY_REPORT_SUM
+AS
+SELECT UCS.회원코드, RR.REPORTER_ID AS 댓글_신고접수자_ID, REPLY_ID AS 댓글_ID,REPORT_TYPE_ID AS 신고_유형_ID
+        ,RR.REPORT_CONTENT AS 댓글_신고_내용,RR.REPORTED_DATE AS 신고일,RR.REPLY_REPORT_ID AS 댓글_신고_접수_ID
+FROM USER_CODE_SUM UCS JOIN REPLY_REPORT RR
+ON UCS.회원코드 = RR.REPORTER_ID;
+
+
+
+--회원_가입 + 회원_코드 + 댓글_신고_접수 + 댓글_신고_처리
+CREATE OR REPLACE VIEW REPLY_REPORT_ACTION_SUM
+AS
+SELECT RRS.회원코드, 댓글_신고접수자_ID, 댓글_ID, 신고_유형_ID, 댓글_신고_내용, 신고일, 댓글_신고_접수_ID
+        ,RRA.REPLY_REPORT_ACTION_ID AS 댓글_신고처리_ID,RRA.REPORT_ACTION_TYPE_ID AS 댓글_신고_처리_유형_ID,RRA.COMPLETED_DATE AS 댓글_신고_처리일
+        ,RRA.ADMIN_ID AS 댓글_처리_관리자_ID
+FROM REPLY_REPORT_SUM RRS JOIN REPLY_REPORT_ACTION RRA
+ON RRS.댓글_신고_접수_ID = RRA.REPLY_REPORT_ID;
+
+
+DROP VIEW RENTAL_REPLY_SUM;
+--회원_가입 + 회원_코드 + 렌탈_댓글_신고_접수
+CREATE OR REPLACE VIEW RENTAL_REPLY_SUM
+AS
+SELECT UCS.회원코드,RRR.REPORTER_ID AS 렌탈_신고접수자_ID,RRR.RENTAL_REPLY_ID AS 렌탈_댓글_ID,RRR.REPORT_TYPE_ID AS 렌탈_댓글_신고_유형_ID
+       ,RRR.REPORT_CONTENT AS 렌탈_댓글_신고_내용,RRR.REPORTED_DATE AS 렌탈_댓글_신고일, RENTAL_REPLY_REPORT_ID AS 렌탈_댓글_신고_접수_ID
+FROM USER_CODE_SUM UCS JOIN RENTAL_REPLY_REPORT RRR
+ON UCS.회원코드 = RRR.REPORTER_ID;
+
+
+
+--회원_가입 + 회원_코드 + 렌탈_댓글_신고_접수 + 렌탈_신고_처리
+CREATE OR REPLACE VIEW RENTAL_REPLY_ACTION_SUM
+AS
+SELECT RRS.회원코드, 렌탈_신고접수자_ID, 렌탈_댓글_ID, 렌탈_댓글_신고_유형_ID, 렌탈_댓글_신고_내용, 렌탈_댓글_신고일, 렌탈_댓글_신고_접수_ID
+        ,RRRA.ADMIN_ID AS 렌탈_처리_관리자_ID,RRRA.REPORT_ACTION_TYPE_ID AS 렌탈_댓글_처리_유형_ID,RRRA.COMPLETED_DATE AS 렌탈_댓글_신고_처리일
+FROM RENTAL_REPLY_SUM RRS JOIN RENTAL_REPLY_REPORT_ACTION RRRA
+ON RRS.렌탈_댓글_신고_접수_ID = RRRA.RENTAL_REPLY_REPORT_ID;
+
+
+
+
+
+
+
+
+
+
+
+
+
+--○ 회원 상세 정보 뷰
+-- 개인 정보,활동 내역 (게시물, 댓글, 결제 이력),포인트 내역 (POINT_LOG),만족도 평가 내역 (SATISFACTION_LOG)
+
+
+CREATE OR REPLACE VIEW USER_INFO
+AS
+SELECT UC.USER_CODE AS 회원코드,U.USER_ID AS 회원_ID,U.USER_NAME AS 회원_이름
+    ,U.USER_TEL AS 회원_전화번호,U.USER_EMAIL AS 회원_이메일,U.CREATED_DATE AS 회원가입일
+    ,P.POST_ID AS 게시물_ID,P.USER_CODE AS 게시물_회원_코드,P.BOARD_ID AS 게시판_ID,P.POST_LABEL_ID AS 말머리_ID,P.POST_TITLE AS 게시물_제목,P.POST_CONTENT AS 게시물_내용,P.CREATED_DATE AS 게시물_생성일
+    ,R.REPLY_ID AS 댓글_ID,R.ROOT_REPLY_ID AS 상윗댓글_ID,R.USER_CODE AS 댓글_회원_코드,R.POST_ID AS 댓글_게시물_ID,REPLY_CONTENT AS 댓글_내용,R.CREATED_DATE AS 댓글_생성일
+    ,PL.POINT_LOG_ID AS 포인트_로그_ID,PL.USER_CODE AS 포인트_변동_회원_코드,PL.POINT_CHANGE_TYPE_ID AS 포인트_변동_유형_ID,PL.POINT_CHANGE AS 변동_포인트,PL.CREATED_DATE AS 포인트_변동_생성일
+    ,SL.SATIS_LOG_ID AS 만족도_평가_로그_ID,SL.RENTAL_MATCHING_DONE_ID AS 만족도_평가_렌탈_완료,SL.REVIEWEE_ID AS 피평가자_ID,SL.REVIEWER_ID AS 평가자_ID
+    ,SL.SATIS_SCORE AS 만족도_점수,SL.SATIS_COMMENT AS 만족도_코멘트,SL.CREATED_DATE AS 만족도_평가_생성일
+FROM USER_CODE UC JOIN USERS U
+ON UC.USER_CODE = U.USER_CODE
+JOIN POST P
+ON U.USER_CODE = P.USER_CODE
+JOIN REPLY R
+ON P.USER_CODE = R.USER_CODE
+JOIN POINT_LOG PL
+ON R.USER_CODE = PL.USER_CODE
+JOIN SATISFACTION_LOG SL
+ON PL.USER_CODE = SL.REVIEWEE_ID;
+
+
+
+
+
+
+
+
+
+CREATE OR REPLACE VIEW USER_INFO AS
+SELECT
+    UC.USER_CODE AS "회원코드",
+    U.USER_ID AS "회원_ID",
+    U.USER_NAME AS "회원_이름",
+    U.USER_TEL AS "회원_전화번호",
+    U.USER_EMAIL AS "회원_이메일",
+    ST.SIGNUP_TYPE_NAME AS "가입유형",
+    U.CREATED_DATE AS "회원가입일",
+    (SELECT NICKNAME
+     FROM NICKNAME_LOG NL
+     WHERE NL.USER_CODE = UC.USER_CODE
+     AND NL.LAST_UPDATED_DATE = (SELECT MAX(LAST_UPDATED_DATE)
+                                FROM NICKNAME_LOG
+                                WHERE USER_CODE = UC.USER_CODE)) AS "현재_닉네임",
+    (SELECT MAX(RANK_NAME)
+     FROM RANK R
+     WHERE (SELECT NVL(SUM(POINT_CHANGE),0)
+            FROM POINT_LOG
+            WHERE USER_CODE = UC.USER_CODE) BETWEEN R.MIN_POINT AND R.MAX_POINT) AS "현재_등급",
+    (SELECT NVL(SUM(POINT_CHANGE),0)
+     FROM POINT_LOG
+     WHERE USER_CODE = UC.USER_CODE) AS "총_보유_포인트",
+    (SELECT COUNT(*)
+     FROM POST
+     WHERE USER_CODE = UC.USER_CODE) AS "게시물_수",
+    (SELECT COUNT(*)
+     FROM REPLY
+     WHERE USER_CODE = UC.USER_CODE) AS "댓글_수",
+    (SELECT COUNT(*)
+     FROM BOOKMARK
+     WHERE USER_CODE = UC.USER_CODE) AS "북마크_수",
+    (SELECT COUNT(*)
+     FROM RECOMMEND
+     WHERE USER_CODE = UC.USER_CODE) AS "추천_수",
+    (SELECT COUNT(*)
+     FROM EQUIPMENT_REGISTRATION
+     WHERE USER_CODE = UC.USER_CODE) AS "장비등록_수",
+    (SELECT COUNT(*)
+     FROM RENTAL
+     WHERE EQUIP_CODE IN (SELECT EQUIP_CODE
+                         FROM EQUIPMENT_REGISTRATION
+                         WHERE USER_CODE = UC.USER_CODE)) AS "렌탈_등록_수",
+    (SELECT COUNT(*)
+     FROM STOREN
+     WHERE EQUIP_CODE IN (SELECT EQUIP_CODE
+                          FROM EQUIPMENT_REGISTRATION
+                          WHERE USER_CODE = UC.USER_CODE)) AS "스토렌_등록_수",
+    (SELECT COUNT(*)
+     FROM STORAGE
+     WHERE EQUIP_CODE IN (SELECT EQUIP_CODE
+                          FROM EQUIPMENT_REGISTRATION
+                          WHERE USER_CODE = UC.USER_CODE)) AS "보관_등록_수",
+    (SELECT AVG(SATIS_SCORE)
+     FROM SATISFACTION_LOG
+     WHERE REVIEWEE_ID = UC.USER_CODE) AS "평균_만족도_점수",
+    (SELECT COUNT(*)
+     FROM OWNED_COUPON
+     WHERE USER_CODE = UC.USER_CODE AND COMPLETED_DATE IS NULL) AS "보유_쿠폰_수",
+    (SELECT ADDRESS
+     FROM ADDRESS_LOG
+     WHERE USER_CODE = UC.USER_CODE
+     AND LAST_UPDATED_DATE = (SELECT MAX(LAST_UPDATED_DATE)
+                              FROM ADDRESS_LOG
+                              WHERE USER_CODE = UC.USER_CODE)) AS "현재_주소",
+    CASE
+        WHEN EXISTS (SELECT 1 FROM SUSPENDED_USER SU WHERE SU.USER_CODE = UC.USER_CODE AND SU.SUSPENDED_START_DATE <= SYSDATE)
+        THEN '활동정지'
+        WHEN UC.EXIT_DATE IS NOT NULL
+        THEN '탈퇴'
+        ELSE '활동중'
+    END AS "회원_상태",
+    UC.EXIT_DATE AS "탈퇴일자"
+FROM
+    USER_CODE UC
+    LEFT JOIN USERS U ON UC.USER_CODE = U.USER_CODE
+    LEFT JOIN SIGNUP_TYPE ST ON U.SIGNUP_TYPE_ID = ST.SIGNUP_TYPE_ID
+ORDER BY
+    UC.USER_CODE;
+
+
+
+
+
+--○ 회원 제제 관리 뷰
+-- 활동 정지 관리 (SUSPENDED_USER), 제재 이력 조회
+
+SELECT *
+FROM USER_CODE UC JOIN ADMINS A
+ON UC.USER_CODE = A.USER_CODE
+JOIN POST_REPORT_ACTION PRA
+ON A.ADMIN_ID = PRA.ADMIN_ID
+JOIN REPLY_REPORT_ACTION RRA
+ON PRA.ADMIN_ID = RRA.ADMIN_ID
+JOIN RENTAL_REPLY_REPORT_ACTION RRRA
+ON RRA.ADMIN_ID = RRRA.ADMIN_ID;
+
+
+
+
+
+
+
+
+--○ 회원 등급 조회
+
+--○ 자유게시판 인기글 조회 뷰
+
+--○ 자유게시판 전체 조회 뷰
+
+--○ 전체 BEST 게시글 조회 뷰(최신순)(일부만)
+
+--○ 렌탈 요청 시 기존 예약과 날짜 중복 없도록 관리
+
+--○ 브랜드&장비명 목록 조회
+
+
+
+=====================================================================================================
+
