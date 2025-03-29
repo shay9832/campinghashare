@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 게시판</title>
+    <style>
+        main {
+            display: grid;
+            grid-template-columns: 200px 700px;
+            grid-template-rows: 300px 300px 300px 300px;
+        }
+
+        div {
+            border: 1px solid black;
+        }
+
+        .menu {
+            grid-row-start: 1;
+            grid-row-end: 5;
+            text-align: center;
+        }
+
+        .menu p {
+            background-color: rgb(200, 200, 200);
+        }
+
+
+        .menu li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .image {
+            padding: 20px;
+            text-align: center;
+        }
+
+        img {
+            height: 250px;
+            width: 400px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header></header>
+    <main>
+        <div class="menu">
+            <p>커뮤니티</p>
+            <li>BEST</li>
+            <li>자유게시판</li>
+            <li>고독한캠핑방</li>
+        </div>
+        <div class="image">
+            <img src="jeremy-bishop-qwuuxv17aJw-unsplash.jpg" alt="">
+        </div>
+        <div class="best">BEST</div>
+        <div class="free">자유게시판</div>
+        <div class="lonely">고독한캠핑방</div>
+    </main>
+    <footer></footer>
+</body>
+</html>
