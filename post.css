@@ -1,0 +1,185 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+
+/* 헤더 */
+header {
+  padding: 10px 0;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.header-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #afadad;
+}
+
+.top-menu {
+    display: flex;
+    flex-direction: column;
+  gap: 15px;
+}
+
+.logo img {
+    width: 120px;
+    height: auto;
+}
+
+.user-menu ul {
+  display: flex;
+  gap: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-toggle {
+  font-size: 16px;
+  padding: 3px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.icon-menu {
+    display: flex;
+    gap: 15px;
+}
+
+.icon-menu i{
+  font-size: 18px;
+  color: black;
+}
+
+
+/* 메인 */
+.main-content {
+  display: flex;
+  gap: 30px;
+  margin: 20px 0;
+}
+
+
+/* 사이드바 */
+.sidebar {
+    width: 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid gray;
+}
+
+.sidebar ul li {
+    padding: 10px 0;
+}
+
+
+/* 메인 이미지 */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-image img {
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+
+
+/* 게시판 */
+.board-wrapper {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #c1bfbf;
+    border-bottom: 1px solid #ddd;
+}
+
+.board-header .more-btn {
+    font-size: 20px;
+}
+
+.post-list {
+    padding: 15px 20px;
+}
+
+.post-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.post-item .post-number {
+    width: 30px;
+    text-align: center;
+    background-color: rgb(205, 194, 169);
+    border-radius: 5px;
+}
+
+.post-item .post-rec {
+    display: flex;
+    width: 60px;
+    gap: 5px;
+    text-align: center;
+    margin-left: 20px;
+}
+
+.post-item .post-title {
+   flex: 1;
+   margin-left: 10px;
+}
+
+.post-item .created-date {
+    width: 100px;
+    text-align: center;
+}
