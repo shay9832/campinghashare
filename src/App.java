@@ -7,8 +7,4 @@ public class App {
 // hey hi hello
 
 // this is master
-// go 3team go!
-
-// protecting
-// checking by develop branch
 // go 3team go!!
