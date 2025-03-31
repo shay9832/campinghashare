@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="header.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="header__top">
+          <img src="/images/image (2).png" alt="CampingHaShare" class="logo" />
+          <div class="top__menu">
+            <a href="#" class="add-equip">내 장비 등록</a>
+            <a href="#">로그인</a>
+            <a href="#">회원가입</a>
+            <a href="#">사이트맵</a>
+          </div>
+        </div>
+        <div class="header__bottom">
+          <div class="toggle-menu">
+            <button><i class="fa-solid fa-bars"></i>카테고리</button>
+            <div class="toggle-container">
+              <input
+                type="radio"
+                name="toggle"
+                id="trade-radio"
+                class="toggle-radio"
+                checked
+              />
+              <input
+                type="radio"
+                name="toggle"
+                id="community-radio"
+                class="toggle-radio"
+              />
+              <div class="toggle-options">
+                <label for="trade-radio" class="toggle-option trade-option"
+                  >거래</label
+                >
+                <label
+                  for="community-radio"
+                  class="toggle-option community-option"
+                  >커뮤니티</label
+                >
+              </div>
+              <div class="toggle-slider"></div>
+            </div>
+          </div>
+          <div class="user-menu">
+            <a href="">
+              <i class="fa-solid fa-bell"></i>
+              <span>알림</span>
+            </a>
+            <a href="">
+              <i class="fa-solid fa-user"></i>
+              <span>마이페이지</span>
+            </a>
+            <a href="">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>장바구니</span>
+            </a>
+            <a href="">
+              <i class="fa-solid fa-book"></i>
+              <span>캠핑로그</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+  </body>
+</html>

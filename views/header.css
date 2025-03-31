@@ -1,0 +1,203 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+body {
+  min-width: 320px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 40px;
+}
+
+.top__menu {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.top__menu a {
+  font-size: 12px;
+  color: #666;
+}
+
+.top__menu a.add-equip {
+  display: inline-block;
+  background-color: #f9d34c;
+  color: #333;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 20px;
+  padding: 2px 12px;
+  line-height: 1.5;
+}
+
+.top__menu a.add-equip:hover {
+  background-color: #f8c830;
+}
+
+.header__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.toggle-menu {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.toggle-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* 토글 컨테이너 스타일 */
+.toggle-container {
+  position: relative;
+  width: 180px;
+  height: 34px;
+  border-radius: 17px;
+  background-color: #e5e5e5;
+  overflow: hidden;
+}
+
+/* 토글 스위치 - 옵션 컨테이너 */
+.toggle-options {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* 토글 옵션 스타일 */
+.toggle-option {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+/* 기본 텍스트 색상 */
+.trade-option {
+  color: #333;
+}
+
+.community-option {
+  color: #555;
+}
+
+/* 토글 배경 슬라이더 */
+.toggle-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #f8d14c; /* 노란색 - 거래 */
+  border-radius: 17px;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* 실제 라디오 버튼은 숨김 */
+.toggle-radio {
+  display: none;
+}
+
+/* 커뮤니티 선택 시 슬라이더 이동 및 색상 변경 */
+#community-radio:checked ~ .toggle-slider {
+  left: 50%;
+  background-color: #4caf50; /* 초록색 - 커뮤니티 */
+}
+
+/* 선택된 옵션에 따른 텍스트 색상 변경 */
+#trade-radio:checked ~ .toggle-options .trade-option {
+  color: #000;
+}
+
+#community-radio:checked ~ .toggle-options .trade-option {
+  color: #555;
+}
+
+#community-radio:checked ~ .toggle-options .community-option {
+  color: #fff;
+}
+
+.user-menu {
+  display: flex;
+  gap: 20px;
+}
+
+.user-menu a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #333;
+}
+
+.user-menu i {
+  font-size: 20px;
+  margin-bottom: 3px;
+}
+
+@media (max-width: 768px) {
+  .top__menu {
+    gap: 10px;
+  }
+
+  .toggle-container {
+    width: 150px;
+  }
+
+  .user-menu {
+    gap: 12px;
+  }
+
+  .user-menu span {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .toggle-container {
+    display: none;
+  }
+}
