@@ -45,7 +45,7 @@ a {
 
 .top__menu a.add-equip {
   display: inline-block;
-  background-color: #f9d34c;
+  background-color: #f2e8cf;
   color: #333;
   font-weight: 500;
   font-size: 12px;
@@ -55,7 +55,7 @@ a {
 }
 
 .top__menu a.add-equip:hover {
-  background-color: #f8c830;
+  background-color: #e97451;
 }
 
 .header__bottom {
@@ -83,7 +83,7 @@ a {
   font-size: 14px;
 }
 
-/* 토글 컨테이너 스타일 */
+
 .toggle-container {
   position: relative;
   width: 180px;
@@ -93,7 +93,7 @@ a {
   overflow: hidden;
 }
 
-/* 토글 스위치 - 옵션 컨테이너 */
+
 .toggle-options {
   position: relative;
   display: flex;
@@ -102,7 +102,7 @@ a {
   z-index: 2;
 }
 
-/* 토글 옵션 스타일 */
+
 .toggle-option {
   flex: 1;
   display: flex;
@@ -114,7 +114,7 @@ a {
   transition: color 0.3s;
 }
 
-/* 기본 텍스트 색상 */
+
 .trade-option {
   color: #333;
 }
@@ -123,31 +123,31 @@ a {
   color: #555;
 }
 
-/* 토글 배경 슬라이더 */
+
 .toggle-slider {
   position: absolute;
   top: 0;
   left: 0;
   width: 50%;
   height: 100%;
-  background-color: #f8d14c; /* 노란색 - 거래 */
+  background-color: #e97451; 
   border-radius: 17px;
   transition: all 0.3s ease;
   z-index: 1;
 }
 
-/* 실제 라디오 버튼은 숨김 */
+
 .toggle-radio {
   display: none;
 }
 
-/* 커뮤니티 선택 시 슬라이더 이동 및 색상 변경 */
+
 #community-radio:checked ~ .toggle-slider {
   left: 50%;
-  background-color: #4caf50; /* 초록색 - 커뮤니티 */
+  background-color: #2c5f2d; 
 }
 
-/* 선택된 옵션에 따른 텍스트 색상 변경 */
+
 #trade-radio:checked ~ .toggle-options .trade-option {
   color: #000;
 }
@@ -200,4 +200,52 @@ a {
   .toggle-container {
     display: none;
   }
+}
+
+
+
+
+
+
+
+footer {
+    background-color: #f5f5f5;
+    padding: 15px 0;
+    border-top: 1px solid #e0e0e0;
+    width: 100%;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-menu {
+    display: flex;
+    gap: 30px;
+}
+
+.footer-menu a {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    min-width: 120px;
 }
