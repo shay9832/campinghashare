@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampingHaShare - 스토렌 신청 (렌탈 내용 작성)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        body {
+            background-color: white;
+        }
+        header {
+            background-color: white;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            height: 40px;
+            margin-left: 20px;
+        }
+        .top-menu {
+            display: flex;
+            height: 60px;
+            align-items: center;
+            margin-right: 20px;
+        }
+        .top-menu a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-size: 12px;
+            display: inline-block;
+            line-height: 60px;
+        }
+        nav {
+            background-color: white;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .nav-border {
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background-color: #e1e1e1;
+        }
+        .toggle-menu {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+        .toggle-btn {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #1B5E20;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .hamburger-icon {
+            margin-right: 8px;
+        }
+        .toggle-container {
+            position: relative;
+            width: 160px;
+            height: 34px;
+            margin-left: 5px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+            height: 34px;
+        }
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-options {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .toggle-option {
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            z-index: 3;
+        }
+        .toggle-label {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f0f0f0;
+            border-radius: 34px;
+            transition: .4s;
+        }
+        .toggle-switch-handle {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 70px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #FFC107;
+            border-radius: 17px;
+            transition: .4s;
+            z-index: 2;
+        }
+        .toggle-input:checked + .toggle-label .toggle-switch-handle {
+            transform: translateX(0);
+        }
+        .toggle-input:not(:checked) + .toggle-label .toggle-switch-handle {
+            transform: translateX(82px);
+        }
+        .user-menu {
+            display: flex;
+            margin-right: 20px;
+        }
+        .user-menu a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        .user-menu a i {
+            font-size: 32px;
+            margin-bottom: 6px;
+            color: #444;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 0 0 30px 0;
+            box-shadow: none;
+        }
+        .page-title {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .page-title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .checkbox-container {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .info-table tr:last-child {
+            border-bottom: 2px solid #e1e1e1;
+        }
+        .info-table-top tr {
+            border-bottom: none;
+        }
+        .info-table-bottom tr {
+            border-bottom: none;
+        }
+        .info-table th {
+            width: 120px;
+            text-align: left;
+            padding: 15px 20px;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            vertical-align: top;
+        }
+        .info-table td {
+            padding: 15px 20px 15px 0;
+        }
+        .equipment-images {
+            display: flex;
+            gap: 10px;
+        }
+        .equipment-image {
+            width: 80px;
+            height: 80px;
+            border: 1px solid #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+        .equipment-image::before, .equipment-image::after {
+            content: "";
+            position: absolute;
+            background-color: #e1e1e1;
+            width: 140%;
+            height: 2px;
+            left: -20%;
+            top: 50%;
+        }
+        .equipment-image::before {
+            transform: translateY(-50%) rotate(45deg);
+        }
+        .equipment-image::after {
+            transform: translateY(-50%) rotate(-45deg);
+        }
+        .grade-link {
+            color: #1E88E5;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .price-info {
+            display: flex;
+            align-items: center;
+        }
+        .price-value {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .price-compare {
+            color: #FF6B6B;
+            margin-left: 10px;
+        }
+        .price-avg {
+            color: #777;
+            margin-left: 15px;
+        }
+        .help-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #e1e1e1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .help-tooltip {
+            display: none;
+            position: absolute;
+            left: 20px;
+            top: -5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 250px;
+            font-size: 12px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .help-icon:hover .help-tooltip {
+            display: block;
+        }
+        .input-field {
+            width: 150px;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        .input-field-wide {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        .textarea-field {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+            min-height: 150px;
+            resize: vertical;
+        }
+        .unit {
+            margin-left: 5px;
+        }
+        .note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 5px;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            gap: 50px;
+        }
+        .btn {
+            padding: 12px 40px;
+            border: 1px solid #e1e1e1;
+            background-color: white;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            min-width: 150px;
+        }
+        .btn:hover {
+            background-color: #f5f5f5;
+        }
+        .footer {
+            background-color: white;
+            padding: 20px;
+            border-top: 1px solid #e1e1e1;
+        }
+        .footer-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .footer-logo {
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .footer-links a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .copyright {
+            color: #888;
+            font-size: 12px;
+        }
+        
+        /* 반응형 조정 */
+        @media (max-width: 768px) {
+            .info-table th, .info-table td {
+                display: block;
+                width: 100%;
+                padding: 10px 20px;
+            }
+            .info-table th {
+                padding-bottom: 0;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="CampingHaShare" class="logo">
+        <div class="top-menu">
+            <a href="#">내 장비 등록</a>
+            <a href="#">로그아웃</a>
+            <a href="#">사이트맵</a>
+        </div>
+    </header>
+
+    <nav>
+        <div class="toggle-menu">
+            <button class="toggle-btn">
+                <i class="fas fa-bars hamburger-icon"></i>
+                카테고리
+            </button>
+            <div class="toggle-container">
+                <div class="toggle-options">
+                    <div class="toggle-option">거래</div>
+                    <div class="toggle-option">커뮤니티</div>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="toggle" class="toggle-input" checked>
+                    <label for="toggle" class="toggle-label">
+                        <span class="toggle-switch-handle"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="user-menu">
+            <a href="#">
+                <i class="fas fa-bell"></i>
+                <span>알림</span>
+            </a>
+            <a href="#">
+                <i class="fas fa-user"></i>
+                <span>마이페이지</span>
+            </a>
+            <a href="#">
+                <i class="fas fa-heart"></i>
+                <span>찜목록</span>
+            </a>
+            <a href="#">
+                <i class="fas fa-shopping-cart"></i>
+                <span>장바구니</span>
+            </a>
+        </div>
+        <div class="nav-border"></div>
+    </nav>
+
+    <div class="container">
+        <div class="page-title-container">
+            <div class="page-title">
+                스토렌 신청 (렌탈 내용 작성)
+            </div>
+        </div>
+        
+        <div class="checkbox-container" style="display: none;">
+            <label>
+                <input type="checkbox" id="agreement"> 장비명과 동일하게 설정
+            </label>
+        </div>
+
+        <table class="info-table info-table-top">
+            <tr>
+                <th>장비 사진</th>
+                <td>
+                    <div class="equipment-images">
+                        <div class="equipment-image"></div>
+                        <div class="equipment-image"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>카테고리(대)</th>
+                <td>텐트/쉘터</td>
+            </tr>
+            <tr>
+                <th>카테고리(중)</th>
+                <td>텐트</td>
+            </tr>
+            <tr>
+                <th>브랜드</th>
+                <td>스노우피크</td>
+            </tr>
+            <tr>
+                <th>장비명</th>
+                <td>스노우피크 텐트 65구낭 리빙 쉘 프로 아너 롱 쉐드 TP-653</td>
+            </tr>
+            <tr>
+                <th>장비 사이즈</th>
+                <td>M</td>
+            </tr>
+            <tr>
+                <th>보관 기간</th>
+                <td>3 개월</td>
+            </tr>
+            <tr>
+                <th>장비 등급</th>
+                <td>C <a href="storen_inspec_result1.html" class="grade-link">(상세 내용 보기)</a></td>
+            </tr>
+            <tr>
+                <th>신품 가격</th>
+                <td>
+                    <div class="price-info">
+                        <span class="price-value">3,050,000 원</span>
+                        <span class="price-compare">(평균 대비 22%↑)</span>
+                        <span class="price-avg">평균 신품 가격 2,500,000원</span>
+                        <span class="help-icon">?
+                            <div class="help-tooltip">신품 가격은 브랜드 공식 홈페이지, 유명 아웃도어 쇼핑몰의 가격을 기준으로 산정됩니다.</div>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="info-table info-table-bottom">
+            <tr>
+                <th>렌탈 가격</th>
+                <td>
+                    <input type="text" class="input-field" placeholder="일 렌탈가 입력"> 원/일
+                    <span class="price-compare">(평균 대비 0% -)</span>
+                    <span class="price-avg">평균 렌탈 가격 20,000원/일</span>
+                    <span class="help-icon">?
+                        <div class="help-tooltip">렌탈 가격은 같은 등급, 같은 카테고리의 유사 제품 가격을 기준으로 산정됩니다.</div>
+                    </span>
+                    <div class="note">렌탈 가격은 (평균)신품 가격 + 1% 수준으로 직접 권장 드립니다.<br>시세 조회 시 거래 성사가 어려울 수 있습니다.</div>
+                </td>
+            </tr>
+            <tr>
+                <th>글 제목</th>
+                <td>
+                    <input type="text" class="input-field-wide" placeholder="렌탈 글 제목 입력">
+                    <div class="checkbox-container" style="margin-top: 10px;">
+                        <label>
+                            <input type="checkbox" id="agreement"> 장비명과 동일하게 설정
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>상품 내용</th>
+                <td>
+                    <textarea class="textarea-field" placeholder="렌탈 글 내용 입력&#13;(구매 시점, 장비 소재 등 참고사항 입력)"></textarea>
+                    <div class="char-count">0/1000byte</div>
+                </td>
+            </tr>
+        </table>
+        
+        <div class="button-container">
+            <button class="btn">이전</button>
+            <button class="btn">다음</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logo.png" alt="CampingHaShare" class="logo" style="height: 30px;">
+            </div>
+            <div class="footer-links">
+                <a href="#">공지사항</a>
+                <a href="#">이벤트</a>
+                <a href="#">고객센터</a>
+                <a href="#">개인정보처리방침</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 CampingHaShare. All rights reserved.
+        </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 토글 스위치 기능
+            document.querySelector('#toggle').addEventListener('change', function() {
+                if(this.checked) {
+                    console.log('거래 모드 활성화');
+                } else {
+                    console.log('커뮤니티 모드 활성화');
+                }
+            });
+
+            // 카테고리 버튼 클릭 이벤트
+            document.querySelector('.toggle-btn').addEventListener('click', function() {
+                console.log('카테고리 메뉴 표시');
+            });
+            
+            // 글자수 계산
+            const textarea = document.querySelector('.textarea-field');
+            const charCount = document.querySelector('.char-count');
+            
+            textarea.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = `${length}/1000byte`;
+            });
+            
+            // 장비명 동일하게 설정 체크박스
+            const agreementCheckbox = document.getElementById('agreement');
+            const titleInput = document.querySelector('.input-field-wide');
+            
+            agreementCheckbox.addEventListener('change', function() {
+                if(this.checked) {
+                    titleInput.value = "스노우피크 텐트 65구낭 리빙 쉘 프로 아너 롱 쉐드 TP-653";
+                }
+            });
+            
+            // 상세 내용 보기 링크
+            document.querySelector('.grade-link').addEventListener('click', function(e) {
+                console.log("상세 내용 보기 페이지로 이동");
+            });
+            
+            // 렌탈 가격 입력에 따른 평균 대비 표시 업데이트
+            const priceInput = document.querySelector('.input-field');
+            const priceCompare = document.querySelector('.price-compare');
+            const avgPrice = 20000; // 평균 렌탈 가격
+            
+            priceInput.addEventListener('input', function() {
+                const inputVal = parseInt(this.value.replace(/[^0-9]/g, '')) || 0;
+                if(inputVal > 0) {
+                    const diff = ((inputVal - avgPrice) / avgPrice * 100).toFixed(0);
+                    if(diff > 0) {
+                        priceCompare.textContent = `(평균 대비 ${diff}%↑)`;
+                    } else if(diff < 0) {
+                        priceCompare.textContent = `(평균 대비 ${Math.abs(diff)}%↓)`;
+                    } else {
+                        priceCompare.textContent = `(평균과 동일)`;
+                    }
+                } else {
+                    priceCompare.textContent = `(평균 대비 0% -)`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
