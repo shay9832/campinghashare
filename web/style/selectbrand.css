@@ -111,7 +111,8 @@ body {
 
 .nav-buttons {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 80px;
   margin-top: 30px;
 }
 
