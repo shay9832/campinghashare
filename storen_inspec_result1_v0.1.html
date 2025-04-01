@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampingHaShare - 스토렌 검수 결과</title>
+    <title>캠핑하쉐어</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -323,7 +323,39 @@
             color: #888;
             font-size: 12px;
         }
-        
+        .help-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #e1e1e1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .help-tooltip {
+            display: none;
+            position: absolute;
+            left: 20px;
+            top: -5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 250px;
+            font-size: 12px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .help-icon:hover .help-tooltip {
+            display: block;
+        }
+
         /* 반응형 조정 */
         @media (max-width: 768px) {
             .info-row {
@@ -376,7 +408,7 @@
             </a>
             <a href="#">
                 <i class="fas fa-heart"></i>
-                <span>찜목록</span>
+                <span>찜</span>
             </a>
             <a href="#">
                 <i class="fas fa-shopping-cart"></i>
@@ -414,7 +446,7 @@
                 </div>
                 <div class="info-row">
                     <div class="info-label">장비명</div>
-                    <div class="info-value">스노우피크 텐트 65구낭 리빙 쉘 프로 아너 롱 쉐드 TP-653</div>
+                    <div class="info-value">스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653</div>
                 </div>
                 <div class="info-row">
                     <div class="info-label">장비 사이즈</div>
@@ -444,12 +476,12 @@
                 
                 <table class="result-table">
                     <colgroup>
-                        <col style="width: 15%">
+                        <col style="width: 15%"> <!-- 등급 열 -->
                         <col style="width: 19%">
                         <col style="width: 19%">
                         <col style="width: 19%">
                         <col style="width: 19%">
-                        <col style="width: 80px"> <!-- 등급 열 -->
+                        <col style="width: 80px">
                         <col style="width: 80px"> <!-- 점수 열 -->
                     </colgroup>
                     <thead>
@@ -470,10 +502,10 @@
                     <tbody>
                         <tr>
                             <td>외관 보존 상태</td>
-                            <td>사용감 거의 없음, 신품</td>
-                            <td>미모 흠 정도만 있감 있음</td>
-                            <td>뚜렷한 사용 흔적, 외관 보존 변색</td>
-                            <td>외관에 조금의 외관 있음</td>
+                            <td>사용감 거의 없음, 신품 수준 외관</td>
+                            <td>마모 등 경미한 사용감 있음</td>
+                            <td>뚜렷한 사용 흔적, 외관 낡고 변색</td>
+                            <td>외관에 주름이 약간 있음</td>
                             <td class="grade-col">중</td>
                             <td class="score-col">13</td>
                         </tr>
@@ -482,14 +514,14 @@
                             <td>파손 없음</td>
                             <td>작은 손상 있음</td>
                             <td>심한 손상 있음</td>
-                            <td>텐트 하단 찢어짐</td>
+                            <td>텐트 하단 약간 찢어짐</td>
                             <td class="grade-col">중</td>
                             <td class="score-col">13</td>
                         </tr>
                         <tr>
                             <td>청결/세정 상태</td>
                             <td>오염 없음</td>
-                            <td>약간 오염 있음</td>
+                            <td>약간의 오염 있음</td>
                             <td>심한 오염 있음</td>
                             <td>청결도 우수함</td>
                             <td class="grade-col">상</td>
@@ -499,8 +531,8 @@
                             <td>부속품 완비</td>
                             <td>부속품(매뉴얼 등) 모두 보유</td>
                             <td>일부 부속품 누락</td>
-                            <td>많은 부속품 누락</td>
-                            <td>부속품 모두 보관되어 있음</td>
+                            <td>필수 부속품 누락</td>
+                            <td>부속품 모두 포함되어 있음</td>
                             <td class="grade-col">상</td>
                             <td class="score-col">20</td>
                         </tr>
@@ -509,7 +541,7 @@
                             <td>기능 모두 정상 작동</td>
                             <td>일부 기능 약간 미흡</td>
                             <td>기능 중 하나 이상 심각한 문제 있음</td>
-                            <td>지퍼가 약간 빡빡함</td>
+                            <td>지퍼가 약간 뻑뻑함</td>
                             <td class="grade-col">중</td>
                             <td class="score-col">13</td>
                         </tr>
@@ -527,7 +559,10 @@
                     <p>- C : 79-70점</p>
                     <p>- D : 69-60점</p>
                     <p>- E : 59-50점</p>
-                    <p>- F : 49점 이하(스토렌 이용 불가)</p>
+                    <p>- F : 49점 이하 (스토렌/렌탈 이용 불가)</p>
+                    <span class="help-icon">?
+                        <div class="help-tooltip">F 등급 장비의 경우, 소유자분께 즉시 반환됩니다.</div>
+                    </span>
                 </div>
             </div>
         </div>
