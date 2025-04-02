@@ -1,0 +1,519 @@
+@charset "UTF-8";
+
+/* main.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+body {
+    background-color: white;
+}
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+
+
+/* 모달 스타일 */
+.matching-confirm-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.matching-confirm-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 30px;
+    width: 70%;
+    max-width: 800px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: modalopen 0.4s;
+}
+
+/* 모달 버튼 */
+.confirm-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+
+
+/* 메인 콘테이너 */
+.main-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 30px;
+    background-color: white;
+    box-shadow: none;
+}
+
+/* 상품 설명 */
+.product-container {
+    width:100%;
+    display: flex;
+    flex-wrap: wrap;
+    /*margin: 20px 0;*/
+    /*padding: 0 20px;*/
+    margin:0;
+}
+
+/* (왼쪽 상단) 상품 이미지들 */
+.product-images {
+    width: 50%;
+    padding-right: 20px;
+    padding-left:30px;
+    margin: 0;
+}
+.main-image-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.main-image {
+    width: calc(70px * 5 + 10px * 4);
+    /*width:100%;*/
+    height: 300px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.image-counter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.image-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    color: #777;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 3;
+}
+.prev-btn {
+    left: 10px;
+}
+.next-btn {
+    right: 10px;
+}
+.thumbnail-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    overflow-x: auto;
+}
+.thumbnail {
+    width: 70px;
+    height: 70px;
+    border: 1px solid #e1e1e1;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* (왼쪽 하단) 유저 정보 */
+.user-info {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 14px;
+}
+.user-info img {
+    margin-right: 5px;
+    max-width: 24px;
+    display: inline-block;
+}
+
+/* (오른쪽) 장비 설명 테이블 */
+.product-info {
+    width: 50%;
+}
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.info-table th {
+    width: 120px; /* 더 넓게 변경 */
+    text-align: left;
+    padding: 10px 0;
+    color: #555;
+    font-weight: normal;
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+.info-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.info-table tr:last-child td {
+    border-bottom: none;
+}
+.price {
+    font-weight: bold;
+    font-size: 18px;
+}
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    margin-left: 10px;
+}
+.discount {
+    color: #FF6B6B;
+    font-size: 14px;
+    margin-left: 5px;
+}
+.avg-price {
+    color: #777;
+    font-size: 14px;
+}
+.help-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-color: #e1e1e1;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 16px;
+    color: white;
+    font-size: 10px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.grade-link {
+    color: #1E88E5;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.rental-form {
+    margin-top: 20px;
+    border-top: 1px solid #e1e1e1;
+    padding-top: 20px;
+}
+.date-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    position: relative;
+}
+.calendar-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    pointer-events: none;
+}
+.rental-days {
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+.total-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.match-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #E97451;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.match-btn:hover {
+    background-color: #CC5A3B;
+}
+
+.report-btn {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: #777;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.separator {
+    margin: 30px 0;
+    border: none;
+    border-top: 1px solid #e1e1e1;
+}
+.description {
+    padding: 0 20px;
+}
+.description h3 {
+    margin-bottom: 15px;
+}
+.comment-section {
+    margin: 0 20px 50px 20px;
+}
+.comment-list {
+    margin-bottom: 20px;
+}
+.comment {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 10px;
+}
+.comment-container {
+    display: flex;
+    width: 100%;
+}
+.comment-left {
+    width: 120px;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: column;
+}
+.comment-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.comment-user span {
+    font-weight: bold;
+    margin-right: 5px;
+}
+.comment-user img {
+    max-width: 24px;
+    display: inline-block;
+}
+.comment-date {
+    font-size: 12px;
+    color: #888;
+}
+.comment-right {
+    flex: 1;
+}
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.comment-text {
+    margin: 6px 0;
+    line-height: 1.4;
+}
+.comment-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+.reply-btn-text {
+    color: #4CAF50;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 3px 8px;
+    background: none;
+    border: none;
+}
+.reply-section {
+    margin-left: 120px;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    margin-top: 8px;
+}
+.reply-form {
+    display: none;
+    margin-top: 10px;
+    margin-left: 120px;
+    flex-wrap: wrap;
+}
+.reply-input {
+    flex-grow: 1;
+    padding: 8px 10px;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 13px;
+    min-width: 200px;
+}
+.reply-btn {
+    padding: 0 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    height: 36px;
+}
+.comment-form {
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    padding: 12px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+.comment-form-left {
+    width: 120px;
+    padding-right: 15px;
+}
+.comment-user {
+    display: flex;
+    align-items: center;
+}
+.comment-form-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.comment-input-container {
+    display: flex;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+.comment-input {
+    flex-grow: 1;
+    padding: 8px 10px;
+    border: 1px solid #e1e1e1;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 13px;
+    min-width: 150px;
+    margin-bottom: 5px;
+}
+.comment-btn {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    height: 36px;
+}
+.file-btn {
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 13px;
+    height: 36px;
+}
+/* 캘린더 커스텀 스타일 */
+.flatpickr-calendar {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+}
+.flatpickr-months {
+    display: flex;
+    background-color: #4CAF50;
+    padding: 8px 0;
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    fill: white;
+    padding: 5px;
+    height: 34px;
+}
+.flatpickr-current-month {
+    color: white;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.flatpickr-current-month .cur-month {
+    font-size: 16px;
+}
+.flatpickr-current-month select {
+    font-size: 15px;
+}
+.flatpickr-day {
+    line-height: 36px;
+    height: 36px;
+    font-size: 14px;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: #4CAF50;
+    border-color: #4CAF50;
+}
+.flatpickr-day.inRange {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: rgba(76, 175, 80, 0.3);
+    color: #333;
+}
+.flatpickr-day.today {
+    border-color: #FFC107;
+}
+.flatpickr-weekday {
+    color: #555;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .product-images, .product-info {
+        width: 100%;
+        padding-right: 0;
+    }
+    .comment-left {
+        width: 100px;
+    }
+    .reply-section, .reply-form {
+        margin-left: 100px;
+    }
+}

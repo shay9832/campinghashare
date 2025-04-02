@@ -1,484 +1,64 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String matching_done = request.getParameter("matching_done");
+    System.out.println(matching_done);
+%>
 <html>
 <head>
-    <title>캠핑하쉐어 - 렌탈 매칭 신청</title>
+    <title>캠핑하쉐어 - 스토렌 매칭 신청</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/matching_request.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 0 0 30px 0;
-            box-shadow: none;
-        }
-        .product-container {
-            display: flex;
-            flex-wrap: wrap;
+        .confirm-box {
             padding: 20px;
-        }
-        .product-images {
-            width: 50%;
-            padding-right: 20px;
-        }
-        .main-image-container {
-            position: relative;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .main-image {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #e1e1e1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .main-image::before, .main-image::after {
-            content: "";
-            position: absolute;
-            background-color: #e1e1e1;
-            width: 140%;
-            height: 2px;
-            left: -20%;
-            top: 50%;
-        }
-        .main-image::before {
-            transform: translateY(-50%) rotate(45deg);
-        }
-        .main-image::after {
-            transform: translateY(-50%) rotate(-45deg);
-        }
-        .image-counter {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: rgba(0,0,0,0.5);
-            color: white;
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-size: 12px;
-        }
-        .image-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            color: #777;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 3;
-        }
-        .prev-btn {
-            left: 10px;
-        }
-        .next-btn {
-            right: 10px;
-        }
-        .thumbnail-container {
-            display: flex;
-            justify-content: flex-start;
-            gap: 10px;
-            overflow-x: auto;
-        }
-        .thumbnail {
-            width: 70px;
-            height: 70px;
-            border: 1px solid #e1e1e1;
-            flex-shrink: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-        }
-        .thumbnail::before, .thumbnail::after {
-            content: "";
-            position: absolute;
-            background-color: #e1e1e1;
-            width: 140%;
-            height: 2px;
-            left: -20%;
-            top: 50%;
-        }
-        .thumbnail::before {
-            transform: translateY(-50%) rotate(45deg);
-        }
-        .thumbnail::after {
-            transform: translateY(-50%) rotate(-45deg);
-        }
-        .product-info {
-            width: 50%;
-        }
-        .info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .info-table th {
-            width: 120px; /* 더 넓게 변경 */
-            text-align: left;
-            padding: 10px 0;
-            color: #555;
-            font-weight: normal;
-            white-space: nowrap; /* 줄바꿈 방지 */
-        }
-        .info-table td {
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .info-table tr:last-child td {
-            border-bottom: none;
-        }
-        .price {
-            font-weight: bold;
-            font-size: 18px;
-        }
-        .original-price {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 14px;
-            margin-left: 10px;
-        }
-        .discount {
-            color: #FF6B6B;
-            font-size: 14px;
-            margin-left: 5px;
-        }
-        .avg-price {
-            color: #777;
-            font-size: 14px;
-        }
-        .help-icon {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-color: #e1e1e1;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 16px;
-            color: white;
-            font-size: 10px;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        .grade-link {
-            color: #1E88E5;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .rental-form {
-            margin-top: 20px;
-            border-top: 1px solid #e1e1e1;
-            padding-top: 20px;
-        }
-        .date-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            font-size: 15px;
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 16px;
-            position: relative;
-        }
-        .calendar-icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #777;
-            pointer-events: none;
-        }
-        .rental-days {
-            text-align: right;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .total-price {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .match-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        .user-info img {
-            margin-right: 5px;
-            max-width: 24px;
-            display: inline-block;
-        }
-        .report-btn {
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 3px;
-            padding: 3px 8px;
-            font-size: 12px;
-            color: #777;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .separator {
-            margin: 30px 0;
-            border: none;
-            border-top: 1px solid #e1e1e1;
-        }
-        .description {
-            padding: 0 20px;
-        }
-        .description h3 {
-            margin-bottom: 15px;
-        }
-        .comment-section {
-            margin: 0 20px 50px 20px;
-        }
-        .comment-list {
-            margin-bottom: 20px;
-        }
-        .comment {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-            margin-bottom: 10px;
-        }
-        .comment-container {
-            display: flex;
-            width: 100%;
-        }
-        .comment-left {
-            width: 120px;
-            padding-right: 15px;
-            display: flex;
-            flex-direction: column;
-        }
-        .comment-user {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .comment-user span {
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .comment-user img {
-            max-width: 24px;
-            display: inline-block;
-        }
-        .comment-date {
-            font-size: 12px;
-            color: #888;
-        }
-        .comment-right {
-            flex: 1;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        .comment-text {
-            margin: 6px 0;
-            line-height: 1.4;
-        }
-        .comment-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 8px;
-        }
-        .reply-btn-text {
-            color: #4CAF50;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 3px 8px;
-            background: none;
-            border: none;
-        }
-        .reply-section {
-            margin-left: 120px;
-            padding: 10px 15px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            margin-top: 8px;
-        }
-        .reply-form {
-            display: none;
-            margin-top: 10px;
-            margin-left: 120px;
-            flex-wrap: wrap;
-        }
-        .reply-input {
-            flex-grow: 1;
-            padding: 8px 10px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-            margin-right: 5px;
-            font-size: 13px;
-            min-width: 200px;
-        }
-        .reply-btn {
-            padding: 0 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            height: 36px;
-        }
-        .comment-form {
-            display: flex;
-            align-items: flex-start;
-            background-color: #f9f9f9;
-            padding: 12px;
-            border-radius: 5px;
-            margin-top: 15px;
-        }
-        .comment-form-left {
-            width: 120px;
-            padding-right: 15px;
-        }
-        .comment-user {
-            display: flex;
-            align-items: center;
-        }
-        .comment-form-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        .comment-input-container {
-            display: flex;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        .comment-input {
-            flex-grow: 1;
-            padding: 8px 10px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-            margin-right: 5px;
-            font-size: 13px;
-            min-width: 150px;
-            margin-bottom: 5px;
-        }
-        .comment-btn {
-            padding: 8px 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-            height: 36px;
-        }
-        .file-btn {
-            padding: 8px 12px;
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 5px;
-            font-size: 13px;
-            height: 36px;
-        }
-        /* 캘린더 커스텀 스타일 */
-        .flatpickr-calendar {
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: #fff;
             border-radius: 8px;
-            overflow: hidden;
-            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
-        .flatpickr-months {
-            display: flex;
-            background-color: #4CAF50;
-            padding: 8px 0;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
         }
-        .flatpickr-prev-month,
-        .flatpickr-next-month {
-            fill: white;
-            padding: 5px;
-            height: 34px;
-        }
-        .flatpickr-current-month {
-            color: white;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-        .flatpickr-current-month .cur-month {
-            font-size: 16px;
-        }
-        .flatpickr-current-month select {
-            font-size: 15px;
-        }
-        .flatpickr-day {
-            line-height: 36px;
-            height: 36px;
-            font-size: 14px;
-        }
-        .flatpickr-day.selected,
-        .flatpickr-day.startRange,
-        .flatpickr-day.endRange {
-            background: #4CAF50;
-            border-color: #4CAF50;
-        }
-        .flatpickr-day.inRange {
-            background: rgba(76, 175, 80, 0.3);
-            border-color: rgba(76, 175, 80, 0.3);
-            color: #333;
-        }
-        .flatpickr-day.today {
-            border-color: #FFC107;
-        }
-        .flatpickr-weekday {
-            color: #555;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        /* 반응형 조정 */
-        @media (max-width: 768px) {
-            .product-images, .product-info {
-                width: 100%;
-                padding-right: 0;
-            }
-            .comment-left {
-                width: 100px;
-            }
-            .reply-section, .reply-form {
-                margin-left: 100px;
-            }
+        button {
+            margin-top: 10px;
         }
     </style>
+    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // 매칭 신청 버튼 눌렀을 때 모달 보이기
+            $(".match-btn").on('click', function () {
+                $("#matching-confirm-modal").show();
+                $("body").css("overflow", "hidden"); // 페이지 스크롤 방지
+            });
+
+            // 모달1 중 취소 버튼 눌렀을 때 모달 닫기
+            $("#cancel").on("click", function() {
+                $("#matching-confirm-modal").hide(); // 모달 숨기기
+                $("body").css("overflow", "auto"); // 페이지 스크롤 복원
+            });
+
+            // 모달1 중 확인 버튼 눌렀을 때 모달 보이기
+            $("#confirm").on('click', function () {
+                $("#matching-confirm-modal").hide();
+                $("#matching-confirm-modal2").show();
+                $("body").css("overflow", "hidden"); // 페이지 스크롤 방지
+            });
+
+            // 모달2 중 확인 버튼 눌렀을 때 리다이렉트(matching_done = true 를 GET 방식으로 넘기기)
+            $("#confirm2").on("click", function() {
+                $(location).attr("href", "storen_matching_request.jsp?matching_done=true");
+            });
+        });
+
+
+
+    </script>
 </head>
 
 <body>
@@ -486,31 +66,52 @@
         <jsp:include page="Header.jsp"></jsp:include>
     </header>
 
-    <div class="container">
+    <!-- 매칭 신청 여부 모달 -->
+    <div id="matching-confirm-modal" class="matching-confirm-modal">
+        <div class="matching-confirm-content">
+            <p>매칭 신청하시겠습니까?</p>
+            <div class="modal-buttons">
+                <button id="confirm" class="confirm-btn">확인</button>
+                <button id="cancel" class="cancle-btn">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 매칭 신청 확인 모달 -->
+    <div id="matching-confirm-modal2" class="matching-confirm-modal">
+        <div class="matching-confirm-content">
+            <p>매칭 신청되었습니다.</p>
+            <div class="modal-buttons">
+                <button id="confirm2" class="confirm-btn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
         <div class="product-container">
             <div class="product-images">
                 <div class="main-image-container">
-                    <button class="image-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
                     <div class="main-image">
+                        <button class="image-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
                         <span class="image-counter">1/5</span>
-                    </div>
-                    <button class="image-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
+                        <button class="image-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+                    </div><!-- .main-image -->
+                </div><!-- .main-image-container -->
                 <div class="thumbnail-container">
                     <div class="thumbnail"></div>
                     <div class="thumbnail"></div>
                     <div class="thumbnail"></div>
                     <div class="thumbnail"></div>
                     <div class="thumbnail"></div>
-                </div>
+                </div><!-- .thumbnail-container -->
                 <div class="user-info">
                     <span>가나초콜릿</span>
                     <img src="rank-icon5.png" class="rank-icon">
                     <span>(신뢰도 00% / 신고 0회 접수)</span>
                     <button class="report-btn">신고</button>
-                </div>
+                </div><!-- .user-info -->
                 <div>2025.06.01 등록</div>
-            </div>
+            </div><!-- .product-images -->
             <div class="product-info">
                 <table class="info-table">
                     <tr>
@@ -539,7 +140,7 @@
                         <th>장비 등급</th>
                         <td>C <span class="grade-link">(상세 내용 보기)</span></td>
                     </tr>
-                </table>
+                </table><!-- .info-table -->
 
                 <div class="rental-form">
                     <table class="info-table">
@@ -573,11 +174,20 @@
                         <span>총 렌탈 금액</span>
                         <span class="price total-price-value">0원</span>
                     </div>
-
+                    <%
+                        if ("true".equals(matching_done)) {
+                    %>
+                    <button class="match-btn" style="background-color:#e0e0e0" disabled="disabled">매칭 중</button>
+                    <%
+                    } else {
+                    %>
                     <button class="match-btn">매칭 신청</button>
-                </div>
-            </div>
-        </div>
+                    <%
+                        }
+                    %>
+                </div><!-- .rental-form -->
+            </div><!-- .product-info -->
+        </div><!-- .product-container -->
 
         <hr class="separator">
 
@@ -591,11 +201,11 @@
                 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
                 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
             </p>
-        </div>
+        </div><!-- .description -->
 
         <hr class="separator">
 
-        <div class="comment-section">
+        <div class="comment-section" style="display:none;">
             <div class="comment-list">
                 <!-- 댓글 1 -->
                 <div class="comment">
@@ -791,8 +401,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </div><!-- .comment-section -->
+    </div><!-- .main-container -->
 
 
     <jsp:include page="Footer.jsp"></jsp:include>
@@ -858,26 +468,6 @@
                         document.querySelector('.total-price-value').textContent = "0원";
                     }
                 }
-            });
-
-            // 토글 스위치 기능
-            document.querySelector('#toggle').addEventListener('change', function() {
-                if(this.checked) {
-                    // 거래 선택 시 동작
-                    console.log('거래 모드 활성화');
-                    // 여기에 거래 관련 컨텐츠를 표시하는 코드 추가
-                } else {
-                    // 커뮤니티 선택 시 동작
-                    console.log('커뮤니티 모드 활성화');
-                    // 여기에 커뮤니티 관련 컨텐츠를 표시하는 코드 추가
-                }
-            });
-
-            // 카테고리 버튼 클릭 이벤트
-            document.querySelector('.toggle-btn').addEventListener('click', function() {
-                // 카테고리 버튼 클릭 시 동작
-                console.log('카테고리 메뉴 표시');
-                // 여기에 카테고리 메뉴를 표시하는 코드 추가
             });
 
             // 이미지 내비게이션
@@ -946,5 +536,9 @@
             });
         });
     </script>
-</body>
+</body><!-- end body -->
+
+
+
+
 </html>

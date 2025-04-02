@@ -2,263 +2,11 @@
 <html>
 <head>
     <title>상품 검색결과</title>
-  <style type="text/css">
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Noto Sans KR', sans-serif;
-    }
-    body {
-      background-color: white;
-    }
-    div {
-      display: block;
-      unicode-bidi: isolate;
-    }
-    li {
-      list-style-type: none;
-    }
-    .main-container {
-      padding: 10px 20px;
-    }
-    .content {
-      display: flex;
-    }
-    .left-category {
-      position: sticky;
-      background: rgba(255, 255, 255, 1);
-      box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
-      border-top: 0;
-      margin: 0 17px 0 0;
-      border-radius: 20px;
-      height: 528px;
-      width: 10%;
-    }
-    .left-category li {
-      position: relative; /* 부모 li에 relative 추가 */
-    }
-    .left-category li a {
-      display: block;
-      padding: 0 16px 0 16px;
-      font-size: 13px;
-      line-height: 44px;
-      letter-spacing: -1px;
-      color: #333;
-      transition: all .5s;
-    }
-    .left-category li a:hover {
-      color: beige;
-      background: #E97451;
-      border-radius: 8px;
-    }
-    .left-category li:hover .left-category-sub {
-      visibility: visible;
-      opacity: 1; /* 마우스를 올렸을 때 보이게 설정 */
-      /*transition: opacity 0.3s ease, visibility 0s linear 0s;*/
-    }
-    .right-contents {
-      width: 90%;
-      background-color:beige;
-    }
-    .left-category-sub {
-      position: absolute;
-      top: 0;
-      left: 100%;
-      width: 160px;
-      padding: 8px;
-      box-sizing: border-box;
-      background-color: #fff;
-      box-shadow: 1px 1px 10px rgb(0 0 0 / 10%);
-      opacity: 0;
-      visibility: hidden;
-      transition: all .5s;
-    }
-    .left-category-sub li a:hover{
-      color: #E97451;
-      background-color: transparent;
-    }
-
-  /* 오른쪽 콘텐츠 부분  */
-    .filter-container {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 100%;
-    }
-    .search-container, .search-container2 {
-      width: 100%;
-      max-width: 800px;  /* 최대 너비를 800px로 제한 */
-      margin: 0 auto;  /* 중앙 정렬 및 좌우 여백 확보 */
-    }
-    .search-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-
-    .search-container form {
-      display: flex;
-      align-items: center;
-      border: 1px solid #ddd;
-      border-radius: 25px;
-      padding: 8px 12px;
-      background-color: #fff;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      /*max-width: 400px;*/
-
-    }
-
-    .search-container label {
-      display: none; /* 접근성을 위해 숨김 */
-    }
-
-    #search-input {
-      flex-grow: 1;
-      width: 100%;
-      min-width: 150px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      padding: 8px;
-      border-radius: 25px;
-    }
-
-    #search-btn {
-      border: none;
-      background: none;
-      cursor: pointer;
-      font-size: 18px;
-      padding: 5px 10px;
-    }
-    /*검색창 아래 날짜선택, 가격필터*/
-    .search-container2 {
-      max-width: 1200px;
-      background-color: white;
-      border-radius: 50px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .search-inputs {
-      display: flex;
-      flex: 1;
-      border-right: 1px solid #e5e5e5;
-    }
-
-    .input-group {
-      flex: 1;
-      padding: 10px 15px;
-      border-right: 1px solid #e5e5e5;
-    }
-
-    .input-group:last-child {
-      border-right: none;
-    }
-
-    .input-label {
-      display: block;
-      color: #666;
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
-
-    .input-value {
-      font-size: 14px;
-      color: #333;
-      font-weight: 500;
-    }
-
-    .search-button {
-      background-color: #2C5F2D;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      padding: 15px 30px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 10px;
-      font-size: 14px;
-      transition: background-color 0.3s;
-    }
-
-    .search-button:hover {
-      background-color: #2C5F2D;
-    }
-
-    @media (max-width: 768px) {
-      .search-container2 {
-        flex-direction: column;
-        border-radius: 20px;
-        padding: 15px;
-      }
-      .search-inputs {
-        flex-direction: column;
-        width: 100%;
-        border-right: none;
-      }
-
-      .input-group {
-        border-right: none;
-        border-bottom: 1px solid #e5e5e5;
-        padding: 10px 0;
-      }
-
-      .search-button {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 10px;
-      }
-
-      /* 검색결과 총 개수와 정렬방법 선택*/
-      .count-sort {
-        display: flex;
-        background-color: red;
-        border: 3px solid red;
-        align-items: center;
-        width: 100%; /* 전체 너비 설정 */
-        /*max-width: 95%;*/
-        margin: 0 auto;
-        padding: 0 20px;
-        justify-content: space-between; /* 각 요소를 양쪽 끝으로 배치 */
-        gap: 20px; /* 두 항목 사이에 간격을 추가할 수 있습니다 */
-      }
-
-      .count p {
-        justify-content: flex-start;
-        font-size: 14px;
-        color: #333;
-        text-decoration: none;
-        display: inline-block;
-        padding: 10px 0;
-        width: 50px;
-      }
-
-      .dropdown-sort {
-        justify-content: flex-end;
-        position: relative;
-      }
-
-      .dropdown-sort select {
-        padding: 6px 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: #fff;
-        font-size: 14px;
-        color: #333;
-        cursor: pointer;
-        min-width: 120px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="css/search_equip_css.css">
   <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
+      // 왼쪽 카테고리 대분류에 마우스 올렸을 때/뗐을 때 오른쪽으로 중분류 나오게 처리
       $(".left-category > ul > li").hover(
               function () {
                 // 마우스를 올렸을 때
@@ -267,7 +15,15 @@
               function() {
                 // 마우스를 뗐을 때
                 $(this).children(".left-category-sub").stop(true, true).fadeOut(50);
-              })
+              });
+      $(".fa-solid").click(function () {
+        var currentColor = $(this).css('color');
+        if (currentColor === 'rgb(242, 232, 207)') {
+          $(this).css('color', '#e9745e');
+        } else {
+          $(this).css('color', '#f2e8cf');
+        }
+      });
 
       });
   </script>
@@ -394,22 +150,27 @@
           </li>
         </ul>
       </div><!-- .left-category -->
+
+      <!-- 오른쪽 상품 검색 결과 부분 -->
       <div class="right-contents">
+
+          <!-- 상품 검색 키워드, 가격, 날짜 지정 -->
           <div class="filter-container">
-            <div class="search-container">
-              <form>
-                <label for="search-input">검색</label>
-                <input type="text" id="search-input" placeholder="키워드 검색(상품명 일부 키워드 / 브랜드명 등을 입력)">
-                <button type="submit" id="search-btn">
-                  <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
-                </button>
-              </form>
-            </div><!-- .search-container-->
             <div class="search-container2">
               <div class="search-inputs">
-                <div class="input-group">
+                <div class="input-group search">
                   <div class="input-label">키워드</div>
-                  <div class="input-value">상품명 혹은 브랜드명을 입력해주세요</div>
+                  <div class="input-value">
+                    <div class="search-container">
+                      <form>
+                        <label for="search-input">검색</label>
+                        <input type="text" id="search-input" placeholder="키워드 검색(상품명 일부 키워드 / 브랜드명 등을 입력)">
+                        <button type="submit" id="search-btn">
+                          <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
+                        </button>
+                      </form>
+                    </div><!-- .search-container-->
+                  </div>
                 </div>
                 <div class="input-group">
                   <div class="input-label">가격</div>
@@ -424,6 +185,7 @@
             </div><!-- .search-container2-->
           </div><!-- .filter-container-->
 
+        <!-- 총 개수, 정렬 -->
         <div class="count-sort">
           <p class="count">총 100개</p><!--ajax 처리 필요-->
           <div class="dropdown-sort">
@@ -438,8 +200,215 @@
           </div><!-- .dropdown-sort-->
         </div><!-- .count-sort-->
 
+        <!-- 검색 결과 상품 리스트 -->
+        <div class="product-container">
+          <!-- 상품 카드 반복 -->
+          <ul>
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <!-- 더 많은 상품 카드들 반복 (총 12개) -->
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+
+            <li>
+              <a href="storen_matching_request.jsp"></a>
+              <div class="product-card">
+                <div class="product-image">
+                  <div class="product-placeholder"></div>
+                  <button class="like-button"><i class="fa-solid fa-heart" style="color: #f2e8cf;"></i></button>
+                </div>
+                <div class="product-info">
+                  <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
+                  <p class="product-brand">코베아몰</p>
+                  <p class="product-price">36,000원</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+          <button>◀</button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button>4</button>
+          <button>5</button>
+          <button>6</button>
+          <button>7</button>
+          <button>8</button>
+          <button>9</button>
+          <button>10</button>
+          <button>▶</button>
+          <button>≫</button>
+        </div>
       </div><!-- .right-contents-->
     </div><!-- .content -->
   </div><!-- .main-container-->
+
+  <!-- footer 외부 jsp 참조-->
+  <jsp:include page="Footer.jsp"></jsp:include>
+
 </body>
 </html>
