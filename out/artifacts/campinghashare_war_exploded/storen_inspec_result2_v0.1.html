@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>캠핑하쉐어</title>
+    <title>storen_inspecResult2.jsp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -172,35 +172,43 @@
             font-size: 24px;
             font-weight: bold;
         }
-        .info-section {
-            margin: 0 20px 20px 20px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .section-title {
-            padding: 12px 15px;
-            background-color: #f2f2f2;
-            font-weight: bold;
-            border-bottom: 1px solid #e1e1e1;
-        }
-        .section-content {
-            padding: 20px;
-        }
-        .info-row {
+        .page-title-container {
             display: flex;
-            margin-bottom: 15px;
+            flex-direction: column;
         }
-        .info-row:last-child {
-            margin-bottom: 0;
+        .checkbox-container {
+            padding: 0 20px;
+            margin-bottom: 20px;
         }
-        .info-label {
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        .info-table tr:last-child {
+            border-bottom: 2px solid #e1e1e1;
+        }
+        .info-table-top tr {
+            border-bottom: none;
+        }
+        .info-table-bottom tr {
+            border-bottom: none;
+        }
+        .info-table th {
             width: 120px;
+            text-align: left;
+            padding: 15px 20px;
+            color: #333;
             font-weight: bold;
-            color: #555;
+            white-space: nowrap;
+            vertical-align: top;
         }
-        .info-value {
-            flex: 1;
+        .info-table td {
+            padding: 15px 20px 15px 0;
+        }
+        .equipment-images {
+            display: flex;
+            gap: 10px;
         }
         .equipment-image {
             width: 80px;
@@ -224,55 +232,96 @@
         .equipment-image::after {
             transform: translateY(-50%) rotate(-45deg);
         }
-        .result-table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #e1e1e1;
-            table-layout: fixed;
+        .grade-link {
+            color: #1E88E5;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 10px;
         }
-        .result-table th, .result-table td {
-            border: 1px solid #e1e1e1;
-            padding: 10px;
-            text-align: center;
-            font-size: 14px;
+        .price-info {
+            display: flex;
+            align-items: center;
         }
-        .result-table th {
-            background-color: #f8f8f8;
-        }
-        .result-table .item-col {
-            width: 15%;
-        }
-        .result-table .criteria-col {
-            width: 19%;
-        }
-        .result-table .comment-col {
-            width: 32%;
-        }
-        .result-table .grade-col,
-        .result-table .score-col {
-            width: 80px;
-            max-width: 80px;
-            min-width: 80px;
-            padding: 5px;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        .result-table .grade-col {
-            background-color: #FFF9C4;
-        }
-        .result-table .score-col {
-            background-color: #FFF59D;
-        }
-        .result-table .total-row td:last-child {
-            background-color: #FFF59D;
+        .price-value {
             font-weight: bold;
+            font-size: 18px;
         }
-        .grade-info {
-            margin-top: 20px;
-            font-size: 14px;
+        .price-compare {
+            color: #FF6B6B;
+            margin-left: 10px;
         }
-        .grade-info p {
-            margin: 5px 0;
+        .price-avg {
+            color: #777;
+            margin-left: 15px;
+        }
+        .help-icon {
+            width: 16px;
+            height: 16px;
+            background-color: #e1e1e1;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .help-tooltip {
+            display: none;
+            position: absolute;
+            left: 20px;
+            top: -5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            width: 250px;
+            font-size: 12px;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .help-icon:hover .help-tooltip {
+            display: block;
+        }
+        .input-field {
+            width: 150px;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        .input-field-wide {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        .textarea-field {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 15px;
+            min-height: 150px;
+            resize: vertical;
+        }
+        .unit {
+            margin-left: 5px;
+        }
+        .note {
+            font-size: 13px;
+            color: #777;
+            margin-top: 5px;
+        }
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #777;
+            margin-top: 5px;
         }
         .button-container {
             display: flex;
@@ -323,47 +372,21 @@
             color: #888;
             font-size: 12px;
         }
-        .help-icon {
-            width: 16px;
-            height: 16px;
-            background-color: #e1e1e1;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            margin-left: 5px;
-            cursor: pointer;
-            position: relative;
-        }
-        .help-tooltip {
-            display: none;
-            position: absolute;
-            left: 20px;
-            top: -5px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            width: 250px;
-            font-size: 12px;
-            color: #333;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 100;
-        }
-        .help-icon:hover .help-tooltip {
-            display: block;
-        }
-
+        
         /* 반응형 조정 */
         @media (max-width: 768px) {
-            .info-row {
-                flex-direction: column;
-            }
-            .info-label {
+            .info-table th, .info-table td {
+                display: block;
                 width: 100%;
-                margin-bottom: 5px;
+                padding: 10px 20px;
+            }
+            .info-table th {
+                padding-bottom: 0;
+            }
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
             }
         }
     </style>
@@ -410,162 +433,109 @@
                 <i class="fas fa-heart"></i>
                 <span>찜</span>
             </a>
-            <a href="#">
-                <i class="fas fa-shopping-cart"></i>
-                <span>장바구니</span>
-            </a>
         </div>
         <div class="nav-border"></div>
     </nav>
 
     <div class="container">
-        <div class="page-title">
-            스토렌 신청 (검수결과 확인)
+        <div class="page-title-container">
+            <div class="page-title">
+                스토렌 신청 (렌탈 내용 작성)
+            </div>
+        </div>
+        
+        <div class="checkbox-container" style="display: none;">
+            <label>
+                <input type="checkbox" id="agreement"> 장비명과 동일하게 설정
+            </label>
         </div>
 
-        <div class="info-section">
-            <div class="section-title">신청 정보</div>
-            <div class="section-content">
-                <div class="info-row">
-                    <div class="info-label">장비 사진</div>
-                    <div class="info-value">
+        <table class="info-table info-table-top">
+            <tr>
+                <th>장비 사진</th>
+                <td>
+                    <div class="equipment-images">
+                        <div class="equipment-image"></div>
                         <div class="equipment-image"></div>
                     </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">카테고리(대)</div>
-                    <div class="info-value">텐트/쉘터</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">카테고리(중)</div>
-                    <div class="info-value">텐트</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">브랜드</div>
-                    <div class="info-value">스노우피크</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">장비명</div>
-                    <div class="info-value">스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">장비 사이즈</div>
-                    <div class="info-value">M</div>
-                </div>
-            </div>
-        </div>
+                </td>
+            </tr>
+            <tr>
+                <th>카테고리(대)</th>
+                <td>텐트/쉘터</td>
+            </tr>
+            <tr>
+                <th>카테고리(중)</th>
+                <td>텐트</td>
+            </tr>
+            <tr>
+                <th>브랜드</th>
+                <td>스노우피크</td>
+            </tr>
+            <tr>
+                <th>장비명</th>
+                <td>스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653</td>
+            </tr>
+            <tr>
+                <th>장비 사이즈</th>
+                <td>M</td>
+            </tr>
+            <tr>
+                <th>보관 기간</th>
+                <td>3 개월</td>
+            </tr>
+            <tr>
+                <th>장비 등급</th>
+                <td>C <a href="storen_inspec_result1.html" class="grade-link">(상세 내용 보기)</a></td>
+            </tr>
+            <tr>
+                <th>신품 가격</th>
+                <td>
+                    <div class="price-info">
+                        <span class="price-value">3,050,000 원</span>
+                        <span class="price-compare">(평균 대비 22%↑)</span>
+                        <span class="price-avg">평균 신품 가격 2,500,000원</span>
+                        <span class="help-icon">?
+                            <div class="help-tooltip">'평균 신품 가격'은 유저들이 해당 장비에 대해 입력한 데이터를 기반으로 산출됩니다. (보통 브랜드 공식 홈페이지, 쇼핑몰 가격을 기준으로 입력)</div>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-        <div class="info-section">
-            <div class="section-title">검수 결과</div>
-            <div class="section-content">
-                <div class="info-row">
-                    <div class="info-label">스토렌 번호</div>
-                    <div class="info-value">00000000</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">검수일</div>
-                    <div class="info-value">2025.09.30</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">장비 등급</div>
-                    <div class="info-value">C</div>
-                </div>
-                <div class="info-row" style="white-space: nowrap;">
-                    <div class="info-label">검수 항목별 기준 및 결과</div>
-                </div>
-                
-                <table class="result-table">
-                    <colgroup>
-                        <col style="width: 15%"> <!-- 등급 열 -->
-                        <col style="width: 19%">
-                        <col style="width: 19%">
-                        <col style="width: 19%">
-                        <col style="width: 19%">
-                        <col style="width: 80px">
-                        <col style="width: 80px"> <!-- 점수 열 -->
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th rowspan="2" class="item-col">검수항목</th>
-                            <th colspan="3">검수 기준</th>
-                            <th colspan="3">검수 결과</th>
-                        </tr>
-                        <tr>
-                            <th class="criteria-col">상</th>
-                            <th class="criteria-col">중</th>
-                            <th class="criteria-col">하</th>
-                            <th class="comment-col">코멘트</th>
-                            <th class="grade-col">등급</th>
-                            <th class="score-col">점수</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>외관 보존 상태</td>
-                            <td>사용감 거의 없음, 신품 수준 외관</td>
-                            <td>마모 등 경미한 사용감 있음</td>
-                            <td>뚜렷한 사용 흔적, 외관 낡고 변색</td>
-                            <td>외관에 주름이 약간 있음</td>
-                            <td class="grade-col">중</td>
-                            <td class="score-col">13</td>
-                        </tr>
-                        <tr>
-                            <td>물리적 무손상 상태</td>
-                            <td>파손 없음</td>
-                            <td>작은 손상 있음</td>
-                            <td>심한 손상 있음</td>
-                            <td>텐트 하단 약간 찢어짐</td>
-                            <td class="grade-col">중</td>
-                            <td class="score-col">13</td>
-                        </tr>
-                        <tr>
-                            <td>청결/세정 상태</td>
-                            <td>오염 없음</td>
-                            <td>약간의 오염 있음</td>
-                            <td>심한 오염 있음</td>
-                            <td>청결도 우수함</td>
-                            <td class="grade-col">상</td>
-                            <td class="score-col">20</td>
-                        </tr>
-                        <tr>
-                            <td>부속품 완비</td>
-                            <td>부속품(매뉴얼 등) 모두 보유</td>
-                            <td>일부 부속품 누락</td>
-                            <td>필수 부속품 누락</td>
-                            <td>부속품 모두 포함되어 있음</td>
-                            <td class="grade-col">상</td>
-                            <td class="score-col">20</td>
-                        </tr>
-                        <tr>
-                            <td>기능 작동성</td>
-                            <td>기능 모두 정상 작동</td>
-                            <td>일부 기능 약간 미흡</td>
-                            <td>기능 중 하나 이상 심각한 문제 있음</td>
-                            <td>지퍼가 약간 뻑뻑함</td>
-                            <td class="grade-col">중</td>
-                            <td class="score-col">13</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td colspan="6" style="text-align: center; font-weight: bold;">합계</td>
-                            <td>79</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="grade-info">
-                    [등급 판정 기준]
-                    <p>- A : 100-90점</p>
-                    <p>- B : 89-80점</p>
-                    <p>- C : 79-70점</p>
-                    <p>- D : 69-60점</p>
-                    <p>- E : 59-50점</p>
-                    <p>- F : 49점 이하 (스토렌/렌탈 이용 불가)</p>
+        <table class="info-table info-table-bottom">
+            <tr>
+                <th>렌탈 가격</th>
+                <td>
+                    <input type="text" class="input-field" placeholder="일 렌탈가 입력"> 원/일
+                    <span class="price-compare">(평균 대비 0% -)</span>
+                    <span class="price-avg">평균 렌탈 가격 20,000원/일</span>
                     <span class="help-icon">?
-                        <div class="help-tooltip">F 등급 장비의 경우, 소유자분께 즉시 반환됩니다.</div>
+                        <div class="help-tooltip">'평균 렌탈 가격'은 유저들이 해당 장비에 대해 입력한 데이터를 기반으로 산출됩니다.</div>
                     </span>
-                </div>
-            </div>
-        </div>
+                    <div class="note">렌탈 가격은 '(평균)신품 가격 * 1%' 수준으로 작성 권장 드립니다.
+                        <br>시세 초과 시 거래 성사가 어려울 수 있습니다.</div>
+                </td>
+            </tr>
+            <tr>
+                <th>글 제목</th>
+                <td>
+                    <input type="text" class="input-field-wide" placeholder="렌탈 글 제목 입력">
+                    <div class="checkbox-container" style="margin-top: 10px;">
+                        <label>
+                            <input type="checkbox" id="agreement"> 장비명과 동일하게 설정
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>상품 내용</th>
+                <td>
+                    <textarea class="textarea-field" placeholder="렌탈 글 내용 입력&#13;(구매 시점, 장비 소재 등 참고사항 입력)"></textarea>
+                    <div class="char-count">0/1000byte</div>
+                </td>
+            </tr>
+        </table>
         
         <div class="button-container">
             <button class="btn">이전</button>
@@ -595,18 +565,60 @@
             // 토글 스위치 기능
             document.querySelector('#toggle').addEventListener('change', function() {
                 if(this.checked) {
-                    // 거래 선택 시 동작
                     console.log('거래 모드 활성화');
                 } else {
-                    // 커뮤니티 선택 시 동작
                     console.log('커뮤니티 모드 활성화');
                 }
             });
 
             // 카테고리 버튼 클릭 이벤트
             document.querySelector('.toggle-btn').addEventListener('click', function() {
-                // 카테고리 버튼 클릭 시 동작
                 console.log('카테고리 메뉴 표시');
+            });
+            
+            // 글자수 계산
+            const textarea = document.querySelector('.textarea-field');
+            const charCount = document.querySelector('.char-count');
+            
+            textarea.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = `${length}/1000byte`;
+            });
+            
+            // 장비명 동일하게 설정 체크박스
+            const agreementCheckbox = document.getElementById('agreement');
+            const titleInput = document.querySelector('.input-field-wide');
+            
+            agreementCheckbox.addEventListener('change', function() {
+                if(this.checked) {
+                    titleInput.value = "스노우피크 텐트 65구낭 리빙 쉘 프로 아너 롱 쉐드 TP-653";
+                }
+            });
+            
+            // 상세 내용 보기 링크
+            document.querySelector('.grade-link').addEventListener('click', function(e) {
+                console.log("상세 내용 보기 페이지로 이동");
+            });
+            
+            // 렌탈 가격 입력에 따른 평균 대비 표시 업데이트
+            const priceInput = document.querySelector('.input-field');
+            const priceCompare = document.querySelector('.price-compare');
+            const avgPrice = 20000; // 평균 렌탈 가격
+            
+            priceInput.addEventListener('input', function() {
+                const inputVal = parseInt(this.value.replace(/[^0-9]/g, '')) || 0;
+                if(inputVal > 0) {
+                    const diff = ((inputVal - avgPrice) / avgPrice * 100).toFixed(0);
+                    if(diff > 0) {
+                        priceCompare.textContent = `(평균 대비 ${diff}%↑)`;
+                    } else if(diff < 0) {
+                        priceCompare.textContent = `(평균 대비 ${Math.abs(diff)}%↓)`;
+                    } else {
+                        priceCompare.textContent = `(평균과 동일)`;
+                    }
+                } else {
+                    priceCompare.textContent = `(평균 대비 0% -)`;
+                }
             });
         });
     </script>
