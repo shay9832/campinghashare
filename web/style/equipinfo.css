@@ -9,7 +9,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: "Noto Sans KR", sans-serif;
-  background-color: #FAF9F6;
 }
 
 .main-content {

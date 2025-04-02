@@ -15,6 +15,9 @@
         color: inherit;
     }
 
+    header {
+        background-color: #faf9f6;
+    }
 
     .header-container {
         width: 100%;
