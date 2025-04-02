@@ -33,7 +33,7 @@
         $(document).ready(function () {
             // 매칭 신청 버튼 눌렀을 때 모달 보이기
             $(".match-btn").on('click', function () {
-                $("#matching-confirm-modal").show();
+                $("#matching-confirm-modal").show().css("display", "flex");
                 $("body").css("overflow", "hidden"); // 페이지 스크롤 방지
             });
 
@@ -46,7 +46,7 @@
             // 모달1 중 확인 버튼 눌렀을 때 모달 보이기
             $("#confirm").on('click', function () {
                 $("#matching-confirm-modal").hide();
-                $("#matching-confirm-modal2").show();
+                $("#matching-confirm-modal2").show().css("display", "flex");
                 $("body").css("overflow", "hidden"); // 페이지 스크롤 방지
             });
 
@@ -81,7 +81,7 @@
     <div id="matching-confirm-modal2" class="matching-confirm-modal">
         <div class="matching-confirm-content">
             <p>매칭 신청되었습니다.</p>
-            <div class="modal-buttons">
+            <div class="modal-buttons single-button">
                 <button id="confirm2" class="confirm-btn">확인</button>
             </div>
         </div>

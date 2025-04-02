@@ -1,19 +1,93 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    // 검수 결과 정보를 저장할 변수들
+    String equipmentCategory = "텐트/쉘터";
+    String equipmentSubCategory = "텐트";
+    String brand = "스노우피크";
+    String equipmentName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
+    String equipmentSize = "M";
+    String storenNumber = "00000000";
+    String inspectionDate = "2025.09.30";
+    String equipmentGrade = "C";
+
+    // 검수 항목별 결과 (코멘트, 등급, 점수)
+    String[][] inspectionResults = {
+            {"외관에 주름이 약간 있음", "중", "13"},
+            {"텐트 하단 약간 찢어짐", "중", "13"},
+            {"청결도 우수함", "상", "20"},
+            {"부속품 모두 포함되어 있음", "상", "20"},
+            {"지퍼가 약간 뻑뻑함", "중", "13"}
+    };
+
+    int totalScore = 0;
+    for (String[] result : inspectionResults) {
+        totalScore += Integer.parseInt(result[2]);
+    }
+%>
+
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스토렌 신청 - 렌탈비 결제</title>
-    <link rel="stylesheet" href="css/storen_rentalfee_pay.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/storen_inspecResult.css">
+    <style type="text/css">
+        .info-value.gray {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .info-value.red {
+            color: #e53e3e;
+        }
+
+        /* 쿠폰 적용 버튼 */
+        .coupon-button {
+            padding: 8px 15px;
+            /*background-color: #2C5F2D;*/
+            border: 1px solid #2C5F2D;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* 결제 선택 옵션 */
+        .payment-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .payment-option {
+            width:100%;
+            height: 40px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        /* 완료 메시지 */
+        .completion-message {
+            text-align: center;
+            padding: 30px 0;
+            color: #333;
+            font-size: 15px;
+        }
+    </style>
 </head>
 <body>
-<header>
-    <jsp:include page="Header.jsp"></jsp:include>
-</header>
+<!-- 헤더 포함 -->
+<jsp:include page="Header.jsp" />
+
 <div class="container">
     <!-- 페이지 제목 -->
-    <h1 class="page-title">스토렌 신청 (렌탈비 결제)</h1>
+    <div class="page-title">
+        스토렌 신청 (렌탈비 결제)
+    </div>
 
     <!-- 배송지 정보 섹션 -->
     <div class="info-section">
@@ -134,8 +208,9 @@
                     </div><!-- .delivery-dropdown -->
                 </div><!-- .info-value -->
             </div><!-- .info-row -->
-        </div>
-    </div>
+        </div><!-- .section-content -->
+    </div><!-- .info-section -->
+
 
     <!-- 신청 정보 섹션 -->
     <div class="info-section">
@@ -144,24 +219,24 @@
             <div class="info-row">
                 <div class="info-label">장비 사진</div>
                 <div class="info-value">
-                    <div class="product-image">X</div>
+                    <div class="equipment-image"></div>
                 </div>
             </div>
             <div class="info-row">
                 <div class="info-label">카테고리(대)</div>
-                <div class="info-value">텐트/쉘터</div>
+                <div class="info-value"><%= equipmentCategory %></div>
             </div>
             <div class="info-row">
                 <div class="info-label">카테고리(중)</div>
-                <div class="info-value">텐트</div>
+                <div class="info-value"><%= equipmentSubCategory %></div>
             </div>
             <div class="info-row">
                 <div class="info-label">브랜드</div>
-                <div class="info-value">스노우피크</div>
+                <div class="info-value"><%= brand %></div>
             </div>
             <div class="info-row">
                 <div class="info-label">장비명</div>
-                <div class="info-value">스노우피크 텐트 65구년 리빙 쉘 프로 이너 룸 세트 TP-653</div>
+                <div class="info-value"><%= equipmentName %></div>
             </div>
             <div class="info-row">
                 <div class="info-label">장비 등급</div>
@@ -185,7 +260,7 @@
             <div class="info-row">
                 <div class="info-label">쿠폰 할인</div>
                 <div class="info-value">20,000원</div>
-                <button class="coupon-button">쿠폰 적용</button>
+                <button class="btn coupon-button">쿠폰 적용</button>
             </div>
             <div class="info-row">
                 <div class="info-value">보유 쿠폰 2개</div>
@@ -223,11 +298,13 @@
             <div class="info-row">
                 <div class="info-label">결제 수단 선택</div>
             </div>
-            <div class="payment-option">
-                신용카드
-            </div>
-            <div class="payment-option selected">
-                무통장입금
+            <div class="payment-row">
+                <button class="btn payment-option">
+                    신용카드
+                </button>
+                <button class="btn payment-option">
+                    무통장입금
+                </button>
             </div>
         </div>
     </div>
@@ -238,13 +315,13 @@
     </div>
 
     <!-- 버튼 영역 -->
-    <div class="button-area">
-        <button>이전</button>
-        <button class="primary-button">결제하기</button>
+    <div class="button-container">
+        <button class="btn">이전</button>
+        <button class="btn btn-primary">다음</button>
     </div>
 </div>
 
-<!-- footer 외부 jsp 참조-->
+<!-- 푸터 포함 -->
 <jsp:include page="Footer.jsp" />
 </body>
 </html>
