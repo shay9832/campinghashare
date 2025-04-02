@@ -50,7 +50,7 @@
             } else {
                 // 장비명 입력 필드를 검색 모드로 설정
                 $("#equipNameSearch").attr("placeholder", "장비명 검색 및 선택");
-                $("#equipNameSearch").attr("readonly", true);
+                $("#equipNameSearch").attr("readonly", false);
                 $(".search-button").show(); // 검색 버튼 표시
 
                 // 가격 입력 시 가격 비교 정보 표시

@@ -19,6 +19,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jquery-3.6.0" level="application" />
+    <orderEntry type="library" name="org.springframework.aop-3.0.2.RELEASE" level="project" />
   </component>
 </module>

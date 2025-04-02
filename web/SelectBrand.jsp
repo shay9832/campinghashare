@@ -93,8 +93,8 @@
     </div>
 
     <div class="nav-buttons">
-        <a href="#" class="nav-button">이전</a>
-        <a href="#" class="nav-button">다음</a>
+        <a href="MiddleCategory.jsp" class="nav-button">이전</a>
+        <a href="EquipInfo.jsp" class="nav-button">다음</a>
     </div>
 </main>
 

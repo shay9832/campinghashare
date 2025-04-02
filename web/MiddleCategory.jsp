@@ -20,7 +20,7 @@
         function goToNextStep() {
             if (selectedCategory) {
                 window.location.href =
-                    "register-equipment-detail.jsp?category=" +
+                    "SelectBrand.jsp?category=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 alert("카테고리를 선택해주세요.");
@@ -63,8 +63,8 @@
     </div>
 
     <div class="nav-buttons">
-        <a href="#" class="nav-button">이전</a>
-        <a href="#" class="nav-button">다음</a>
+        <a href="MajorCategory.jsp" class="nav-button">이전</a>
+        <a href="#" class="nav-button" onclick="goToNextStep()">다음</a>
     </div>
 </main>
 

@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #FAF9F6;
 }
 
 .main-content {
@@ -26,7 +27,9 @@ body {
   font-size: 18px;
   margin-bottom: 20px;
 }
+/*--------------------------------------------------------------------------------*/
 
+/*검색창 관련 스타일*/
 .search-container {
   margin-bottom: 50px;
   width: 100%;
@@ -69,7 +72,9 @@ body {
 .search-button:hover {
   color: #e97451;
 }
+/*--------------------------------------------------------------------------------*/
 
+/*브랜드 관련 스타일*/
 .brand-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -108,7 +113,9 @@ body {
   font-size: 16px;
   text-align: center;
 }
+/*--------------------------------------------------------------------------------*/
 
+/*하단 버튼 스타일*/
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -132,6 +139,7 @@ body {
 .nav-button:hover {
   background-color: #f5f5f5;
 }
+/*--------------------------------------------------------------------------------*/
 
 @media (min-width: 1600px) {
   .brand-grid {

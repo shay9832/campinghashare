@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #FAF9F6;
 }
 
 .main-content {
@@ -21,7 +22,9 @@ body {
   font-weight: bold;
   margin-bottom: 50px;
 }
+/*--------------------------------------------------------------------------------*/
 
+/*카테고리 관련 스타일*/
 .category-title {
   font-size: 18px;
   margin-bottom: 40px;
@@ -71,7 +74,9 @@ body {
   font-size: 14px;
   text-align: center;
 }
+/*--------------------------------------------------------------------------------*/
 
+/*하단 버튼 스타일*/
 .nav-buttons {
   display: flex;
   justify-content: space-evenly;
@@ -92,8 +97,9 @@ body {
 }
 
 .nav-button:hover {
-  background-color: #f5f5f5;
+  background-color: #94a187;
 }
+/*--------------------------------------------------------------------------------*/
 
 @media (min-width: 1600px) {
   .category-grid {

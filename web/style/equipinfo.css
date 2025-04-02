@@ -9,6 +9,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   font-family: "Noto Sans KR", sans-serif;
+  background-color: #FAF9F6;
 }
 
 .main-content {
@@ -25,12 +26,16 @@ body {
   margin-bottom: 40px;
 }
 
+
+/*--------------------------------------------------------------------------------*/
+/*장비 정보 관련 스타일*/
 .equipinfo-container {
   width: 100%;
   margin-bottom: 30px;
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
+  background-color: #fff;
 }
 
 .equipinfo-item {
@@ -60,7 +65,37 @@ body {
   font-size: 15px;
 }
 
+input:disabled {
+  background: #e5e5e5;
+}
+
+/*--------------------------------------------------------------------------------*/
+
 /* 사진 관련 스타일 */
+.photo-upload {
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-photo-btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: #999;
+}
+
 .photo-area {
   display: flex;
   flex-wrap: wrap;
@@ -105,8 +140,26 @@ body {
   cursor: pointer;
   font-size: 10px;
 }
+/*--------------------------------------------------------------------------------*/
 
 /* 가격 관련 스타일 */
+.price-container {
+  position: relative;
+}
+
+.search-input {
+  padding-right: 40px;
+}
+
+.search-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
 .price-row {
   display: flex;
   flex-wrap: wrap;
@@ -116,7 +169,6 @@ body {
 .price-input {
   width: 150px !important;
   text-align: right;
-  padding-right: 10px !important;
 }
 
 .currency {
@@ -145,6 +197,9 @@ body {
   font-weight: 500;
 }
 
+/*--------------------------------------------------------------------------------*/
+
+/* 툴팁 스타일 */
 .info-icon {
   position: relative;
   color: #999;
@@ -153,7 +208,6 @@ body {
   margin-left: 5px;
 }
 
-/* 툴팁 스타일 */
 .tooltip-trigger {
   position: relative;
   display: inline-block;
@@ -188,63 +242,8 @@ body {
   border-style: solid;
   border-color: #333 transparent transparent transparent;
 }
-
-
-
-/*------------------------------------------------*/
-
-
-.photo-upload {
-  width: 80px;
-  height: 80px;
-  border: 2px dashed #ccc;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add-photo-btn {
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  color: #999;
-}
-
-
-.search-input {
-  padding-right: 40px;
-}
-
-.search-button {
-  position: absolute;
-  right: 10px;
-  background: none;
-  border: none;
-  color: #666;
-  cursor: pointer;
-}
-
-.price-container {
-  position: relative;
-}
-
-.price-input {
-  padding-right: 30px;
-}
-
-.currency {
-  margin-left: 10px;
-  font-size: 15px;
-}
-
+/*--------------------------------------------------------------------------------*/
+/*주의사항 관련 스타일*/
 .divider {
   position: relative;
   margin: 40px 0;
@@ -280,8 +279,9 @@ body {
   margin-bottom: 12px;
   color: #555;
 }
+/*--------------------------------------------------------------------------------*/
 
-
+/*하단 버튼 스타일*/
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -305,7 +305,7 @@ body {
 .nav-button:hover {
   background-color: #f5f5f5;
 }
-
+/*--------------------------------------------------------------------------------*/
 
 @media (max-width: 768px) {
   .equipinfo-item {
