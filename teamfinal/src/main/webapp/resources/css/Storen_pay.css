@@ -1,0 +1,534 @@
+/* 전체 기본 스타일 초기화: 모든 요소의 여백, 패딩 제거 및 박스 모델 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* 요소의 크기 계산 시 테두리와 패딩을 포함 */
+}
+
+/* 기본 바디 스타일 및 중앙 정렬 레이아웃 설정 */
+body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; /* 한글 폰트 지정 */
+    color: #333; /* 기본 텍스트 색상 설정 */
+    line-height: 1.6; /* 텍스트 줄 간격 설정 */
+}
+
+/* 메인 컨테이너 - 전체 콘텐츠를 담는 컨테이너 */
+.main-container {
+    width: 80%; /* 컨테이너 너비 - 화면의 80% 차지 */
+    max-width: 800px; /* 최대 너비 제한 - 화면이 커져도 800px 이상 늘어나지 않음 */
+    margin: 0 auto; /* 좌우 마진 자동으로 설정하여 중앙 정렬 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로 방향으로 배치 */
+    gap: 20px; /* 자식 요소 사이의 간격 설정 - 배송지와 신청정보 사이 간격 */
+}
+
+/* 상단 제목 영역 - "스토렌 신청" 헤더 스타일 */
+.main-container_top {
+    margin: 20px 20px; /* 하단 여백 추가 */
+    width: 80%; /* 컨테이너와 동일한 너비 */
+    max-width: 800px; /* 컨테이너와 동일한 최대 너비 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+/* 배송지 정보 전체 섹션 스타일 */
+.delivery-section {
+    border: 2px solid #000000; /* 검은색 테두리 설정 */
+    border-radius: 10px; /* 테두리 모서리 둥글게 설정 */
+    overflow: hidden; /* 내부 요소가 둥근 모서리를 넘어가지 않도록 설정 */
+}
+
+/* 신청 정보 전체 섹션 스타일 */
+.application-section {
+    border: 2px solid #000000; /* 검은색 테두리 설정 */
+    border-radius: 10px; /* 테두리 모서리 둥글게 설정 */
+    overflow: hidden; /* 내부 요소가 둥근 모서리를 넘어가지 않도록 설정 */
+}
+
+/* 배송지 선택 헤더 영역 스타일 */
+.main-container_delivery {
+    padding: 20px; /* 내부 여백 설정 */
+    background-color: #d6d6d6; /* 배경색 설정 - 회색 */
+    border-bottom: 2px solid #000000; /* 하단 테두리 설정 - 구분선 역할 */
+}
+
+/* 배송지 개인정보 내용 영역 스타일 */
+.main-container_delivery_content {
+    padding: 20px; /* 내부 여백 설정 */
+    line-height: 40px; /* 텍스트 줄 간격 설정 - 각 정보 행 사이 간격 */
+    border-bottom: 1px solid #000000; /* 하단 테두리 설정 - 구분선 역할 */
+    margin-bottom: 20px; /* 하단 여백 추가 */
+}
+
+/* 받는 사람, 휴대전화, 이메일 행 공통 스타일 */
+.delivery_pickup, .phone_number, .e-mail {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: space-between; /* 내부 요소 양쪽 끝으로 정렬 - 레이블과 값 분리 */
+}
+
+/* 주소 입력 영역 전체 스타일 */
+.main_container_delivery_address {
+    padding: 20px; /* 내부 여백 설정 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: flex-start; /* 위쪽 정렬 - 레이블과 입력필드 상단 정렬 */
+}
+
+/* "주소" 레이블 스타일 */
+.main_container_delivery_address > span {
+    min-width: 80px; /* 최소 너비 설정 - 레이블 영역 크기 */
+    margin-right: 40px; /* 오른쪽 여백 - 레이블과 입력 필드 사이 간격 */
+}
+
+/* 주소 입력 필드 컨테이너 스타일 */
+.address_input_container {
+    flex: 1; /* 남은 공간 전부 차지 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로 방향으로 배치 */
+    gap: 10px; /* 입력 필드 사이 간격 */
+}
+
+/* 주소 검색창과 버튼을 담는 행 스타일 */
+.address_search_row {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    gap: 10px; /* 요소 사이 간격 - 검색창과 버튼 사이 */
+    margin-bottom: 10px; /* 하단 여백 */
+}
+
+/* 주소 검색 입력창 스타일 */
+.address_search {
+    flex: 1; /* 남은 공간 차지 */
+    padding: 8px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+}
+
+/* 주소 검색 버튼 스타일 */
+.btn_address {
+    padding: 8px 16px; /* 내부 여백 설정 - 가로 세로 다르게 */
+    background-color: #f0f0f0; /* 배경색 설정 - 밝은 회색 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 - 클릭 가능함을 표시 */
+}
+
+/* 호버 상태 추가 */
+.btn_address:hover {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+/* 액티브 상태 개선 */
+.btn_address:active {
+    background-color: #5cb85c;
+    color: white; /* 텍스트 색상 변경 추가 */
+    border-color: #4cae4c; /* 테두리 색상 변경 추가 */
+    transition: ease-in 0.5s;
+}
+
+/* 기본 주소, 상세 주소 입력창 공통 스타일 */
+.address_one, .address_two {
+    width: 100%; /* 너비 전체 사용 */
+    padding: 8px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+}
+
+/* 신청 정보 내용 영역 스타일 */
+.main_container_app_info_content {
+    padding: 30px; /* 내부 여백 설정 */
+    background-color: white; /* 배경색 설정 */
+}
+
+/* 폼 행(각 정보 항목) 공통 스타일 */
+.form-row {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    margin-bottom: 20px; /* 하단 여백 - 각 행 사이 간격 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+/* 폼 레이블(왼쪽 텍스트) 스타일 */
+.form-label {
+    width: 120px; /* 너비 고정 - 모든 레이블 너비 통일 */
+    font-weight: bold; /* 글씨 굵게 */
+}
+
+/* 폼 입력 영역(오른쪽 부분) 스타일 */
+.form-input {
+    flex: 1; /* 남은 공간 전부 차지 */
+}
+
+/* 이미지 업로드 영역 스타일 */
+.image-upload {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    gap: 10px; /* 요소 사이 간격 - 이미지 플레이스홀더 사이 */
+    align-items: flex-start; /* 위쪽 정렬 */
+}
+
+/* 이미지 플레이스홀더(이미지 미리보기 영역) 스타일 */
+.image-placeholder {
+    width: 150px; /* 너비 설정 */
+    height: 150px; /* 높이 설정 */
+    border: 1px solid #ddd; /* 테두리 설정 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    background-color: #fff; /* 배경색 설정 */
+    position: relative; /* 상대적 위치 지정 - 내부 X 표시를 위한 기준점 */
+}
+
+
+/* 이미지 플레이스홀더 내 X 표시 가로선 */
+.image-placeholder::before, .image-placeholder::after {
+    content: ''; /* 가상 요소 내용 없음 */
+    position: absolute; /* 절대 위치 지정 */
+    background-color: #ddd; /* 배경색(선 색상) 설정 */
+}
+
+/* 이미지 플레이스홀더 내 X 표시 우하향 대각선 */
+.image-placeholder::before {
+    width: 100px; /* 선 너비 */
+    height: 1px; /* 선 두께 */
+    transform: rotate(45deg); /* 45도 회전 */
+}
+
+/* 이미지 플레이스홀더 내 X 표시 좌하향 대각선 */
+.image-placeholder::after {
+    width: 100px; /* 선 너비 */
+    height: 1px; /* 선 두께 */
+    transform: rotate(-45deg); /* -45도 회전 */
+}
+
+/* 신청 정보 헤더 영역 스타일 */
+.main_container_app_info {
+    padding: 20px; /* 내부 여백 설정 */
+    background-color: #d6d6d6; /* 배경색 설정 - 회색 */
+    border-bottom: 2px solid #000000; /* 하단 테두리 - 구분선 역할 */
+}
+
+/* 폼 입력 필드 스타일 - 너비 조정 */
+.form-input input[type="text"] {
+    width: 70%; /* 너비 70%로 조정하여 가독성 향상 */
+    padding: 8px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+    background-color: #f5f5f5; /* 배경색 설정 - 비활성화 상태 표시 */
+}
+
+/* 신청정보 영역 스타일*/
+.application-section {
+    margin-bottom: 30px;
+}
+
+/* 쿠폰 현황 영역 스타일 */
+.discount-section {
+    border: 2px solid #000000; /* 검은색 테두리 설정 */
+    border-radius: 10px; /* 테두리 모서리 둥글게 설정 */
+    overflow: hidden; /* 내부 요소가 둥근 모서리를 넘어가지 않도록 설정 */
+    margin-bottom: 30px; /* 하단 여백 */
+}
+
+/* 쿠폰 현황 타이틀 스타일 */
+.discount-title {
+    padding: 20px; /* 내부 여백 설정 */
+    background-color: #d6d6d6; /* 배경색 설정 - 회색 */
+    border-bottom: 2px solid #000000; /* 하단 테두리 설정 */
+}
+
+/* 할인 섹션 콘텐츠 영역 */
+.discount-content {
+    padding: 20px; /* 내부 여백 */
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-direction: column; /* 자식 요소들을 세로 방향으로 배치 */
+    gap: 15px; /* 요소 사이 간격 */
+}
+
+/* 할인 쿠폰 행 - 레이블과 입력 필드를 포함 */
+.discount-row {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: space-between; /* 내부 요소 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    width: 100%; /* 너비 전체 사용 */
+}
+
+/* 쿠폰 할인 레이블 */
+.discount_coupon {
+    font-weight: bold; /* 글씨 굵게 */
+}
+
+/* 오른쪽 요소들을 감싸는 컨테이너 */
+.discount-right {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px; /* 요소 사이 간격 */
+}
+
+/* 할인 금액 입력 필드 */
+.discount_sum {
+    width: 150px; /* 너비 설정 */
+    padding: 8px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+}
+
+/* 쿠폰 적용 버튼 */
+.apply_coupon {
+    padding: 8px 16px; /* 내부 여백 설정 */
+    background-color: #f0f0f0; /* 배경색 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+    transition: all 0.2s ease; /* 부드러운 전환 효과 */
+}
+
+/* 쿠폰 적용 버튼 호버 효과 */
+.apply_coupon:hover {
+    background-color: #e0e0e0;
+    border-color: #999;
+}
+
+/* 쿠폰 적용 버튼 액티브 효과 */
+.apply_coupon:active {
+    background-color: #5cb85c;
+    color: white;
+    border-color: #4cae4c;
+}
+
+/* 보유 쿠폰 행 - 오른쪽 정렬 */
+.coupon-row {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    width: 100%; /* 너비 전체 사용 */
+}
+
+/* 보유 쿠폰 입력 필드 */
+.have_coupon {
+    width: 150px; /* 너비 설정 */
+    padding: 8px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 테두리 설정 */
+    border-radius: 4px; /* 테두리 모서리 둥글게 */
+}
+
+/* 결제 정보 섹션 스타일 */
+.payment-info-section, .payment-method-section {
+    border: 2px solid #000000; /* 검은색 테두리 설정 */
+    border-radius: 10px; /* 테두리 모서리 둥글게 설정 */
+    overflow: hidden; /* 내부 요소가 둥근 모서리를 넘어가지 않도록 설정 */
+    margin-bottom: 30px; /* 하단 여백 */
+}
+
+/* 결제 정보 타이틀 스타일 */
+.payment-info-title, .payment-method-title {
+    padding: 20px; /* 내부 여백 설정 */
+    background-color: #d6d6d6; /* 배경색 설정 - 회색 */
+    border-bottom: 2px solid #000000; /* 하단 테두리 설정 */
+}
+
+/* 결제 정보 콘텐츠 영역 */
+.payment-info-content, .payment-method-content {
+    padding: 20px; /* 내부 여백 */
+}
+
+/* 결제 정보 행 - 레이블과 금액을 포함 */
+.payment-row {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    justify-content: space-between; /* 내부 요소 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px 0; /* 상하 여백 */
+    width: 100%; /* 너비 전체 사용 */
+}
+
+/* 결제 레이블 */
+.payment-label {
+    font-weight: normal; /* 기본 글씨 두께 */
+}
+
+/* 결제 금액 */
+.payment-amount {
+    font-weight: bold; /* 글씨 굵게 */
+}
+
+/* 구분선 */
+.payment-divider {
+    height: 1px; /* 높이 */
+    background-color: #000000; /* 배경색(선 색상) */
+    margin: 15px 0; /* 상하 여백 */
+    width: 100%; /* 너비 전체 */
+}
+
+/* 최종 결제 금액 행 */
+.total-payment {
+    font-size: 1.2em; /* 글씨 크기 증가 */
+}
+
+/* 최종 결제 금액 레이블 */
+.total-payment .payment-label {
+    font-weight: bold; /* 글씨 굵게 */
+}
+
+/* 결제 수단 레이블 */
+.payment-method-label {
+    font-weight: bold; /* 글씨 굵게 */
+    margin-bottom: 15px; /* 하단 여백 */
+}
+
+/* 결제 수단 옵션 컨테이너 */
+.payment-method-options {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    gap: 20px; /* 옵션 사이 간격 */
+}
+
+/* 결제 수단 개별 옵션 */
+.payment-method-option {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px; /* 라디오 버튼과 텍스트 사이 간격 */
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+}
+
+/* 결제 수단 텍스트 */
+.payment-method-text {
+    font-size: 1em; /* 글씨 크기 */
+    transition: color 0.3s ease; /* 색상 변화에 부드러운 전환 효과 */
+}
+
+/* 라디오 버튼 커스텀 스타일 */
+.payment-method-option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    outline: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* 라디오 버튼 선택 시 스타일 */
+.payment-method-option input[type="radio"]:checked {
+    border-color: #4CAF50;
+}
+
+/* 라디오 버튼 선택 시 내부 원 */
+.payment-method-option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+}
+
+/* 라디오 버튼 선택 시 텍스트 색상 변경 */
+.payment-method-option input[type="radio"]:checked + .payment-method-text {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+/* 주문 확인 섹션 전체 스타일 */
+.confirmation-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+/* 주문 확인 체크박스 컨테이너 */
+.order-confirmation {
+    margin-top: 10px;
+}
+
+/* 체크박스 레이블 스타일 */
+.confirmation-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+/* 체크박스 텍스트 스타일 */
+.confirmation-text {
+    font-weight: bold;
+}
+
+/* 체크된 상태의 텍스트 스타일 */
+#confirm_order:checked + .confirmation-text {
+    color: #4CAF50;
+}
+
+/* 체크박스 커스텀 스타일 */
+#confirm_order {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+/* 체크된 상태의 체크박스 스타일 */
+#confirm_order:checked {
+    border-color: #4CAF50;
+    background-color: #4CAF50;
+}
+
+/* 체크 표시 만들기 */
+#confirm_order:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 버튼 컨테이너 스타일 */
+.button-container {
+    display: flex;
+    gap: 20px;
+}
+
+/* 이전 버튼 스타일 */
+.btn-previous {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 이전 버튼 호버 효과 */
+.btn-previous:hover {
+    background-color: #e0e0e0;
+}
+
+/* 결제하기 버튼 스타일 */
+.btn-payment {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 결제하기 버튼 호버 효과 */
+.btn-payment:hover {
+    background-color: #555;
+}
