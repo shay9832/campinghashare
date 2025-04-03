@@ -1,3 +1,8 @@
+/* storen_inspecResult.css */
+
+
+/* [main.css] */
+
 /* 기본 스타일 */
 * {
     margin: 0;
@@ -6,261 +11,314 @@
     font-family: "Noto Sans KR", sans-serif;
 }
 
+/* HTML, BODY */
 html, body {
     min-width: 320px;
     height: 100%;
     background-color: white;
 }
 
+/* 앵커 : 기본 텍스트 장식 제거, 상위 요소의 색상 상속 */
 a {
     text-decoration: none;
     color: inherit;
 }
 
-.main-content, .footer-container {
+/* 메인 컨텐트 */
+.main-content {
     max-width: 95%;
 }
 
-/* 헤더 스타일 */
-.header-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.header__top {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 20px;
-}
-
-.logo {
-    height: 50px;
-}
-
-.top__menu {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.top__menu a {
-    font-size: 12px;
-    color: #666;
-}
-
-.top__menu button.add-equip {
-    display: inline-block;
-    background-color: #f2e8cf;
-    color: #333;
-    font-weight: 500;
-    font-size: 12px;
-    border-radius: 20px;
-    padding: 2px 12px;
-    line-height: 1.5;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.top__menu button.add-equip:hover {
-    background-color: #e97451;
-    transform: translateY(-2px);
-}
-
-.header__bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-}
-
-.toggle-menu {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.toggle-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-}
-
-.toggle-btn:hover {
-    background-color: #f5f5f5;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.toggle-container {
-    position: relative;
-    width: 180px;
-    height: 34px;
-    border-radius: 17px;
-    background-color: #e5e5e5;
-    overflow: hidden;
-}
-
-.toggle-options {
-    position: relative;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-}
-
-.toggle-option {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-.trade-option {
-    color: #333;
-}
-
-.community-option {
-    color: #555;
-}
-
-.toggle-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50%;
-    height: 100%;
-    background-color: #e97451;
-    border-radius: 17px;
-    transition: all 0.3s ease;
-    z-index: 1;
-}
-
-.toggle-radio {
-    display: none;
-}
-
-#community-radio:checked ~ .toggle-slider {
-    left: 50%;
-    background-color: #2c5f2d;
-}
-
-#trade-radio:checked ~ .toggle-options .trade-option {
-    color: #000;
-}
-
-#community-radio:checked ~ .toggle-options .trade-option {
-    color: #555;
-}
-
-#community-radio:checked ~ .toggle-options .community-option {
-    color: #fff;
-}
-
-.user-menu {
-    display: flex;
-    gap: 20px;
-}
-
-.user-menu a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
-    color: #333;
-    transition: transform 0.3s ease;
-}
-
-.user-menu a:hover {
-    transform: translateY(-2px);
-}
-
-.user-menu i {
-    font-size: 20px;
-    margin-bottom: 3px;
-}
-
-/* 공통 컨테이너 스타일 */
-.container, .simple-container {
+/* 공통 컨테이너 */
+.container {
     max-width: 1200px;
     margin: 0 auto;
     background-color: white;
-    padding: 0 0 30px 0;
+    padding: 0 0 50px 0;
     box-shadow: none;
 }
 
-.page-title, .simple-title {
+/* 페이지 제목 */
+.page-title {
     font-size: 24px;
     font-weight: bold;
-    margin: 20px 0;
+    margin: 35px 0;
     padding: 0 20px;
 }
 
-/* 검수 결과 페이지 스타일 */
+/* 정보 섹션 컨테이너 */
 .info-section {
-    margin: 0 20px 10px 20px;
+    margin: 0 20px 25px 20px;
     border: 1px solid #e1e1e1;
     border-radius: 5px;
     overflow: hidden;
     transition: box-shadow 0.3s ease;
 }
 
+/* 정보 섹션 - 호버 효과*/
 .info-section:hover {
     box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
 
+/* 섹션 제목 */
 .section-title {
-    padding: 12px 15px;
+    padding: 15px;
     background-color: #f2f2f2;
     font-weight: bold;
     border-bottom: 1px solid #e1e1e1;
 }
 
+/* 섹션 내용 */
 .section-content {
     padding: 20px;
 }
 
+/* 정보 행(레이블+값) */
 .info-row {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
+/* 마지막 정보 행 */
 .info-row:last-child {
     margin-bottom: 0;
 }
 
+/* 정보 레이블 */
 .info-label {
     width: 120px;
     font-weight: bold;
     color: #000;
 }
 
+/* 정보 값 */
 .info-value {
     flex: 1;
     color: #000;
 }
 
+/* 정보 박스 */
+.info-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin: 0 20px 30px 20px;
+}
+
+/* 정보 헤더 */
+.info-header {
+    background-color: #f5f5f5;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* 정보 내용 */
+.info-content {
+    padding: 25px;
+    overflow: hidden;
+}
+
+/* 정보 테이블 */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* 정보 테이블 - 헤더 */
+.info-table th {
+    width: 120px;
+    text-align: left;
+    padding: 10px 0;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+/* 정보 테이블 - 셀 */
+.info-table td {
+    padding: 10px 0;
+    word-break: break-word;
+}
+
+/* 넓은 구분선(섹션 구분용) */
+.divider {
+    display: block;
+    width: calc(100% + 40px); /* 좌우 패딩을 고려한 너비 */
+    margin-left: -20px; /* 좌측 간격 제거 */
+    border-top: 1px solid #e0e0e0;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* 짧은 구분선(항목 구분용) */
+.short-divider {
+    display: block;
+    width: 100%;
+    border-top: 1px solid #e0e0e0;
+    margin: 15px 0;
+    box-sizing: border-box;
+}
+
+
+/* 모바일 반응형 : 768px 이하 화면 */
+@media (max-width: 768px) {
+    /* 상단 메뉴 : 간격 축소 */
+    .top__menu {
+        gap: 10px;
+    }
+    /* 토글 컨테이너 : 너비 조정 */
+    .toggle-container {
+        width: 150px;
+    }
+    /* 사용자 메뉴 : 간격 조정 */
+    .user-menu {
+        gap: 12px;
+    }
+    /* 사용자 메뉴 : 텍스트 숨김 */
+    .user-menu span {
+        display: none;
+    }
+    /* 정보 행 : 세로 배치로 변경 */
+    .info-row {
+        flex-direction: column;
+    }
+    /* 정보 레이블 : 너비 조정, 여백 추가 */
+    .info-label {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    /* 버튼 컨테이너 : 간격 축소 */
+    .button-container {
+        gap: 20px;
+    }
+    /* 버튼 : 크기, 패딩 축소 */
+    .btn {
+        min-width: 120px;
+        padding: 10px 30px;
+    }
+    /* 정보 테이블 - 헤더 : 너비 축소 */
+    .info-table th {
+        width: 100px;
+    }
+    /* 우편번호 행 : 세로 배치로 변경 */
+    .zipcode-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    /* 우편번호 입력 필드 : 너비 확장 */
+    #postcode {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    /* 우편번호 버튼 : 너비 확장 */
+    .zipcode-row input[type="button"] {
+        width: 100%;
+    }
+}
+
+
+/* 작은 화면 반응형 : 576px 이하 */
+@media (max-width: 576px) {
+    /* 페이지 제목 : 크기, 여백 축소 */
+    .page-title {
+        font-size: 20px;
+        padding: 15px;
+        margin: 25px 0;
+    }
+
+    /* 정보 섹션 : 여백 축소 */
+    .info-section, .info-box {
+        margin: 0 10px 20px 10px;
+    }
+
+    /* 섹션 제목 : 크기, 패딩 축소 */
+    .section-title{
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    /* 섹션 내용 : 패딩 축소 */
+    .section-content{
+        padding: 15px;
+    }
+
+    /* 폰트 크기 축소 */
+    .info-label, .info-value, .info-table th, .info-table td {
+        font-size: 14px;
+    }
+
+    /* 버튼 컨테이너 : 여백 및 간격 축소 */
+    .button-container{
+        margin-top: 15px;
+        gap: 15px;
+    }
+
+    /* 버튼 : 크기 및 패딩 축소 */
+    .btn{
+        padding: 10px 20px;
+        font-size: 16px;
+        min-width: 100px;
+    }
+
+    /* 도움말 툴팁 : 위치 및 너비 조정 */
+    .help-tooltip {
+        width: 200px;
+        left: auto;
+        right: 0;
+    }
+
+    /* 정보 테이블 - 헤더 : 너비 축소 */
+    .info-table th {
+        width: 90px;
+    }
+
+    /* 기본 구분선, 짧은 구분선 : 여백 축소 */
+    .divider, .short-divider {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    /* 기본 구분선 : 너비, 여백 조정 */
+    .divider {
+        width: calc(100% + 30px);
+        margin-left: -15px;
+    }
+
+    /* 완료 메시지 : 여백 및 패딩 축소 */
+    .complete-message {
+        margin-top: 30px;
+        padding: 15px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* [equipImage.css] */
+
+/* 장비 이미지 */
 .equipment-image {
     width: 80px;
     height: 80px;
     border: 1px solid #ddd;
     position: relative;
     overflow: hidden;
+    display: inline-block;
 }
 
+/* 장비 이미지 - X 표시 : 가상 요소로 대각선 생성 */
 .equipment-image::before, .equipment-image::after {
     content: "";
     position: absolute;
@@ -271,15 +329,26 @@ a {
     top: 50%;
 }
 
+/* 첫번째 대각선(좌상단->우하단) 회전 */
 .equipment-image::before {
     transform: translateY(-50%) rotate(45deg);
 }
 
+/* 두번째 대각선(우상단->좌하단) 회전 */
 .equipment-image::after {
     transform: translateY(-50%) rotate(-45deg);
 }
 
-/* 등급 표시 스타일 */
+
+
+
+
+
+
+
+/* [equipRank.css] */
+
+/* 장비 등급 표시 */
 .grade-value, .grade-indicator {
     padding: 3px;
     border-radius: 3px;
@@ -291,74 +360,87 @@ a {
     line-height: 19px;
 }
 
+/* 등급 표시 */
 .grade-indicator {
     font-size: 12px;
     margin-left: 5px;
 }
 
+/* 각 등급별 색상 : A~F 등급에 따른 배경색, 글자색 */
 .grade-A {
     background-color: #415d37;
     color: white;
 }
-
 .grade-B {
     background-color: #97a08a;
     color: white;
 }
-
 .grade-C {
     background-color: #d5b66a;
     color: #ffffff;
 }
-
 .grade-D {
     background-color: #ede7d3;
     color: #3c3c3c;
 }
-
 .grade-E {
     background-color: #f9f7f3;
     color: #3c3c3c;
 }
-
 .grade-F {
     background-color: #cd7d61;
     color: #3c3c3c;
 }
 
-/* 테이블 스타일 */
+/* 결과 테이블 */
 .result-table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #777777;
     table-layout: fixed;
 }
 
+/* 테이블 셀 */
 .result-table th, .result-table td {
-    border: 1px solid #e1e1e1;
+    border: 1px solid #ffffff;
     padding: 10px;
     text-align: center;
     font-size: 14px;
 }
 
+/* 테이블 헤더 */
 .result-table th {
-    background-color: #f8f8f8;
+    background-color: #ededed;
 }
 
+/* 테이블 항목 열 */
 .result-table .item-col {
+    background-color: #ededed;
+    font-weight: bold;
     width: 15%;
 }
 
+/* 테이블 기준 열 */
 .result-table .criteria-col {
     width: 19%;
 }
 
-.result-table .comment-col {
-    width: 32%;
-    background-color: #ededed;
+/* 테이블 결과 열 */
+.result-table .item-result-col {
+    width: 19%;
+    background-color: #dddddd;
+    border: 1px solid #ffffff;
 }
 
-.result-table .grade-col,
+/* 테이블 코멘트 열 */
+.result-table .comment-col {
+    width: 32%;
+    background-color: #dddddd;
+    border: 1px solid #ffffff;
+}
+
+/* 테이블 등급/점수 열 - 공통 스타일 */
+.result-table .grade-col,)
 .result-table .score-col {
     width: 80px;
     max-width: 80px;
@@ -366,35 +448,116 @@ a {
     padding: 5px;
     white-space: nowrap;
     overflow: hidden;
+    border: 1px solid #ffffff;
 }
 
+/* 테이블 등급 열 */
 .result-table .grade-col {
-    background-color: #ededed;
+    background-color: #cfcfcf;
 }
 
+/* 테이블 점수 열 */
 .result-table .score-col {
-    background-color: #e6e6e6;
+    background-color: #c5c5c5;
 }
 
+/* 합계 행 - 마지막 셀 */
 .total-row td:last-child {
-    background-color: #e6e6e6;
+    background-color: #c5c5c5;
     font-weight: bold;
 }
 
+/* 합계 행 */
 .total-row {
-    background-color: #f8f8f8;
+    background-color: #dddddd;
     font-weight: bold;
 }
 
+/* 등급 정보 */
 .grade-info {
-    margin-top: 20px;
+    margin-top: 25px;
     font-size: 14px;
 }
 
+/* 등급 정보 - 문단 여백 */
 .grade-info p {
-    margin: 5px 0;
+    margin: 8px 0;
 }
 
+/* 등급 배지 */
+.grade-badge {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background: #d5b66a;
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    font-weight: bold;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+/* 상세 링크 */
+.detail-link {
+    color: #085297;
+    text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+/* [button.css] */
+
+/* 버튼 컨테이너 */
+.button-container, .button-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    gap: 50px;
+}
+
+/* 기본 버튼 */
+.btn {
+    padding: 12px 40px;
+    border: 1px solid #e1e1e1;
+    background-color: white;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+    min-width: 150px;
+    transition: all 0.3s ease;
+}
+
+/* 버튼 - 호버 효과 */
+.btn:hover {
+    background-color: #f5f5f5;
+}
+
+/* 버튼 - 활성화 효과 */
+.btn:active {
+    opacity: 0.9;
+}
+
+/* 주요 버튼  */
+.btn-primary {
+    background-color: #395e33;
+    color: white;
+    border: none;
+}
+
+/* 주요 버튼 - 호버 효과 */
+.btn-primary:hover {
+    background-color: #65a65a;
+}
+
+/* 도움말 아이콘 */
 .help-icon {
     width: 16px;
     height: 16px;
@@ -411,10 +574,12 @@ a {
     transition: background-color 0.3s ease;
 }
 
+/* 도움말 아이콘 - 호버 효과 */
 .help-icon:hover {
     background-color: #555;
 }
 
+/* 도움말 툴팁 */
 .help-tooltip {
     display: none;
     position: absolute;
@@ -432,204 +597,60 @@ a {
     text-align: left;
 }
 
+/* 도움말 아이콘 - 호버 시 툴팁 표시 */
 .help-icon:hover .help-tooltip {
     display: block;
 }
 
-/* 버튼 공통 스타일 */
-.button-container, .button-row {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-    margin-bottom: 20px;
-    gap: 50px;
-}
 
-.btn, .simple-btn {
-    padding: 12px 40px;
-    border: 1px solid #e1e1e1;
-    background-color: white;
-    cursor: pointer;
-    font-size: 18px;
-    border-radius: 5px;
-    min-width: 150px;
-    transition: all 0.3s ease;
-}
 
-.btn:hover, .simple-btn:hover {
-    background-color: #f5f5f5;
-}
 
-.btn:active, .simple-btn:active {
-    opacity: 0.9;
-}
 
-.btn-primary, .primary-btn {
-    background-color: #395e33;
-    color: white;
-    border: none;
-}
 
-.btn-primary:hover, .primary-btn:hover {
-    background-color: #65a65a;
-}
 
-/* 렌탈 정보 등록 페이지 스타일 */
-.info-box {
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    margin: 0 20px 30px 20px;
-}
 
-.info-box:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
 
-.info-header {
-    background-color: #f5f5f5;
-    padding: 10px 15px;
-    font-weight: bold;
-    border-bottom: 1px solid #e0e0e0;
-}
 
-.info-content {
-    padding: 20px;
-    overflow: hidden;
-}
 
-.info-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
 
-.info-table th {
-    width: 120px;
-    text-align: left;
-    padding: 10px 0;
-    vertical-align: top;
-    font-weight: bold;
-}
+/* [avgPrice.css] */
 
-.info-table td {
-    padding: 10px 0;
-    word-break: break-word;
-}
-
-/* 구분선 스타일 */
-.divider {
-    display: block;
-    width: calc(100% + 40px); /* 좌우 패딩을 고려한 너비 */
-    margin-left: -20px; /* 좌측 간격 제거 */
-    border-top: 1px solid #e0e0e0;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    box-sizing: border-box;
-}
-
-.short-divider {
-    display: block;
-    width: 100%;
-    border-top: 1px solid #e0e0e0;
-    margin: 15px 0;
-    box-sizing: border-box;
-}
-
-.img-placeholder {
-    width: 80px;
-    height: 80px;
-    border: 1px solid #ddd;
-    background: white;
-    position: relative;
-    display: inline-block;
-    margin-right: 10px;
-}
-
-.img-placeholder:before, .img-placeholder:after {
-    content: '';
-    position: absolute;
-    background: #ddd;
-    width: 110%;
-    height: 1px;
-    left: -5%;
-    top: 50%;
-}
-
-.img-placeholder:before {
-    transform: rotate(45deg);
-}
-
-.img-placeholder:after {
-    transform: rotate(-45deg);
-}
-
-.grade-badge {
-    display: inline-block;
-    width: 25px;
-    height: 25px;
-    background: #d5b66a;
-    color: white;
-    text-align: center;
-    line-height: 25px;
-    font-weight: bold;
-    border-radius: 3px;
-    margin-right: 5px;
-}
-
-.detail-link {
-    color: #085297;
-    text-decoration: underline;
-}
-
+/* 가격 평균 표시 */
 .price-avg {
     color: #838383;
-    margin: 0 5px;
+    margin: 0 10px;
     font-weight: bold;
+    display: inline-block;
 }
 
+/* 가격 차이 표시(양수): 가격이 평균보다 높을 때 */
 .price-diff-positive {
     color: #cb7d61;
 }
 
+/* 가격 차이 표시(음수/중립): 가격이 평균보다 낮거나 같을 때 */
 .price-diff-negative, .price-diff-neutral {
     color: #435d3a;
 }
 
-.help-btn {
+/* 가격 차이 - 공통 스타일 */
+.price-diff-positive,
+.price-diff-negative,
+.price-diff-neutral {
+    margin-right: 5px;
     display: inline-block;
-    width: 16px;
-    height: 16px;
-    background: #888;
-    color: white;
-    border-radius: 50%;
-    font-size: 10px;
-    text-align: center;
-    line-height: 16px;
-    cursor: pointer;
-    position: relative;
-    margin-left: 5px;
 }
 
-.help-btn .help-tooltip {
-    display: none;
-    position: absolute;
-    left: 25px;
-    top: -5px;
-    background: white;
-    border: 1px solid #ddd;
-    padding: 10px;
-    width: 250px;
-    font-size: 12px;
-    color: #333;
-    z-index: 100;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
 
-.help-btn:hover .help-tooltip {
-    display: block;
-}
 
+
+
+
+
+
+/* [transPost.css] */
+
+/* 입력 필드 - 일반 */
 .input-normal {
     width: 150px;
     padding: 6px 10px;
@@ -637,6 +658,7 @@ a {
     border-radius: 3px;
 }
 
+/* 입력 필드 - 넓음 : 너비 100%, 기타 속성은 기본 입력 필드와 동일 */
 .input-wide {
     width: 100%;
     padding: 6px 10px;
@@ -644,6 +666,7 @@ a {
     border-radius: 3px;
 }
 
+/* 텍스트 영역 필드 */
 .textarea-field {
     width: 100%;
     min-height: 300px;
@@ -653,110 +676,106 @@ a {
     resize: vertical;
 }
 
+/* 참고 텍스트 */
 .note-text {
     font-size: 13px;
     color: #777;
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
+/* 글자 수 카운터 */
 .char-counter {
     text-align: right;
     font-size: 12px;
     color: #777;
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
+/* 중앙 정렬 텍스트 */
 .centered-text {
     text-align: center;
-    margin-top: 20px;
+    margin: 15px 0 10px 0;
     color: #666;
+    font-weight: bold;
 }
 
-/* 모바일 반응형 스타일 */
-@media (max-width: 768px) {
-    .top__menu {
-        gap: 10px;
-    }
-    .toggle-container {
-        width: 150px;
-    }
-    .user-menu {
-        gap: 12px;
-    }
-    .user-menu span {
-        display: none;
-    }
-    .info-row {
-        flex-direction: column;
-    }
-    .info-label {
-        width: 100%;
-        margin-bottom: 5px;
-    }
-    .button-container, .button-row {
-        gap: 20px;
-    }
-    .btn, .simple-btn {
-        min-width: 120px;
-        padding: 10px 30px;
-    }
-    .info-table th {
-        width: 100px;
-    }
+
+
+
+
+
+
+
+
+/* [completeMessage.css] */
+
+/* 완료 메시지 */
+.complete-message {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    padding: 20px;
 }
 
-/* 작은 화면용 폰트 크기 및 간격 조정 */
-@media (max-width: 576px) {
-    .page-title, .simple-title {
-        font-size: 20px;
-        padding: 15px;
-    }
 
-    .info-section, .info-box {
-        margin: 0 10px 15px 10px;
-    }
 
-    .section-title, .info-header {
-        font-size: 16px;
-        padding: 10px;
-    }
 
-    .section-content, .info-content {
-        padding: 15px;
-    }
 
-    .info-label, .info-value, .info-table th, .info-table td {
-        font-size: 14px;
-    }
 
-    .button-container, .button-row {
-        margin-top: 30px;
-        gap: 15px;
-    }
 
-    .btn, .simple-btn {
-        padding: 10px 20px;
-        font-size: 16px;
-        min-width: 100px;
-    }
 
-    .help-tooltip {
-        width: 200px;
-        left: auto;
-        right: 0;
-    }
 
-    .info-table th {
-        width: 90px;
-    }
 
-    .divider, .short-divider {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
 
-    .divider {
-        width: calc(100% + 30px);
-        margin-left: -15px;
-    }
+
+
+/* [address.css] */
+
+/* 우편번호 행 */
+.zipcode-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
 }
+
+/* 우편번호 입력 */
+#postcode {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* 주소 입력 필드들 */
+#address, #detailAddress, #extraAddress {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+/* 우편번호 검색 버튼 */
+.zipcode-row input[type="button"] {
+    padding: 8px 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* 우편번호 검색 버튼 - 호버 효과 */
+.zipcode-row input[type="button"]:hover {
+    background-color: #e6e6e6;
+}
+
+
+
+
+
+
+
+
