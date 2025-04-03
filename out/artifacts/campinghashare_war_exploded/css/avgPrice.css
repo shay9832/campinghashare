@@ -1,0 +1,27 @@
+/* [avgPrice.css] */
+
+/* 가격 평균 표시 */
+.price-avg {
+    color: #838383;
+    margin: 0 10px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* 가격 차이 표시(양수): 가격이 평균보다 높을 때 */
+.price-diff-positive {
+    color: #cb7d61;
+}
+
+/* 가격 차이 표시(음수/중립): 가격이 평균보다 낮거나 같을 때 */
+.price-diff-negative, .price-diff-neutral {
+    color: #435d3a;
+}
+
+/* 가격 차이 - 공통 스타일 */
+.price-diff-positive,
+.price-diff-negative,
+.price-diff-neutral {
+    margin-right: 5px;
+    display: inline-block;
+}
