@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>MiddleCategory</title>
-    <link rel="stylesheet" href="style/middle-category.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/middle-category.css">
     <script>
         var selectedCategory = "";
 
+        // 선택된 카테고리를 selectedCategory에 저장
         function selectCategory(element, category) {
             var categoryItems = document.querySelectorAll(".category-item");
             for (var i = 0; i < categoryItems.length; i++) {
@@ -17,10 +18,13 @@
             selectedCategory = category;
         }
 
+        // 다음 버튼 클릭시 category값을 다음 페이지에 전달
         function goToNextStep() {
             if (selectedCategory) {
                 window.location.href =
-                    "SelectBrand.jsp?category=" +
+                    "${pageContext.request.contextPath}/selectbrand?majorCategory=" +
+                    encodeURIComponent('${majorCategory}') +
+                    "&middleCategory=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 alert("카테고리를 선택해주세요.");
@@ -63,7 +67,7 @@
     </div>
 
     <div class="nav-buttons">
-        <a href="MajorCategory.jsp" class="nav-button">이전</a>
+        <a href="${pageContext.request.contextPath}/majorcategory" class="nav-button">이전</a>
         <a href="#" class="nav-button" onclick="goToNextStep()">다음</a>
     </div>
 </main>

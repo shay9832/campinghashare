@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>MajorCategory</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/style/major-category.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/major-category.css">
     <script>
         var selectedCategory = "";
 
+        // 선택된 카테고리를 selectedCategory에 저장
         function selectCategory(element, category) {
             var categoryItems = document.querySelectorAll(".category-item");
             for (var i = 0; i < categoryItems.length; i++) {
@@ -17,10 +18,11 @@
             selectedCategory = category;
         }
 
+        // 다음 버튼 클릭시 category값을 다음 페이지에 전달
         function goToNextStep() {
             if (selectedCategory) {
                 window.location.href =
-                    "${pageContext.request.contextPath}/middlecategory.action?category=" +
+                    "${pageContext.request.contextPath}/middlecategory?category=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 alert("카테고리를 선택해주세요.");
