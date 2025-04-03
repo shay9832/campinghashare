@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Equip Info</title>
-    <link rel="stylesheet" href="style/equipinfo.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/equipinfo.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -122,7 +122,7 @@
             <label>장비 사진</label>
             <div class="photo-area">
                 <div class="photos-container" id="photosContainer">
-                    <!-- 업로드된 사진이 여기에 표시됩니다 -->
+                    <!-- 업로드된 사진이 여기에 표시 -->
                 </div>
                 <div class="photo-upload">
                     <label for="photoInput" class="add-photo-btn">

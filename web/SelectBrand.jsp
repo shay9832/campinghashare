@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>SelectBrand</title>
-    <link rel="stylesheet" href="style/selectbrand.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/selectbrand.css">
     <script>
         var selectedBrand = "";
 
+        // 선택된 브랜드를 selectedBrand에 저장
         function selectBrand(element, brand) {
             var brandItems = document.querySelectorAll(".brand-item");
             for (var i = 0; i < brandItems.length; i++) {
@@ -17,10 +18,15 @@
             selectedBrand = brand;
         }
 
+        // 다음 버튼 클릭시 brand값을 다음 페이지에 전달
         function goToNextStep() {
             if (selectedBrand) {
                 window.location.href =
-                    "register-equipment-detail.jsp?brand=" +
+                    "${pageContext.request.contextPath}/equipinfo?majorCategory=" +
+                    encodeURIComponent('${majorCategory}') +
+                    "&middleCategory=" +
+                    encodeURIComponent('${middleCategory}') +
+                    "&brand=" +
                     encodeURIComponent(selectedBrand);
             } else {
                 alert("브랜드를 선택해주세요.");
@@ -29,6 +35,7 @@
     </script>
 </head>
 <body>
+
 <jsp:include page="Header.jsp"></jsp:include>
 
 <main class="main-content">
@@ -93,12 +100,12 @@
     </div>
 
     <div class="nav-buttons">
-        <a href="MiddleCategory.jsp" class="nav-button">이전</a>
-        <a href="EquipInfo.jsp" class="nav-button">다음</a>
+        <a href="${pageContext.request.contextPath}/middlecategory?category=${majorCategory}" class="nav-button">이전</a>
+        <a href="#" class="nav-button" onclick="goToNextStep()">다음</a>
     </div>
 </main>
 
-
 <jsp:include page="Footer.jsp"></jsp:include>
+
 </body>
 </html>
