@@ -3,6 +3,13 @@
 <body>
 <h2>페이지 모음</h2>
 
+<a href="0-1-main-before-login.jsp" target="_blank">0-1-main-before-login.jsp</a><br>
+<a href="0-2-main-after-login.jsp" target="_blank">0-2-main-after-login.jsp</a><br>
+<a href="0-3-register-tel.jsp" target="_blank">0-3-register-tel.jsp</a><br>
+<a href="0-4-register-id.jsp" target="_blank">0-4-register-id.jsp</a><br>
+<a href="0-5-login.jsp" target="_blank">0-5-login.jsp</a><br>
+<br><br>
+
 <a href="1-major-category.jsp" target="_blank">1-major-category.jsp</a><br>
 <a href="2-middle-category.jsp" target="_blank">2-middle-category.jsp</a><br>
 <a href="3-search-brand.jsp" target="_blank">3-search-brand.jsp</a><br>
