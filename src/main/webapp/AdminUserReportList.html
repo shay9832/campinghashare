@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ko"> <!-- 한국어 페이지 설정 -->
+<head>
+  <meta charset="UTF-8"> <!-- 문자 인코딩 UTF-8 설정 -->
+  <title>관리자 시스템 - 신고처리내역</title> <!-- 브라우저 탭에 표시될 제목 -->
+  <style>
+    /* ===== 기본 설정 ===== */
+    body {
+      margin: 0; /* 바깥 여백 제거 */
+      padding: 0; /* 안쪽 여백 제거 */
+      font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 - 한글 지원이 좋은 폰트 사용 */
+      background-color: #f8f9fa; /* 페이지 배경색 - 연한 회색 */
+      color: #333; /* 기본 텍스트 색상 */
+    }
+
+    /* ===== 헤더 영역 ===== */
+    #header {
+      height: 60px; /* 헤더 높이 */
+      background-color: #3f861d; /* 헤더 배경색 - 녹색 사용 */
+      color: white; /* 헤더 텍스트 색상 */
+      width: 100%; /* 전체 너비 사용 */
+      padding: 10px; /* 내부 여백 */
+      box-sizing: border-box; /* 패딩 포함 크기 계산 */
+      display: flex; /* 플렉스 레이아웃 사용 */
+      align-items: center; /* 세로 중앙 정렬 */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 헤더 하단 그림자 효과 */
+    }
+
+    #header h1 {
+      margin: 0; /* 제목 기본 여백 제거 */
+      font-size: 24px; /* 제목 글자 크기 */
+    }
+
+    /* ===== 메인 컨테이너 ===== */
+    #container {
+      display: flex; /* 플렉스 레이아웃으로 메뉴와 콘텐츠 영역 수평 배치 */
+      min-height: calc(100vh - 60px); /* 헤더 제외한 전체 높이 */
+    }
+
+    /* 왼쪽 메뉴 영역 스타일링 */
+    #leftMenu {
+      padding: 30px; /* 내부 여백 */
+      border-right: 1px solid #ccc; /* 오른쪽에 경계선 추가 */
+      min-width: 150px; /* 메뉴 영역 너비 고정 */
+      background: #ffffff; /* 메뉴 배경색 (연한 회색) */
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05); /* 오른쪽에 그림자 효과 */
+    }
+
+    /* 메뉴 버튼의 기본 스타일 - 하위 메뉴를 가진 버튼 */
+    .menu-button {
+      display: block; /* 블록 레벨 요소로 설정 (가로 전체 차지) */
+      width: 100%; /* 부모 컨테이너의 너비 100% 차지 */
+      padding: 12px 15px; /* 내부 여백 (위아래 12px, 좌우 15px) */
+      margin-bottom: 15px; /* 하단 여백 */
+      text-align: left; /* 텍스트 왼쪽 정렬 */
+      background-color: white; /* 버튼 배경색 */
+      border: 1px solid #ddd; /* 테두리 설정 */
+      border-radius: 4px; /* 둥근 모서리 설정 */
+      cursor: pointer; /* 마우스 오버 시 손가락 커서 표시 */
+      transition: all 0.3s ease; /* 모든 변화에 0.3초 애니메이션 적용 */
+      position: relative; /* 상대적 위치 설정 (화살표 배치를 위함) */
+      font-weight: 500; /*글자 굵기*/
+    }
+
+    /* 메뉴 버튼 호버 효과 */
+    .menu-button:hover {
+      background: #ebf5e3; /* 호버 시 배경색 변경 - 연한 녹색 */
+      border-left: 4px solid #3f861d; /* 왼쪽에 강조 테두리 추가 */
+    }
+
+    /* 메뉴 버튼 화살표 아이콘 */
+    .menu-button::after {
+      content: "▼"; /* 화살표 문자 */
+      position: absolute; /* 절대 위치 설정 */
+      right: 15px; /* 오른쪽 여백 */
+      top: 50%; /* 세로 중앙 배치 */
+      transform: translateY(-50%); /* 정확한 세로 중앙 정렬 */
+      font-size: 12px; /* 화살표 크기 */
+      transition: transform 0.3s ease; /* 회전 애니메이션 */
+    }
+
+    /* 활성화된 메뉴 버튼의 화살표 회전 */
+    .menu-button.active::after {
+      transform: translateY(-50%) rotate(180deg); /* 화살표 180도 회전 */
+    }
+
+    /* 하위 메뉴 컨테이너 */
+    .submenu {
+      max-height: 0; /* 초기에는 보이지 않도록 높이 0 설정 */
+      overflow: hidden; /* 넘치는 내용 숨김 */
+      transition: max-height 0.3s ease; /* 높이 변화에 애니메이션 */
+      margin-bottom: 10px; /* 하단 여백 */
+      margin-top: -5px; /* 상단 여백 조정 */
+    }
+
+    /* 하위 메뉴 항목 (링크) */
+    .submenu a {
+      display: block; /* 블록 요소로 설정 */
+      padding: 10px 10px 10px 25px; /* 내부 여백 - 왼쪽 여백 더 넓게 */
+      text-decoration: none; /* 링크 밑줄 제거 */
+      color: #555; /* 텍스트 색상 */
+      border-left: 1px solid #e0e0e0; /* 왼쪽 테두리 */
+      margin-left: 10px; /* 왼쪽 여백 */
+      transition: all 0.2s ease; /* 변화에 애니메이션 */
+      font-size: 14px; /* 글자 크기 */
+    }
+
+    /* 하위 메뉴 항목 호버 효과 */
+    .submenu a:hover {
+      background-color: #f1f8e9; /* 호버 시 배경색 - 연한 녹색 */
+      color: #3f861d; /* 호버 시 텍스트 색상 - 녹색 */
+      border-left: 2px solid #3f861d; /* 왼쪽에 강조 테두리 */
+    }
+
+    /* ===== 콘텐츠 영역 ===== */
+    #content {
+      flex-grow: 1; /* 남은 공간 모두 차지 */
+      padding: 20px; /* 내부 여백 */
+      background-color: #ffffff; /* 배경색 */
+      overflow: auto; /* 콘텐츠가 넘치면 스크롤 */
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* 내부 그림자 효과 */
+    }
+
+    /* 콘텐츠 헤더 */
+    .content-header {
+      border-bottom: 2px solid #3f861d; /* 하단 경계선 - 녹색 */
+      padding-bottom: 10px; /* 하단 여백 */
+      margin-bottom: 20px; /* 하단 외부 여백 */
+    }
+
+    .content-header h2 {
+      color: #333; /* 텍스트 색상 */
+      margin: 0; /* 여백 제거 */
+      font-size: 22px; /* 글자 크기 */
+    }
+
+    /* ===== 검색 영역 ===== */
+    .content-search-info {
+      display: flex; /* 플렉스 레이아웃 */
+      align-items: center; /* 세로 중앙 정렬 */
+      background-color: #f8f9fa; /* 배경색 - 연한 회색 */
+      padding: 15px; /* 내부 여백 */
+      border-radius: 5px; /* 모서리 둥글게 */
+      margin-bottom: 20px; /* 하단 여백 */
+      flex-wrap: wrap; /* 필요시 여러 줄로 나누기 */
+      gap: 10px; /* 항목 간 간격 */
+    }
+
+    .content-search-info span {
+      margin-right: 10px; /* 오른쪽 여백 */
+      font-weight: 500; /* 글자 굵기 */
+    }
+
+    /* 검색 입력 요소들 공통 스타일 */
+    .content-search-info select,
+    .content-search-date input,
+    .content-search-bar input {
+      padding: 8px 12px; /* 내부 여백 */
+      border: 1px solid #ddd; /* 테두리 */
+      border-radius: 4px; /* 모서리 둥글게 */
+      margin-right: 10px; /* 오른쪽 여백 */
+    }
+
+    /* 날짜 검색 영역 */
+    .content-search-date {
+      display: flex; /* 플렉스 레이아웃 */
+      align-items: center; /* 세로 중앙 정렬 */
+    }
+
+    .content-search-date span {
+      margin: 0 10px; /* 좌우 여백 */
+    }
+
+    /* 검색 버튼 */
+    .content-search-btn input {
+      background-color: #3f861d; /* 배경색 - 녹색 */
+      color: white; /* 텍스트 색상 */
+      border: none; /* 테두리 제거 */
+      padding: 8px 15px; /* 내부 여백 */
+      border-radius: 4px; /* 모서리 둥글게 */
+      cursor: pointer; /* 마우스 커서 포인터로 변경 */
+      transition: background-color 0.3s; /* 배경색 변화에 애니메이션 */
+    }
+
+    /* 검색 버튼 호버 효과 */
+    .content-search-btn input:hover {
+      background-color: #346e18; /* 호버 시 배경색 - 더 진한 녹색 */
+    }
+
+    /* ===== 통계 요약 영역 ===== */
+    .report-summary {
+      display: flex; /* 플렉스 레이아웃 */
+      margin-bottom: 20px; /* 하단 여백 */
+      gap: 15px; /* 요소 간 간격 */
+    }
+
+    /* 통계 박스 공통 스타일 */
+    .summary-box {
+      flex: 1; /* 동일한 너비로 공간 차지 */
+      background-color: #f8f9fa; /* 배경색 - 연한 회색 */
+      padding: 15px; /* 내부 여백 */
+      border-radius: 5px; /* 모서리 둥글게 */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    }
+
+    /* 통계 박스 테두리 색상 구분 */
+    .total-processed {
+      border-left: 4px solid #3f861d; /* 처리완료 - 녹색 */
+    }
+
+    .by-post {
+      border-left: 4px solid #3498db; /* 게시물 신고 - 파란색 */
+    }
+
+    .by-comment {
+      border-left: 4px solid #e74c3c; /* 댓글 신고 - 빨간색 */
+    }
+
+    .by-rental {
+      border-left: 4px solid #f39c12; /* 렌탈댓글 신고 - 주황색 */
+    }
+
+    /* ===== 테이블 스타일 ===== */
+    .report-table {
+      overflow-x: auto; /* 가로 스크롤 허용 - 모바일 대응 */
+      margin-right: 10px; /* 오른쪽 여백 */
+      border: 1px solid #e0e0e0; /* 테두리 */
+      border-radius: 5px; /* 모서리 둥글게 */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    }
+
+    .report-table table {
+      width: 100%; /* 테이블 전체 너비 */
+      border-collapse: collapse; /* 테두리 합치기 */
+      min-width: 1200px; /* 최소 너비 설정 - 가로 스크롤 발생 임계값 */
+      table-layout: fixed; /* 고정 테이블 레이아웃 사용 - 열 너비 고정 */
+    }
+
+    /* 테이블 헤더 셀 */
+    .report-table th {
+      background-color: #f1f8e9; /* 배경색 - 연한 녹색 */
+      padding: 12px 15px; /* 내부 여백 */
+      text-align: left; /* 텍스트 왼쪽 정렬 */
+      border-bottom: 2px solid #3f861d; /* 하단 테두리 - 녹색 */
+      color: #333; /* 텍스트 색상 */
+      font-weight: 500; /* 글자 굵기 */
+      white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    }
+
+    /* 테이블 데이터 셀 */
+    .report-table td {
+      padding: 10px 15px; /* 내부 여백 */
+      border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */
+      white-space: nowrap; /* 텍스트 줄바꿈 방지 - 한 줄로 표시 */
+      overflow: hidden; /* 넘치는 내용 숨김 */
+      text-overflow: ellipsis; /* 넘치는 텍스트 ... 처리 */
+    }
+
+    /* 테이블 행 호버 효과 */
+    .report-table tr:hover {
+      background-color: #f5f5f5; /* 호버 시 배경색 - 연한 회색 */
+    }
+
+    /* 각 열의 너비 설정 */
+    .col-report-id { width: 60px; } /* 신고접수 아이디 */
+    .col-reporter { width: 80px; } /* 신고자 닉네임 */
+    .col-reported { width: 80px; } /* 피신고자 닉네임 */
+    .col-category { width: 80px; } /* 분류(게시물, 댓글, 렌탈댓글) */
+    .col-report-type { width: 80px; } /* 신고유형 */
+    .col-report-content { width: 150px; } /* 신고내용 */
+    .col-report-date { width: 80px; } /* 신고일 */
+    .col-admin-id { width: 80px; } /* 처리 관리자 */
+    .col-process-detail { width: 150px; } /* 처리내용 */
+    .col-process-date { width: 80px; } /* 처리일 */
+    .col-penalty { width: 100px; } /* 제재내용 */
+
+    /* 텍스트 말줄임표 처리를 위한 스타일 */
+    .report-content, .process-detail {
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    /* 신고 유형 배지 스타일 */
+    .report-type-badge {
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .type-spam { background-color: #f1c40f; color: #000; } /* 스팸 - 노란색 */
+    .type-abuse { background-color: #e74c3c; color: #fff; } /* 욕설/비방 - 빨간색 */
+    .type-adult { background-color: #9b59b6; color: #fff; } /* 음란물 - 보라색 */
+    .type-etc { background-color: #95a5a6; color: #fff; } /* 기타 - 회색 */
+
+    /* 분류 배지 스타일 */
+    .category-badge {
+      padding: 3px 6px;
+      border-radius: 2px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .category-post { background-color: #3498db; color: #fff; } /* 게시물 - 파란색 */
+    .category-comment { background-color: #2ecc71; color: #fff; } /* 댓글 - 녹색 */
+    .category-rental { background-color: #e67e22; color: #fff; } /* 렌탈 댓글 - 주황색 */
+
+    /* 제재 내용 배지 스타일 */
+    .penalty-badge {
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .penalty-temporary { background-color: #e74c3c; color: #fff; } /* 일시정지 - 빨간색 */
+    .penalty-permanent { background-color: #7f8c8d; color: #fff; } /* 영구정지 - 회색 */
+    .penalty-none { background-color: #ecf0f1; color: #7f8c8d; } /* 제재없음 - 연한 회색 */
+
+    /* ===== 커스텀 스크롤바 ===== */
+    .report-table::-webkit-scrollbar {
+      width: 10px; /* 세로 스크롤바 너비 */
+      height: 10px; /* 가로 스크롤바 높이 */
+    }
+
+    .report-table::-webkit-scrollbar-track {
+      background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+      border-radius: 10px; /* 모서리 둥글게 */
+    }
+
+    .report-table::-webkit-scrollbar-thumb {
+      background: #3f861d; /* 스크롤바 색상 - 녹색 */
+      border-radius: 10px; /* 모서리 둥글게 */
+    }
+
+    .report-table::-webkit-scrollbar-thumb:hover {
+      background: #346e18; /* 호버 시 스크롤바 색상 - 더 진한 녹색 */
+    }
+
+    /* ===== 페이지네이션 스타일 ===== */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 30px 0;
+      user-select: none;
+    }
+
+    .page-numbers {
+      display: flex;
+      margin: 0 10px;
+    }
+
+    .page-btn {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      color: #555;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 8px 12px;
+      margin: 0 3px;
+      transition: all 0.3s ease;
+      border-radius: 4px;
+    }
+
+    .page-btn:hover {
+      background-color: #f1f8e9;
+      border-color: #3f861d;
+      color: #3f861d;
+    }
+
+    .page-btn.active {
+      background-color: #3f861d;
+      border-color: #3f861d;
+      color: white;
+      font-weight: 500;
+    }
+
+    .first-page, .last-page, .prev-page, .next-page {
+      font-weight: bold;
+    }
+
+    /* 페이지 버튼 비활성화 스타일 */
+    .page-btn:disabled {
+      background-color: #f5f5f5;
+      border-color: #eee;
+      color: #bbb;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+<!-- 헤더 영역 - 페이지 상단 타이틀 -->
+<div id="header">
+  <h1>관리자 시스템</h1>
+</div>
+
+<!-- 메인 컨테이너 - 메뉴와 콘텐츠 영역 포함 -->
+<div id="container">
+  <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 -->
+  <div id="leftMenu">
+    <!-- 회원 관리 메뉴 -->
+    <button class="menu-button">회원 관리</button>
+    <div class="submenu">
+      <a href="#">회원 목록</a>
+      <a href="#">제재내역</a>
+    </div>
+
+    <!-- 장비 관리 메뉴 -->
+    <button class="menu-button">장비 관리</button>
+    <div class="submenu">
+      <a href="#">장비 목록</a>
+      <a href="#">검수 목록</a>
+      <a href="#">장비 통계</a>
+    </div>
+
+    <!-- 신고 관리 메뉴 -->
+    <button class="menu-button active">신고 관리</button>
+    <div class="submenu" style="max-height: 200px;">
+      <a href="#">신고 목록</a>
+      <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">처리 내역</a>
+    </div>
+
+    <!-- 이벤트 관리 메뉴 -->
+    <button class="menu-button">이벤트 관리</button>
+    <div class="submenu">
+      <a href="#">이벤트 목록</a>
+    </div>
+
+    <!-- 배송 관리 메뉴 -->
+    <button class="menu-button">배송 관리</button>
+    <div class="submenu">
+      <a href="#">배송 현황</a>
+    </div>
+
+    <!-- 쿠폰 관리 메뉴 -->
+    <button class="menu-button">쿠폰 관리</button>
+    <div class="submenu">
+      <a href="#">쿠폰 발급</a>
+      <a href="#">쿠폰 조회</a>
+    </div>
+
+    <!-- 거래 카테고리 관리 메뉴 -->
+    <button class="menu-button">거래 관리</button>
+    <div class="submenu">
+      <a href="#">매칭 관리</a>
+    </div>
+
+    <!-- 상품 카테고리 관리 메뉴 -->
+    <button class="menu-button">상품 카테고리 관리</button>
+    <div class="submenu">
+      <a href="#">카테고리 등록</a>
+      <a href="#">카테고리 수정</a>
+    </div>
+
+
+    <!-- 통계 메뉴 -->
+    <button class="menu-button">통계</button>
+    <div class="submenu">
+      <a href="#">일간 통계</a>
+      <a href="#">월간 통계</a>
+      <a href="#">연간 통계</a>
+    </div>
+  </div>
+
+  <!-- 콘텐츠 영역 - 실제 데이터와 컨트롤이 표시되는 부분 -->
+  <div id="content">
+    <!-- 콘텐츠 헤더 - 페이지 제목 -->
+    <div class="content-header">
+      <h2>신고처리내역</h2>
+    </div>
+
+    <!-- 검색 영역 - 처리내역 검색 필터링 옵션 -->
+    <div class="content-search-info">
+      <span>검색항목</span>
+      <select>
+        <option>신고접수 ID</option>
+        <option>신고자</option>
+        <option>피신고자</option>
+        <option>관리자</option>
+      </select>
+
+      <span>분류</span>
+      <select>
+        <option>전체</option>
+        <option>게시물</option>
+        <option>댓글</option>
+        <option>렌탈댓글</option>
+      </select>
+
+      <span>유형</span>
+      <select>
+        <option>전체</option>
+        <option>스팸</option>
+        <option>욕설/비방</option>
+        <option>음란물</option>
+        <option>기타</option>
+      </select>
+
+      <!-- 처리일 범위 선택 -->
+      <div class="content-search-date">
+        <input type="date">
+        <span>~</span>
+        <input type="date">
+      </div>
+
+      <!-- 검색어 입력 -->
+      <div class="content-search-bar">
+        <input type="search" placeholder="검색어 입력">
+      </div>
+
+      <!-- 검색 버튼 -->
+      <div class="content-search-btn">
+        <input type="button" value="검색하기">
+      </div>
+    </div>
+
+    <!-- 처리내역 요약 - 주요 통계 -->
+    <div class="report-summary">
+      <div class="summary-box total-processed">
+        <span>총 처리건수: 853건</span>
+      </div>
+      <div class="summary-box by-post">
+        <span>게시물 처리: 325건</span>
+      </div>
+      <div class="summary-box by-comment">
+        <span>댓글 처리: 418건</span>
+      </div>
+      <div class="summary-box by-rental">
+        <span>렌탈댓글 처리: 110건</span>
+      </div>
+    </div>
+
+    <!-- 처리내역 테이블 - 가로 스크롤 가능 -->
+    <div class="report-table">
+      <table>
+        <tr>
+          <!-- 테이블 헤더 - 각 열의 제목 -->
+          <th class="col-report-id">신고ID</th>
+          <th class="col-reporter">신고자</th>
+          <th class="col-reported">피신고자</th>
+          <th class="col-category">분류</th>
+          <th class="col-report-type">신고유형</th>
+          <th class="col-report-content">신고내용</th>
+          <th class="col-report-date">신고일</th>
+          <th class="col-admin-id">처리 관리자</th>
+          <th class="col-process-detail">처리내용</th>
+          <th class="col-process-date">처리일</th>
+          <th class="col-penalty">제재내용</th>
+        </tr>
+
+        <!-- 처리내역 데이터 행 -->
+        <tr>
+          <td>10023</td>
+          <td>나무빛</td>
+          <td>파랑새</td>
+          <td><span class="category-badge category-post">게시물</span></td>
+          <td><span class="report-type-badge type-abuse">욕설/비방</span></td>
+          <td><span class="report-content">상품 문의 게시글에 불필요한 욕설을 사용하여 불쾌감을 주었습니다.</span></td>
+          <td>2025-04-05</td>
+          <td>admin01</td>
+          <td><span class="process-detail">해당 게시물의 욕설 부분 삭제 처리 및 작성자에게 경고 조치</span></td>
+          <td>2025-04-05</td>
+          <td><span class="penalty-badge penalty-permanent">영구정지</span></td>
+        </tr>
+
+        <tr>
+          <td>10022</td>
+          <td>별빛달</td>
+          <td>구름꽃</td>
+          <td><span class="category-badge category-comment">댓글</span></td>
+          <td><span class="report-type-badge type-adult">음란물</span></td>
+          <td><span class="report-content">부적절한 내용의 링크를 댓글에 게시하였습니다.</span></td>
+          <td>2025-04-04</td>
+          <td>admin02</td>
+          <td><span class="process-detail">불법 음란물 관련 링크 확인 후 해당 댓글 삭제 및 계정 일시정지 7일 조치</span></td>
+          <td>2025-04-05</td>
+          <td><span class="penalty-badge penalty-temporary">일시정지</span></td>
+        </tr>
+
+        <tr>
+          <td>10021</td>
+          <td>바람길</td>
+          <td>햇살봄</td>
+          <td><span class="category-badge category-rental">렌탈댓글</span></td>
+          <td><span class="report-type-badge type-spam">스팸</span></td>
+          <td><span class="report-content">동일한 광고성 댓글을 다수의 렌탈 상품에 반복 게시하였습니다.</span></td>
+          <td>2025-04-03</td>
+          <td>admin01</td>
+          <td><span class="process-detail">해당 계정의 스팸 댓글 패턴 확인 후 모든 관련 댓글 일괄 삭제 처리</span></td>
+          <td>2025-04-04</td>
+          <td><span class="penalty-badge penalty-none">제재없음</span></td>
+        </tr>
+
+        <tr>
+          <td>10020</td>
+          <td>푸른초원</td>
+          <td>달빛별</td>
+          <td><span class="category-badge category-post">게시물</span></td>
+          <td><span class="report-type-badge type-etc">기타</span></td>
+          <td><span class="report-content">해당 게시물 내용이 타인의 저작권을 침해한다고 생각됩니다.</span></td>
+          <td>2025-04-03</td>
+          <td>admin03</td>
+          <td><span class="process-detail">저작권 침해 여부 확인을 위한 게시물 검토. 원저작자 확인 후 저작권 침해 사실 없음 확인.</span></td>
+          <td>2025-04-04</td>
+          <td><span class="penalty-badge penalty-none">제재없음</span></td>
+        </tr>
+
+        <tr>
+          <td>10019</td>
+          <td>구름나래</td>
+          <td>하늘빛</td>
+          <td><span class="category-badge category-comment">댓글</span></td>
+          <td><span class="report-type-badge type-abuse">욕설/비방</span></td>
+          <td><span class="report-content">상대방을 심하게 모욕하는 내용의 댓글을 계속해서 작성하고 있습니다.</span></td>
+          <td>2025-04-02</td>
+          <td>admin01</td>
+          <td><span class="process-detail">해당 계정의 이전 신고 이력 확인 결과 3회 이상 동일 유형 위반으로 확인. 영구정지 조치.</span></td>
+          <td>2025-04-03</td>
+          <td><span class="penalty-badge penalty-permanent">영구정지</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+      <button class="page-btn first-page">&laquo;</button>
+      <button class="page-btn prev-page">&lt;</button>
+      <div class="page-numbers">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+      </div>
+      <button class="page-btn next-page">&gt;</button>
+      <button class="page-btn last-page">&raquo;</button>
+    </div>
+  </div>
+</div>
+
+<!-- 자바스크립트 - 페이지 기능 구현 -->
+<script>
+  // 드롭다운 메뉴 기능 구현
+  // 모든 메뉴 버튼 요소 선택
+  const menuButtons = document.querySelectorAll('.menu-button');
+
+  // 각 메뉴 버튼에 클릭 이벤트 리스너 추가
+  menuButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // 클릭된 버튼에 활성화 클래스 토글 (추가/제거)
+      this.classList.toggle('active');
+
+      // 버튼 다음 요소(하위메뉴) 가져오기
+      const submenu = this.nextElementSibling;
+
+      // 하위메뉴 표시 상태 체크 및 변경
+      if (submenu.style.maxHeight) {
+        // 열려있으면 닫기
+        submenu.style.maxHeight = null;
+      } else {
+        // 닫혀있으면 열기 (콘텐츠 높이만큼)
+        submenu.style.maxHeight = submenu.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // 페이지네이션 기능 구현
+  document.addEventListener('DOMContentLoaded', function() {
+    const pageButtons = document.querySelectorAll('.page-numbers .page-btn');
+    const firstPageBtn = document.querySelector('.first-page');
+    const prevPageBtn = document.querySelector('.prev-page');
+    const nextPageBtn = document.querySelector('.next-page');
+    const lastPageBtn = document.querySelector('.last-page');
+
+    // 현재 페이지를 관리하는 상태 변수
+    let currentPage = 1;
+    const totalPages = 5; // 예시로 5페이지로 설정 (실제로는 데이터 기반으로 계산)
+
+    // 페이지 버튼 클릭 이벤트
+    pageButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 현재 활성화된 버튼에서 active 클래스 제거
+        document.querySelector('.page-btn.active').classList.remove('active');
+        // 클릭한 버튼에 active 클래스 추가
+        this.classList.add('active');
+        // 현재 페이지 업데이트
+        currentPage = parseInt(this.textContent);
+
+        // 여기에 실제 데이터 로드 또는 페이지 변경 로직 추가
+        console.log('페이지 변경:', currentPage);
+
+        // 처음/이전/다음/마지막 버튼 상태 업데이트
+        updateNavigationButtons();
+      });
+    });
+
+    // 처음 페이지 버튼 클릭 이벤트
+    firstPageBtn.addEventListener('click', function() {
+      if (currentPage !== 1) {
+        goToPage(1);
+      }
+    });
+
+    // 이전 페이지 버튼 클릭 이벤트
+    prevPageBtn.addEventListener('click', function() {
+      if (currentPage > 1) {
+        goToPage(currentPage - 1);
+      }
+    });
+
+    // 다음 페이지 버튼 클릭 이벤트
+    nextPageBtn.addEventListener('click', function() {
+      if (currentPage < totalPages) {
+        goToPage(currentPage + 1);
+      }
+    });
+
+    // 마지막 페이지 버튼 클릭 이벤트
+    lastPageBtn.addEventListener('click', function() {
+      if (currentPage !== totalPages) {
+        goToPage(totalPages);
+      }
+    });
+
+    // 특정 페이지로 이동하는 함수
+    function goToPage(pageNumber) {
+      // 현재 활성화된 버튼에서 active 클래스 제거
+      document.querySelector('.page-btn.active').classList.remove('active');
+      // 새 페이지 버튼에 active 클래스 추가
+      pageButtons[pageNumber - 1].classList.add('active');
+      // 현재 페이지 업데이트
+      currentPage = pageNumber;
+
+      // 여기에 실제 데이터 로드 또는 페이지 변경 로직 추가
+      console.log('페이지 변경:', currentPage);
+
+      // 처음/이전/다음/마지막 버튼 상태 업데이트
+      updateNavigationButtons();
+    }
+
+    // 네비게이션 버튼 상태 업데이트 함수
+    function updateNavigationButtons() {
+      // 첫 페이지일 경우 처음/이전 버튼 비활성화
+      firstPageBtn.disabled = currentPage === 1;
+      prevPageBtn.disabled = currentPage === 1;
+
+      // 마지막 페이지일 경우 다음/마지막 버튼 비활성화
+      nextPageBtn.disabled = currentPage === totalPages;
+      lastPageBtn.disabled = currentPage === totalPages;
+    }
+
+    // 초기 상태 설정
+    updateNavigationButtons();
+  });
+</script>
