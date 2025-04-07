@@ -157,7 +157,7 @@
     <!-- 버튼 컨테이너 -->
     <div class="button-container">
         <a href="#" class="btn">이전</a>
-        <a href="7-storen-storage-pay.jsp" class="btn btn-primary">다음</a>
+        <a href="storenRegister-storage-pay.jsp" class="btn btn-primary">다음</a>
     </div>
 </main>
 
