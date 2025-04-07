@@ -47,7 +47,11 @@
                 <ul class="submenu">
                     <li><a href="mypage-my-equip.jsp" class="sidebar-link">내 장비 목록</a></li>
                     <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
+<<<<<<< Updated upstream
                     <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
+=======
+                    <li><a href="mypage-my-post.jsp" class="sidebar-link">내가 작성한 글</a></li>
+>>>>>>> Stashed changes
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -170,7 +174,11 @@
                         <div class="item-count">5</div>
                     </a>
                     <a href="#" class="urgent-item">
+<<<<<<< Updated upstream
                         <div class="item-label">주가 비용 결제 대기</div>
+=======
+                        <div class="item-label">추가 비용 결제 대기</div>
+>>>>>>> Stashed changes
                         <div class="item-count">2</div>
                     </a>
                 </div>

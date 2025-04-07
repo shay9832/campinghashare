@@ -259,7 +259,11 @@
                 <ul class="submenu">
                     <li><a href="mypage-my-equip.jsp" class="sidebar-link active">내 장비 목록</a></li>
                     <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
+<<<<<<< Updated upstream
                     <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
+=======
+                    <li><a href="mypage-my-post.jsp" class="sidebar-link">내가 작성한 글</a></li>
+>>>>>>> Stashed changes
                 </ul>
             </li>
             <li class="sidebar-menu-item">
