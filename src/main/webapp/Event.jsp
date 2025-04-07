@@ -177,21 +177,6 @@
             font-weight: var(--font-bold);
         }
 
-        .view-option {
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition-normal);
-        }
-
-        .view-option:hover {
-            background-color: var(--color-gray-200);
-        }
-
-        .view-option.active {
-            background-color: var(--color-gray-200);
-        }
-
         /* 반응형 조정 */
         @media (max-width: 992px) {
             .event-container {
@@ -226,8 +211,20 @@
                     <h1 class="page-title"><i class="fa-solid fa-gift"></i> 이벤트</h1>
                 </div>
 
-                <!-- 필터 영역 -->
                 <div class="filter-area mb-4">
+                    <!-- 정렬 옵션 -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <select class="form-control form-control-sm mr-5">
+                                <option>정렬</option>
+                                <option>최신순</option>
+                                <option>조회순</option>
+                                <option>추천순</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 필터 영역 -->
                     <div class="filter-group">
                         <div class="filter-label">진행상태</div>
                         <div class="filter-options">
@@ -249,25 +246,6 @@
                     </div>
                 </div>
 
-                <!-- 정렬 옵션 -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="d-flex align-items-center">
-                        <select class="form-control form-control-sm mr-2">
-                            <option>정렬</option>
-                            <option>최신순</option>
-                            <option>조회순</option>
-                            <option>추천순</option>
-                        </select>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <div class="view-option">
-                            <i class="fa-solid fa-list"></i>
-                        </div>
-                        <div class="view-option active">
-                            <i class="fa-solid fa-table-cells"></i>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- 이벤트 카드 컨테이너 -->
                 <div class="event-container">
@@ -511,13 +489,15 @@
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
                         <div class="d-flex border rounded">
-                            <select class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
+                            <select class="form-control-sm border-0"
+                                    style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
                                 <option>제목+내용</option>
                                 <option>제목</option>
                                 <option>내용</option>
                                 <option>작성자</option>
                             </select>
-                            <input type="text" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요" style="padding: 8px 10px; font-size: 13px;">
+                            <input type="text" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요"
+                                   style="padding: 8px 10px; font-size: 13px;">
                             <button class="btn border-0" style="background-color: #f8f9fa; padding: 8px 10px;">
                                 <i class="fa-solid fa-magnifying-glass"></i>
                             </button>

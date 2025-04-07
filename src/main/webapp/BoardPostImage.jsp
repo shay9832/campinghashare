@@ -2,32 +2,41 @@
 <html>
 <head>
     <title>고독한 캠핑방 - 게시글 상세</title>
+    <!-- CSS 파일 로드 -->
+    <link rel="stylesheet" href="resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 메인 CSS 파일 링크 (모든 스타일시트 통합) -->
-    <link rel="stylesheet" href="resources/css/main.css">
-    <!-- 페이지 특정 스타일 -->
     <style>
-        /* 게시글 영역 추가 스타일 */
+        /* 게시글 상세 페이지 관련 스타일 */
+        .post-container {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+            overflow: hidden;
+        }
+
         .post-header {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .post-meta {
-            display: flex;
-            gap: var(--spacing-sm);
-            color: var(--text-secondary);
-            font-size: var(--font-xs);
-            margin-top: var(--spacing-xs);
-        }
-
-        .post-stats {
-            display: flex;
-            gap: var(--spacing-md);
             align-items: center;
+        }
+
+        .post-title {
+            font-size: var(--font-xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        .post-info {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
         }
 
         .post-author {
@@ -40,16 +49,20 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
+            object-fit: cover;
         }
 
-        .post-content {
-            margin-bottom: var(--spacing-lg);
+        .post-body {
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+            min-height: 200px;
             text-align: center;
         }
 
-        .post-content img {
+        .post-body img {
             max-width: 100%;
             border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
         }
 
         .post-actions {
@@ -58,10 +71,116 @@
             align-items: center;
         }
 
-        .like-area {
+        .post-buttons {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .like-button {
             display: flex;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: var(--spacing-sm);
+        }
+
+        .like-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .like-icon:hover {
+            background-color: #ffe6e6;
+        }
+
+        .like-icon i {
+            color: var(--color-coral);
+            font-size: var(--font-md);
+        }
+
+        .like-count {
+            font-weight: var(--font-bold);
+            color: var(--text-secondary);
+        }
+
+        /* 댓글 영역 */
+        .comments-container {
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .comment-list {
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comment-item {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .comment-author {
+            font-weight: var(--font-bold);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .comment-author img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-date {
+            font-size: var(--font-xxs);
+            color: var(--text-tertiary);
+        }
+
+        .comment-text {
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .comment-btn {
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            background-color: var(--bg-secondary);
+            cursor: pointer;
+            font-size: var(--font-xxs);
+            transition: all var(--transition-normal);
+        }
+
+        .comment-btn:hover {
+            background-color: var(--color-gray-200);
         }
 
         .report-btn {
@@ -69,69 +188,114 @@
             border: none;
             background-color: transparent;
             padding: 0;
-            cursor: pointer;
         }
 
-        /* 댓글 영역 스타일 */
-        .comment-item {
-            padding: var(--spacing-md);
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .comment-author {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            font-weight: var(--font-bold);
-        }
-
-        .comment-author img {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-        }
-
-        .comment-meta {
-            display: flex;
-            gap: var(--spacing-md);
-            font-size: var(--font-xxs);
-            color: var(--text-secondary);
-        }
-
-        .comment-body {
-            margin-bottom: var(--spacing-xs);
-            color: var(--text-primary);
-            line-height: 1.5;
-        }
-
-        .comment-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: var(--spacing-sm);
-        }
-
-        .reply-comment {
-            padding-left: var(--spacing-xl);
-            border-left: 3px solid var(--border-medium);
-            margin-left: var(--spacing-lg);
-        }
-
-        .reply-form {
-            padding: var(--spacing-md);
-            background-color: var(--color-gray-100);
-            border-radius: var(--radius-md);
+        .comment-reply-area {
+            background-color: transparent;
+            padding: var(--spacing-md) 0;
             margin-top: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
             display: none;
         }
 
-        .comment-form {
-            padding: var(--spacing-md);
+        .comment-reply-input {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            resize: none;
+            font-family: inherit;
+            font-size: var(--font-xs);
+            background-color: var(--bg-primary);
+        }
+
+        .comment-reply-input:focus {
+            outline: none;
+            border-color: var(--color-maple);
+        }
+
+        .reply-comment {
+            margin-left: 30px;
+            border-left: 2px solid var(--border-light);
+            padding-left: var(--spacing-md);
+        }
+
+        .write-comment {
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .comment-input-area {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            resize: none;
+            font-family: inherit;
+            font-size: var(--font-xs);
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: var(--color-maple);
+        }
+
+        .comment-submit {
+            align-self: flex-end;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--color-maple);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .comment-submit:hover {
+            background-color: var(--btn-primary-hover-bg);
+        }
+
+        /* 게시글 목록 테이블 */
+        .board-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .board-table th {
+            background-color: var(--bg-secondary);
+            padding: var(--spacing-sm);
+            text-align: center;
+            font-weight: var(--font-bold);
+            border-bottom: 1px solid var(--border-medium);
+        }
+
+        .board-table td {
+            padding: var(--spacing-sm);
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .board-table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .board-table .title-cell {
+            text-align: left;
+        }
+
+        .board-table .title-cell a:hover {
+            color: var(--color-maple);
+            text-decoration: underline;
         }
 
         /* 관련 게시글 영역 */
@@ -146,46 +310,79 @@
             gap: var(--spacing-md);
         }
 
-        /* 사이드바 커스텀 스타일 */
-        .sidebar {
-            width: 220px;
-            flex-shrink: 0;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar-menu-item {
-            margin-bottom: 2px;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: var(--text-primary);
-            text-decoration: none;
-            border-radius: var(--radius-sm);
+        .product-card {
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            cursor: pointer;
             transition: all var(--transition-normal);
         }
 
-        .sidebar-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
 
-        .sidebar-link:hover {
-            background-color: var(--color-gray-100);
+        .product-image {
+            height: 180px;
+            overflow: hidden;
         }
 
-        .sidebar-link.active {
-            background-color: var(--color-beige);
-            color: var(--color-maple);
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-primary);
+        }
+
+        .product-title {
+            font-size: var(--font-sm);
             font-weight: var(--font-bold);
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
         }
+
+        .product-meta {
+            font-size: var(--font-xs);
+            color: var(--text-secondary);
+        }
+
+        /* 페이지네이션 */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: var(--spacing-lg);
+        }
+
+        .page-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 28px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            margin: 0 3px;
+            transition: all var(--transition-normal);
+        }
+
+        .page-link.active {
+            background-color: var(--color-maple);
+            color: var(--color-white);
+            border-color: var(--color-maple);
+        }
+
+        .page-link:hover:not(.active) {
+            background-color: var(--bg-secondary);
+        }
+
 
         @media (max-width: 992px) {
             .posts-grid {
@@ -194,7 +391,7 @@
         }
 
         @media (max-width: 768px) {
-            .two-column-layout {
+            .main-content {
                 flex-direction: column;
             }
 
@@ -225,71 +422,60 @@
 <jsp:include page="Header.jsp"></jsp:include>
 
 <div class="page-wrapper">
-    <div class="container section" style="width: 100%; max-width: 1500px; padding: 0 15px; margin: 0 auto;">
-        <div class="two-column-layout my-5">
+    <div class="container" style="max-width: 1500px; padding: 0 15px;">
+        <div class="main-content d-flex gap-4 my-5">
             <!-- 사이드바 -->
-            <aside class="sidebar mr-4">
-                <div class="content-box p-4 mb-4">
-                    <h2 class="font-bold mb-3">커뮤니티</h2>
-                    <ul class="sidebar-menu">
-                        <li class="sidebar-menu-item">
-                            <a href="#" class="sidebar-link">
-                                <i class="fa-solid fa-star"></i>
-                                <span>BEST</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-menu-item">
-                            <a href="BoardFree.jsp" class="sidebar-link">
-                                <i class="fa-solid fa-comments"></i>
-                                <span>자유게시판</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-menu-item">
-                            <a href="#" class="sidebar-link active">
-                                <i class="fa-solid fa-person-hiking"></i>
-                                <span>고독한캠핑방</span>
-                            </a>
-                        </li>
-                    </ul>
+            <aside class="sidebar" style="width: 220px; margin-right: 20px;">
+                <div class="sidebar-header">
+                    <h2 class="sidebar-title">커뮤니티</h2>
                 </div>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-menu-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fa-solid fa-star"></i>
+                            <span>BEST</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item">
+                        <a href="#" class="sidebar-link">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>자유게시판</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item">
+                        <a href="#" class="sidebar-link active">
+                            <i class="fa-solid fa-person-hiking"></i>
+                            <span>고독한캠핑방</span>
+                        </a>
+                    </li>
+                </ul>
             </aside>
 
-            <!-- 메인 컨텐츠 -->
-            <main class="main-column">
+            <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <h1 class="page-title">고독한 캠핑방</h1>
+                    <h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1>
                 </div>
-
                 <!-- 게시글 영역 -->
-                <div class="content-box mb-5">
-                    <!-- 게시글 제목 및 정보 -->
-                    <div class="p-4 border-bottom">
-                        <div class="post-header">
-                            <h2 class="font-bold mb-0">
-                                가니주골한식
-                                <i class="fa-solid fa-image text-secondary"></i>
-                            </h2>
-                        </div>
-                        <div class="post-meta">
-                            <div class="post-author">
-                                <img src="/api/placeholder/24/24" alt="프로필 이미지">
-                                가니주골한식
-                            </div>
-                            <div class="post-date">2025.03.03</div>
-                            <div class="post-stats">
+                <div class="post-container">
+                    <div class="post-header">
+                        <div>
+                            <h1 class="post-title">가니주골한식 <i class="fa-solid fa-image text-secondary"></i></h1>
+                            <div class="post-info">
+                                <div class="post-author">
+                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
+                                    가니주골한식
+                                </div>
+                                <div class="post-date">2025.03.03</div>
                                 <div class="post-views">조회수 1003</div>
                                 <div class="post-likes">추천 77</div>
                                 <button class="report-btn">신고</button>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 게시글 내용 -->
-                    <div class="post-content p-4">
-                        <img src="/api/placeholder/700/500" alt="캠핑 한식 사진" class="img-fluid">
+                    <div class="post-body">
+                        <img src="/api/placeholder/700/500" alt="캠핑 한식 사진">
                     </div>
 
-                    <!-- 게시글 액션 -->
                     <div class="p-4 border-top">
                         <div class="post-actions">
                             <div class="like-area">
@@ -410,8 +596,6 @@
                     </div>
                 </div>
 
-                <!-- 관련 게시글 영역 -->
-                <h3 class="font-bold mb-3">관련 게시글</h3>
                 <div class="posts-grid mb-5">
                     <div class="product-card">
                         <div class="product-image">

@@ -7,7 +7,128 @@
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 갤러리 레이아웃 관련 추가 스타일 */
+        /* 게시판 특화 스타일 */
+        .board-category-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-semibold);
+            margin-right: 8px;
+        }
+
+        .board-category-tag.question {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.review {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .board-category-tag.chat {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .board-category-tag.notice {
+            background-color: #fff9c4;
+            color: #ffa000;
+        }
+
+        .board-category-tag.freeboard {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.solocamping {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .notice-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: var(--color-error);
+            color: var(--color-white);
+        }
+
+        .hot-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .title-cell {
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+        }
+
+        .title-cell a:hover {
+            text-decoration: underline;
+            color: var(--color-maple);
+        }
+
+        .board-row.notice {
+            background-color: #fff8e1;
+        }
+
+        .board-row.hot-post {
+            background-color: #ffebee;
+        }
+
+        .icon-heart {
+            color: var(--color-error);
+        }
+
+        .icon-eye {
+            color: var(--text-secondary);
+        }
+
+        .icon-comment {
+            color: var(--color-info);
+        }
+
+        .table-icon {
+            margin-right: 5px;
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            background-color: var(--bg-secondary);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: var(--font-xs);
+            min-width: 80px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .filter-btn:hover {
+            background-color: var(--color-gray-200);
+        }
+
+        .filter-btn.active {
+            background-color: var(--color-beige-light);
+            border-color: var(--color-maple);
+            color: var(--color-maple);
+            font-weight: var(--font-semibold);
+        }
+
+        /* 갤러리 레이아웃 관련 스타일 */
         .gallery-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -21,6 +142,7 @@
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .gallery-item:hover {
@@ -63,136 +185,28 @@
             gap: var(--spacing-sm);
         }
 
-        /* 아이콘 스타일 */
-        .fa-heart {
-            color: var(--color-coral);
-        }
-
-        .fa-eye {
-            color: var(--text-secondary);
-        }
-
-        .fa-comment {
-            color: var(--color-maple);
-        }
-
-        /* 이미지 없음 아이콘 */
         .no-image-icon {
             font-size: 48px;
-            color: var(--color-gray-500);
+            color: var(--color-gray-400);
         }
 
-        /* 필터 버튼 */
-        .filter-btn {
-            padding: 6px 16px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-medium);
-            background-color: var(--bg-secondary);
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            font-size: var(--font-xs);
-            min-width: 80px;
-            text-align: center;
+        /* 반응형 조정 */
+        @media (max-width: 992px) {
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .filter-btn:hover {
-            background-color: var(--color-gray-200);
+        @media (max-width: 768px) {
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .filter-btn.active {
-            background-color: var(--color-beige-light);
-            border-color: var(--color-maple);
-            color: var(--color-maple);
-            font-weight: var(--font-semibold);
-        }
-
-        /* 보기 옵션 버튼 */
-        .view-option {
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition-normal);
-        }
-
-        .view-option:hover {
-            background-color: var(--color-gray-200);
-        }
-
-        .view-option.active {
-            background-color: var(--color-gray-200);
-        }
-
-        /* 공지 테이블 */
-        .notice-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--bg-primary);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--spacing-lg);
-        }
-
-        .notice-table th {
-            background-color: var(--bg-secondary);
-            padding: var(--spacing-sm);
-            text-align: center;
-            font-weight: var(--font-bold);
-            border-bottom: 1px solid var(--border-medium);
-        }
-
-        .notice-table td {
-            padding: var(--spacing-sm);
-            text-align: center;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .notice-table .notice {
-            background-color: #fff8e1;
-        }
-
-        .notice-table .title-cell {
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding-left: var(--spacing-sm);
-        }
-
-        .notice-table .title-cell a:hover {
-            text-decoration: underline;
-            color: var(--color-maple);
-        }
-
-        /* 카테고리 태그 */
-        .category-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            font-size: var(--font-xxs);
-            font-weight: var(--font-bold);
-            margin-right: var(--spacing-sm);
-        }
-
-        .category-tag.notice {
-            background-color: #fff9c4;
-            color: #ffa000;
-        }
-
-        .category-tag.solocamping {
-            background-color: #ffebee;
-            color: #d32f2f;
-        }
-
-        /* 공지 태그 */
-        .notice-tag {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            font-size: var(--font-xxs);
-            font-weight: var(--font-bold);
-            background-color: var(--color-coral);
-            color: var(--color-white);
+        @media (max-width: 576px) {
+            .gallery-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -246,60 +260,63 @@
                         </select>
 
                         <div style="display: flex; margin-left: 20px;">
-                            <a href="#" class="filter-btn active" style="border-radius: 4px; margin-right: 10px;  min-width: 80px; text-align: center;">전체</a>
-                            <a href="#" class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
-                        </div>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <div class="view-option">
-                            <i class="fa-solid fa-list"></i>
-                        </div>
-                        <div class="view-option active">
-                            <i class="fa-solid fa-table-cells"></i>
+                            <a href="#" class="filter-btn active">전체</a>
+                            <a href="#" class="filter-btn">인기글</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- 공지사항 테이블 -->
-                <table class="notice-table">
-                    <thead>
-                    <tr>
-                        <th width="5%">번호</th>
-                        <th width="10%">분류</th>
-                        <th width="48%">제목</th>
-                        <th width="10%">작성자</th>
-                        <th width="10%">작성일</th>
-                        <th width="8%">조회수</th>
-                        <th width="9%">추천</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- 공지사항 -->
-                    <tr class="notice">
-                        <td><span class="notice-tag">공지</span></td>
-                        <td><span class="category-tag notice">공지</span></td>
-                        <td class="title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>
-                        <td>관리자</td>
-                        <td>2025-03-25</td>
-                        <td>1,245</td>
-                        <td>32</td>
-                    </tr>
-                    <tr class="notice">
-                        <td><span class="notice-tag">공지</span></td>
-                        <td><span class="category-tag notice">공지</span></td>
-                        <td class="title-cell"><a href="#">고독한캠핑방 이용 규칙 안내</a></td>
-                        <td>관리자</td>
-                        <td>2025-03-25</td>
-                        <td>876</td>
-                        <td>28</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="content-box mb-5">
+                    <table class="w-100">
+                        <thead>
+                        <tr class="border-bottom">
+                            <th width="6%" class="p-3 text-center">번호</th>
+                            <th width="9%" class="p-3 text-center">분류</th>
+                            <th width="48%" class="p-3 text-center">제목</th>
+                            <th width="10%" class="p-3 text-center">작성자</th>
+                            <th width="10%" class="p-3 text-center">작성일</th>
+                            <th width="8%" class="p-3 text-center">조회수</th>
+                            <th width="9%" class="p-3 text-center">추천</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 공지사항 -->
+                        <tr class="board-row notice border-bottom">
+                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
+                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                            <td class="p-3 text-center">2025-03-25</td>
+                            <td class="p-3 text-center">1,245</td>
+                            <td class="p-3 text-center">32</td>
+                        </tr>
+                        <tr class="board-row notice border-bottom">
+                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
+                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 title-cell"><a href="#">고독한캠핑방 이용 규칙 안내</a></td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                            <td class="p-3 text-center">2025-03-25</td>
+                            <td class="p-3 text-center">876</td>
+                            <td class="p-3 text-center">28</td>
+                        </tr>
+                        <tr class="board-row notice border-bottom">
+                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
+                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                            <td class="p-3 text-center">2025-03-25</td>
+                            <td class="p-3 text-center">987</td>
+                            <td class="p-3 text-center">45</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- 갤러리 형태의 게시판 -->
                 <div class="gallery-container">
                     <!-- 갤러리 아이템 1 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -309,15 +326,15 @@
                                 <span>혼캠러버</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 254</span>
-                                    <span><i class="fa-solid fa-heart"></i> 42</span>
-                                    <span><i class="fa-solid fa-comment"></i> 15</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 42</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 15</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 2 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -327,15 +344,15 @@
                                 <span>산속여행자</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 612</span>
-                                    <span><i class="fa-solid fa-heart"></i> 93</span>
-                                    <span><i class="fa-solid fa-comment"></i> 31</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 93</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 31</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 3 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -345,15 +362,15 @@
                                 <span>솔로캠퍼</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 432</span>
-                                    <span><i class="fa-solid fa-heart"></i> 76</span>
-                                    <span><i class="fa-solid fa-comment"></i> 23</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 76</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 23</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 4 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -363,15 +380,15 @@
                                 <span>안전제일</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 523</span>
-                                    <span><i class="fa-solid fa-heart"></i> 91</span>
-                                    <span><i class="fa-solid fa-comment"></i> 24</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 91</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 24</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 5 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -381,15 +398,15 @@
                                 <span>캠핑여왕</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 728</span>
-                                    <span><i class="fa-solid fa-heart"></i> 135</span>
-                                    <span><i class="fa-solid fa-comment"></i> 42</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 135</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 42</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 6 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -399,15 +416,15 @@
                                 <span>별빛캠퍼</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 412</span>
-                                    <span><i class="fa-solid fa-heart"></i> 87</span>
-                                    <span><i class="fa-solid fa-comment"></i> 18</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 87</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 18</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 7 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -417,15 +434,15 @@
                                 <span>혼캠초보</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 356</span>
-                                    <span><i class="fa-solid fa-heart"></i> 65</span>
-                                    <span><i class="fa-solid fa-comment"></i> 31</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 65</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 31</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 8 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -435,15 +452,15 @@
                                 <span>미니멀리스트</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 478</span>
-                                    <span><i class="fa-solid fa-heart"></i> 93</span>
-                                    <span><i class="fa-solid fa-comment"></i> 27</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 93</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 27</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- 갤러리 아이템 9 -->
-                    <div class="gallery-item">
+                    <div class="gallery-item" onclick="location.href='BoardPostImage.jsp'">
                         <div class="gallery-image">
                             <i class="fas fa-image no-image-icon"></i>
                         </div>
@@ -453,8 +470,8 @@
                                 <span>혼캠셰프</span>
                                 <div class="gallery-meta">
                                     <span><i class="fa-solid fa-eye"></i> 562</span>
-                                    <span><i class="fa-solid fa-heart"></i> 112</span>
-                                    <span><i class="fa-solid fa-comment"></i> 34</span>
+                                    <span><i class="fa-solid fa-heart icon-heart"></i> 112</span>
+                                    <span><i class="fa-solid fa-comment icon-comment"></i> 34</span>
                                 </div>
                             </div>
                         </div>
@@ -466,7 +483,7 @@
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
                         <div class="d-flex border rounded">
-                            <select class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px;">
+                            <select class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
                                 <option>제목+내용</option>
                                 <option>제목</option>
                                 <option>내용</option>
@@ -510,5 +527,14 @@
 </div>
 
 <jsp:include page="Footer.jsp"></jsp:include>
+
+<script>
+    // 갤러리 아이템 클릭 이벤트
+    document.querySelectorAll('.gallery-item').forEach(item => {
+        item.addEventListener('click', function() {
+            window.location.href = 'BoardPostImage.jsp';
+        });
+    });
+</script>
 </body>
 </html>

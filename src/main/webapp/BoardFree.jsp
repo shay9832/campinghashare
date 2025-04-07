@@ -114,21 +114,6 @@
             margin-right: 5px;
         }
 
-        .view-option {
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition-normal);
-        }
-
-        .view-option:hover {
-            background-color: var(--color-gray-200);
-        }
-
-        .view-option.active {
-            background-color: var(--color-gray-200);
-        }
-
         .filter-btn {
             padding: 6px 16px;
             border-radius: var(--radius-sm);
@@ -205,14 +190,6 @@
                             <a href="#" class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
                         </div>
                     </div>
-                    <div class="d-flex gap-2">
-                        <div class="view-option active">
-                            <i class="fa-solid fa-list"></i>
-                        </div>
-                        <div class="view-option">
-                            <i class="fa-solid fa-table-cells"></i>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- 게시글 테이블 -->
@@ -235,7 +212,7 @@
                             <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
                             <td class="p-3 title-cell"><a href="#">자유게시판 이용 규칙 안내</a></td>
-                            <td class="p-3 text-center">관리자</td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
                             <td class="p-3 text-center">1,245</td>
                             <td class="p-3 text-center">32</td>
@@ -244,7 +221,7 @@
                             <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
                             <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>
-                            <td class="p-3 text-center">관리자</td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
                             <td class="p-3 text-center">876</td>
                             <td class="p-3 text-center">28</td>
@@ -253,7 +230,7 @@
                             <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
                             <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
-                            <td class="p-3 text-center">관리자</td>
+                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
                             <td class="p-3 text-center">987</td>
                             <td class="p-3 text-center">45</td>
