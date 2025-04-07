@@ -105,8 +105,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="2-middle-category.jsp" class="btn">이전</a>
-            <a href="4-equip-info.jsp" class="btn btn-primary">다음</a>
+            <a href="equipRegister-middleCategory.jsp" class="btn">이전</a>
+            <a href="equipRegister-newPrice.jsp" class="btn btn-primary">다음</a>
         </div>
     </main>
 

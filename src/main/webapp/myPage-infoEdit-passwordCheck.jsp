@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampingHaShare - 회원 정보 수정</title>
+    <title>CampingHaShare - 마이페이지</title>
     <!-- 외부 라이브러리 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 메인 CSS 로드 (모든 스타일시트 통합) -->
@@ -17,11 +17,11 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 </head>
 <body>
-
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
 <div class="container mypage-container section">
+
     <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
         <div class="sidebar-title">마이 페이지</div>
@@ -32,9 +32,9 @@
                 </a>
                 <ul class="submenu">
 <<<<<<< Updated upstream
-                    <li><a href="mypage-edit-info.jsp" class="sidebar-link active">회원 정보 수정</a></li>
+                    <li><a href="myPage-infoEdit.jsp" class="sidebar-link active">회원 정보 수정</a></li>
 =======
-                    <li><a href="mypage-password-check.jsp" class="sidebar-link active">회원 정보 수정</a></li>
+                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link active">회원 정보 수정</a></li>
 >>>>>>> Stashed changes
                     <li><a href="#" class="sidebar-link">회원 등급</a></li>
                     <li><a href="#" class="sidebar-link">신뢰도</a></li>
@@ -51,9 +51,9 @@
                     <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
                     <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
 =======
-                    <li><a href="mypage-my-equip.jsp" class="sidebar-link">내 장비 목록</a></li>
+                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
                     <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="mypage-my-post.jsp" class="sidebar-link">내가 작성한 글</a></li>
+                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
 >>>>>>> Stashed changes
                 </ul>
             </li>
@@ -92,75 +92,56 @@
 
     <!-- 마이페이지 메인 콘텐츠 -->
     <div class="mypage-main-content">
-        <!-- 회원 정보 수정 화면 (이미지 4) -->
-            <div id="edit-profile-view" class="content-box">
-                <h3 class="content-box-title mb-4">회원 정보</h3>
+        <div class="page-header">
+            <h2 class="page-title">회원 정보 수정 - 비밀번호 확인</h2>
+        </div>
 
-                <div class="form-row">
-                    <div class="form-label">이름</div>
-                    <div class="form-input">유진이</div>
+        <!-- 비밀번호 확인 콘텐츠 -->
+        <div id="password-check-view" class="content-box">
+            <div class="centered-container">
+                <h3 class="mb-4 text-center">회원 정보를 수정하기 위해서는<br>비밀번호를 입력해야 합니다.</h3>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'reaedonly')" value="reasony" readonly>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-label">아이디</div>
-                    <div class="form-input">abc1234</div>
+                <div class="form-group mt-3">
+                    <input type="password" class="form-control" id="password-input" placeholder="password">
+                    <div class="form-text text-error" id="password-error" style="display: none;">비밀번호가 다릅니다.</div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-label">휴대폰번호</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>010-0000-0000</div>
-                        <button class="btn btn-outline-primary ml-3">인증 변경</button>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-label">이메일</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>abc1234@test.com</div>
-                        <span class="text-success ml-2">이메일 수신동의 OK</span>
-                        <button class="btn btn-primary ml-auto" id="edit-email-btn">수정</button>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-label">닉네임</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>가나초콜릿</div>
-                        <span class="text-muted ml-2">수정횟수 1/5</span>
-                        <button class="btn btn-primary ml-auto" id="edit-nickname-btn">수정</button>
-                    </div>
-                </div>
-
-                <div class="form-row mt-5">
-                    <button class="btn btn-block btn-outline-primary" id="change-password-btn">비밀번호 변경</button>
-                </div>
-
-                <div class="form-row mt-3">
-                    <button class="btn btn-block btn-outline-primary">주소 변경</button>
+                <div class="button-container mt-4">
+                    <button class="btn btn-primary w-100" id="confirm-password-btn">확인</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <!-- 푸터 인클루드 (JSP 방식) -->
 <jsp:include page="footer.jsp" />
 
-<script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+<script type="text/javascript">
     $(document).ready(function() {
-        // 닉네임 수정 버튼 클릭
-        $("#edit-nickname-btn").click(function() {
-            window.location.href = 'mypage-nickname-change.jsp';
+        // 비밀번호 확인 버튼 클릭
+        $("#confirm-password-btn").click(function() {
+            const password = $("#password-input").val();
+
+            // 테스트를 위해 '1234'가 비밀번호라고 가정
+            if (password === '1234') {
+                // 비밀번호 일치 시 회원 정보 수정 페이지로 이동
+                window.location.href = 'myPage-infoEdit.jsp';
+            } else {
+                // 비밀번호 불일치 시 에러 메시지 표시
+                $("#password-error").show();
+            }
         });
 
-        // 이메일 수정 버튼 클릭
-        $("#edit-email-btn").click(function() {
-            window.location.href = 'mypage-email-change.jsp';
-        });
-
-        // 비밀번호 변경 버튼 클릭
-        $("#change-password-btn").click(function() {
-            window.location.href = 'mypage-password-check.jsp';
+        // 비밀번호 입력 시 에러 메시지 숨기기
+        $("#password-input").on('input', function() {
+            $("#password-error").hide();
         });
     });
 </script>
