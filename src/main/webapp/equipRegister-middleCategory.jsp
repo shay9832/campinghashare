@@ -27,7 +27,7 @@
             if (selectedCategory) {
                 // 다음 페이지로 이동 (선택된 카테고리 파라미터 전달)
                 window.location.href =
-                    "3-search-brand.jsp?category=" +
+                    "equipRegister-brand.jsp?category=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 // 카테고리가 선택되지 않은 경우 알림
@@ -67,8 +67,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="1-major-category.jsp" class="btn">이전</a>
-            <a href="3-search-brand.jsp" class="btn btn-primary" onclick="goToNextStep()">다음</a>
+            <a href="equipRegister-majorCategory.jsp" class="btn">이전</a>
+            <a href="equipRegister-brand.jsp" class="btn btn-primary" onclick="goToNextStep()">다음</a>
         </div>
     </main>
 

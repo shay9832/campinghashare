@@ -213,7 +213,7 @@
 
             // 모달2 중 확인 버튼 눌렀을 때 리다이렉트(matching_done = true 를 GET 방식으로 넘기기)
             $("#confirm2").on("click", function() {
-                $(location).attr("href", "16-storen-matching-request.jsp?matching_done=true");
+                $(location).attr("href", "storenMatching-request.jsp?matching_done=true");
             });
         });
     </script>
