@@ -3,7 +3,7 @@
 <head>
     <title>공지사항</title>
     <!-- CSS 파일 로드 -->
-    <link rel="stylesheet" href="resources/css/main.css">
+    <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -77,7 +77,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="Header.jsp"></jsp:include>
+<jsp:include page="header.jsp"></jsp:include>
 
 <div class="page-wrapper">
     <div class="container section" style="width: 100%; max-width: 1500px; padding: 0 15px; margin: 0 auto;">
@@ -253,6 +253,7 @@
     </div>
 </div>
 
-<jsp:include page="Footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"></jsp:include>
 </body>
+
 </html>

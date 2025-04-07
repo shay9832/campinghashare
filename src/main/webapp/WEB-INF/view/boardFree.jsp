@@ -3,7 +3,7 @@
 <head>
     <title>자유게시판</title>
     <!-- CSS 파일 로드 -->
-    <link rel="stylesheet" href="resources/css/main.css">
+    <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -137,7 +137,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="Header.jsp"></jsp:include>
+<jsp:include page="header.jsp"></jsp:include>
 
 <div class="page-wrapper">
     <div class="container" style="max-width: 1500px; padding: 0 15px;">
@@ -426,6 +426,6 @@
     </div>
 </div>
 
-<jsp:include page="Footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"></jsp:include>
 </body>
 </html>
