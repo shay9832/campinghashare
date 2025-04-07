@@ -151,7 +151,7 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title">글쓰기</h1>
+                    <h1 class="page-title"><i class="fa-solid fa-pen"></i> 글쓰기</h1>
                 </div>
 
                 <div class="content-box p-5">

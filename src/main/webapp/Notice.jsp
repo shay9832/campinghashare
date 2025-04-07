@@ -74,21 +74,6 @@
         .table-icon {
             margin-right: 5px;
         }
-
-        .view-option {
-            cursor: pointer;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            transition: all var(--transition-normal);
-        }
-
-        .view-option:hover {
-            background-color: var(--color-gray-200);
-        }
-
-        .view-option.active {
-            background-color: var(--color-gray-200);
-        }
     </style>
 </head>
 <body>
@@ -112,14 +97,6 @@
                             <option>조회순</option>
                             <option>추천순</option>
                         </select>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <div class="view-option active">
-                            <i class="fa-solid fa-list"></i>
-                        </div>
-                        <div class="view-option">
-                            <i class="fa-solid fa-table-cells"></i>
-                        </div>
                     </div>
                 </div>
 

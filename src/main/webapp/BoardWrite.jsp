@@ -18,7 +18,7 @@
 
     .input-field {
       width: 100%;
-      padding: var(--spacing-sm);
+      padding: var(--spacing-xs);
       border: 1px solid var(--border-medium);
       border-radius: var(--radius-sm);
       font-size: var(--font-xs);

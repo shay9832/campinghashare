@@ -408,7 +408,7 @@
                 <div class="post-container">
                     <div class="post-header">
                         <div>
-                            <h1 class="post-title">주말 캠핑에서 찍은 몬당하키 사진</h1>
+                            <h1 class="post-title">주말 캠핑에서 찍은 사진</h1>
                             <div class="post-info">
                                 <div class="post-author">
                                     <img src="/api/placeholder/24/24" alt="작성자 아이콘">
@@ -422,16 +422,12 @@
                         </div>
                     </div>
                     <div class="post-body">
-                        <p>지난 주말 양평 근처 캠핑장에서 몬당하키한 사진을 공유합니다.</p>
-                        <p>몬당하키는 캠핑 시 화로나 모닥불을 이용해 불을 피우고 쳐다보면서 사색에 잠기는 것을 말합니다.
-                            특히 혼자 캠핑을 할 때 몬당하키의 매력을 더 느낄 수 있는데, 이번에는 가족들과 함께 갔지만
-                            모두가 잠든 후 혼자만의 시간을 가질 수 있었습니다.</p>
+                        <p>지난 주말 양평 근처 캠핑장에서 찍은 사진을 공유합니다.</p>
 
                         <p>지난 달에 새로 구입한 소토(SOTO) 화로대를 사용했는데, 장작도 잘 타고 불꽃 모양도 예뻐서
-                            몬당하키하기에 정말 좋았습니다. 화로대 위에 그릴을 올려 고기도 구워 먹을 수 있어서 일석이조였어요.</p>
+                            정말 좋았습니다. 화로대 위에 그릴을 올려 고기도 구워 먹을 수 있어서 일석이조였어요.</p>
 
-                        <p>몬당하키를 하며 마시는 핫초코는 정말 최고의 조합이었습니다. 별 구경하면서 진행하는 몬당하키는
-                            도시에서는 느낄 수 없는 힐링을 선사해줍니다.</p>
+                        <p>핫초코는 정말 최고의 조합이었습니다. 별 구경은 도시에서는 느낄 수 없는 힐링을 선사해줍니다.</p>
 
                         <div class="post-images">
                             <div class="post-image">
@@ -623,24 +619,49 @@
                 </table>
 
                 <!-- 페이지네이션 -->
-                <div class="pagination-container">
-                    <a href="#" class="page-link">◀</a>
-                    <a href="#" class="page-link active">1</a>
-                    <a href="#" class="page-link">2</a>
-                    <a href="#" class="page-link">3</a>
-                    <a href="#" class="page-link">4</a>
-                    <a href="#" class="page-link">5</a>
-                    <a href="#" class="page-link">6</a>
-                    <a href="#" class="page-link">7</a>
-                    <a href="#" class="page-link">8</a>
-                    <a href="#" class="page-link">9</a>
-                    <a href="#" class="page-link">10</a>
-                    <a href="#" class="page-link">▶</a>
-                </div>
+                <div style="display: flex; align-items: center; margin-top: 30px; width: 100%;">
+                    <!-- 검색 영역 - 왼쪽 -->
+                    <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
+                        <div class="d-flex border rounded">
+                            <select class="form-control-sm border-0"
+                                    style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
+                                <option>제목+내용</option>
+                                <option>제목</option>
+                                <option>내용</option>
+                                <option>작성자</option>
+                            </select>
+                            <input type="text" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요"
+                                   style="padding: 8px 10px; font-size: 13px;">
+                            <button class="btn border-0" style="background-color: #f8f9fa; padding: 8px 10px;">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- 글쓰기 버튼 -->
-                <div class="write-btn-container">
-                    <button class="btn btn-primary">글쓰기</button>
+                    <!-- 페이지네이션 - 중앙에 가깝게 -->
+                    <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
+                        <div class="d-flex gap-1">
+                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-left"></i></a>
+                            <a href="#" class="btn btn-primary btn-sm">1</a>
+                            <a href="#" class="btn btn-sm">2</a>
+                            <a href="#" class="btn btn-sm">3</a>
+                            <a href="#" class="btn btn-sm">4</a>
+                            <a href="#" class="btn btn-sm">5</a>
+                            <a href="#" class="btn btn-sm">6</a>
+                            <a href="#" class="btn btn-sm">7</a>
+                            <a href="#" class="btn btn-sm">8</a>
+                            <a href="#" class="btn btn-sm">9</a>
+                            <a href="#" class="btn btn-sm">10</a>
+                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 글쓰기 버튼 - 오른쪽 -->
+                    <div style="flex: 1; display: flex; justify-content: flex-end;">
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-pen"></i> 글쓰기
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -651,7 +672,7 @@
 
 <script>
     // 모든 기능 초기화
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // 모든 댓글 답글 영역 숨기기
         document.querySelectorAll('.comment-reply-area').forEach(area => {
             area.style.display = 'none';
@@ -659,7 +680,7 @@
 
         // 답글 버튼 클릭 시 답글 영역 토글
         document.querySelectorAll('.reply-toggle').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const commentItem = this.closest('.comment-item');
                 const replyArea = commentItem.querySelector('.comment-reply-area');
 
@@ -669,7 +690,7 @@
                 });
 
                 // 클릭한 답글 영역만 보이게 함
-                if(replyArea) {
+                if (replyArea) {
                     replyArea.style.display = 'block';
                 }
             });
@@ -677,9 +698,9 @@
 
         // 취소 버튼 이벤트 리스너
         document.querySelectorAll('.cancel-reply').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const replyArea = this.closest('.comment-reply-area');
-                if(replyArea) {
+                if (replyArea) {
                     replyArea.style.display = 'none';
                 }
             });
@@ -687,7 +708,7 @@
 
         // 신고 버튼 기능
         document.querySelectorAll('.report-btn').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 alert('신고가 접수되었습니다.');
             });
         });
