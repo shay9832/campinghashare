@@ -1,9 +1,9 @@
 /*
  * header.css
- * 헤더 및 내비게이션 스타일 정의
+ * 헤더 및 내비게이션 스타일 정의 (미니헤더 + 사이드바 포함)
  */
 
-/* 헤더 컨테이너 */
+/* 공통 헤더 */
 .header-container {
     width: 100%;
     background-color: var(--header-bg);
@@ -12,18 +12,15 @@
     z-index: var(--z-header);
 }
 
-/* 스크롤 시 헤더 Sticky 효과 */
 .header-sticky {
     position: sticky;
     top: 0;
 }
 
-/* 스크롤 후 헤더 스타일 */
 .header-scrolled {
     box-shadow: var(--shadow-md);
 }
 
-/* 헤더 상단 영역 */
 .header__top {
     display: flex;
     justify-content: space-between;
@@ -32,7 +29,6 @@
     transition: height var(--transition-normal);
 }
 
-/* 헤더 스크롤 시 상단 영역 축소 */
 .header-scrolled .header__top {
     height: 0;
     padding: 0 var(--spacing-lg);
@@ -40,7 +36,6 @@
     opacity: 0;
 }
 
-/* 로고 영역 */
 .logo {
     height: 50px;
     display: flex;
@@ -54,12 +49,10 @@
     width: auto;
 }
 
-/* 스크롤 시 로고 크기 조정 */
 .header-scrolled .logo {
     height: 40px;
 }
 
-/* 상단 메뉴 */
 .top__menu {
     display: flex;
     gap: var(--spacing-sm);
@@ -78,8 +71,7 @@
     color: var(--color-maple);
 }
 
-/* 장비 등록 버튼 */
-.top__menu .add-equip {
+.add-equip {
     display: inline-block;
     background-color: var(--color-beige);
     color: var(--text-primary);
@@ -93,12 +85,12 @@
     transition: all var(--transition-normal);
 }
 
-.top__menu .add-equip:hover {
+.add-equip:hover {
     background-color: var(--color-coral);
     color: var(--color-white);
 }
 
-/* 헤더 하단 영역 */
+/* 하단 */
 .header__bottom {
     display: flex;
     justify-content: space-between;
@@ -107,20 +99,9 @@
     transition: padding var(--transition-normal);
 }
 
-/* 스크롤 시 하단 패딩 조정 */
 .header-scrolled .header__bottom {
     padding-top: var(--spacing-xs);
     padding-bottom: var(--spacing-xs);
-}
-
-/* 헤더 스크롤 시 통합 로고 표시 */
-.logo-compact {
-    display: none;
-    height: 40px;
-}
-
-.header-scrolled .logo-compact {
-    display: block;
 }
 
 /* 토글 메뉴 */
@@ -148,7 +129,6 @@
     color: var(--color-maple);
 }
 
-/* 토글 컨테이너 (거래/커뮤니티 전환) */
 .toggle-container {
     position: relative;
     width: 180px;
@@ -237,11 +217,10 @@
     color: var(--color-maple);
 }
 
-/* 아이콘 크기 조정 */
 .user-menu i {
-    font-size: 30px !important;
-    width: 30px;
-    height: 30px;
+    font-size: 20px !important;
+    width: 20px;
+    height: 20px;
     line-height: 1;
     transition: transform var(--transition-normal);
 }
@@ -250,87 +229,104 @@
     transform: translateY(-2px);
 }
 
-/* 모바일 메뉴 토글 버튼 */
-.mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: var(--font-lg);
-    color: var(--text-primary);
-    cursor: pointer;
-    padding: var(--spacing-xs);
-}
-
-/* 모바일 메뉴 */
-.mobile-menu {
-    display: none;
+/* ✅ 미니 헤더 */
+.mini-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: var(--color-white);
-    z-index: var(--z-modal);
-    overflow-y: auto;
-    transform: translateX(-100%);
-    transition: transform var(--transition-normal);
-}
-
-.mobile-menu.active {
-    transform: translateX(0);
-}
-
-.mobile-menu-header {
-    display: flex;
+    z-index: 9999;
+    background-color: white;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    display: none;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-md);
-    border-bottom: 1px solid var(--border-medium);
 }
 
-.mobile-menu-close {
-    background: none;
-    border: none;
-    font-size: var(--font-lg);
+.mini-header .logo {
+    height: 30px;
+}
+
+.mini-header .mini-menu a {
+    margin-left: 15px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+.left-wrap {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 미니 헤더 토글 동기화 */
+#trade-radio-mini:checked ~ .toggle-slider {
+    left: 0;
+    background-color: var(--color-coral);
+}
+
+#community-radio-mini:checked ~ .toggle-slider {
+    left: 50%;
+    background-color: var(--color-maple);
+}
+
+#trade-radio-mini:checked ~ .toggle-options .trade-option {
+    color: var(--color-black);
+}
+
+#community-radio-mini:checked ~ .toggle-options .trade-option {
     color: var(--text-secondary);
-    cursor: pointer;
 }
 
-.mobile-menu-list {
-    padding: var(--spacing-md);
+#community-radio-mini:checked ~ .toggle-options .community-option {
+    color: var(--color-white);
 }
 
-.mobile-menu-item {
-    margin-bottom: var(--spacing-sm);
-}
-
-.mobile-menu-link {
-    display: block;
-    padding: var(--spacing-sm) 0;
-    font-size: var(--font-sm);
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-light);
-}
-
-/* 모바일 메뉴 백드롭 */
-.mobile-menu-backdrop {
-    display: none;
+/* ✅ 카테고리 사이드바 */
+.category-sidebar {
     position: fixed;
     top: 0;
+    left: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--color-white);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    transition: left 0.3s ease-in-out;
+    z-index: 9998;
+}
+
+.category-sidebar.active {
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: calc(var(--z-modal) - 1);
-    opacity: 0;
-    transition: opacity var(--transition-normal);
 }
 
-.mobile-menu-backdrop.active {
-    opacity: 1;
+.category-sidebar ul {
+    list-style: none;
+    padding: 20px;
 }
 
-/* 반응형 조정 */
+.category-sidebar li {
+    margin-bottom: 10px;
+}
+
+.category-sidebar a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: var(--font-regular);
+}
+
+.category-sidebar .left-category-sub {
+    display: none;
+    padding-left: 20px;
+}
+
+.category-sidebar li:hover .left-category-sub {
+    display: block;
+}
+
+/* ✅ 반응형 대응 */
 @media (max-width: 992px) {
     .toggle-container {
         width: 150px;
@@ -341,10 +337,6 @@
     .header__top {
         padding: var(--spacing-xs) var(--spacing-md);
         align-items: flex-start;
-    }
-
-    .logo {
-        align-self: center;
     }
 
     .header__bottom {
@@ -367,13 +359,13 @@
     .toggle-container {
         width: 120px;
     }
+
+    .category-sidebar {
+        width: 240px;
+    }
 }
 
 @media (max-width: 576px) {
-    .mobile-menu-toggle {
-        display: block;
-    }
-
     .toggle-menu {
         display: none;
     }
@@ -388,22 +380,12 @@
         height: 24px;
     }
 
-    .user-menu i svg {
-        width: 24px !important;
-        height: 24px !important;
-    }
-
     .logo {
         height: 40px;
     }
 
     .header-scrolled .logo {
         height: 36px;
-    }
-
-    .mobile-menu,
-    .mobile-menu-backdrop {
-        display: block;
     }
 
     .top__menu {
