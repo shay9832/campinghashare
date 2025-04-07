@@ -335,7 +335,7 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="mypage-password-check.jsp" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
                     <li><a href="#" class="sidebar-link">회원 등급</a></li>
                     <li><a href="#" class="sidebar-link">신뢰도</a></li>
                     <li><a href="#" class="sidebar-link">포인트</a></li>
@@ -346,9 +346,9 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="mypage-my-equip.jsp" class="sidebar-link">내 장비 목록</a></li>
+                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
                     <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="mypage-my-post.jsp" class="sidebar-link active">내가 작성한 글</a></li>
+                    <li><a href="myPage-myPost.jsp" class="sidebar-link active">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">

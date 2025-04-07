@@ -159,7 +159,7 @@
                     <label class="form-label">장비 등급</label>
                     <div class="form-input">
                         <span class="grade-badge grade-<%= equipmentGrade %>"><%= equipmentGrade %></span>
-                        <a href="11-storen-inspec-result.jsp" class="text-link">(상세 내용 보기)</a>
+                        <a href="storenRegister-inspecResult.jsp" class="text-link">(상세 내용 보기)</a>
                     </div>
                 </div>
                 <div class="form-row mt-3">
@@ -262,8 +262,8 @@
 
         <!-- 이전/다음 버튼 -->
         <div class="button-container">
-            <a href="16-storen-matching-request.jsp" class="btn">이전</a>
-            <a href="18-storen-rental-pay-complete.jsp" class="btn btn-primary" disabled>결제하기</a>
+            <a href="storenMatching-request.jsp" class="btn">이전</a>
+            <a href="storenMatching-rental-pay-complete.jsp" class="btn btn-primary" disabled>결제하기</a>
         </div>
     </div>
 </main>
