@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <!-- 버튼 컨테이너 클래스 변경 -->
+        <!-- 버튼 컨테이너 -->
         <div class="button-container">
             <a href="1-major-category.jsp" class="btn">이전</a>
             <a href="3-search-brand.jsp" class="btn btn-primary" onclick="goToNextStep()">다음</a>

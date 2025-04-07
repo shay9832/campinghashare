@@ -16,14 +16,14 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-start; /* 상단 정렬 */
 }
 
 .content {
-    flex: 1;
+    flex: 1; /* 남은 공간 모두 차지 */
     display: flex;
     gap: 20px;
-    min-width: 0;
+    min-width: 0; /* 내용 넘침 방지 */
 }
 
 /* 왼쪽 카테고리 메뉴 */
