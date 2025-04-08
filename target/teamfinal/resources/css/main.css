@@ -1,0 +1,37 @@
+/*
+ * main.css
+ * 모든 스타일시트를 통합 로드하는 메인 CSS 파일
+ */
+
+/* 기본 스타일 */
+@import url('reset.css');
+@import url('variables.css');
+@import url('typography.css');
+
+/* 레이아웃 */
+@import url('container.css');
+@import url('grid.css');
+@import url('header.css');
+@import url('footer.css');
+@import url('sidebar.css');
+
+/* 컴포넌트 */
+@import url('buttons.css');
+@import url('forms.css');
+@import url('cards.css');
+@import url('category.css');
+@import url('alert.css');
+@import url('modal.css');
+@import url('navigation.css');
+
+/* 유틸리티 */
+@import url('animations.css');
+@import url('spacing.css');
+@import url('display.css');
+@import url('responsive.css');
+
+/* 페이지별 스타일 */
+@import url('equipment-register.css');
+@import url('storen-register.css');
+@import url('search.css');
+@import url('register.css');

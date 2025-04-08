@@ -4,7 +4,6 @@
 //import com.team.mvc.DTO.CategoryDTO;
 //import com.team.mvc.Interface.IBrandDAO;
 //import com.team.mvc.Interface.ICategoryDAO;
-//import org.apache.ibatis.session.SqlSession;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
 //import org.springframework.ui.Model;
@@ -18,11 +17,15 @@
 //@Controller
 //public class EquipController {
 //
+//    @Autowired
 //    private ICategoryDAO categoryDAO;
+//
+//    @Autowired
+//    private IBrandDAO brandDAO;
 //
 //    @RequestMapping("/majorcategory.action")
 //    public String majorCategory(Model model) {
-//        List<CategoryDTO> majorCategory = categoryDAO.getMapper(ICategoryDAO.class).getMajorCategory();
+//        List<CategoryDTO> majorCategory = categoryDAO.getMajorCategory();
 //
 //        Map<String, String> categoryIcons = new HashMap<>();
 //        categoryIcons.put("텐트/쉘터", "fa-solid fa-campground");
@@ -34,7 +37,6 @@
 //        categoryIcons.put("수납/운반용품", "fa-solid fa-box");
 //        categoryIcons.put("기타", "fa-solid fa-grip");
 //
-//
 //        model.addAttribute("majorCategory", majorCategory);
 //        model.addAttribute("categoryIcons", categoryIcons);
 //
@@ -43,23 +45,21 @@
 //
 //    @RequestMapping("/middlecategory")
 //    public String middleCategory(@RequestParam("category") String category, Model model) {
-//        // 대분류 정보 조회
 //        try {
-//            List<CategoryDTO> majorCategoryList = sqlSession.getMapper(ICategoryDAO.class).getCategoryByName(category);
+//            List<CategoryDTO> majorCategoryList = categoryDAO.getCategoryByName(category);
 //
-//            if (majorCategoryList != null) {
-//
+//            if (majorCategoryList != null && !majorCategoryList.isEmpty()) {
 //                CategoryDTO majorCategory = majorCategoryList.get(0);
-//
-//                List<CategoryDTO> middleCategory = sqlSession.getMapper(ICategoryDAO.class).getMiddleCategory(majorCategory.getCategory_id());
+//                List<CategoryDTO> middleCategory = categoryDAO.getMiddleCategory(majorCategory.getCategory_id());
 //                model.addAttribute("middleCategory", middleCategory);
 //            }
 //
 //        } catch (Exception e) {
 //            System.out.println(e.toString());
 //        }
+//
 //        model.addAttribute("majorCategory", category);
-//        return "equipResister-middleCategory"; // 확장자까지 포함
+//        return "equipResister-middleCategory";
 //    }
 //
 //    @RequestMapping("/selectbrand")
@@ -68,7 +68,7 @@
 //            @RequestParam("middleCategory") String middleCategory,
 //            Model model) {
 //        try {
-//            List<BrandDTO> brands = sqlSession.getMapper(IBrandDAO.class).getBrands();
+//            List<BrandDTO> brands = brandDAO.getBrands();
 //
 //            model.addAttribute("brands", brands);
 //            model.addAttribute("majorCategory", majorCategory);
@@ -77,6 +77,7 @@
 //        } catch (Exception e) {
 //            System.out.println(e.toString());
 //        }
+//
 //        return "equipResister-brand";
 //    }
 //
