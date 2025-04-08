@@ -303,8 +303,8 @@
                         <tbody>
                         <!-- 공지사항 -->
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a> </td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a> </td>
                             <td class="p-3 title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
@@ -312,8 +312,8 @@
                             <td class="p-3 text-center">32</td>
                         </tr>
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
                             <td class="p-3 title-cell"><a href="#">고독한캠핑방 이용 규칙 안내</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
@@ -321,8 +321,8 @@
                             <td class="p-3 text-center">28</td>
                         </tr>
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a> </td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
                             <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
