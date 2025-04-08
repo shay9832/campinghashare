@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IAdminInspectListDAO">
+
+    <resultMap id="admin-inspectList" type="com.team.mvc.DTO.AdminInspectListDTO">
+        <result column="장비코드" property="equipCode"/>
+        <result column="검수유형" property="inspectName"/>
+        <result column="장비명" property="equipName"/>
+        <result column="카테고리명" property="categoryName"/>
+        <result column="검수항목" property="inspectList"/>
+        <result column="관리자ID" property="adminId"/>
+        <result column="검수결과" property="inspectResult"/>
+        <result column="검수코멘트" property="inspectComment"/>
+        <result column="검수상태" property="inspectState"/>
+    </resultMap>
+
+    <select id="list" resultMap="admin-inspectList">
+         SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
+         FROM VW_INSPEC_LIST_AND_PD
+    </select>
+
+</mapper>
+
+<!--        장비코드,검수유형,장비명,카테고리명,검수항목,관리자ID,검수결과,검수코멘트,검수상태-->
