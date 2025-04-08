@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <html>
 <head>
     <title>2-middle-category.jsp</title>
@@ -27,7 +29,9 @@
             if (selectedCategory) {
                 // 다음 페이지로 이동 (선택된 카테고리 파라미터 전달)
                 window.location.href =
-                    "equipregister-brand.action?category=" +
+                    "${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=" +
+                    encodeURIComponent('${majorCategory}') +
+                    "&middleCategory=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 // 카테고리가 선택되지 않은 경우 알림
@@ -45,30 +49,17 @@
 
         <h2 class="category-title">카테고리(중분류) 선택</h2>
         <div class="category-grid category-grid-medium">
-            <div class="category-item" onclick="selectCategory(this, '텐트')">
-                <span class="category-item-text">텐트</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '쉘터/타프')">
-                <span class="category-item-text">쉘터/타프</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '설치용 부속품')">
-                <span class="category-item-text">설치용 부속품</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '보조텐트류')">
-                <span class="category-item-text">보조텐트류</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '바닥보호시트')">
-                <span class="category-item-text">바닥보호시트</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '기타용품')">
-                <span class="category-item-text">기타용품</span>
-            </div>
+            <c:forEach var="category" items="${middleCategory}">
+                <div class="category-item" onclick="selectCategory(this, '${category.category_name}')">
+                    <span class="category-item-text">${category.category_name}</span>
+                </div>
+            </c:forEach>
         </div>
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="equipregister-majorcategory.action" class="btn">이전</a>
-            <a href="equipregister-brand.action" class="btn btn-primary" onclick="goToNextStep()">다음</a>
+            <a href="${pageContext.request.contextPath}/equipregister-majorcategory.action" class="btn">이전</a>
+            <a href="#" class="btn btn-primary" onclick="goToNextStep()">다음</a>
         </div>
     </main>
 

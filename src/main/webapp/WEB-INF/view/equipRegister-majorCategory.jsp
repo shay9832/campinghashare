@@ -58,7 +58,7 @@
         <!-- 버튼 컨테이너 클래스 변경 -->
         <div class="button-container">
             <a href="#" class="btn">이전</a>
-            <a href="equipregister-middlecategory.action" class="btn btn-primary" onclick="goToNextStep()">다음</a>
+            <a href="#" class="btn btn-primary" onclick="goToNextStep()">다음</a>
         </div>
     </main>
 
