@@ -431,16 +431,16 @@
 
                         <div class="post-images">
                             <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="몬당하키 이미지1">
+                                <img src="/api/placeholder/120/120" alt="이미지1">
                             </div>
                             <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="몬당하키 이미지2">
+                                <img src="/api/placeholder/120/120" alt="이미지2">
                             </div>
                             <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="몬당하키 이미지3">
+                                <img src="/api/placeholder/120/120" alt="이미지3">
                             </div>
                             <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="몬당하키 이미지4">
+                                <img src="/api/placeholder/120/120" alt="이미지4">
                             </div>
                         </div>
 

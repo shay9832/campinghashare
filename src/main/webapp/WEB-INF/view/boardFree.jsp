@@ -149,19 +149,19 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="boardbest.action" class="sidebar-link">
                             <i class="fa-solid fa-star"></i>
                             <span>BEST</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link active">
+                        <a href="boardfree.action" class="sidebar-link active">
                             <i class="fa-solid fa-comments"></i>
                             <span>자유게시판</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="boardimage.action" class="sidebar-link">
                             <i class="fa-solid fa-person-hiking"></i>
                             <span>고독한캠핑방</span>
                         </a>
@@ -209,8 +209,8 @@
                         <tbody>
                         <!-- 공지사항 -->
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
                             <td class="p-3 title-cell"><a href="#">자유게시판 이용 규칙 안내</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
@@ -218,8 +218,8 @@
                             <td class="p-3 text-center">32</td>
                         </tr>
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
                             <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
@@ -227,8 +227,8 @@
                             <td class="p-3 text-center">28</td>
                         </tr>
                         <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><span class="notice-tag">공지</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
+                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
                             <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
                             <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                             <td class="p-3 text-center">2025-03-25</td>
@@ -240,7 +240,7 @@
                         <tr class="board-row hot-post border-bottom">
                             <td class="p-3 text-center"><span class="hot-number">인기</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">좋은 캠핑장 추천 부탁드려요!</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">좋은 캠핑장 추천 부탁드려요!</a></td>
                             <td class="p-3 text-center">물멍러버</td>
                             <td class="p-3 text-center">2025-04-04</td>
                             <td class="p-3 text-center">428</td>
@@ -249,7 +249,7 @@
                         <tr class="board-row hot-post border-bottom">
                             <td class="p-3 text-center"><span class="hot-number">인기</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑 요리 장비 추천 (사진 많음)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=2">캠핑 요리 장비 추천 (사진 많음)</a></td>
                             <td class="p-3 text-center">캠핑셰프</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">392</td>
@@ -258,7 +258,7 @@
                         <tr class="board-row hot-post border-bottom">
                             <td class="p-3 text-center"><span class="hot-number">인기</span></td>
                             <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="#">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=3">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
                             <td class="p-3 text-center">웃음사냥꾼</td>
                             <td class="p-3 text-center">2025-04-02</td>
                             <td class="p-3 text-center">512</td>
@@ -269,7 +269,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13134</td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">텐트 추천 부탁드려요 (4인용)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">텐트 추천 부탁드려요 (4인용)</a></td>
                             <td class="p-3 text-center">텐트초보</td>
                             <td class="p-3 text-center">2025-04-04</td>
                             <td class="p-3 text-center">87</td>
@@ -278,7 +278,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13133</td>
                             <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="#">충청도 바다뷰 캠핑장 다녀왔어요!</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">충청도 바다뷰 캠핑장 다녀왔어요!</a></td>
                             <td class="p-3 text-center">바다사랑</td>
                             <td class="p-3 text-center">2025-04-04</td>
                             <td class="p-3 text-center">124</td>
@@ -287,7 +287,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13132</td>
                             <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="#">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
                             <td class="p-3 text-center">웃음사냥꾼</td>
                             <td class="p-3 text-center">2025-04-04</td>
                             <td class="p-3 text-center">215</td>
@@ -296,7 +296,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13131</td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑카 대여 어디가 좋나요?</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑카 대여 어디가 좋나요?</a></td>
                             <td class="p-3 text-center">제주여행자</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">156</td>
@@ -305,7 +305,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13130</td>
                             <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑용 화로대 추천 (가성비 좋은 것)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 화로대 추천 (가성비 좋은 것)</a></td>
                             <td class="p-3 text-center">불멍러버</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">198</td>
@@ -314,7 +314,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13129</td>
                             <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑 중 만난 야생동물 이야기</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑 중 만난 야생동물 이야기</a></td>
                             <td class="p-3 text-center">자연사랑</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">227</td>
@@ -323,7 +323,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13128</td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">가족 캠핑 초보인데 팁 부탁드려요</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">가족 캠핑 초보인데 팁 부탁드려요</a></td>
                             <td class="p-3 text-center">행복한아빠</td>
                             <td class="p-3 text-center">2025-04-02</td>
                             <td class="p-3 text-center">183</td>
@@ -332,7 +332,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13127</td>
                             <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="#">새로 산 침낭 추천합니다 (겨울용)</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">새로 산 침낭 추천합니다 (겨울용)</a></td>
                             <td class="p-3 text-center">따뜻하게</td>
                             <td class="p-3 text-center">2025-04-02</td>
                             <td class="p-3 text-center">135</td>
@@ -341,7 +341,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13126</td>
                             <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑장에서 마주친 웃긴 상황</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑장에서 마주친 웃긴 상황</a></td>
                             <td class="p-3 text-center">유머왕</td>
                             <td class="p-3 text-center">2025-04-01</td>
                             <td class="p-3 text-center">246</td>
@@ -350,7 +350,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13125</td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑용 테이블 추천 부탁드립니다</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 테이블 추천 부탁드립니다</a></td>
                             <td class="p-3 text-center">테이블고수</td>
                             <td class="p-3 text-center">2025-04-01</td>
                             <td class="p-3 text-center">167</td>
@@ -359,7 +359,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13131</td>
                             <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑카 대여 어디가 좋나요? <i class="fa-solid fa-comment table-icon icon-comment"></i> 12</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑카 대여 어디가 좋나요? <i class="fa-solid fa-comment table-icon icon-comment"></i> 12</a></td>
                             <td class="p-3 text-center">제주여행자</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">156</td>
@@ -368,7 +368,7 @@
                         <tr class="board-row border-bottom">
                             <td class="p-3 text-center">13130</td>
                             <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑용 화로대 추천 (가성비 좋은 것) <i class="fa-solid fa-image table-icon"></i> <i class="fa-solid fa-comment table-icon icon-comment"></i> 21</a></td>
+                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 화로대 추천 (가성비 좋은 것) <i class="fa-solid fa-image table-icon"></i> <i class="fa-solid fa-comment table-icon icon-comment"></i> 21</a></td>
                             <td class="p-3 text-center">불멍러버</td>
                             <td class="p-3 text-center">2025-04-03</td>
                             <td class="p-3 text-center">198</td>
