@@ -312,7 +312,7 @@
         if (okBtn) {
             okBtn.addEventListener('click', function() {
                 console.log("성공 모달 확인 버튼 클릭됨");
-                window.location.href = 'BoardCamping.jsp';
+                window.location.href = 'boardimage.action';
             });
         } else {
             console.error("성공 모달 확인 버튼 요소를 찾을 수 없음");
@@ -320,7 +320,7 @@
 
         // 취소 버튼 클릭 시 고독한 캠핑방으로 이동
         document.querySelector('.btn-secondary').addEventListener('click', function() {
-            window.location.href = 'BoardCamping.jsp';
+            window.location.href = 'boardimage.action';
         });
     });
 </script>

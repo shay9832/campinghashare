@@ -29,7 +29,7 @@
             if (selectedBrand) {
                 // 다음 페이지로 이동 (선택된 브랜드 파라미터 전달)
                 window.location.href =
-                    "register-equipment-detail.jsp?brand=" +
+                    "equipregister-newprice.action?brand=" +
                     encodeURIComponent(selectedBrand);
             } else {
                 // 브랜드가 선택되지 않은 경우 알림
@@ -105,8 +105,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="equipRegister-middleCategory.jsp" class="btn">이전</a>
-            <a href="equipRegister-newPrice.jsp" class="btn btn-primary">다음</a>
+            <a href="equipregister-middlecategory.action" class="btn">이전</a>
+            <a href="equipregister-newprice.action" class="btn btn-primary">다음</a>
         </div>
     </main>
 

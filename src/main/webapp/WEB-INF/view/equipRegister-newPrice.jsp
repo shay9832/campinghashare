@@ -237,8 +237,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="equipRegister-brand.jsp" class="btn">이전</a>
-            <a href="equipRegister-complete.jsp" class="btn btn-primary">등록</a>
+            <a href="equipregister-brand.action" class="btn">이전</a>
+            <a href="equipregister-complete.action" class="btn btn-primary">등록</a>
         </div>
     </main>
 
