@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.IRegisterStorenDAO">
+
+    <resultMap id="brand" type="com.team.mvc.IRegisterStorenDTO">
+        <result column="브랜드명" property="brandName"/>
+        <result column="장비명" property="equipName"/>
+    </resultMap>
+
+    <select id="list" resultMap="brand">
+        SELECT "브랜드명","장비명"
+        FROM VW_BRAND_EQUIP_NAME
+    </select>
+
+</mapper>
+
+
+
+
+<!--categoryName,boardName,postLabel;-->
