@@ -1,5 +1,8 @@
 package com.team.mvc.DTO;
 
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public class BrandDTO {
     private int brand_Id;
     private String brand_Name;
