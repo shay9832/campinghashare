@@ -176,22 +176,21 @@
             <div class="equipinfo-item">
                 <label>카테고리(대)</label>
                 <div class="input-container">
-                    <span class="info-text">텐트/쉘터</span>
+                    <span class="info-text">${majorCategory}</span>
                 </div>
             </div>
 
             <div class="equipinfo-item">
                 <label>카테고리(중)</label>
                 <div class="input-container">
-                    <span class="info-text">텐트</span>
+                    <span class="info-text">${middleCategory}</span>
                 </div>
             </div>
 
             <div class="equipinfo-item">
                 <label>브랜드</label>
                 <div class="input-container">
-                    <span class="info-text">스노우피크</span>
-                    <input type="hidden" id="brandInput" value="스노우피크">
+                    <span class="info-text">${brand}</span>
                 </div>
             </div>
 
@@ -237,8 +236,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="equipregister-brand.action" class="btn">이전</a>
-            <a href="equipregister-complete.action" class="btn btn-primary">등록</a>
+            <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}" class="btn">이전</a>
+            <a href="javascript:void(0)" class="btn btn-primary" onclick="submitEquipmentForm()">등록</a>
         </div>
     </main>
 
