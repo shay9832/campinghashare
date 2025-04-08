@@ -365,6 +365,136 @@
             justify-content: flex-end;
             margin-top: var(--spacing-sm);
         }
+
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .report-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            width: 500px;
+            max-width: 90%;
+            border-radius: var(--radius-md);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+        }
+
+        .modal-content {
+            width: 100%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: var(--font-bold);
+            margin: 0;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-tertiary);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: var(--font-medium);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: var(--font-xs);
+        }
+
+        /* 신고 경고사항 스타일 */
+        .report-warning {
+            margin-top: 20px;
+            background-color: #fff8f8;
+            border: 1px solid #ffebeb;
+            border-radius: var(--radius-sm);
+            padding: 12px 15px;
+        }
+
+        .warning-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #e74c3c;
+            font-weight: var(--font-bold);
+            font-size: 14px;
+        }
+
+        .warning-list {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .warning-list li {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .warning-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .warning-list strong {
+            color: #333;
+        }
+
+        /* 모달 표시 애니메이션 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -489,9 +619,17 @@
                             <div class="comment-reply-area">
                                 <div class="comment-input-area">
                                     <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
-                                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                                        <button class="btn btn-sm cancel-reply">취소</button>
-                                        <button class="btn btn-primary btn-sm">등록</button>
+                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                                    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                                        <div>
+                                            <button class="btn btn-outline-primary btn-sm"><i
+                                                    class="fa-solid fa-paperclip"></i>첨부파일
+                                            </button>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm cancel-reply">취소</button>
+                                            <button class="btn btn-primary btn-sm">등록</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -519,6 +657,7 @@
                             <div class="comment-reply-area">
                                 <div class="comment-input-area">
                                     <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
+                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
                                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
                                         <button class="btn btn-sm cancel-reply">취소</button>
                                         <button class="btn btn-primary btn-sm">등록</button>
@@ -548,6 +687,7 @@
                             <div class="comment-reply-area">
                                 <div class="comment-input-area">
                                     <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
+                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
                                     <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
                                         <button class="btn btn-sm cancel-reply">취소</button>
                                         <button class="btn btn-primary btn-sm">등록</button>
@@ -557,9 +697,11 @@
                         </div>
                     </div>
 
-                    <div class="write-comment">
-                        <div class="comment-input-area">
-                            <textarea class="comment-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
+                    <div class="p-3">
+                        <textarea id="contentArea" class="form-control mb-2" rows="3" placeholder="댓글을 작성해주세요"></textarea>
+                        <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-primary"><i class="fa-solid fa-paperclip"></i>첨부파일</button>
                             <button class="btn btn-primary">등록</button>
                         </div>
                     </div>
@@ -668,6 +810,70 @@
     </div>
 </div>
 
+<!-- 모달 컴포넌트 - body 태그 닫기 전에 추가 -->
+<div class="modal-backdrop" id="modalBackdrop" style="display: none;"></div>
+
+<div class="report-modal" id="reportModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">신고하기</h5>
+            <button type="button" class="close-btn" id="closeModalBtn">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="reportForm">
+                <div class="form-group mb-3">
+                    <label class="form-label">신고 사유</label>
+                    <select class="form-select" id="reportReason" required>
+                        <option value="" selected disabled>신고 사유를 선택해주세요</option>
+                        <option value="spam">스팸/홍보 게시글</option>
+                        <option value="abuse">욕설/비방/차별/혐오</option>
+                        <option value="adult">음란물/성적 콘텐츠</option>
+                        <option value="illegal">불법 정보</option>
+                        <option value="privacy">개인정보 노출</option>
+                        <option value="other">기타</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="form-label">상세 내용</label>
+                    <textarea class="form-control" id="reportDetail" rows="4" placeholder="상세 내용을 입력해주세요"></textarea>
+                </div>
+                <div class="report-warning">
+                    <div class="warning-header">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>신고 전 주의사항</span>
+                    </div>
+                    <ul class="warning-list">
+                        <li>허위 신고는 <strong>서비스 이용 제한</strong>의 사유가 될 수 있습니다.</li>
+                        <li>신고 내용은 <strong>관리자만 확인</strong>할 수 있으며, 신고자의 정보는 보호됩니다.</li>
+                        <li>신고 처리 결과는 별도로 <strong>통보되지 않습니다</strong>.</li>
+                        <li>명확한 증거가 있는 경우 <strong>상세 내용에 기재</strong>해 주시기 바랍니다.</li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelReportBtn">취소</button>
+            <button type="button" class="btn btn-danger" id="submitReportBtn">신고하기</button>
+        </div>
+    </div>
+</div>
+
+<!-- 신고 완료 모달 -->
+<div class="popup-alert" id="completionModal" style="display: none;">
+    <div class="popup-alert-icon text-success">
+        <i class="fa-solid fa-check-circle"></i>
+    </div>
+    <div class="popup-alert-title">신고가 접수되었습니다</div>
+    <div class="popup-alert-content">검토 후 조치하겠습니다.</div>
+
+    <!-- 확인 버튼 -->
+    <div class="popup-alert-buttons">
+        <button class="btn btn-primary" id="confirmReportBtn">확인</button>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
@@ -705,14 +911,384 @@
                 }
             });
         });
+    });
 
-        // 신고 버튼 기능
-        document.querySelectorAll('.report-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                alert('신고가 접수되었습니다.');
-            });
+
+
+    // 2. 모든 텍스트 입력창(메인 댓글 + 대댓글)에 바이트 카운터 기능 적용
+    // 바이트 수 계산 함수
+    function calculateBytes(str) {
+        let byteCount = 0;
+        for (let i = 0; i < str.length; i++) {
+            const charCode = str.codePointAt(i);
+
+            // '서로게이트 페어(Surrogate Pair)' 처리 - 이모지 등 특수 문자
+            if (charCode > 0xFFFF) {
+                byteCount += 4;
+                i++;
+            } else if (charCode > 0x7FF) {
+                byteCount += 3;
+            } else if (charCode > 0x7F) {
+                byteCount += 2;
+            } else {
+                byteCount += 1;
+            }
+        }
+        return byteCount;
+    }
+
+    // 디바운스 함수 정의 - 연속 이벤트 처리 최적화
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // 모든 댓글 및 대댓글 텍스트 영역에 바이트 체크 적용
+    function applyByteCounter(textarea) {
+        if (!textarea) return;
+
+        // 해당 텍스트영역의 카운터 찾기 (형제 요소)
+        const counterEl = textarea.parentNode.querySelector('.charCounter');
+        if (!counterEl) return;
+
+        // 바이트 업데이트 함수
+        function updateByteCount() {
+            const text = textarea.value;
+            let currentBytes = calculateBytes(text);
+
+            // 1000 byte 초과 시 자르기
+            if (currentBytes > 1000) {
+                // 바이너리 검색 최적화
+                let start = 0;
+                let end = text.length;
+                let mid;
+                let cutText = text;
+
+                while (start < end) {
+                    mid = Math.floor((start + end) / 2);
+                    cutText = text.substring(0, mid);
+
+                    if (calculateBytes(cutText) <= 1000) {
+                        start = mid + 1;
+                    } else {
+                        end = mid;
+                    }
+                }
+
+                // 최종 적합한 지점 찾기
+                while (calculateBytes(cutText) > 1000) {
+                    cutText = cutText.slice(0, -1);
+                }
+
+                // 잘린 텍스트로 업데이트
+                textarea.value = cutText;
+                currentBytes = calculateBytes(cutText);
+            }
+
+            // 카운터 업데이트
+            counterEl.textContent = currentBytes + '/1000byte';
+        }
+
+        // 디바운싱 적용
+        const debouncedUpdate = debounce(updateByteCount, 100);
+
+        // 이미 리스너가 있을 수 있으므로 한 번 제거했다가 다시 추가
+        textarea.removeEventListener('input', debouncedUpdate);
+        textarea.addEventListener('input', debouncedUpdate);
+
+        // 초기 카운트 표시
+        updateByteCount();
+    }
+
+    // 메인 댓글창에 적용
+    const mainCommentArea = document.getElementById('contentArea');
+    if (mainCommentArea) {
+        applyByteCounter(mainCommentArea);
+    }
+
+    // 답글 표시 버튼 클릭 시 대댓글 입력창에도 바이트 카운터 적용
+    document.querySelectorAll('.reply-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            // 해당 댓글 항목 찾기
+            const commentItem = this.closest('.comment-item');
+            if (!commentItem) return;
+
+            // 대댓글 입력창 찾기
+            const replyArea = commentItem.querySelector('.comment-reply-area');
+            if (!replyArea) return;
+
+            // 대댓글 텍스트 영역 찾기
+            const replyTextarea = replyArea.querySelector('textarea');
+            if (replyTextarea) {
+                // 약간 지연을 두고 적용 (표시 애니메이션 이후)
+                setTimeout(() => {
+                    applyByteCounter(replyTextarea);
+                }, 50);
+            }
         });
     });
+
+
+
+
+    //-------------------------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const reportModal = document.getElementById('reportModal');
+        const completionModal = document.getElementById('completionModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelReportBtn = document.getElementById('cancelReportBtn');
+        const submitReportBtn = document.getElementById('submitReportBtn');
+
+        // 신고 대상 정보를 저장할 변수
+        let reportTargetType = ''; // 'post' 또는 'comment'
+        let reportTargetId = '';   // 게시글 ID 또는 댓글 ID
+
+        // 모든 신고 버튼에 직접 onclick 핸들러 할당 (이벤트 위임 방식으로 변경)
+        document.addEventListener('click', function(e) {
+            // 클릭된 요소가 report-btn 클래스를 가지고 있는지 확인
+            if (e.target.classList.contains('report-btn') ||
+                e.target.closest('.report-btn')) {
+                e.preventDefault();
+
+                // 실제 클릭된 버튼을 찾음
+                const reportBtn = e.target.classList.contains('report-btn') ?
+                    e.target : e.target.closest('.report-btn');
+
+                // 신고 대상 정보 설정
+                const commentItem = reportBtn.closest('.comment-item');
+
+                if (commentItem) {
+                    // 댓글 신고
+                    reportTargetType = 'comment';
+                    // data-id 속성이 있으면 사용, 없으면 기본값 사용
+                    reportTargetId = reportBtn.dataset.id || '1';
+                } else {
+                    // 게시글 신고
+                    reportTargetType = 'post';
+                    reportTargetId = reportBtn.dataset.id || '13150';
+                }
+
+                // 모달 표시
+                showModal();
+            }
+        });
+
+        // 모달 닫기 함수
+        function closeModal() {
+            modalBackdrop.style.display = 'none';
+            reportModal.style.display = 'none';
+
+            // 모달 닫을 때 애니메이션 클래스 제거
+            reportModal.classList.remove('fade-in');
+
+            // 폼 초기화
+            document.getElementById('reportForm').reset();
+        }
+
+        // 모달 표시 함수
+        function showModal() {
+            modalBackdrop.style.display = 'block';
+            reportModal.style.display = 'block';
+            reportModal.classList.add('show', 'fade-in');
+            modalBackdrop.classList.add('show');
+        }
+
+        // 닫기 버튼 클릭 시 모달 닫기
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelReportBtn.addEventListener('click', closeModal);
+
+        // 배경 클릭 시 모달 닫기
+        modalBackdrop.addEventListener('click', closeModal);
+
+        // 모달 내부 클릭 시 이벤트 버블링 방지
+        reportModal.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // 신고 제출 버튼 클릭 시
+        submitReportBtn.addEventListener('click', function() {
+            const reportReason = document.getElementById('reportReason').value;
+            const reportDetail = document.getElementById('reportDetail').value;
+
+            // 필수 항목 검증
+            if (!reportReason) {
+                alert('신고 사유를 선택해주세요.');
+                return;
+            }
+
+            // 여기에 신고 데이터 처리 AJAX 요청을 추가할 수 있음
+            // 예: fetch('/api/report', { method: 'POST', body: JSON.stringify({...}) })
+
+            // 신고 모달 닫기
+            reportModal.style.display = 'none';
+
+            // 완료 모달 표시
+            completionModal.style.display = 'block';
+            completionModal.classList.add('zoom-in');
+        });
+
+        // 완료 모달의 확인 버튼 클릭 시 목록 페이지로 이동
+        document.getElementById('confirmReportBtn').addEventListener('click', function() {
+            // 모달 닫기
+            modalBackdrop.style.display = 'none';
+            completionModal.style.display = 'none';
+
+            // 목록 페이지로 이동
+            window.location.href = 'boardfree.action'; // 실제 구현 시 적절한 URL로 변경 필요
+        });
+    });
+
 </script>
 </body>
 </html>
+
+
+<%--.progress-bar-container {--%>
+<%--width: 80%;--%>
+<%--margin: 20px auto 0;--%>
+<%--background-color: var(--color-gray-200);--%>
+<%--border-radius: 10px;--%>
+<%--height: 6px;--%>
+<%--overflow: hidden;--%>
+<%--}--%>
+
+<%--.progress-bar {--%>
+<%--height: 100%;--%>
+<%--width: 0;--%>
+<%--background-color: var(--color-maple);--%>
+<%--transition: width 3s linear;--%>
+<%--}--%>
+
+
+
+
+
+<%--<!-- 신고 완료 모달 -->--%>
+<%--<div class="popup-alert" id="completionModal" style="display: none;">--%>
+<%--    <div class="popup-alert-icon text-success">--%>
+<%--        <i class="fa-solid fa-check-circle"></i>--%>
+<%--    </div>--%>
+<%--    <div class="popup-alert-title">신고가 접수되었습니다</div>--%>
+<%--    <div class="popup-alert-content">검토 후 조치하겠습니다. 잠시 후 목록 페이지로 이동합니다.</div>--%>
+
+<%--    <!-- 진행 상태 표시줄 -->--%>
+<%--    <div class="progress-bar-container">--%>
+<%--        <div class="progress-bar" id="completionProgressBar"></div>--%>
+<%--    </div>--%>
+<%--</div>--%>
+
+
+
+
+
+<%--document.addEventListener('DOMContentLoaded', function() {--%>
+<%--const modalBackdrop = document.getElementById('modalBackdrop');--%>
+<%--const reportModal = document.getElementById('reportModal');--%>
+<%--const completionModal = document.getElementById('completionModal');--%>
+<%--const closeModalBtn = document.getElementById('closeModalBtn');--%>
+<%--const cancelReportBtn = document.getElementById('cancelReportBtn');--%>
+<%--const submitReportBtn = document.getElementById('submitReportBtn');--%>
+
+<%--// 신고 대상 정보를 저장할 변수--%>
+<%--let reportTargetType = ''; // 'post' 또는 'comment'--%>
+<%--let reportTargetId = '';   // 게시글 ID 또는 댓글 ID--%>
+
+<%--// 모든 신고 버튼에 직접 onclick 핸들러 할당 (이벤트 위임 방식으로 변경)--%>
+<%--document.addEventListener('click', function(e) {--%>
+<%--// 클릭된 요소가 report-btn 클래스를 가지고 있는지 확인--%>
+<%--if (e.target.classList.contains('report-btn') ||--%>
+<%--e.target.closest('.report-btn')) {--%>
+<%--e.preventDefault();--%>
+
+<%--// 실제 클릭된 버튼을 찾음--%>
+<%--const reportBtn = e.target.classList.contains('report-btn') ?--%>
+<%--e.target : e.target.closest('.report-btn');--%>
+
+<%--// 신고 대상 정보 설정--%>
+<%--const commentItem = reportBtn.closest('.comment-item');--%>
+
+<%--if (commentItem) {--%>
+<%--// 댓글 신고--%>
+<%--reportTargetType = 'comment';--%>
+<%--// data-id 속성이 있으면 사용, 없으면 기본값 사용--%>
+<%--reportTargetId = reportBtn.dataset.id || '1';--%>
+<%--} else {--%>
+<%--// 게시글 신고--%>
+<%--reportTargetType = 'post';--%>
+<%--reportTargetId = reportBtn.dataset.id || '13150';--%>
+<%--}--%>
+
+<%--// 모달 표시--%>
+<%--showModal();--%>
+<%--}--%>
+<%--});--%>
+
+<%--// 모달 닫기 함수--%>
+<%--function closeModal() {--%>
+<%--modalBackdrop.style.display = 'none';--%>
+<%--reportModal.style.display = 'none';--%>
+
+<%--// 모달 닫을 때 애니메이션 클래스 제거--%>
+<%--reportModal.classList.remove('fade-in');--%>
+
+<%--// 폼 초기화--%>
+<%--document.getElementById('reportForm').reset();--%>
+<%--}--%>
+
+<%--// 모달 표시 함수--%>
+<%--function showModal() {--%>
+<%--modalBackdrop.style.display = 'block';--%>
+<%--reportModal.style.display = 'block';--%>
+<%--reportModal.classList.add('show', 'fade-in');--%>
+<%--modalBackdrop.classList.add('show');--%>
+<%--}--%>
+
+<%--// 닫기 버튼 클릭 시 모달 닫기--%>
+<%--closeModalBtn.addEventListener('click', closeModal);--%>
+<%--cancelReportBtn.addEventListener('click', closeModal);--%>
+
+<%--// 배경 클릭 시 모달 닫기--%>
+<%--modalBackdrop.addEventListener('click', closeModal);--%>
+
+<%--// 모달 내부 클릭 시 이벤트 버블링 방지--%>
+<%--reportModal.addEventListener('click', function(e) {--%>
+<%--e.stopPropagation();--%>
+<%--});--%>
+
+<%--// 신고 제출 버튼 클릭 시--%>
+<%--submitReportBtn.addEventListener('click', function() {--%>
+<%--const reportReason = document.getElementById('reportReason').value;--%>
+<%--const reportDetail = document.getElementById('reportDetail').value;--%>
+
+<%--// 필수 항목 검증--%>
+<%--if (!reportReason) {--%>
+<%--alert('신고 사유를 선택해주세요.');--%>
+<%--return;--%>
+<%--}--%>
+
+<%--// 여기에 신고 데이터 처리 AJAX 요청을 추가할 수 있음--%>
+<%--// 예: fetch('/api/report', { method: 'POST', body: JSON.stringify({...}) })--%>
+
+<%--// 신고 모달 닫기--%>
+<%--modalBackdrop.style.display = 'block';--%>
+<%--reportModal.style.display = 'none';--%>
+
+<%--// 완료 모달 표시--%>
+<%--completionModal.style.display = 'block';--%>
+<%--completionModal.classList.add('zoom-in');--%>
+
+<%--// 진행 상태 표시 (프로그레스 바 애니메이션)--%>
+<%--const progressBar = document.getElementById('completionProgressBar');--%>
+<%--if (progressBar) {--%>
+<%--progressBar.style.width = '100%';--%>
+<%--}--%>
+
+<%--// 3초 후에 목록 페이지로 이동--%>
+<%--setTimeout(function() {--%>
+<%--window.location.href = 'boardfree.action'; // 실제 구현 시 적절한 URL로 변경 필요--%>
+<%--}, 3000);--%>
+<%--});--%>

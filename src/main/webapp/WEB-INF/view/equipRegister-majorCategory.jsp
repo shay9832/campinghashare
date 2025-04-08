@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>1-major-category.jsp</title>
@@ -27,7 +28,7 @@
             if (selectedCategory) {
                 // 다음 페이지로 이동 (선택된 카테고리 파라미터 전달)
                 window.location.href =
-                    "${pageContext.request.contextPath}/middlecategory.action?category=" +
+                    "${pageContext.request.contextPath}/equipregister-middlecategory.action?category=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 // 카테고리가 선택되지 않은 경우 알림
@@ -45,44 +46,19 @@
 
         <h2 class="category-title">카테고리(대분류) 선택</h2>
         <div class="category-grid">
-            <div class="category-item" onclick="selectCategory(this, '텐트/쉘터')">
-                <i class="fa-solid fa-campground"></i>
-                <span class="category-item-text">텐트/쉘터</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '취침용품')">
-                <i class="fa-solid fa-bed"></i>
-                <span class="category-item-text">취침용품</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '캠핑가구')">
-                <i class="fa-solid fa-chair"></i>
-                <span class="category-item-text">캠핑가구</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '조명/전력장비')">
-                <i class="fa-solid fa-lightbulb"></i>
-                <span class="category-item-text">조명/전력장비</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '조리장비')">
-                <i class="fa-solid fa-utensils"></i>
-                <span class="category-item-text">조리장비</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '냉/난방장비')">
-                <i class="fa-solid fa-fan"></i>
-                <span class="category-item-text">냉/난방장비</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '수납/운반용품')">
-                <i class="fa-solid fa-box"></i>
-                <span class="category-item-text">수납/운반용품</span>
-            </div>
-            <div class="category-item" onclick="selectCategory(this, '기타장비')">
-                <i class="fa-solid fa-tools"></i>
-                <span class="category-item-text">기타장비</span>
-            </div>
-        </div>
+            <c:forEach var="category" items="${majorCategory}">
+                <div class="category-item" onclick="selectCategory(this, '${category.category_name}')">
+                    <!-- 카테고리별 아이콘 적용 -->
+                    <i class="${categoryIcons[category.category_name]}"></i>
+                    <span class="category-item-text">${category.category_name}</span>
+                </div>
+            </c:forEach>
+        </div> <!-- 누락된 category-grid 닫는 태그 추가 -->
 
         <!-- 버튼 컨테이너 클래스 변경 -->
         <div class="button-container">
             <a href="#" class="btn">이전</a>
-            <a href="equipRegister-middleCategory.jsp" class="btn btn-primary" onclick="goToNextStep()">다음</a>
+            <a href="equipregister-middlecategory.action" class="btn btn-primary" onclick="goToNextStep()">다음</a>
         </div>
     </main>
 
