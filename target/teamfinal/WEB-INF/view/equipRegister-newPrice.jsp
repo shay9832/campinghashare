@@ -145,6 +145,59 @@
         function setupUIBasedOnBrand() {
             // 원래 주석처리된 함수이지만, ready 함수에서 호출되므로 빈 함수로 구현
         }
+
+        function submitEquipmentForm() {
+            const equipName = document.getElementById("equipNameSearch").value;
+            const price = document.getElementById("priceInput").value.replace(/,/g, '');
+
+            // 입력값 검증
+            if (equipName.trim() === '') {
+                alert("장비명을 입력해주세요.");
+                return false;
+            }
+
+            if (price.trim() === '' || isNaN(price) || parseInt(price) <= 0) {
+                alert("유효한 가격을 입력해주세요.");
+                return false;
+            }
+
+            // 폼 생성 및 제출
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "${pageContext.request.contextPath}/equipregister-complete.action";
+
+            // 히든 필드 추가
+            const fields = {
+                "majorCategory": "${majorCategory}",
+                "middleCategory": "${middleCategory}",
+                "brand": "${brand}",
+                "equipName": equipName,
+                "originalPrice": price
+            };
+
+            // 사진 정보도 함께 전송하기 위한 처리
+            const photos = document.querySelectorAll('#photosContainer .photo-preview img');
+            if (photos.length > 0) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "hasPhotos";
+                input.value = "true";
+                form.appendChild(input);
+            }
+
+            // 각 필드를 폼에 추가
+            for (const key in fields) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+
+            // 폼을 body에 추가하고 제출
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 
 </head>
@@ -237,7 +290,7 @@
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
             <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}" class="btn">이전</a>
-            <a href="equipregister-complete.action" class="btn btn-primary" onclick="">등록</a>
+            <a href="javascript:void(0)" class="btn btn-primary" onclick="submitEquipmentForm()">등록</a>
         </div>
     </main>
 

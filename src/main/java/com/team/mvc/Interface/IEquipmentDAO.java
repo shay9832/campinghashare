@@ -11,13 +11,14 @@ public interface IEquipmentDAO {
 
     int getLastEquipId();
 
-    int addEquipment(EquipmentDTO dto);
-
-    // 장비명 검색
-    Integer searchEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);
+    int insertEquipment(EquipmentDTO dto);
 
     // 브랜드가 '기타'일 경우
     Integer insertEquip(@Param("brandId") int brandId, @Param("equipName") String equipName);
 
-    Integer searchCategoryId(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
+
+    Integer getCategoryById(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
+
+    // 장비명 ID 조회
+    Integer getEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);
 }
