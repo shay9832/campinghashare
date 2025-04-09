@@ -195,32 +195,9 @@
           </tr>
 
           <!-- 검수 데이터 행 -->
-          <c:forEach var="inspect" items="${list}">
-            <tr>
-              <td class="checkbox-column"><input type="checkbox"></td>
-              <td>${inspect.equipCode}</td>
-              <td>${inspect.inspectName}</td>
-              <td>${inspect.equipName}</td>
-              <td>${inspect.categoryName}</td>
-              <td>${inspect.inspectList}</td>
-              <td>${inspect.adminId}</td>
-              <td><button class="process-btn" onclick="openInspectionModal(this)">검수처리</button></td>
-              <%--검수결과에 따른 결과처리--%>
-              <td>
-                <c:if test="${inspect.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
-                </c:if>
-              </td>
-              <td>${inspect.inspectComment}</td>
-              <td><span class="status-badge status-pass">${inspect.inspectState}</span></td>
-            </tr>
-          </c:forEach>
+
+
+
         </table>
       </div>
     </div>
@@ -247,7 +224,32 @@
 
           <!-- 1차 검수 데이터 행 -->
 
-
+          <c:forEach var="inspect" items="${list}">
+            <tr>
+              <td class="checkbox-column"><input type="checkbox"></td>
+              <td>${inspect.equipCode}</td>
+              <td>${inspect.inspectName}</td>
+              <td>${inspect.equipName}</td>
+              <td>${inspect.categoryName}</td>
+              <td>${inspect.inspectList}</td>
+              <td>${inspect.adminId}</td>
+              <td><button class="process-btn" onclick="openInspectionModal(this)">검수처리</button></td>
+                <%--검수결과에 따른 결과처리--%>
+              <td>
+                <c:if test="${inspect.inspectResult eq '상'}">
+                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '중'}">
+                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '하'}">
+                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                </c:if>
+              </td>
+              <td>${inspect.inspectComment}</td>
+              <td><span class="status-badge status-pass">${inspect.inspectState}</span></td>
+            </tr>
+          </c:forEach>
 
 
         </table>
@@ -274,13 +276,33 @@
             <th class="col-status">검수상태</th>
           </tr>
 
-          <!-- 2차 검수 데이터 행 -->
-
-
-
-
-
-
+          <!--2차 검수 데이터 행-->
+          <c:forEach var="inspectr" items="${listr}">
+            <tr>
+              <td class="checkbox-column"><input type="checkbox"></td>
+              <td>${inspectr.equipCode}</td>
+              <td>${inspectr.inspectName}</td>
+              <td>${inspectr.equipName}</td>
+              <td>${inspectr.categoryName}</td>
+              <td>${inspectr.inspectList}</td>
+              <td>${inspectr.adminId}</td>
+              <td><button class="process-btn" onclick="openInspectionModal(this)">검수처리</button></td>
+                <%--검수결과에 따른 결과처리--%>
+              <td>
+                <c:if test="${inspectr.inspectResult eq '상'}">
+                  <span class="status-badge status-pass">${inspectr.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspectr.inspectResult eq '중'}">
+                  <span class="status-badge status-pending">${inspectr.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspectr.inspectResult eq '하'}">
+                  <span class="status-badge status-fail">${inspectr.inspectResult}</span>
+                </c:if>
+              </td>
+              <td>${inspectr.inspectComment}</td>
+              <td><span class="status-badge status-pass">${inspectr.inspectState}</span></td>
+            </tr>
+          </c:forEach>
         </table>
       </div>
     </div>
@@ -319,20 +341,88 @@
             </div>
             <div class="form-group">
               <label for="equipCategory">카테고리</label>
-              <input type="text" id="equipCategory" disabled="disabled">
+              <input type="text" id="equipCategory" class="form-control" disabled="disabled">
             </div>
-            <div class="form-group">
-              <label for="deductionPoints">총 감점점수</label>
-              <input type="number" id="deductionPoints" class="form-control" min="0" max="100" onchange="calculateGrade()">
-              <div class="grade-display">
-                <span>장비등급:</span>
-                <span id="gradeDisplay" class="grade-badge grade-a">A</span>
+            <div class="form-group checklist-form-group">
+              <label for="checklistTable">체크리스트</label>
+              <div class="checklist-container">
+                <table id="checklistTable" class="checklist-table">
+                  <thead>
+                  <tr>
+                    <th rowspan="2">검수 항목</th>
+                    <th colspan="3">기준</th>
+                    <th colspan="2">결과</th>
+                  </tr>
+                  <tr>
+                    <th>상</th>
+                    <th>중</th>
+                    <th>하</th>
+                    <th>코멘트</th>
+                    <th>점수</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>외관 보존 상태</td>
+                    <td><input type="checkbox" name="외관보존상태" value="상" class="grade-checkbox"> 사용감 거의 없음, 신품 수준 외관</td>
+                    <td><input type="checkbox" name="외관보존상태" value="중" class="grade-checkbox"> 마모 등 경미한 사용감 있음</td>
+                    <td><input type="checkbox" name="외관보존상태" value="하" class="grade-checkbox"> 뚜렷한 사용 흔적, 외관 낡고 변색</td>
+                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                    <td class="score-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>물리적 무손상 상태</td>
+                    <td><input type="checkbox" name="물리적무손상상태" value="상" class="grade-checkbox"> 파손 없음</td>
+                    <td><input type="checkbox" name="물리적무손상상태" value="중" class="grade-checkbox"> 작은 손상 있음</td>
+                    <td><input type="checkbox" name="물리적무손상상태" value="하" class="grade-checkbox"> 심한 손상 있음</td>
+                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                    <td class="score-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>청결/세정 상태</td>
+                    <td><input type="checkbox" name="청결세정상태" value="상" class="grade-checkbox"> 오염 없음</td>
+                    <td><input type="checkbox" name="청결세정상태" value="중" class="grade-checkbox"> 약간의 오염 있음</td>
+                    <td><input type="checkbox" name="청결세정상태" value="하" class="grade-checkbox"> 심한 오염 있음</td>
+                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                    <td class="score-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>부속품 완비</td>
+                    <td><input type="checkbox" name="부속품완비" value="상" class="grade-checkbox"> 부속품(매뉴얼 등) 모두 보유</td>
+                    <td><input type="checkbox" name="부속품완비" value="중" class="grade-checkbox"> 일부 부속품 누락</td>
+                    <td><input type="checkbox" name="부속품완비" value="하" class="grade-checkbox"> 필수 부속품 누락</td>
+                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                    <td class="score-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>기능 작동성</td>
+                    <td><input type="checkbox" name="기능작동성" value="상" class="grade-checkbox"> 기능 모두 정상 작동</td>
+                    <td><input type="checkbox" name="기능작동성" value="중" class="grade-checkbox"> 일부 기능 약간 미흡</td>
+                    <td><input type="checkbox" name="기능작동성" value="하" class="grade-checkbox"> 기능 중 하나 이상 심각한 문제 있음</td>
+                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                    <td class="score-cell">20</td>
+                  </tr>
+                  <tr class="total-row">
+                    <td colspan="4" style="text-align: right;"><strong>합계</strong></td>
+                    <td id="totalScore" class="total-score">100</td>
+                    <td id="finalGrade" class="final-grade">A</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="grade-info">
+                <p><strong>[등급 판정 기준]</strong></p>
+                <div class="grade-badges">
+                  <span class="grade-info-badge grade-a">A</span> 100-90점
+                  <span class="grade-info-badge grade-b">B</span> 89-80점
+                  <span class="grade-info-badge grade-c">C</span> 79-70점
+                  <span class="grade-info-badge grade-d">D</span> 69-60점
+                  <span class="grade-info-badge grade-e">E</span> 59-50점
+                  <span class="grade-info-badge grade-f">F</span> 49점 이하 (스토렌/렌탈 이용 불가)
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <label for="inspectionComment">검수코멘트</label>
-              <textarea id="inspectionComment" class="form-control" rows="3"></textarea>
-            </div>
+
             <div class="form-group">
               <label for="processDate">처리일</label>
               <input type="text" id="processDate" class="form-control" disabled>
@@ -357,16 +447,14 @@
         const equipCode = row.cells[1].textContent;
         const inspectionType = row.cells[2].textContent;
         const equipName = row.cells[3].textContent;
-        const inspectionComment = row.cells[9].textContent;
+        const categoryName = row.cells[4].textContent;
 
         // 모달 폼에 데이터 설정
         document.getElementById('equipCode').value = equipCode;
         document.getElementById('deliveryId').value = 'DELV-' + Math.floor(Math.random() * 10000);
         document.getElementById('inspectionType').value = inspectionType;
         document.getElementById('equipName').value = equipName;
-
-        document.getElementById('deductionPoints').value = '0';
-        document.getElementById('inspectionComment').value = inspectionComment;
+        document.getElementById('equipCategory').value = categoryName;
 
         // 현재 날짜와 시간 설정
         const now = new Date();
@@ -378,8 +466,8 @@
                 String(now.getSeconds()).padStart(2, '0');
         document.getElementById('processDate').value = formattedDate;
 
-        // 등급 계산 및 표시
-        calculateGrade();
+        // 체크리스트 초기화
+        initChecklistFunctionality();
 
         // 모달 표시
         modal.style.display = 'block';
@@ -475,13 +563,29 @@
         // 현재 처리 중인 행 참조
         const row = document.querySelector('.process-btn:focus').closest('tr');
 
-        // 모달에서 선택한 검수 결과 가져오기
-        const commentText = document.getElementById('inspectionComment').value;
+        // 최종 등급 가져오기
+        const finalGrade = document.getElementById('finalGrade').textContent;
+
+        // 검수 결과 설정 (A, B는 합격, C, D는 대기중, E, F는 불합격)
+        let resultType;
+        let resultClass;
+
+        if (finalGrade === 'A' || finalGrade === 'B') {
+          resultType = '상';
+          resultClass = 'status-pass';
+        } else if (finalGrade === 'C' || finalGrade === 'D') {
+          resultType = '중';
+          resultClass = 'status-pending';
+        } else {
+          resultType = '하';
+          resultClass = 'status-fail';
+        }
+
 
         // 검수 결과 셀 업데이트
         const resultCell = row.cells[8]; // 검수결과 열의 인덱스
 
-        // 결과 배지 업데이트 (없으면 새로 생성)
+        // 결과 배지 업데이트
         let resultBadge = resultCell.querySelector('.status-badge');
         if (!resultBadge) {
           resultBadge = document.createElement('span');
@@ -491,16 +595,7 @@
         }
 
         resultBadge.textContent = resultType;
-
-        // 클래스 업데이트
-        resultBadge.className = 'status-badge';
-        if (resultType === '합격') {
-          resultBadge.classList.add('status-pass');
-        } else if (resultType === '불합격') {
-          resultBadge.classList.add('status-fail');
-        } else {
-          resultBadge.classList.add('status-pending');
-        }
+        resultBadge.className = 'status-badge ' + resultClass;
 
         // 검수 코멘트 업데이트
         const commentCell = row.cells[9]; // 검수코멘트 열의 인덱스
@@ -541,6 +636,100 @@
           }
         });
       });
+
+      // 체크리스트 점수 계산 함수
+      function initChecklistFunctionality() {
+        const checkboxes = document.querySelectorAll('.grade-checkbox');
+
+        // 각 체크박스에 이벤트 리스너 추가
+        checkboxes.forEach(checkbox => {
+          checkbox.addEventListener('change', function() {
+            // 같은 행의 다른 체크박스 선택 해제
+            const name = this.name;
+            document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+              if(cb !== this) cb.checked = false;
+            });
+
+            updateScores();
+          });
+        });
+
+        // 초기 점수 계산
+        updateScores();
+      }
+
+      // 점수 업데이트 함수
+      function updateScores() {
+        const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+        let totalScore = 0; // 총점 초기화
+
+        rows.forEach(row => {
+          const checkboxes = row.querySelectorAll('.grade-checkbox');
+          const scoreCell = row.querySelector('.score-cell');
+
+          let score = 20; // 기본 점수 20점
+          let selectedGrade = null;
+
+          // 선택된 등급 확인
+          checkboxes.forEach(checkbox => {
+            if(checkbox.checked) {
+              selectedGrade = checkbox.value;
+
+              // 등급별 점수 설정
+              switch(selectedGrade) {
+                case '상':
+                  score = 20; // 감점 없음
+                  break;
+                case '중':
+                  score = 13; // 중간 점수
+                  break;
+                case '하':
+                  score = 6; // 낮은 점수
+                  break;
+                default:
+                  score = 20; // 기본값
+              }
+            }
+          });
+
+          // 점수 업데이트
+          scoreCell.textContent = score;
+
+          // 총점 계산에 추가
+          totalScore += score;
+        });
+
+        // 총점 업데이트
+        document.getElementById('totalScore').textContent = totalScore;
+
+        // 등급 계산 및 업데이트
+        const finalGradeElement = document.getElementById('finalGrade');
+        let gradeClass = '';
+        let grade = '';
+
+        if (totalScore >= 90) {
+          grade = 'A';
+          gradeClass = 'grade-a';
+        } else if (totalScore >= 80) {
+          grade = 'B';
+          gradeClass = 'grade-b';
+        } else if (totalScore >= 70) {
+          grade = 'C';
+          gradeClass = 'grade-c';
+        } else if (totalScore >= 60) {
+          grade = 'D';
+          gradeClass = 'grade-d';
+        } else if (totalScore >= 50) {
+          grade = 'E';
+          gradeClass = 'grade-e';
+        } else {
+          grade = 'F';
+          gradeClass = 'grade-f';
+        }
+
+        finalGradeElement.textContent = grade;
+        finalGradeElement.className = 'final-grade ' + gradeClass;
+      }
     </script>
   </div>
 </div>

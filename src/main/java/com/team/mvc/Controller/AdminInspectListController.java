@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.DTO.AdminInspectListDTO;
 import com.team.mvc.Interface.IAdminInspectListDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,20 @@ public class AdminInspectListController {
         IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
 
         model.addAttribute("list",dao.list());
+        model.addAttribute("listr",dao.listr());
 
         return "admin-inspectList";
-
     }
+
+    @RequestMapping(value="/admin-inspectList.action",method=RequestMethod.POST)
+    public String adminInspectListAdd(AdminInspectListDTO ai) {
+
+        IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+
+        dao.add(ai);
+
+        return "redirect:/admin-inspectList.action";
+    }
+
+
 }
