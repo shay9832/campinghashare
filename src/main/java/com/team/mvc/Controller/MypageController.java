@@ -1,6 +1,7 @@
 package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.EquipmentDTO;
+import com.team.mvc.DTO.MyEquipDTO;
 import com.team.mvc.DTO.StorenDTO;
 import com.team.mvc.Interface.*;
 import jakarta.servlet.http.HttpSession;
@@ -20,8 +21,10 @@ import java.util.List;
 public class MypageController {
 
     // 자동 의존성 주입
+    //@Autowired
+    //private SqlSession sqlSession;
     @Autowired
-    private SqlSession sqlSession;
+    private IMypageMyEquipService myEquipService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -84,17 +87,23 @@ public class MypageController {
     // 마이페이지-내가 소유한 장비
     @RequestMapping(value="/mypage-myequip.action")
     public String mypageMyEquip(Model model) {
-        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
-//        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
-        IStorenService storenDao = sqlSession.getMapper(IStorenService.class);
+        //IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
 
-        ArrayList<StorenDTO> storenList = (ArrayList<StorenDTO>) storenDao.getStorenListWithEquipment(2);
+        //List<StorenDTO> storenList = storenService.getStorenListWithEquipment(2);
 
         // &&로그인 완성 후 세션에서 받은 유저 코드로 매개변수 수정해야함!!
-        ArrayList<EquipmentDTO> equipList = equipDao.listByUserCode(2);
-//        ArrayList<StorenDTO> storenList = storenDAO.listByUserCode(2);
-        model.addAttribute("equipList", equipList);
-        model.addAttribute("storenList", storenList);
+        //ArrayList<EquipmentDTO> equipList = equipDao.listByUserCode(2);
+        //model.addAttribute("equipList", equipList);
+        //model.addAttribute("storenList", storenList);
+
+
+        MyEquipDTO data = myEquipService.listMyEquip(2); // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+
+        model.addAttribute("equipList", data.getEquipList());
+        model.addAttribute("storenMap", data.getStorenMap());
+        model.addAttribute("firstStorenList", data.getFirstStorenList());
+        //rentalList, storageList도 받아와야함
+
 
         return "myPage-myEquip";
     }
