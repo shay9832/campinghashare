@@ -1,41 +1,123 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.final</groupId>
   <artifactId>teamfinal</artifactId>
-  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>teamfinal Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <packaging>war</packaging>
+  <name>Team Final Project</name>
+
+  <!-- Java 버전 설정 -->
+  <properties>
+    <maven.compiler.source>23</maven.compiler.source>
+    <maven.compiler.target>23</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
+    <!-- JUnit -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+
+    <!-- Spring Core -->
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
+      <artifactId>spring-core</artifactId>
       <version>6.1.14</version>
     </dependency>
+
+    <!-- Spring Context -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
       <version>6.1.14</version>
     </dependency>
+
+    <!-- Spring Web MVC -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>6.1.14</version>
+    </dependency>
+
+    <!-- Spring JDBC -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>6.1.14</version>
+    </dependency>
+
+    <!-- Spring Transaction -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>6.1.14</version>
+    </dependency>
+
+    <!-- MyBatis -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis</artifactId>
+      <version>3.5.15</version>
+    </dependency>
+
+    <!-- MyBatis Spring 연동 -->
+    <dependency>
+      <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId>
+      <version>3.0.3</version>
+    </dependency>
+
+    <!-- Oracle JDBC Driver (Maven Central 등록된 버전 사용) -->
+    <dependency>
+      <groupId>com.oracle.database.jdbc</groupId>
+      <artifactId>ojdbc11</artifactId>
+      <version>21.9.0.0</version>
+    </dependency>
+
+    <!-- Servlet API (Tomcat 10.x는 Jakarta Servlet 6.0 기반) -->
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSTL -->
+    <dependency>
+      <groupId>jakarta.servlet.jsp.jstl</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.web</groupId>
+      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
   </dependencies>
+
   <build>
     <finalName>teamfinal</finalName>
-    <resources>
-      <resource>
-        <directory>src/main/webapp</directory>
-        <targetPath>META-INF/resources</targetPath>
-        <includes>
-          <include>**/*.*</include>
-        </includes>
-      </resource>
-    </resources>
+    <plugins>
+      <!-- Java 컴파일 플러그인 -->
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.11.0</version>
+        <configuration>
+          <source>23</source>
+          <target>23</target>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>
+
