@@ -94,6 +94,12 @@ public class EquipController {
         model.addAttribute("brand", brand);
         return "equipRegister-newPrice";
     }
+
+    @RequestMapping("/equipregister-complete.action")
+    public String equipComplete(){
+        return "equipRegister-complete";
+    }
+
 }
 
 
