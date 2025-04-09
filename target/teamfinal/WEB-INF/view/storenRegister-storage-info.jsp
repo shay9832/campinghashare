@@ -127,7 +127,6 @@
                                 <button class="increase">+</button>
                             </div>
                             <span class="ml-2">개월(30일 기준)</span>
-                            <div class="ml-4" style="font-weight: bold">일일 보관 비용: <span id="dailyPrice" style="font-weight: bold">3,000</span>원</div>
                         </div>
                     </div>
                 </div>
