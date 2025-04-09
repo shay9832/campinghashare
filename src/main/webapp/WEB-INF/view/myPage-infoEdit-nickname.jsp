@@ -21,7 +21,7 @@
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
-<div class="container mypage-container section">
+<div class="container container-wide mypage-container section">
   <!-- 마이페이지 사이드바 -->
   <div class="sidebar">
     <div class="sidebar-title">마이 페이지</div>
@@ -31,14 +31,9 @@
           <span>회원 관리</span>
         </a>
         <ul class="submenu">
-<<<<<<< Updated upstream
-          <li><a href="myPage-infoEdit.jsp" class="sidebar-link active">회원 정보 수정</a></li>
-=======
           <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link active">회원 정보 수정</a></li>
->>>>>>> Stashed changes
-          <li><a href="#" class="sidebar-link">회원 등급</a></li>
-          <li><a href="#" class="sidebar-link">신뢰도</a></li>
-          <li><a href="#" class="sidebar-link">포인트</a></li>
+          <li><a href="myPage-trust.jsp" class="sidebar-link">신뢰도</a></li>
+          <li><a href="myPage-point.jsp" class="sidebar-link">포인트</a></li>
         </ul>
       </li>
       <li class="sidebar-menu-item">
@@ -46,24 +41,21 @@
           <span>이용 내역 조회</span>
         </a>
         <ul class="submenu">
-<<<<<<< Updated upstream
-          <li><a href="#" class="sidebar-link">내 장비 목록</a></li>
-          <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-          <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
-=======
-          <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
-          <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
+          <li><a href="myPage-myEquip.jsp" class="sidebar-link">내가 소유한 장비</a></li>
+          <li><a href="myPage-inspecList.jsp" class="sidebar-link">검수 결과 조회</a></li>
+          <li><a href="myPage-delivery.jsp" class="sidebar-link">배송 조회/내역</a></li>
+          <li><a href="myPage-matchingList.jsp" class="sidebar-link">매칭 조회/내역</a></li>
+          <li><a href="myPage-rentEquip.jsp" class="sidebar-link">내가 대여한 장비</a></li>
           <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
->>>>>>> Stashed changes
         </ul>
       </li>
       <li class="sidebar-menu-item">
-        <a href="#" class="sidebar-link title">
+        <a href="myPage-wishlist.jsp" class="sidebar-link title">
           <span>찜</span>
         </a>
       </li>
       <li class="sidebar-menu-item">
-        <a href="#" class="sidebar-link title">
+        <a href="" class="sidebar-link title">
           <span>나의 캠핑일지</span>
         </a>
       </li>
