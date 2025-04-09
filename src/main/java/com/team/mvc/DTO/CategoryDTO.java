@@ -1,8 +1,5 @@
 package com.team.mvc.DTO;
 
-import org.apache.ibatis.annotations.Mapper;
-
-@Mapper
 public class CategoryDTO {
     private int category_id;
     private String category_name;

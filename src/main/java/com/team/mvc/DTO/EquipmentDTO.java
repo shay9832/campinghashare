@@ -1,8 +1,5 @@
 package com.team.mvc.DTO;
 
-import org.apache.ibatis.annotations.Mapper;
-
-@Mapper
 public class EquipmentDTO {
     private int equip_id, equip_code, user_code, category_id, equip_name_id, original_price;
     private String created_date;

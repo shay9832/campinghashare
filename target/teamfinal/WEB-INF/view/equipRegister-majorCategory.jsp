@@ -1,9 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-
 <html>
 <head>
-    <title>equipRegister-middleCategory.jsp</title>
+    <title>1-major-category.jsp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 
@@ -29,9 +28,7 @@
             if (selectedCategory) {
                 // 다음 페이지로 이동 (선택된 카테고리 파라미터 전달)
                 window.location.href =
-                    "${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=" +
-                    encodeURIComponent('${majorCategory}') +
-                    "&middleCategory=" +
+                    "${pageContext.request.contextPath}/equipregister-middlecategory.action?category=" +
                     encodeURIComponent(selectedCategory);
             } else {
                 // 카테고리가 선택되지 않은 경우 알림
@@ -47,18 +44,20 @@
     <main class="main-content container">
         <h1 class="page-title">내 장비 등록</h1>
 
-        <h2 class="category-title">카테고리(중분류) 선택</h2>
-        <div class="category-grid category-grid-medium">
-            <c:forEach var="category" items="${middleCategory}">
+        <h2 class="category-title">카테고리(대분류) 선택</h2>
+        <div class="category-grid">
+            <c:forEach var="category" items="${majorCategory}">
                 <div class="category-item" onclick="selectCategory(this, '${category.category_name}')">
+                    <!-- 카테고리별 아이콘 적용 -->
+                    <i class="${categoryIcons[category.category_name]}"></i>
                     <span class="category-item-text">${category.category_name}</span>
                 </div>
             </c:forEach>
-        </div>
+        </div> <!-- 누락된 category-grid 닫는 태그 추가 -->
 
-        <!-- 버튼 컨테이너 -->
+        <!-- 버튼 컨테이너 클래스 변경 -->
         <div class="button-container">
-            <a href="${pageContext.request.contextPath}/equipregister-majorcategory.action" class="btn">이전</a>
+            <a href="#" class="btn">이전</a>
             <a href="#" class="btn btn-primary" onclick="goToNextStep()">다음</a>
         </div>
     </main>
