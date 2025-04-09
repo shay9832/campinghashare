@@ -176,13 +176,12 @@
             };
 
             // 사진 정보도 함께 전송하기 위한 처리
-            const photos = document.querySelectorAll('#photosContainer .photo-preview img');
-            if (photos.length > 0) {
-                const input = document.createElement("input");
-                input.type = "hidden";
-                input.name = "hasPhotos";
-                input.value = "true";
-                form.appendChild(input);
+            if (document.querySelectorAll('#photosContainer .photo-preview').length > 0) {
+                const hasPhotosInput = document.createElement("input");
+                hasPhotosInput.type = "hidden";
+                hasPhotosInput.name = "hasPhotos";
+                hasPhotosInput.value = "true";
+                form.appendChild(hasPhotosInput);
             }
 
             // 각 필드를 폼에 추가
@@ -198,6 +197,72 @@
             document.body.appendChild(form);
             form.submit();
         }
+
+        function setupEquipNameDropdown() {
+            const searchInput = document.getElementById('equipNameSearch');
+            const searchContainer = searchInput.closest('.search-container');
+            const brand = "${brand}"; // JSP 표현식으로 브랜드 값 가져오기
+
+            // 드롭다운 엘리먼트 생성
+            const dropdown = document.createElement('div');
+            dropdown.id = 'equipNameDropdown';
+            searchContainer.appendChild(dropdown);
+
+            // AJAX로 장비명 목록 가져오기
+            function fetchEquipNames(searchTerm = '') {
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/getEquipNamesByBrand.action",
+                    type: "GET",
+                    data: { brand: brand },
+                    success: function(equipNames) {
+                        // 검색어 필터링
+                        const filteredNames = equipNames.filter(name =>
+                            name.toLowerCase().includes(searchTerm.toLowerCase())
+                        );
+
+                        // 드롭다운 내용 업데이트
+                        dropdown.innerHTML = filteredNames.map(name =>
+                            `<div class="dropdown-item">${name}</div>`
+                        ).join('');
+
+                        // 드롭다운 표시
+                        dropdown.style.display = filteredNames.length > 0 ? 'block' : 'none';
+                    },
+                    error: function() {
+                        // 에러 처리
+                        dropdown.innerHTML = '<div class="dropdown-item">장비명을 불러올 수 없습니다.</div>';
+                        dropdown.style.display = 'block';
+                    }
+                });
+            }
+
+            // 초기 로딩 시 한 번 호출
+            fetchEquipNames();
+
+            // 입력 이벤트 리스너
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value;
+                fetchEquipNames(searchTerm);
+            });
+
+            // 드롭다운 항목 클릭 이벤트
+            dropdown.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dropdown-item')) {
+                    // 선택된 항목으로 입력창 채우기
+                    searchInput.value = e.target.textContent;
+                    // 드롭다운 숨기기
+                    dropdown.style.display = 'none';
+                }
+            });
+
+            // 문서 클릭 시 드롭다운 숨기기
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        }
+
     </script>
 
 </head>
@@ -251,7 +316,7 @@
                 <label>장비명</label>
                 <div class="input-container">
                     <div class="search-container">
-                        <input type="text" placeholder="장비명 검색 및 선택" class="search-input" id="equipNameSearch">
+                        <input type="text" placeholder="장비명 검색 및 선택" class="search-input" id="equipNameSearch" name="equipName">
                         <button class="search-button">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </button>
@@ -262,7 +327,7 @@
             <div class="equipinfo-item">
                 <label>신품가격</label>
                 <div class="input-container price-row">
-                    <input type="text" placeholder="금액 입력" class="price-input" id="priceInput">
+                    <input type="text" placeholder="금액 입력" class="price-input" id="priceInput" name="originalPrice">
                     <span class="currency">원</span>
                     <div class="price-comparison" id="priceComparison">
                         <span class="price-diff" id="priceDiff">(평균 대비 22%▲)</span>
