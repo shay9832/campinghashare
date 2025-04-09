@@ -17,6 +17,84 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <style>
+        /* 확장 행을 위한 스타일 */
+        .matching-row.rental-header {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .matching-row.rental-header:hover {
+            background-color: #f5f8f5;
+        }
+
+        .matching-row.rental-header.active {
+            background-color: #f5f8f5;
+            border-bottom: none;
+        }
+
+        .matching-row.rental-header .match-count {
+            font-weight: 600;
+            color: #3f861d;
+        }
+
+        .matching-details-container {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .details-title {
+            color: #2C5F2D;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .details-info {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #555;
+            background-color: #f0f4f0;
+            padding: 10px 15px;
+            border-radius: 4px;
+            border-left: 3px solid #2C5F2D;
+        }
+
+        .details-info.matched {
+            background-color: #e8f5e8;
+            border-left: 3px solid #4caf50;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .details-table th {
+            background-color: #f0f4f0;
+            color: #555;
+            padding: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .details-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .details-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .text-left {
+            text-align: left !important;
+        }
+    </style>
 </head>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
@@ -287,7 +365,7 @@
                             <th class="checkbox-col">
                             </th>
                             <th>장비 이미지</th>
-                            <th>장비 정보</th>
+                            <th>일반 장비 정보</th>
                             <th>신청</th>
                         </tr>
                         </thead>
@@ -347,14 +425,14 @@
                                 <span>선택</span>
                             </th>
                             <th>장비 이미지</th>
-                            <th>장비 정보</th>
-                            <th>스토렌ID</th>
+                            <th>일반 장비 정보</th>
+                            <th>스토렌 정보</th>
                             <th>처리</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach var="storen" items="${storenList}">
-                            <tr class="table-row">
+                        <c:forEach var="storen" items="${firstStorenList}">
+                            <tr class="table-row matching-row rental-header" data-id="${storen.equip_code}" data-expanded="false">
                                 <td class="checkbox-col">
                                     <input type="checkbox" class="form-check-input storen-checkbox">
                                 </td>
@@ -365,135 +443,93 @@
                                 </td>
                                 <td>
                                     <div class="equipment-info-container">
-                                        <div class="equipment-code">장비 코드 : ${storen.equip_code}</div>
+                                        <div class="equipment-code">${storen.equip_code}</div>
                                         <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${storen.equipmentDTO.equip_name}</a>
                                         <div class="equipment-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</div>
                                         <div class="equipment-brand">${storen.equipmentDTO.brand}</div>
                                         <div class="equipment-date">${storen.equipmentDTO.created_date}</div>
-                                        <div class="equipment-brand">${storen.storen_title}</div>
                                     </div>
                                 </td>
                                 <td>
-                                    <select class="id-select-control">
-                                        <option>STOREN01</option>
-                                        <option>STOREN01</option>
-                                        <option>STOREN01</option>
-                                        <option>STOREN01</option>
-                                    </select>
+                                    <div class="equipment-info-container">
+                                        <div class="equipment-code">스토렌ID : ${storen.storen_id}</div>
+                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${storen.storen_title}</a>
+                                        <div class="equipment-category">${storen.store_month} 개월 보관</div>
+                                        <div class="equipment-date">스토렌등록 : ${storen.created_date}</div>
+                                        <div class="equipment-date">보관시작일 : 2023-04-15</div>
+                                        <div class="equipment-date">보관종료일 : 2023-07-15</div>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="button-group-vertical">
                                         <button class="btn-sm btn-storen">검수 결과 확인</button>
                                         <button class="btn-sm btn-rental">배송 내역 조회</button>
-                                        <button class="btn-sm btn-storage">매칭 신청 승인</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="matching-details" data-parent="${storen.equip_code}" style="display: none;">
+                                <td colspan="5">
+                                    <div class="content-box-sm matching-details-container">
+                                        <h6 class="content-box-title details-title">스토렌 상품글 목록</h6>
+                                        <div class="details-info">
+                                            <p>스토렌 상품글은 보관기한 내 자동으로 생성됩니다.</p>
+                                        </div>
+                                        <table class="details-table">
+                                            <thead>
+                                            <tr>
+                                                <th>스토렌ID</th>
+                                                <th>스토렌제목</th>
+                                                <th>렌탈가능일</th>
+                                                <th>일일렌탈가격</th>
+                                                <th>생성일</th>
+                                                <th>액션</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <c:forEach var="sub" items="${storenMap[storen.equip_code]}">
+                                            <tr>
+                                                <td>
+                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">${sub.storen_id}</a>
+                                                </td>
+                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">${sub.storen_title}</a></td>
+                                                <td>2023-04-20 ~ 2023-05-20</td>
+                                                <td><span class="trust-score high">${sub.daily_rent_price} 원</span></td>
+                                                <td>${sub.created_date}</td>
+                                                <td>
+                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>
+                                                </td>
+                                            </tr>
+<%--                                            <tr>--%>
+<%--                                                <td>--%>
+<%--                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">스토렌id</a>--%>
+<%--                                                </td>--%>
+<%--                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">아주 깨끗하게 잘 쓴 텐트~!</a></td>--%>
+<%--                                                <td>2023-04-20 ~ 2023-05-20</td>--%>
+<%--                                                <td><span class="trust-score high">1000 원</span></td>--%>
+<%--                                                <td>2023-04-15</td>--%>
+<%--                                                <td>--%>
+<%--                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>--%>
+<%--                                                </td>--%>
+<%--                                            </tr>--%>
+<%--                                            <tr>--%>
+<%--                                                <td>--%>
+<%--                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">스토렌id</a>--%>
+<%--                                                </td>--%>
+<%--                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">아주 깨끗하게 잘 쓴 텐트~!</a></td>--%>
+<%--                                                <td>2023-04-20 ~ 2023-05-20</td>--%>
+<%--                                                <td><span class="trust-score high">1000 원</span></td>--%>
+<%--                                                <td>2023-04-15</td>--%>
+<%--                                                <td>--%>
+<%--                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>--%>
+<%--                                                </td>--%>
+<%--                                            </tr>--%>
+                                            </c:forEach>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </td>
                             </tr>
                         </c:forEach>
-<%--                        <tr class="table-row">--%>
-<%--                            <td class="checkbox-col">--%>
-<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="product-image">--%>
-<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="equipment-info-container">--%>
-<%--                                    <div class="equipment-code">EQ1001</div>--%>
-<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
-<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
-<%--                                    <div class="equipment-brand">코베아</div>--%>
-<%--                                    <div class="equipment-date">2023-04-15</div>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <select class="id-select-control">--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                </select>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="button-group-vertical">--%>
-<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
-<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
-<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                        </tr>--%>
-
-<%--                        <tr class="table-row">--%>
-<%--                            <td class="checkbox-col">--%>
-<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="product-image">--%>
-<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="equipment-info-container">--%>
-<%--                                    <div class="equipment-code">EQ1001</div>--%>
-<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
-<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
-<%--                                    <div class="equipment-brand">코베아</div>--%>
-<%--                                    <div class="equipment-date">2023-04-15</div>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <select class="id-select-control">--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                </select>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="button-group-vertical">--%>
-<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
-<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
-<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                        </tr>--%>
-
-<%--                        <tr class="table-row">--%>
-<%--                            <td class="checkbox-col">--%>
-<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="product-image">--%>
-<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="equipment-info-container">--%>
-<%--                                    <div class="equipment-code">EQ1001</div>--%>
-<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
-<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
-<%--                                    <div class="equipment-brand">코베아</div>--%>
-<%--                                    <div class="equipment-date">2023-04-15</div>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <select class="id-select-control">--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                    <option>STOREN01</option>--%>
-<%--                                </select>--%>
-<%--                            </td>--%>
-<%--                            <td>--%>
-<%--                                <div class="button-group-vertical">--%>
-<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
-<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
-<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
-<%--                                </div>--%>
-<%--                            </td>--%>
-<%--                        </tr>--%>
                         </tbody>
                     </table>
                 </div>
@@ -737,6 +773,29 @@
             // 콘텐츠 활성화 - 모든 콘텐츠 숨기고 선택된 것만 표시
             $('.tab-content').hide();
             $('#' + tabId + '-content').show();
+
+            // 열려있는 모든 세부 행 닫기
+            $('.matching-details').hide();
+            $('.rental-header').removeClass('active').attr('data-expanded', 'false');
+        });
+
+        // 스토렌 행 클릭 이벤트 (세부 정보 토글)
+        $(document).on('click', '.rental-header', function() {
+            const rentalId = $(this).data('id');
+            const isExpanded = $(this).attr('data-expanded') === 'true';
+
+            // 현재 열려 있는 다른 세부 행 닫기
+            $('.rental-header').not(this).removeClass('active').attr('data-expanded', 'false');
+            $('.matching-details').not(`[data-parent="` + rentalId + `"]`).hide();
+
+            // 현재 행 토글
+            if (isExpanded) {
+                $(this).removeClass('active').attr('data-expanded', 'false');
+                $(`.matching-details[data-parent="` + rentalId + `"]`).hide();
+            } else {
+                $(this).addClass('active').attr('data-expanded', 'true');
+                $(`.matching-details[data-parent="` + rentalId + `"]`).show();
+            }
         });
 
         // 전체 선택 체크박스 기능
