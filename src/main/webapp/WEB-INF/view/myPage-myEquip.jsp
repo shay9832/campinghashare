@@ -1,5 +1,5 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<% String equip_code = null; %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -33,9 +33,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
-                    <li><a href="myPage-trust.jsp" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="myPage-point.jsp" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -43,41 +43,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link active">내가 소유한 장비</a></li>
-                    <li><a href="myPage-inspecList.jsp" class="sidebar-link">검수 결과 조회</a></li>
-                    <li><a href="myPage-delivery.jsp" class="sidebar-link">배송 조회/내역</a></li>
-                    <li><a href="myPage-matchingList.jsp" class="sidebar-link">매칭 조회/내역</a></li>
-                    <li><a href="myPage-rentEquip.jsp" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
+                    <li><a href="mypage-myequip.action" class="sidebar-link active">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="myPage-wishlist.jsp" class="sidebar-link title">
+                <a href="mypage-wishlist.action" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-leave.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -293,138 +293,33 @@
                         </thead>
                         <tbody>
                         <!-- 일반 장비 탭의 테이블 행 샘플 -->
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input equip-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">스토렌 신청</button>
-                                    <button class="btn-sm btn-rental">렌탈 신청</button>
-                                    <button class="btn-sm btn-storage">보관 신청</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input equip-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">스토렌 신청</button>
-                                    <button class="btn-sm btn-rental">렌탈 신청</button>
-                                    <button class="btn-sm btn-storage">보관 신청</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input equip-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">스토렌 신청</button>
-                                    <button class="btn-sm btn-rental">렌탈 신청</button>
-                                    <button class="btn-sm btn-storage">보관 신청</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input equip-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">스토렌 신청</button>
-                                    <button class="btn-sm btn-rental">렌탈 신청</button>
-                                    <button class="btn-sm btn-storage">보관 신청</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input equip-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">스토렌 신청</button>
-                                    <button class="btn-sm btn-rental">렌탈 신청</button>
-                                    <button class="btn-sm btn-storage">보관 신청</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <c:forEach var="equip" items="${equipList}">
+                            <tr class="table-row">
+                                <td class="checkbox-col">
+                                    <input type="checkbox" class="form-check-input equip-checkbox">
+                                </td>
+                                <td>
+                                    <div class="product-image">
+                                        <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="equipment-info-container">
+                                        <div class="equipment-code">장비코드 : ${equip.equip_code}</div>
+                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${equip.equip_name}</a>
+                                        <div class="equipment-category">${equip.majorCategory} > ${equip.middleCategory}</div>
+                                        <div class="equipment-brand">${equip.brand}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="button-group-vertical">
+                                        <button class="btn-sm btn-storen">스토렌 신청</button>
+                                        <button class="btn-sm btn-rental">렌탈 신청</button>
+                                        <button class="btn-sm btn-storage">보관 신청</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
@@ -458,110 +353,147 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input storen-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <select class="id-select-control">
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">검수 결과 확인</button>
-                                    <button class="btn-sm btn-rental">배송 내역 조회</button>
-                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <c:forEach var="storen" items="${storenList}">
+                            <tr class="table-row">
+                                <td class="checkbox-col">
+                                    <input type="checkbox" class="form-check-input storen-checkbox">
+                                </td>
+                                <td>
+                                    <div class="product-image">
+                                        <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="equipment-info-container">
+                                        <div class="equipment-code">장비 코드 : ${storen.equip_code}</div>
+                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${storen.equipmentDTO.equip_name}</a>
+                                        <div class="equipment-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</div>
+                                        <div class="equipment-brand">${storen.equipmentDTO.brand}</div>
+                                        <div class="equipment-date">${storen.equipmentDTO.created_date}</div>
+                                        <div class="equipment-brand">${storen.storen_title}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <select class="id-select-control">
+                                        <option>STOREN01</option>
+                                        <option>STOREN01</option>
+                                        <option>STOREN01</option>
+                                        <option>STOREN01</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="button-group-vertical">
+                                        <button class="btn-sm btn-storen">검수 결과 확인</button>
+                                        <button class="btn-sm btn-rental">배송 내역 조회</button>
+                                        <button class="btn-sm btn-storage">매칭 신청 승인</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+<%--                        <tr class="table-row">--%>
+<%--                            <td class="checkbox-col">--%>
+<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="product-image">--%>
+<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="equipment-info-container">--%>
+<%--                                    <div class="equipment-code">EQ1001</div>--%>
+<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
+<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
+<%--                                    <div class="equipment-brand">코베아</div>--%>
+<%--                                    <div class="equipment-date">2023-04-15</div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <select class="id-select-control">--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                </select>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="button-group-vertical">--%>
+<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
+<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
+<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
 
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input storen-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <select class="id-select-control">
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">검수 결과 확인</button>
-                                    <button class="btn-sm btn-rental">배송 내역 조회</button>
-                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>
-                                </div>
-                            </td>
-                        </tr>
+<%--                        <tr class="table-row">--%>
+<%--                            <td class="checkbox-col">--%>
+<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="product-image">--%>
+<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="equipment-info-container">--%>
+<%--                                    <div class="equipment-code">EQ1001</div>--%>
+<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
+<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
+<%--                                    <div class="equipment-brand">코베아</div>--%>
+<%--                                    <div class="equipment-date">2023-04-15</div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <select class="id-select-control">--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                </select>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="button-group-vertical">--%>
+<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
+<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
+<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
 
-                        <tr class="table-row">
-                            <td class="checkbox-col">
-                                <input type="checkbox" class="form-check-input storen-checkbox">
-                            </td>
-                            <td>
-                                <div class="product-image">
-                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                </div>
-                            </td>
-                            <td>
-                                <div class="equipment-info-container">
-                                    <div class="equipment-code">EQ1001</div>
-                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>
-                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>
-                                    <div class="equipment-brand">코베아</div>
-                                    <div class="equipment-date">2023-04-15</div>
-                                </div>
-                            </td>
-                            <td>
-                                <select class="id-select-control">
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                    <option>STOREN01</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="button-group-vertical">
-                                    <button class="btn-sm btn-storen">검수 결과 확인</button>
-                                    <button class="btn-sm btn-rental">배송 내역 조회</button>
-                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>
-                                </div>
-                            </td>
-                        </tr>
+<%--                        <tr class="table-row">--%>
+<%--                            <td class="checkbox-col">--%>
+<%--                                <input type="checkbox" class="form-check-input storen-checkbox">--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="product-image">--%>
+<%--                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="equipment-info-container">--%>
+<%--                                    <div class="equipment-code">EQ1001</div>--%>
+<%--                                    <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">진정한 캠핑고수의 텐트</a>--%>
+<%--                                    <div class="equipment-category">텐트/쉘터 > 거실형 텐트</div>--%>
+<%--                                    <div class="equipment-brand">코베아</div>--%>
+<%--                                    <div class="equipment-date">2023-04-15</div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <select class="id-select-control">--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                    <option>STOREN01</option>--%>
+<%--                                </select>--%>
+<%--                            </td>--%>
+<%--                            <td>--%>
+<%--                                <div class="button-group-vertical">--%>
+<%--                                    <button class="btn-sm btn-storen">검수 결과 확인</button>--%>
+<%--                                    <button class="btn-sm btn-rental">배송 내역 조회</button>--%>
+<%--                                    <button class="btn-sm btn-storage">매칭 신청 승인</button>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
                         </tbody>
                     </table>
                 </div>
