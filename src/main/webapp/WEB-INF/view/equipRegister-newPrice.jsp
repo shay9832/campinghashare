@@ -237,7 +237,7 @@
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
             <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}" class="btn">이전</a>
-            <a href="javascript:void(0)" class="btn btn-primary" onclick="submitEquipmentForm()">등록</a>
+            <a href="equipregister-complete.action" class="btn btn-primary" onclick="">등록</a>
         </div>
     </main>
 
