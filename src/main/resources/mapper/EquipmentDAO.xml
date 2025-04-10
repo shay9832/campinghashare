@@ -33,5 +33,12 @@
         WHERE BRAND_ID = #{brandId}
           AND EQUIP_NAME = #{equipName}
     </select>
+    
+    <select id="listEquipNamesByBrand" resultType="java.lang.String">
+        SELECT EQUIP_NAME
+        FROM EQUIP_NAME
+        WHERE BRAND_ID = #{brandId}
+        ORDER BY EQUIP_NAME
+    </select>
 
 </mapper>
