@@ -96,15 +96,20 @@ public class MypageController {
         //model.addAttribute("equipList", equipList);
         //model.addAttribute("storenList", storenList);
 
+        System.out.println("=== MypageController : mypageMyEquip() : START ===");
 
         MyEquipDTO data = myEquipService.listMyEquip(2); // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+
+        System.out.println("EquipList size: " + data.getEquipList().size()); // 콘솔 출력
+        System.out.println("StorenMap size: " + data.getStorenMap().size()); // 콘솔 출력
+        System.out.println("firstStorenList size: " + data.getFirstStorenList().size()); // 콘솔 출력
 
         model.addAttribute("equipList", data.getEquipList());
         model.addAttribute("storenMap", data.getStorenMap());
         model.addAttribute("firstStorenList", data.getFirstStorenList());
         //rentalList, storageList도 받아와야함
 
-
+        System.out.println("=== MypageController : mypageMyEquip() : END ===");
         return "myPage-myEquip";
     }
 
