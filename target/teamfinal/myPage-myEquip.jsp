@@ -372,31 +372,32 @@
                         <tbody>
                         <!-- 일반 장비 탭의 테이블 행 샘플 -->
                         <c:forEach var="equip" items="${equipList}">
-                            <tr class="table-row">
-                                <td class="checkbox-col">
-                                    <input type="checkbox" class="form-check-input equip-checkbox">
-                                </td>
-                                <td>
-                                    <div class="product-image">
-                                        <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="equipment-info-container">
-                                        <div class="equipment-code">장비코드 : ${equip.equip_code}</div>
-                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${equip.equip_name}</a>
-                                        <div class="equipment-category">${equip.majorCategory} > ${equip.middleCategory}</div>
-                                        <div class="equipment-brand">${equip.brand}</div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="button-group-vertical">
-                                        <button class="btn-sm btn-storen">스토렌 신청</button>
-                                        <button class="btn-sm btn-rental">렌탈 신청</button>
-                                        <button class="btn-sm btn-storage">보관 신청</button>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr class="table-row">
+                                    <td class="checkbox-col">
+                                        <input type="checkbox" class="form-check-input equip-checkbox">
+                                    </td>
+                                    <td>
+                                        <div class="product-image">
+                                            <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="equipment-info-container">
+                                            <input type="hidden" name="equip_code" value="${equip.equip_code}">
+                                            <div class="equipment-code">장비코드 : ${equip.equip_code}</div>
+                                            <a href="#" class="equipment-name">${equip.equip_name}</a>
+                                            <div class="equipment-category">${equip.majorCategory} > ${equip.middleCategory}</div>
+                                            <div class="equipment-brand">${equip.brand}</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="button-group-vertical">
+                                            <button class="btn-sm btn-storen">스토렌 신청</button>
+                                            <button class="btn-sm btn-rental">렌탈 신청</button>
+                                            <button class="btn-sm btn-storage">보관 신청</button>
+                                        </div>
+                                    </td>
+                                </tr>
                         </c:forEach>
                         </tbody>
                     </table>
@@ -443,8 +444,8 @@
                                 </td>
                                 <td>
                                     <div class="equipment-info-container">
-                                        <div class="equipment-code">${storen.equip_code}</div>
-                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${storen.equipmentDTO.equip_name}</a>
+                                        <div class="equipment-code">장비 코드 : ${storen.equip_code}</div>
+                                        <a href="#" class="equipment-name">${storen.equipmentDTO.equip_name}</a>
                                         <div class="equipment-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</div>
                                         <div class="equipment-brand">${storen.equipmentDTO.brand}</div>
                                         <div class="equipment-date">${storen.equipmentDTO.created_date}</div>
@@ -452,18 +453,19 @@
                                 </td>
                                 <td>
                                     <div class="equipment-info-container">
+                                        <input type="hidden" name="id" value="${storen.storen_id}">
                                         <div class="equipment-code">스토렌ID : ${storen.storen_id}</div>
-                                        <a href="myPage-myEquip-info.jsp?equip_code=1" class="equipment-name">${storen.storen_title}</a>
+                                        <a href="storenmatching-request.action?storen_id=${storen.storen_id}" class="equipment-name">${storen.storen_title}</a>
                                         <div class="equipment-category">${storen.store_month} 개월 보관</div>
                                         <div class="equipment-date">스토렌등록 : ${storen.created_date}</div>
-                                        <div class="equipment-date">보관시작일 : 2023-04-15</div>
-                                        <div class="equipment-date">보관종료일 : 2023-07-15</div>
+                                        <div class="equipment-date">보관시작일 : 2023-04-15 (수정필요)</div>
+                                        <div class="equipment-date">보관종료일 : 2023-07-15 (수정필요)</div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="button-group-vertical">
-                                        <button class="btn-sm btn-storen">검수 결과 확인</button>
-                                        <button class="btn-sm btn-rental">배송 내역 조회</button>
+                                        <button class="btn-sm btn-inspection">검수 결과 확인</button>
+                                        <button class="btn-sm btn-shipping">배송 내역 조회</button>
                                     </div>
                                 </td>
                             </tr>
@@ -489,9 +491,10 @@
                                             <c:forEach var="sub" items="${storenMap[storen.equip_code]}">
                                             <tr>
                                                 <td>
-                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">${sub.storen_id}</a>
+                                                    <input type="hidden" name="id" value="${storen.storen_id}">
+                                                    <a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_id}</a>
                                                 </td>
-                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">${sub.storen_title}</a></td>
+                                                <td class="text-left"><a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_title}</a></td>
                                                 <td>2023-04-20 ~ 2023-05-20</td>
                                                 <td><span class="trust-score high">${sub.daily_rent_price} 원</span></td>
                                                 <td>${sub.created_date}</td>
@@ -499,30 +502,6 @@
                                                     <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>
                                                 </td>
                                             </tr>
-<%--                                            <tr>--%>
-<%--                                                <td>--%>
-<%--                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">스토렌id</a>--%>
-<%--                                                </td>--%>
-<%--                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">아주 깨끗하게 잘 쓴 텐트~!</a></td>--%>
-<%--                                                <td>2023-04-20 ~ 2023-05-20</td>--%>
-<%--                                                <td><span class="trust-score high">1000 원</span></td>--%>
-<%--                                                <td>2023-04-15</td>--%>
-<%--                                                <td>--%>
-<%--                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>--%>
-<%--                                                </td>--%>
-<%--                                            </tr>--%>
-<%--                                            <tr>--%>
-<%--                                                <td>--%>
-<%--                                                    <a href="storenmatching-request.action?id=스토렌id" class="user-link">스토렌id</a>--%>
-<%--                                                </td>--%>
-<%--                                                <td class="text-left"><a href="storenmatching-request.action?id=스토렌id" class="user-link">아주 깨끗하게 잘 쓴 텐트~!</a></td>--%>
-<%--                                                <td>2023-04-20 ~ 2023-05-20</td>--%>
-<%--                                                <td><span class="trust-score high">1000 원</span></td>--%>
-<%--                                                <td>2023-04-15</td>--%>
-<%--                                                <td>--%>
-<%--                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>--%>
-<%--                                                </td>--%>
-<%--                                            </tr>--%>
                                             </c:forEach>
                                             </tbody>
                                         </table>
@@ -758,6 +737,7 @@
 
 <script>
     $(document).ready(function() {
+        // 탭 전환 이벤트 ========= ======================================================================================
         // 초기 설정 - 첫 번째 탭만 표시
         $('.tab-content').hide();
         $('#general-content').show();
@@ -779,6 +759,9 @@
             $('.rental-header').removeClass('active').attr('data-expanded', 'false');
         });
 
+        // ================================================================================================ 탭 전환 이벤트
+
+        // 확장 테이블 보이고 닫기==========================================================================================
         // 스토렌 행 클릭 이벤트 (세부 정보 토글)
         $(document).on('click', '.rental-header', function() {
             const rentalId = $(this).data('id');
@@ -797,6 +780,8 @@
                 $(`.matching-details[data-parent="` + rentalId + `"]`).show();
             }
         });
+
+        // ==========================================================================================확장 테이블 보이고 닫기
 
         // 전체 선택 체크박스 기능
         $('#select-all-general').on('change', function() {
@@ -870,57 +855,56 @@
             $('#deleteConfirmModal').modal('hide');
         });
 
-        // 서비스 신청 버튼 클릭 이벤트 (스토렌/렌탈/보관)
-        $('.btn-storen').on('click', function(e) {
-            e.stopPropagation();
-            // 클릭된 행의 장비 ID 또는 코드 가져오기
-            const equipRow = $(this).closest('tr');
-            const equipId = equipRow.find('a.equipment-name').attr('href').split('=').pop();
 
+        // 각 탭에서 버튼 클릭 이벤트 ======================================================================================
+        // 일반 장비 탭---------------------------------------------------------------------------------------------------
+        // 스토렌 신청 버튼 클릭 이벤트
+        $(".btn-storen").click(function(e) {
+            e.preventDefault(); // 기본 동작 방지
+            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
             // 스토렌 신청 페이지로 이동
-            window.location.href = `myPage-storen-register.jsp?equip_code=${equipId}`;
+            window.location.href = "storenregister-storage-info.action?equip_code=" + equip_code;
         });
 
-        $('.btn-rental').on('click', function(e) {
-            e.stopPropagation();
-            // 클릭된 행의 장비 ID 또는 코드 가져오기
-            const equipRow = $(this).closest('tr');
-            const equipId = equipRow.find('a.equipment-name').attr('href').split('=').pop();
-
+        // 렌탈 신청 버튼 클릭 이벤트
+        $(".btn-rental").click(function(e) {
+            e.preventDefault(); // 기본 동작 방지
+            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
             // 렌탈 신청 페이지로 이동
-            window.location.href = `myPage-rental-register.jsp?equip_code=${equipId}`;
+            window.location.href = "rentalRegister-info.jsp?equip_code=" + equip_code;
         });
 
-        $('.btn-storage').on('click', function(e) {
-            e.stopPropagation();
-            // 클릭된 행의 장비 ID 또는 코드 가져오기
-            const equipRow = $(this).closest('tr');
-            const equipId = equipRow.find('a.equipment-name').attr('href').split('=').pop();
-
+        // 보관 신청 버튼 클릭 이벤트
+        $(".btn-storage").click(function(e) {
+            e.preventDefault(); // 기본 동작 방지
+            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
             // 보관 신청 페이지로 이동
-            window.location.href = `myPage-storage-register.jsp?equip_code=${equipId}`;
+            window.location.href = "storageRegister-storage-info.jsp?equip_code=" + equip_code;
         });
 
-        // 배송 확인 버튼 클릭 시
-        $('.btn-shipping').on('click', function(e) {
-            e.stopPropagation();
-            // 클릭된 행의 ID 가져오기
-            const row = $(this).closest('tr');
-            const id = row.find('a.equipment-name').attr('href').split('=').pop();
-
-            // 배송 조회 페이지로 이동
-            window.location.href = `myPage-delivery.jsp?id=${id}`;
-        });
-
-        // 검수 결과 확인 버튼 클릭 시
+        // 스토렌 & 렌탈 & 보관--------------------------------------------------------------------------------------------
+        // 검수 결과 확인 버튼 클릭 이벤트
         $('.btn-inspection').on('click', function(e) {
-            e.stopPropagation();
-            // 클릭된 행의 ID 가져오기
-            const row = $(this).closest('tr');
-            const id = row.find('a.equipment-name').attr('href').split('=').pop();
+            e.preventDefault(); // 기본 동작 방지
+            var id = $(this).closest("tr").find("input[name='id']").val();
+            // 검수 조회/내역 페이지로 이동
+            window.location.href = "mypage-inspecList.action?id=" + id;
+        });
 
-            // 검수 결과 페이지로 이동
-            window.location.href = `myPage-inspecList.jsp?id=${id}`;
+        // 배송 확인 버튼 클릭 이벤트
+        $('.btn-shipping').on('click', function(e) {
+            e.preventDefault(); // 기본 동작 방지
+            var id = $(this).closest("tr").find("input[name='id']").val();
+            // 배송 조회/내역 페이지로 이동
+            window.location.href = "mypage-delivery.action?id=" + id;
+        });
+
+        // 스토렌 확장 테이블----------------------------------------------------------------------------------------------
+        $('.btn-approve').on('click', function(e) {
+            e.preventDefault(); // 기본 동작 방지
+            var id = $(this).closest("tr").find("input[name='id']").val();
+            // 매칭 조회/내역 페이지로 이동
+            window.location.href = "mypage-matchinglist.action?id=" + id;
         });
 
         // 검색 기능
@@ -933,6 +917,8 @@
                 performSearch();
             }
         });
+
+        //======================================================================================= 각 탭에서 버튼 클릭 이벤트
 
         // 검색 실행 함수
         function performSearch() {

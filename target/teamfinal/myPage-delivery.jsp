@@ -24,7 +24,6 @@
 <div class="container container-wide mypage-container section">
 
     <!-- 마이페이지 사이드바 -->
-    <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
         <div class="sidebar-title">마이 페이지</div>
         <ul class="sidebar-menu">
