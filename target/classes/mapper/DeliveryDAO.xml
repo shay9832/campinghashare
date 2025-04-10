@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IDeliveryDAO">
+    <resultMap id="deliveryResultMap" type="com.team.mvc.DTO.DeliveryDTO">
+        <result column="배송종류" property="delivery_type"/>
+        <result column="발송인" property="sender"/>
+        <result column="수취인" property="receiver"/>
+        <result column="스토렌ID" property="storen_id"/>
+        <result column="보관ID" property="storage_id"/>
+        <result column="렌탈매칭완료ID" property="rental_matching_done_id"/>
+        <result column="렌탈ID" property="rental_id"/>
+        <result column="배송ID" property="delivery_id"/>
+        <result column="장비명" property="equip_name"/>
+        <result column="운송사이름" property="carrier_name"/>
+        <result column="운송장번호" property="waybill_number"/>
+        <result column="배송시작일" property="start_date"/>
+        <result column="배송종료일" property="end_date"/>
+        <result column="검수결과처리일" property="inspec_completed_date"/>
+        <result column="검수결과처리유형" property="inspec_completed_type"/>
+    </resultMap>
+    <!-- 회원코드로 모든 배송내역 조회 -->
+    <select id="listByUserCode" resultType="com.team.mvc.DTO.DeliveryDTO" resultMap="deliveryResultMap">
+        SELECT "배송종류"
+             , "발송인"
+             , "수취인"
+             , "스토렌ID"
+             , "보관ID"
+             , "렌탈매칭완료ID"
+             , "렌탈ID"
+             , "배송ID"
+             , "장비명"
+             , "운송사이름"
+             , "운송장번호"
+             , "배송시작일"
+             , "배송종료일"
+             , "검수결과처리일"
+             , "검수결과처리유형"
+        FROM VW_DELIVERY_MANAGEMENT
+        WHERE "발송인" = #{user_code} OR "수취인" = #{user_code}
+    </select>
+
+</mapper>
