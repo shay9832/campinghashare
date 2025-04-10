@@ -10,6 +10,9 @@ public class DeliveryDTO {
     private String start_date, end_date;                            //배송시작일, 배송종료일
     private String inspec_completed_date, inspec_completed_type;    //검수결과처리일, 검수결과처리유형 (렌탈일 때 null)
 
+    private String status;                                          //배송상태
+    private String statusClass;                                     //배송상태 클래스
+    
     public String getDelivery_type() {
         return delivery_type;
     }
@@ -128,5 +131,21 @@ public class DeliveryDTO {
 
     public void setInspec_completed_type(String inspec_completed_type) {
         this.inspec_completed_type = inspec_completed_type;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatusClass() {
+        return statusClass;
+    }
+
+    public void setStatusClass(String statusClass) {
+        this.statusClass = statusClass;
     }
 }
