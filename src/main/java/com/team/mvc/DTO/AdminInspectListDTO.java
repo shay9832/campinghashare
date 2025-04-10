@@ -2,10 +2,48 @@ package com.team.mvc.DTO;
 
 public class AdminInspectListDTO {
 
-    //장비코드,검수유형,장비명,카테고리명,검수항목,관리자ID,검수결과,검수코멘트,검수상태
 
     private int equipCode;
     private String inspectName, equipName, categoryName, inspectList, adminId, inspectResult, inspectComment, inspectState;
+
+
+    private Integer platformDeliveryId, platformDeliveryReturnId, equipGradeId;
+
+
+
+
+
+
+
+
+
+
+    //getter setter
+
+    public Integer getPlatformDeliveryId() {
+        return platformDeliveryId;
+    }
+
+    public void setPlatformDeliveryId(Integer platformDeliveryId) {
+        this.platformDeliveryId = platformDeliveryId;
+    }
+
+    public Integer getPlatformDeliveryReturnId() {
+        return platformDeliveryReturnId;
+    }
+
+    public void setPlatformDeliveryReturnId(Integer platformDeliveryReturnId) {
+        this.platformDeliveryReturnId = platformDeliveryReturnId;
+    }
+
+    public Integer getEquipGradeId() {
+        return equipGradeId;
+    }
+
+    public void setEquipGradeId(Integer equipGradeId) {
+        this.equipGradeId = equipGradeId;
+    }
+
 
     public int getEquipCode() {
         return equipCode;

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.team.mvc.Interface.IAdminInspectListDAO">
 
+<mapper namespace="com.team.mvc.Interface.IAdminInspectListDAO">
     <resultMap id="admin-inspectList" type="com.team.mvc.DTO.AdminInspectListDTO">
         <result column="장비코드" property="equipCode"/>
         <result column="검수유형" property="inspectName"/>
@@ -17,10 +17,32 @@
     </resultMap>
 
     <select id="list" resultMap="admin-inspectList">
-         SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
-         FROM VW_INSPEC_LIST_AND_PD
+        SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
+        FROM VW_INSPEC_LIST_AND_PD
     </select>
 
-</mapper>
+    <select id="listr" resultMap="admin-inspectList">
+        SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
+        FROM VW_INSPEC_LIST_AND_PDR
+    </select>
 
-<!--        장비코드,검수유형,장비명,카테고리명,검수항목,관리자ID,검수결과,검수코멘트,검수상태-->
+
+    <!-- 검수 결과 추가 - DTO를 통한 프로시저 호출 -->
+    <insert id="add" parameterType="com.team.mvc.DTO.AdminInspectListDTO">
+        <!-- 프로시저 호출 방식으로 변경 -->
+        CALL INSPECT_RESULT(
+        #{platformDeliveryId, jdbcType=INTEGER},
+        #{platformDeliveryReturnId, jdbcType=INTEGER},
+        #{equipGradeId, jdbcType=INTEGER}
+        )
+    </insert>
+
+    <!-- 프로시저 직접 호출 메소드 -->
+    <update id="callINSPECT_RESULT" statementType="CALLABLE">
+        {CALL INSPECT_RESULT(
+                #{platformDeliveryId, jdbcType=INTEGER, mode=IN},
+                #{platformDeliveryReturnId, jdbcType=INTEGER, mode=IN},
+                #{equipGradeId, jdbcType=INTEGER, mode=IN}
+              )}
+    </update>
+</mapper>
