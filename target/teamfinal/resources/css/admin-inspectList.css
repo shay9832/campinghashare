@@ -547,3 +547,110 @@ body {
 .content-area.active {
     display: block;
 }
+
+/* 체크리스트 테이블 스타일 */
+.checklist-form-group {
+    margin-bottom: 30px;
+}
+
+.checklist-container {
+    margin-bottom: 15px;
+}
+
+.checklist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed;
+}
+
+.checklist-table th, .checklist-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.checklist-table thead th {
+    background-color: #5b775b;
+    color: white;
+}
+
+.checklist-table th[rowspan="2"] {
+    background-color: #5b775b;
+    color: white;
+    width: 15%;
+}
+
+.checklist-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.checklist-table tbody tr:hover {
+    background-color: #f1f8e9;
+}
+
+.comment-input {
+    width: 95%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.score-cell {
+    font-weight: bold;
+    width: 60px;
+}
+
+.total-row {
+    background-color: #f1f8e9 !important;
+    font-weight: bold;
+}
+
+.total-score {
+    font-size: 16px;
+    color: #3f861d;
+}
+
+.final-grade {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db;
+    border-radius: 4px;
+}
+
+/* 등급 정보 스타일 */
+.grade-info {
+    background-color: #f9f6e9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.grade-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.grade-info-badge {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.grade-a { background-color: #3498db; }
+.grade-b { background-color: #2ecc71; }
+.grade-c { background-color: #f39c12; }
+.grade-d { background-color: #e74c3c; }
+.grade-e { background-color: #95a5a6; }
+.grade-f { background-color: #7f8c8d; }

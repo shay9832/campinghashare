@@ -263,13 +263,16 @@
 
             <button type="submit" class="auth-button">PASS 인증</button>
 
-            <div class="form-group">
-                <label for="name" class="form-label">이름</label>
-                <span class="ml-2">고길동</span>
-                <label for="tel" class="form-label">핸드폰 번호</label>
-                <span class="ml-2">010-0000-0000</span>
-                <p class="form-help">인증 완료되었습니다.</p>
+        <div class="form-group">
+            <label for="userName" class="form-label">이름 <span class="required-field"></span></label>
+            <div class="input-group">
+                <input type="text" id="userName" name="userName" class="form-input" disabled="disabled" style="background-color: var(--color-gray-50);" value="고길동">
             </div>
+            <label for="userTel" class="form-label">전화번호 <span class="required-field"></span></label>
+            <div class="input-group">
+                <input type="text" id="userTel" name="userTel" class="form-input" disabled="disabled" style="background-color: var(--color-gray-50);" value="010-0000-0000">
+            </div>
+        </div>
 
             <!-- 이전 / 다음 페이지 이동 버튼 -->
             <div class="button-container">

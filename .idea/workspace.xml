@@ -9,7 +9,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="" />
+    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminInspectListDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminInspectListDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminInspectListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminInspectListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminInspectListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminInspectListDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/BrandDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/BrandDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/EquipmentDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/EquipmentDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/HelloController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IAdminInspectListDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IAdminInspectListDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/AdminInspectList.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminInspectListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminInspectListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminInspectListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminInspectListDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/BrandDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/BrandDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/EquipmentDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/EquipmentDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/HelloController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IAdminInspectListDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IAdminInspectListDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminInspectList.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardBest.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardBest.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardFree-write.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardFree-write.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage-post.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage-post.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage-write.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage-write.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/boardImage.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/equipRegister-majorCategory.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/equipRegister-majorCategory.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/equipRegister-middleCategory.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/equipRegister-middleCategory.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/event.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/event.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-email.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-email.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-nickname.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-nickname.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-main.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myEquip.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myEquip.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myPost.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myPost.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/notice.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/notice.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-info.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-info.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/userRegister-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/userRegister-id.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/userRegister-tel.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/userRegister-tel.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/arrow-buttons.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/mypage.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/mypage.css" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,6 +66,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;parkjaee&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:shay9832/campinghashare.git&quot;,
+    &quot;accountId&quot;: &quot;b2095d85-a49c-4738-8200-d28af227a28e&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
     <option name="FILTER_WARNINGS" value="false" />
@@ -37,39 +101,42 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.teamfinal [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
-    "Maven.teamfinal [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Tomcat 서버.Tomcat 10.1.39.executor": "Run",
-    "git-widget-placeholder": "8-jaehoon",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/es/IdeaProjects/teamfinal/src/main/java/com/team/mvc/Controller",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.teamfinal [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.teamfinal [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Tomcat 서버.Tomcat 10.1.39.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;8-jaehoon&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/huni/Desktop/campinghashare/src/main/webapp/WEB-INF&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor.code.editing&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "oracle"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;oracle&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/view" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\java\com\team\mvc\Controller" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\resources\mapper" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\java\com\team\mvc\Interface" />
-      <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\java\com\team\mvc\DTO" />
-      <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\webapp\WEB-INF\view" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\webapp\WEB-INF\view" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\webapp" />
     </key>
@@ -186,10 +253,33 @@
       <workItem from="1744104115518" duration="2000" />
       <workItem from="1744104158734" duration="12000" />
       <workItem from="1744104234844" duration="522000" />
+      <workItem from="1744161469647" duration="93000" />
+      <workItem from="1744161803402" duration="17763000" />
+      <workItem from="1744187834118" duration="833000" />
+      <workItem from="1744199253989" duration="3022000" />
+      <workItem from="1744240968099" duration="1223000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.action" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
