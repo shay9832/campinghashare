@@ -121,9 +121,9 @@
         <!-- 배송 조회 탭 컨테이너 -->
         <div class="tab-container">
             <div class="tabs">
-                <div class="tab active" data-tab="storage">보관</div>
-                <div class="tab" data-tab="storen">스토렌</div>
-                <div class="tab" data-tab="rental">렌탈</div>
+                <div class="tab ${activeTab == 'storen' ? 'active' : ''}" data-tab="storen">스토렌</div>
+                <div class="tab ${activeTab == 'rental' ? 'active' : ''}" data-tab="rental">렌탈</div>
+                <div class="tab ${activeTab == 'storage' ? 'active' : ''}" data-tab="storage">보관</div>
             </div>
 
             <!-- 거래 ID 검색 -->
@@ -134,8 +134,119 @@
                 </button>
             </div>
 
+            <!-- 스토렌 탭 콘텐츠 -->
+            <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
+                <!-- 소유자/사용자 필터 -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                    <!-- 탭 필터 -->
+                    <div class="d-flex flex-wrap align-items-center">
+                        <div class="tab-nav">
+                            <a class="tab-link ${storenTabType == 'owner' ? 'active' : ''}" href="#" data-storen-tab="owner">소유자</a>
+                        </div>
+                        <div class="tab-nav">
+                            <a class="tab-link ${storenTabType == 'user' ? 'active' : ''}" href="#" data-storen-tab="user">사용자</a>
+                        </div>
+                    </div>
+
+                    <!-- 정렬 옵션 (오른쪽) -->--%>
+                    <div class="d-flex align-items-center">
+                        <!-- 날짜 필터 -->
+                        <div class="date-filter me-2">
+                            <select class="form-control">
+                                <option>전체 기간</option>
+                                <option>최근 1개월</option>
+                                <option>최근 3개월</option>
+                                <option>최근 6개월</option>
+                            </select>
+                        </div>
+
+                        <!-- 정렬 옵션 -->
+                        <div class="sort-container">
+                            <select class="form-control sort-select">
+                                <option>최신순</option>
+                                <option>높은 점수순</option>
+                                <option>낮은 점수순</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="custom-table table">
+                        <thead>
+                        <tr>
+                            <th>배송 유형</th>
+                            <th>물품명</th>
+                            <th>배송 상태</th>
+                            <th>배송 시작일</th>
+                            <th>배송 종료일</th>
+                            <th>스토렌 ID</th>
+                            <th>조회</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 초기에 로드된 스토렌 사용자 배송 데이터 -->
+                        <c:if test="${activeTab == 'storen' && storenTabType == 'user'}">
+                            <c:forEach var="delivery" items="${deliveryList}">
+                                <tr class="table-row" data-id="${delivery.delivery_id}">
+                                    <td>${delivery.delivery_type}</td>
+                                    <td class="title-cell delivery-name">${delivery.equip_name}</td>
+                                    <td>
+                                <span class="status-badge
+                                    <c:choose>
+                                        <c:when test="${delivery.end_date != null}">status-completed</c:when>
+                                        <c:when test="${delivery.start_date != null}">status-progress</c:when>
+                                        <c:otherwise>status-pending</c:otherwise>
+                                    </c:choose>
+                                ">
+                                    <c:choose>
+                                        <c:when test="${delivery.start_date == null}">배송준비중</c:when>
+                                        <c:when test="${delivery.start_date != null && delivery.end_date == null}">배송중</c:when>
+                                        <c:when test="${delivery.end_date != null}">배송완료</c:when>
+                                        <c:otherwise>추적불가</c:otherwise>
+                                    </c:choose>
+                                </span>
+                                    </td>
+                                    <td>${delivery.start_date}</td>
+                                    <td>${delivery.end_date}</td>
+                                    <td>${delivery.storen_id}</td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-track-external"
+                                                data-company="${delivery.carrier_name}"
+                                                data-tracking="${delivery.waybill_number}">조회</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 렌탈 탭 콘텐츠 -->
+            <div class="tab-content ${activeTab == 'rental' ? 'active' : ''}" id="rental-content">
+                <div class="table-container">
+                    <table class="custom-table table">
+                        <thead>
+                        <tr>
+                            <th>배송 유형</th>
+                            <th>물품명</th>
+                            <th>배송 상태</th>
+                            <th>배송 시작일</th>
+                            <th>배송 종료일</th>
+                            <th>렌탈 ID</th>
+                            <th>조회</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- AJAX로 로드될 데이터 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- 보관 탭 콘텐츠 -->
-            <div class="tab-content active" id="storage-content">
+            <div class="tab-content ${activeTab == 'storage' ? 'active' : ''}" id="storage-content">
                 <div class="table-container">
                     <table class="custom-table table">
                         <thead>
@@ -150,202 +261,241 @@
                         </tr>
                         </thead>
                         <tbody>
-                <c:forEach var="delivery" items="${deliveryList}">
-                    <c:if test="${delivery.storage_id != null}">
-                        <tr class="table-row" data-id="${delivery.delivery_id}">
-                            <td>${delivery.delivery_type}</td>
-                            <td class="title-cell delivery-name">${delivery.equip_name}</td>
-                            <td>
-                                <span class="status-badge status-progress">
-                                    <c:choose>
-                                        <c:when test="${delivery.start_date} != null">
-                                            배송준비중
-                                        </c:when>
-                                        <c:when test="${delivery.start_date} != null && ${delivery.end_date} == null">
-                                            배송중
-                                        </c:when>
-                                        <c:when test="${delivery.end_date} != null">
-                                            배송완료
-                                        </c:when>
-                                        <c:otherwise>
-                                            추적불가
-                                        </c:otherwise>
-                                    </c:choose>
-                                </span>
-                            </td>
-                            <td>${delivery.start_date}</td>
-                            <td>${delivery.end_date}</td>
-                            <td>${delivery.storage_id}</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="123456789012">조회</button>
-                            </td>
-                        </tr>
-                    </c:if>
-                </c:forEach>
+                        <!-- AJAX로 로드될 데이터 -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 스토렌 탭 콘텐츠 -->
-        <div class="tab-content" id="storen-content">
+<%--        <!-- 배송 조회 탭 컨테이너 -->--%>
+<%--        <div class="tab-container">--%>
+<%--            <div class="tabs">--%>
+<%--                <div class="tab active" data-tab="storage">보관</div>--%>
+<%--                <div class="tab" data-tab="storen">스토렌</div>--%>
+<%--                <div class="tab" data-tab="rental">렌탈</div>--%>
+<%--            </div>--%>
 
-            <!-- 소유자/사용자 필터 -->
-            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-                <!-- 탭 필터 -->
-                <div class="d-flex flex-wrap align-items-center">
-                    <div class="tab-nav">
-                        <a class="tab-link active" href="#">소유자</a>
-                    </div>
-                    <div class="tab-nav">
-                        <a class="tab-link" href="#">사용자</a>
-                    </div>
-                </div>
+<%--            <!-- 거래 ID 검색 -->--%>
+<%--            <div class="search-container">--%>
+<%--                <input type="text" id="search-trade-id" placeholder="거래 ID를 입력하세요">--%>
+<%--                <button type="button" class="search-button" id="btn-search">--%>
+<%--                    <i class="fas fa-search"></i>--%>
+<%--                </button>--%>
+<%--            </div>--%>
 
-                <!-- 정렬 옵션 (오른쪽) -->
-                <div class="d-flex align-items-center">
-                    <!-- 날짜 필터 -->
-                    <div class="date-filter me-2">
-                        <select class="form-control">
-                            <option>전체 기간</option>
-                            <option>최근 1개월</option>
-                            <option>최근 3개월</option>
-                            <option>최근 6개월</option>
-                        </select>
-                    </div>
+<%--            <!-- 보관 탭 콘텐츠 -->--%>
+<%--            <div class="tab-content active" id="storage-content">--%>
+<%--                <div class="table-container">--%>
+<%--                    <table class="custom-table table">--%>
+<%--                        <thead>--%>
+<%--                        <tr>--%>
+<%--                            <th>배송 유형</th>--%>
+<%--                            <th>물품명</th>--%>
+<%--                            <th>배송 상태</th>--%>
+<%--                            <th>배송 시작일</th>--%>
+<%--                            <th>배송 종료일</th>--%>
+<%--                            <th>보관 ID</th>--%>
+<%--                            <th>조회</th>--%>
+<%--                        </tr>--%>
+<%--                        </thead>--%>
+<%--                        <tbody>--%>
+<%--                        <c:forEach var="delivery" items="${deliveryList}">--%>
+<%--                            <c:if test="${delivery.storage_id != null}">--%>
+<%--                                <tr class="table-row" data-id="${delivery.delivery_id}">--%>
+<%--                                    <td>${delivery.delivery_type}</td>--%>
+<%--                                    <td class="title-cell delivery-name">${delivery.equip_name}</td>--%>
+<%--                                    <td>--%>
+<%--                                        <span class="status-badge status-progress">--%>
+<%--                                            <c:choose>--%>
+<%--                                                <c:when test="${delivery.start_date} != null">--%>
+<%--                                                    배송준비중--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:when test="${delivery.start_date} != null && ${delivery.end_date} == null">--%>
+<%--                                                    배송중--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:when test="${delivery.end_date} != null">--%>
+<%--                                                    배송완료--%>
+<%--                                                </c:when>--%>
+<%--                                                <c:otherwise>--%>
+<%--                                                    추적불가--%>
+<%--                                                </c:otherwise>--%>
+<%--                                            </c:choose>--%>
+<%--                                        </span>--%>
+<%--                                    </td>--%>
+<%--                                    <td>${delivery.start_date}</td>--%>
+<%--                                    <td>${delivery.end_date}</td>--%>
+<%--                                    <td>${delivery.storage_id}</td>--%>
+<%--                                    <td>--%>
+<%--                                        <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="123456789012">조회</button>--%>
+<%--                                    </td>--%>
+<%--                                </tr>--%>
+<%--                            </c:if>--%>
+<%--                        </c:forEach>--%>
+<%--                        </tbody>--%>
+<%--                    </table>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+<%--        </div>--%>
 
-                    <!-- 정렬 옵션 -->
-                    <div class="sort-container">
-                        <select class="form-control sort-select">
-                            <option>최신순</option>
-                            <option>높은 점수순</option>
-                            <option>낮은 점수순</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+<%--        <!-- 스토렌 탭 콘텐츠 -->--%>
+<%--        <div class="tab-content" id="storen-content">--%>
 
-            <div class="table-container">
-                <table class="custom-table table">
-                    <thead>
-                    <tr>
-                        <th>배송 유형</th>
-                        <th>물품명</th>
-                        <th>배송 상태</th>
-                        <th>배송 시작일</th>
-                        <th>배송 종료일</th>
-                        <th>스토렌 ID</th>
-                        <th>조회</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="table-row" data-id="2001">
-                        <td>플랫폼_배송</td>
-                        <td class="title-cell delivery-name">등산용 배낭</td>
-                        <td>
-                            <span class="status-badge status-progress">배송중</span>
-                        </td>
-                        <td>2023-04-25</td>
-                        <td>2023-04-27</td>
-                        <td>SR12345</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="234567890123">조회</button>
-                        </td>
-                    </tr>
-                    <tr class="table-row" data-id="2002">
-                        <td>거래자_택배</td>
-                        <td class="title-cell delivery-name">캠핑용 의자</td>
-                        <td>
-                            <span class="status-badge status-completed">배송완료</span>
-                        </td>
-                        <td>2023-04-18</td>
-                        <td>2023-04-21</td>
-                        <td>SR23456</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="345678901234">조회</button>
-                        </td>
-                    </tr>
-                    <tr class="table-row" data-id="2003">
-                        <td>스토렌_최종_반환_ID</td>
-                        <td class="title-cell delivery-name">야외용 랜턴</td>
-                        <td>
-                            <span class="status-badge status-pending">배송준비중</span>
-                        </td>
-                        <td>2023-05-05</td>
-                        <td>2023-05-08</td>
-                        <td>SR34567</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="456789012345">조회</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<%--            <!-- 소유자/사용자 필터 -->--%>
+<%--            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">--%>
+<%--                <!-- 탭 필터 -->--%>
+<%--                <div class="d-flex flex-wrap align-items-center">--%>
+<%--                    <div class="tab-nav">--%>
+<%--                        <a class="tab-link ${storenTabType == 'owner' ? 'active' : ''}" href="?storenTabType=owner">소유자</a>--%>
+<%--                    </div>--%>
+<%--                    <div class="tab-nav">--%>
+<%--                        <a class="tab-link ${storenTabType == 'user' ? 'active' : ''}" href="?storenTabType=user">사용자</a>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
 
-        <!-- 렌탈 탭 콘텐츠 -->
-        <div class="tab-content" id="rental-content">
-            <div class="table-container">
-                <table class="custom-table table">
-                    <thead>
-                    <tr>
-                        <th>배송 유형</th>
-                        <th>물품명</th>
-                        <th>배송 상태</th>
-                        <th>배송 시작일</th>
-                        <th>배송 종료일</th>
-                        <th>렌탈 ID</th>
-                        <th>조회</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="table-row" data-id="3001">
-                        <td>플랫폼_배송</td>
-                        <td class="title-cell delivery-name">바베큐 그릴</td>
-                        <td>
-                            <span class="status-badge status-progress">배송중</span>
-                        </td>
-                        <td>2023-04-22</td>
-                        <td>2023-04-24</td>
-                        <td>RT12345</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="567890123456">조회</button>
-                        </td>
-                    </tr>
-                    <tr class="table-row" data-id="3002">
-                        <td>거래자_택배_반환</td>
-                        <td class="title-cell delivery-name">휴대용 가스버너</td>
-                        <td>
-                            <span class="status-badge status-completed">배송완료</span>
-                        </td>
-                        <td>2023-04-15</td>
-                        <td>2023-04-17</td>
-                        <td>RT23456</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="678901234567">조회</button>
-                        </td>
-                    </tr>
-                    <tr class="table-row" data-id="3003">
-                        <td>플랫폼_배송_반환</td>
-                        <td class="title-cell delivery-name">감성 랜턴</td>
-                        <td>
-                            <span class="status-badge status-pending">배송준비중</span>
-                        </td>
-                        <td>2023-05-10</td>
-                        <td>2023-05-12</td>
-                        <td>RT34567</td>
-                        <td>
-                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="789012345678">조회</button>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<%--                <!-- 정렬 옵션 (오른쪽) -->--%>
+<%--                <div class="d-flex align-items-center">--%>
+<%--                    <!-- 날짜 필터 -->--%>
+<%--                    <div class="date-filter me-2">--%>
+<%--                        <select class="form-control">--%>
+<%--                            <option>전체 기간</option>--%>
+<%--                            <option>최근 1개월</option>--%>
+<%--                            <option>최근 3개월</option>--%>
+<%--                            <option>최근 6개월</option>--%>
+<%--                        </select>--%>
+<%--                    </div>--%>
+
+<%--                    <!-- 정렬 옵션 -->--%>
+<%--                    <div class="sort-container">--%>
+<%--                        <select class="form-control sort-select">--%>
+<%--                            <option>최신순</option>--%>
+<%--                            <option>높은 점수순</option>--%>
+<%--                            <option>낮은 점수순</option>--%>
+<%--                        </select>--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--            </div>--%>
+
+<%--            <div class="table-container">--%>
+<%--                <table class="custom-table table">--%>
+<%--                    <thead>--%>
+<%--                    <tr>--%>
+<%--                        <th>배송 유형</th>--%>
+<%--                        <th>물품명</th>--%>
+<%--                        <th>배송 상태</th>--%>
+<%--                        <th>배송 시작일</th>--%>
+<%--                        <th>배송 종료일</th>--%>
+<%--                        <th>스토렌 ID</th>--%>
+<%--                        <th>조회</th>--%>
+<%--                    </tr>--%>
+<%--                    </thead>--%>
+<%--                    <tbody>--%>
+<%--                    <tr class="table-row" data-id="2001">--%>
+<%--                        <td>플랫폼_배송</td>--%>
+<%--                        <td class="title-cell delivery-name">등산용 배낭</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-progress">배송중</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-04-25</td>--%>
+<%--                        <td>2023-04-27</td>--%>
+<%--                        <td>SR12345</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="234567890123">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr class="table-row" data-id="2002">--%>
+<%--                        <td>거래자_택배</td>--%>
+<%--                        <td class="title-cell delivery-name">캠핑용 의자</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-completed">배송완료</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-04-18</td>--%>
+<%--                        <td>2023-04-21</td>--%>
+<%--                        <td>SR23456</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="345678901234">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr class="table-row" data-id="2003">--%>
+<%--                        <td>스토렌_최종_반환_ID</td>--%>
+<%--                        <td class="title-cell delivery-name">야외용 랜턴</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-pending">배송준비중</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-05-05</td>--%>
+<%--                        <td>2023-05-08</td>--%>
+<%--                        <td>SR34567</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="456789012345">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    </tbody>--%>
+<%--                </table>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+
+<%--        <!-- 렌탈 탭 콘텐츠 -->--%>
+<%--        <div class="tab-content" id="rental-content">--%>
+<%--            <div class="table-container">--%>
+<%--                <table class="custom-table table">--%>
+<%--                    <thead>--%>
+<%--                    <tr>--%>
+<%--                        <th>배송 유형</th>--%>
+<%--                        <th>물품명</th>--%>
+<%--                        <th>배송 상태</th>--%>
+<%--                        <th>배송 시작일</th>--%>
+<%--                        <th>배송 종료일</th>--%>
+<%--                        <th>렌탈 ID</th>--%>
+<%--                        <th>조회</th>--%>
+<%--                    </tr>--%>
+<%--                    </thead>--%>
+<%--                    <tbody>--%>
+<%--                    <tr class="table-row" data-id="3001">--%>
+<%--                        <td>플랫폼_배송</td>--%>
+<%--                        <td class="title-cell delivery-name">바베큐 그릴</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-progress">배송중</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-04-22</td>--%>
+<%--                        <td>2023-04-24</td>--%>
+<%--                        <td>RT12345</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="567890123456">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr class="table-row" data-id="3002">--%>
+<%--                        <td>거래자_택배_반환</td>--%>
+<%--                        <td class="title-cell delivery-name">휴대용 가스버너</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-completed">배송완료</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-04-15</td>--%>
+<%--                        <td>2023-04-17</td>--%>
+<%--                        <td>RT23456</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="678901234567">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    <tr class="table-row" data-id="3003">--%>
+<%--                        <td>플랫폼_배송_반환</td>--%>
+<%--                        <td class="title-cell delivery-name">감성 랜턴</td>--%>
+<%--                        <td>--%>
+<%--                            <span class="status-badge status-pending">배송준비중</span>--%>
+<%--                        </td>--%>
+<%--                        <td>2023-05-10</td>--%>
+<%--                        <td>2023-05-12</td>--%>
+<%--                        <td>RT34567</td>--%>
+<%--                        <td>--%>
+<%--                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="789012345678">조회</button>--%>
+<%--                        </td>--%>
+<%--                    </tr>--%>
+<%--                    </tbody>--%>
+<%--                </table>--%>
+<%--            </div>--%>
+<%--        </div>--%>
         </div>
     </div>
-</div>
+
 
 <!-- 배송 상세 조회 모달 -->
 <div class="modal fade" id="deliveryDetailModal" tabindex="-1" aria-labelledby="deliveryDetailModalLabel" inert>
@@ -435,7 +585,18 @@
 <script type="text/javascript">
     // 페이지 로딩 시 실행
     $(document).ready(function() {
-        // 배송 탭 전환 기능
+        // 데이터 로드 상태 추적
+        let loadedData = {
+            'storage': false,
+            'storen-owner': false,
+            'storen-user': true, // 초기 페이지 로드 시 이미 로드됨
+            'rental': false
+        };
+
+        // 현재 활성화된 스토렌 서브탭
+        let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
+
+        // 메인 탭 전환 기능
         $('.tab').on('click', function() {
             const tabId = $(this).data('tab');
 
@@ -445,8 +606,222 @@
 
             // 콘텐츠 활성화
             $('.tab-content').removeClass('active');
-            $(`#` + tabId + `-content`).addClass('active');
+            $(`#${tabId}-content`).addClass('active');
+
+            // 필요한 데이터 로드
+            if (tabId === 'storen') {
+                loadStorenData(currentStorenSubTab);
+            } else if (tabId === 'rental') {
+                loadRentalData();
+            } else if (tabId === 'storage') {
+                loadStorageData();
+            }
+
+            // 콘텐츠가 바뀌면 검색 결과 재설정
+            if ($('#search-trade-id').val().trim() !== '') {
+                performSearch();
+            }
         });
+
+        // 스토렌 탭 내 소유자/사용자 서브탭 전환
+        $(document).on('click', '#storen-content .tab-link', function(e) {
+            e.preventDefault();
+
+            // 서브탭 타입 (owner 또는 user)
+            const subTabType = $(this).data('storen-tab');
+            currentStorenSubTab = subTabType;
+
+            // 서브탭 활성화
+            $('#storen-content .tab-link').removeClass('active');
+            $(this).addClass('active');
+
+            // 데이터 로드
+            loadStorenData(subTabType);
+        });
+
+        // 스토렌 데이터 로드 함수
+        function loadStorenData(subTabType) {
+            const dataKey = `storen-${subTabType}`;
+
+            // 이미 로드된 데이터라면 다시 요청하지 않음
+            if (loadedData[dataKey]) {
+                return;
+            }
+
+            // 로딩 표시
+            $('#storen-content .table-container tbody').html('<tr><td colspan="7" class="text-center">로딩 중...</td></tr>');
+
+            // API 엔드포인트 결정
+            const apiUrl = `/api/delivery/storen/${subTabType}`;
+
+            // AJAX 요청
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 데이터 로드 상태 업데이트
+                    loadedData[dataKey] = true;
+
+                    // 테이블 내용 업데이트
+                    updateTableContent('#storen-content', data);
+
+                    // 검색 필터 다시 적용
+                    if ($('#search-trade-id').val().trim() !== '') {
+                        performSearch();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(`데이터 로드 실패: ${error}`);
+                    $('#storen-content .table-container tbody').html('<tr><td colspan="7" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                }
+            });
+        }
+
+        // 렌탈 데이터 로드 함수
+        function loadRentalData() {
+            // 이미 로드된 데이터라면 다시 요청하지 않음
+            if (loadedData['rental']) {
+                return;
+            }
+
+            // 로딩 표시
+            $('#rental-content .table-container tbody').html('<tr><td colspan="7" class="text-center">로딩 중...</td></tr>');
+
+            // AJAX 요청
+            $.ajax({
+                url: '/api/delivery/rental',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 데이터 로드 상태 업데이트
+                    loadedData['rental'] = true;
+
+                    // 테이블 내용 업데이트
+                    updateTableContent('#rental-content', data);
+
+                    // 검색 필터 다시 적용
+                    if ($('#search-trade-id').val().trim() !== '') {
+                        performSearch();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(`데이터 로드 실패: ${error}`);
+                    $('#rental-content .table-container tbody').html('<tr><td colspan="7" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                }
+            });
+        }
+
+        // 보관 데이터 로드 함수
+        function loadStorageData() {
+            // 이미 로드된 데이터라면 다시 요청하지 않음
+            if (loadedData['storage']) {
+                return;
+            }
+
+            // 로딩 표시
+            $('#storage-content .table-container tbody').html('<tr><td colspan="7" class="text-center">로딩 중...</td></tr>');
+
+            // AJAX 요청
+            $.ajax({
+                url: '/api/delivery/storage',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 데이터 로드 상태 업데이트
+                    loadedData['storage'] = true;
+
+                    // 테이블 내용 업데이트
+                    updateTableContent('#storage-content', data);
+
+                    // 검색 필터 다시 적용
+                    if ($('#search-trade-id').val().trim() !== '') {
+                        performSearch();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(`데이터 로드 실패: ${error}`);
+                    $('#storage-content .table-container tbody').html('<tr><td colspan="7" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                }
+            });
+        }
+
+        // 테이블 내용 업데이트 함수
+        function updateTableContent(contentSelector, deliveries) {
+            const tbody = $(`${contentSelector} .table-container tbody`);
+            tbody.empty();
+
+            if (deliveries.length === 0) {
+                tbody.html('<tr><td colspan="7" class="text-center">데이터가 없습니다.</td></tr>');
+                return;
+            }
+
+            // 데이터 행 추가
+            deliveries.forEach(function(delivery) {
+                // 배송 상태 결정
+                let statusClass = '';
+                let statusText = '';
+
+                if (delivery.end_date) {
+                    statusClass = 'status-completed';
+                    statusText = '배송완료';
+                } else if (delivery.start_date) {
+                    statusClass = 'status-progress';
+                    statusText = '배송중';
+                } else {
+                    statusClass = 'status-pending';
+                    statusText = '배송준비중';
+                }
+
+                // ID 컬럼 결정 (스토렌/보관/렌탈)
+                let idColumn = '';
+                let idValue = '';
+
+                if (contentSelector === '#storage-content') {
+                    idColumn = '보관 ID';
+                    idValue = delivery.storage_id;
+                } else if (contentSelector === '#storen-content') {
+                    idColumn = '스토렌 ID';
+                    idValue = delivery.storen_id;
+                } else if (contentSelector === '#rental-content') {
+                    idColumn = '렌탈 ID';
+                    idValue = delivery.rental_id;
+                }
+
+                // 행 HTML 생성
+                const row = `
+                    <tr class="table-row" data-id="${delivery.delivery_id}">
+                        <td>${delivery.delivery_type}</td>
+                        <td class="title-cell delivery-name">${delivery.equip_name}</td>
+                        <td>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </td>
+                        <td>${delivery.start_date || ''}</td>
+                        <td>${delivery.end_date || ''}</td>
+                        <td>${idValue || ''}</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external"
+                                data-company="${delivery.carrier_name}"
+                                data-tracking="${delivery.waybill_number}">조회</button>
+                        </td>
+                    </tr>
+                `;
+
+                tbody.append(row);
+            });
+        }
+        // // 배송 탭 전환 기능
+        // $('.tab').on('click', function() {
+        //     const tabId = $(this).data('tab');
+        //
+        //     // 탭 활성화
+        //     $('.tab').removeClass('active');
+        //     $(this).addClass('active');
+        //
+        //     // 콘텐츠 활성화
+        //     $('.tab-content').removeClass('active');
+        //     $(`#` + tabId + `-content`).addClass('active');
+        // });
 
         // 배송업체 사이트 버튼 이벤트
         $(document).on('click', '.btn-track-external, #modal-external-track-btn', function(e) {

@@ -1,6 +1,7 @@
 package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.DeliveryDTO;
+import com.team.mvc.DTO.MyDeliveryDTO;
 import com.team.mvc.DTO.MyEquipDTO;
 import com.team.mvc.Interface.*;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,14 +122,60 @@ public class MypageController {
     }
 
     // 마이페이지-배송 조회/내역
+    // 처음에는 스토렌 사용자 배송내역 로드
     @RequestMapping(value="/mypage-delivery.action")
-    public String mypageDelivery(@RequestParam(defaultValue = "owner") String storenTabType, Model model) {
+    public String mypageDelivery(Model model) {
 
-        List<DeliveryDTO> deliveryList = deliveryService.listByUserCode(2); // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : START ===");
+        int userCode = 2; // 로그인 이후 세션에서 받아오는 걸로 교체 예정
 
-        model.addAttribute("deliveryList", deliveryList);
+        // 초기에는 스토렌 소유자 배송내역만 로드
+        List<DeliveryDTO> storenUserDeliveries = deliveryService.getStorenOwnerDeliveries(userCode);
+        model.addAttribute("deliveryList", storenUserDeliveries);
+        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
+        model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
 
+        System.out.println("deliveryList size : " + storenUserDeliveries.size());
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
         return "myPage-delivery";
+    }
+
+    // AJAX 요청을 처리할 메소드들은 동일하게 유지
+    @RequestMapping(value="/api/delivery/storage", produces="application/json")
+    @ResponseBody
+    public List<DeliveryDTO> getStorageDeliveries() {
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STORAGE : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STORAGE : END ===");
+        return deliveryService.getStorageDeliveries(user_code);
+
+    }
+
+    @RequestMapping(value="/api/delivery/storen/owner", produces="application/json")
+    @ResponseBody
+    public List<DeliveryDTO> getStorenOwnerDeliveries() {
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
+        return deliveryService.getStorenOwnerDeliveries(user_code);
+    }
+
+    @RequestMapping(value="/api/delivery/storen/user", produces="application/json")
+    @ResponseBody
+    public List<DeliveryDTO> getStorenUserDeliveries() {
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN User : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN User : END ===");
+        return deliveryService.getStorenUserDeliveries(user_code);
+    }
+
+    @RequestMapping(value="/api/delivery/rental", produces="application/json")
+    @ResponseBody
+    public List<DeliveryDTO> getRentalDeliveries() {
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - RENTAL : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - RENTAL : END ===");
+        return deliveryService.getRentalDeliveries(user_code);
     }
 
     // 마이페이지-매칭 조회/내역

@@ -466,6 +466,7 @@
                                     <div class="button-group-vertical">
                                         <button class="btn-sm btn-inspection">검수 결과 확인</button>
                                         <button class="btn-sm btn-shipping">배송 내역 조회</button>
+                                        <button class="btn-sm btn-pay">보관비   결제</button>
                                     </div>
                                 </td>
                             </tr>
@@ -499,7 +500,7 @@
                                                 <td><span class="trust-score high">${sub.daily_rent_price} 원</span></td>
                                                 <td>${sub.created_date}</td>
                                                 <td>
-                                                    <button type="button" class="btn-sm btn-approve" data-rental="RT12345" data-user="user123">매칭신청확인</button>
+                                                    <button type="button" class="btn-sm btn-approve" data-rental="${storen.storen_id}">매칭신청확인</button>
                                                 </td>
                                             </tr>
                                             </c:forEach>
@@ -897,6 +898,14 @@
             var id = $(this).closest("tr").find("input[name='id']").val();
             // 배송 조회/내역 페이지로 이동
             window.location.href = "mypage-delivery.action?id=" + id;
+        });
+        
+        // 결제 버튼 클릭 이벤트
+        $('.btn-pay').on('click', function (e) {
+            e.preventDefault(); // 기본 동작 방지
+            var id = $(this).closest("tr").find("input[name='id']").val();
+            // 결제 페이지로 이동
+            window.location.href = "storenRegister-storage-pay.action?id=" + id;
         });
 
         // 스토렌 확장 테이블----------------------------------------------------------------------------------------------
