@@ -1,18 +1,15 @@
 package com.team.mvc.Controller;
 
-import com.team.mvc.DTO.EquipmentDTO;
+import com.team.mvc.DTO.DeliveryDTO;
 import com.team.mvc.DTO.MyEquipDTO;
-import com.team.mvc.DTO.StorenDTO;
 import com.team.mvc.Interface.*;
 import jakarta.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +22,8 @@ public class MypageController {
     //private SqlSession sqlSession;
     @Autowired
     private IMypageMyEquipService myEquipService;
+    @Autowired
+    private IMypageDeliveryService deliveryService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -122,7 +121,12 @@ public class MypageController {
 
     // 마이페이지-배송 조회/내역
     @RequestMapping(value="/mypage-delivery.action")
-    public String mypageDelivery() {
+    public String mypageDelivery(@RequestParam(defaultValue = "owner") String storenTabType, Model model) {
+
+        List<DeliveryDTO> deliveryList = deliveryService.listByUserCode(2); // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+
+        model.addAttribute("deliveryList", deliveryList);
+
         return "myPage-delivery";
     }
 

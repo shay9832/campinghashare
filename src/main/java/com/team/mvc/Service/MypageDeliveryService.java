@@ -1,21 +1,23 @@
 package com.team.mvc.Service;
 
 import com.team.mvc.DTO.DeliveryDTO;
+import com.team.mvc.DTO.MyDeliveryDTO;
 import com.team.mvc.Interface.IDeliveryDAO;
-import com.team.mvc.Interface.IEquipmentDAO;
-import com.team.mvc.Interface.IStorenDAO;
+import com.team.mvc.Interface.IMypageDeliveryService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class MypageDeliveryService implements IDeliveryDAO {
+@Service
+public class MypageDeliveryService implements IMypageDeliveryService {
 
     @Autowired
     private SqlSession sqlSession;
 
     @Override
-    public ArrayList<DeliveryDTO> listByUserCode(int user_code) {
+    public MyDeliveryDTO listByUserCode(int user_code) {
 
         System.out.println("== MypageDelivery Service : listByUserCode : START ==");
         // dao객체 생성

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,6 +17,33 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+    <style>
+        /* 탭 네비게이션 스타일 */
+        .tab-nav {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tab-link {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #495057;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .tab-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .tab-nav .tab-link.active {
+            color: var(--color-white);
+            background-color: var(--color-maple);
+        }
+    </style>
 </head>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
@@ -122,182 +150,199 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="table-row" data-id="1001">
-                            <td>플랫폼_배송</td>
-                            <td class="title-cell delivery-name">캠핑 텐트 세트</td>
+                <c:forEach var="delivery" items="${deliveryList}">
+                    <c:if test="${delivery.storage_id != null}">
+                        <tr class="table-row" data-id="${delivery.delivery_id}">
+                            <td>${delivery.delivery_type}</td>
+                            <td class="title-cell delivery-name">${delivery.equip_name}</td>
                             <td>
-                                <span class="status-badge status-progress">배송중</span>
+                                <span class="status-badge status-progress">
+                                    <c:choose>
+                                        <c:when test="${delivery.start_date} != null">
+                                            배송준비중
+                                        </c:when>
+                                        <c:when test="${delivery.start_date} != null && ${delivery.end_date} == null">
+                                            배송중
+                                        </c:when>
+                                        <c:when test="${delivery.end_date} != null">
+                                            배송완료
+                                        </c:when>
+                                        <c:otherwise>
+                                            추적불가
+                                        </c:otherwise>
+                                    </c:choose>
+                                </span>
                             </td>
-                            <td>2023-04-28</td>
-                            <td>2023-04-30</td>
-                            <td>ST12345</td>
+                            <td>${delivery.start_date}</td>
+                            <td>${delivery.end_date}</td>
+                            <td>${delivery.storage_id}</td>
                             <td>
                                 <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="123456789012">조회</button>
                             </td>
                         </tr>
-                        <tr class="table-row" data-id="1002">
-                            <td>거래자_택배</td>
-                            <td class="title-cell delivery-name">접이식 테이블 체어</td>
-                            <td>
-                                <span class="status-badge status-completed">배송완료</span>
-                            </td>
-                            <td>2023-04-20</td>
-                            <td>2023-04-24</td>
-                            <td>ST23456</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="987654321098">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="1003">
-                            <td>플랫폼_배송_반환</td>
-                            <td class="title-cell delivery-name">캠핑 침낭</td>
-                            <td>
-                                <span class="status-badge status-pending">배송준비중</span>
-                            </td>
-                            <td>2023-05-01</td>
-                            <td>2023-05-03</td>
-                            <td>ST34567</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="567890123456">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="1004">
-                            <td>보관_최종_반환</td>
-                            <td class="title-cell delivery-name">코펠 세트</td>
-                            <td>
-                                <span class="status-badge status-completed">배송완료</span>
-                            </td>
-                            <td>2023-03-15</td>
-                            <td>2023-03-18</td>
-                            <td>ST45678</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="한진택배" data-tracking="456789012345">조회</button>
-                            </td>
-                        </tr>
+                    </c:if>
+                </c:forEach>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 스토렌 탭 콘텐츠 -->
+        <div class="tab-content" id="storen-content">
+
+            <!-- 소유자/사용자 필터 -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <!-- 탭 필터 -->
+                <div class="d-flex flex-wrap align-items-center">
+                    <div class="tab-nav">
+                        <a class="tab-link active" href="#">소유자</a>
+                    </div>
+                    <div class="tab-nav">
+                        <a class="tab-link" href="#">사용자</a>
+                    </div>
+                </div>
+
+                <!-- 정렬 옵션 (오른쪽) -->
+                <div class="d-flex align-items-center">
+                    <!-- 날짜 필터 -->
+                    <div class="date-filter me-2">
+                        <select class="form-control">
+                            <option>전체 기간</option>
+                            <option>최근 1개월</option>
+                            <option>최근 3개월</option>
+                            <option>최근 6개월</option>
+                        </select>
+                    </div>
+
+                    <!-- 정렬 옵션 -->
+                    <div class="sort-container">
+                        <select class="form-control sort-select">
+                            <option>최신순</option>
+                            <option>높은 점수순</option>
+                            <option>낮은 점수순</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- 스토렌 탭 콘텐츠 -->
-            <div class="tab-content" id="storen-content">
-                <div class="table-container">
-                    <table class="custom-table table">
-                        <thead>
-                        <tr>
-                            <th>배송 유형</th>
-                            <th>물품명</th>
-                            <th>배송 상태</th>
-                            <th>배송 시작일</th>
-                            <th>배송 종료일</th>
-                            <th>스토렌 ID</th>
-                            <th>조회</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="table-row" data-id="2001">
-                            <td>플랫폼_배송</td>
-                            <td class="title-cell delivery-name">등산용 배낭</td>
-                            <td>
-                                <span class="status-badge status-progress">배송중</span>
-                            </td>
-                            <td>2023-04-25</td>
-                            <td>2023-04-27</td>
-                            <td>SR12345</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="234567890123">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="2002">
-                            <td>거래자_택배</td>
-                            <td class="title-cell delivery-name">캠핑용 의자</td>
-                            <td>
-                                <span class="status-badge status-completed">배송완료</span>
-                            </td>
-                            <td>2023-04-18</td>
-                            <td>2023-04-21</td>
-                            <td>SR23456</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="345678901234">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="2003">
-                            <td>스토렌_최종_반환_ID</td>
-                            <td class="title-cell delivery-name">야외용 랜턴</td>
-                            <td>
-                                <span class="status-badge status-pending">배송준비중</span>
-                            </td>
-                            <td>2023-05-05</td>
-                            <td>2023-05-08</td>
-                            <td>SR34567</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="456789012345">조회</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="table-container">
+                <table class="custom-table table">
+                    <thead>
+                    <tr>
+                        <th>배송 유형</th>
+                        <th>물품명</th>
+                        <th>배송 상태</th>
+                        <th>배송 시작일</th>
+                        <th>배송 종료일</th>
+                        <th>스토렌 ID</th>
+                        <th>조회</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="table-row" data-id="2001">
+                        <td>플랫폼_배송</td>
+                        <td class="title-cell delivery-name">등산용 배낭</td>
+                        <td>
+                            <span class="status-badge status-progress">배송중</span>
+                        </td>
+                        <td>2023-04-25</td>
+                        <td>2023-04-27</td>
+                        <td>SR12345</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="234567890123">조회</button>
+                        </td>
+                    </tr>
+                    <tr class="table-row" data-id="2002">
+                        <td>거래자_택배</td>
+                        <td class="title-cell delivery-name">캠핑용 의자</td>
+                        <td>
+                            <span class="status-badge status-completed">배송완료</span>
+                        </td>
+                        <td>2023-04-18</td>
+                        <td>2023-04-21</td>
+                        <td>SR23456</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="345678901234">조회</button>
+                        </td>
+                    </tr>
+                    <tr class="table-row" data-id="2003">
+                        <td>스토렌_최종_반환_ID</td>
+                        <td class="title-cell delivery-name">야외용 랜턴</td>
+                        <td>
+                            <span class="status-badge status-pending">배송준비중</span>
+                        </td>
+                        <td>2023-05-05</td>
+                        <td>2023-05-08</td>
+                        <td>SR34567</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="456789012345">조회</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- 렌탈 탭 콘텐츠 -->
-            <div class="tab-content" id="rental-content">
-                <div class="table-container">
-                    <table class="custom-table table">
-                        <thead>
-                        <tr>
-                            <th>배송 유형</th>
-                            <th>물품명</th>
-                            <th>배송 상태</th>
-                            <th>배송 시작일</th>
-                            <th>배송 종료일</th>
-                            <th>렌탈 ID</th>
-                            <th>조회</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr class="table-row" data-id="3001">
-                            <td>플랫폼_배송</td>
-                            <td class="title-cell delivery-name">바베큐 그릴</td>
-                            <td>
-                                <span class="status-badge status-progress">배송중</span>
-                            </td>
-                            <td>2023-04-22</td>
-                            <td>2023-04-24</td>
-                            <td>RT12345</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="567890123456">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="3002">
-                            <td>거래자_택배_반환</td>
-                            <td class="title-cell delivery-name">휴대용 가스버너</td>
-                            <td>
-                                <span class="status-badge status-completed">배송완료</span>
-                            </td>
-                            <td>2023-04-15</td>
-                            <td>2023-04-17</td>
-                            <td>RT23456</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="678901234567">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="3003">
-                            <td>플랫폼_배송_반환</td>
-                            <td class="title-cell delivery-name">감성 랜턴</td>
-                            <td>
-                                <span class="status-badge status-pending">배송준비중</span>
-                            </td>
-                            <td>2023-05-10</td>
-                            <td>2023-05-12</td>
-                            <td>RT34567</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="789012345678">조회</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <!-- 렌탈 탭 콘텐츠 -->
+        <div class="tab-content" id="rental-content">
+            <div class="table-container">
+                <table class="custom-table table">
+                    <thead>
+                    <tr>
+                        <th>배송 유형</th>
+                        <th>물품명</th>
+                        <th>배송 상태</th>
+                        <th>배송 시작일</th>
+                        <th>배송 종료일</th>
+                        <th>렌탈 ID</th>
+                        <th>조회</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="table-row" data-id="3001">
+                        <td>플랫폼_배송</td>
+                        <td class="title-cell delivery-name">바베큐 그릴</td>
+                        <td>
+                            <span class="status-badge status-progress">배송중</span>
+                        </td>
+                        <td>2023-04-22</td>
+                        <td>2023-04-24</td>
+                        <td>RT12345</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="CJ대한통운" data-tracking="567890123456">조회</button>
+                        </td>
+                    </tr>
+                    <tr class="table-row" data-id="3002">
+                        <td>거래자_택배_반환</td>
+                        <td class="title-cell delivery-name">휴대용 가스버너</td>
+                        <td>
+                            <span class="status-badge status-completed">배송완료</span>
+                        </td>
+                        <td>2023-04-15</td>
+                        <td>2023-04-17</td>
+                        <td>RT23456</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="롯데택배" data-tracking="678901234567">조회</button>
+                        </td>
+                    </tr>
+                    <tr class="table-row" data-id="3003">
+                        <td>플랫폼_배송_반환</td>
+                        <td class="title-cell delivery-name">감성 랜턴</td>
+                        <td>
+                            <span class="status-badge status-pending">배송준비중</span>
+                        </td>
+                        <td>2023-05-10</td>
+                        <td>2023-05-12</td>
+                        <td>RT34567</td>
+                        <td>
+                            <button type="button" class="btn-sm btn-track-external" data-company="우체국택배" data-tracking="789012345678">조회</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
+        </div>
         </div>
     </div>
 </div>
