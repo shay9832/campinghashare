@@ -196,7 +196,7 @@
                 });
             }
 
-            // 등록 버튼 클릭 시 확인 모달 표시 수정
+            // 등록 버튼 클릭 시 확인 모달 표시
             if (submitBtn && confirmModal) {
                 submitBtn.addEventListener('click', function () {
                     console.log('등록 버튼 클릭됨');
@@ -267,19 +267,19 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="boardbest.action" class="sidebar-link">
                             <i class="fa-solid fa-star"></i>
                             <span>BEST</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link active">
+                        <a href="boardfree.action" class="sidebar-link active">
                             <i class="fa-solid fa-comments"></i>
                             <span>자유게시판</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="boardimage.action" class="sidebar-link">
                             <i class="fa-solid fa-person-hiking"></i>
                             <span>고독한캠핑방</span>
                         </a>

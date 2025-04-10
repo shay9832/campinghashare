@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BoardController {
 
+
+
+
     @RequestMapping("/boardmain.action")
     public String boardMain(){
         return "boardMain";
@@ -56,4 +59,8 @@ public class BoardController {
     public String notice(){
         return "notice";
     }
+
+
+
+
 }
