@@ -11,6 +11,7 @@
 <head>
   <meta charset="UTF-8"> <!-- 문자 인코딩 UTF-8 설정 -->
   <title>관리자 시스템</title> <!-- 브라우저 탭에 표시될 제목 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-userReport.css">
 
 </head>
 

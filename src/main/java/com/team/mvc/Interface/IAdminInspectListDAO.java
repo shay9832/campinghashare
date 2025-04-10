@@ -10,10 +10,10 @@ import java.util.List;
 public interface IAdminInspectListDAO {
 
     // 검수 목록 조회
-    List<AdminInspectListDTO> list();
+    List<AdminInspectListDTO> getList();
 
     // 반품 검수 목록 조회
-    List<AdminInspectListDTO> listr();
+    List<AdminInspectListDTO> getListr();
 
     // 검수 결과 추가 - DTO 사용
     void add(AdminInspectListDTO dto);

@@ -15,43 +15,67 @@
   <h1>관리자 시스템</h1>
 </div>
 
-<!-- 컨테이너 - 메뉴와 콘텐츠를 포함하는 메인 영역 -->
+<!-- 메인 컨테이너 - 메뉴와 콘텐츠 영역 포함 -->
 <div id="container">
-  <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 구성 -->
+  <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 -->
   <div id="leftMenu">
-    <!-- 회원 관리 메뉴와 하위 메뉴 -->
+    <!-- 회원 관리 메뉴 -->
     <button class="menu-button">회원 관리</button>
     <div class="submenu">
       <a href="#">회원 목록</a>
-      <a href="#">회원 등급 조회</a>
       <a href="#">제재내역</a>
     </div>
-    <!-- 신고 관리 메뉴와 하위 메뉴 -->
+
+    <!-- 장비 관리 메뉴 -->
+    <button class="menu-button active">장비 관리</button>
+    <div class="submenu" style="max-height: 200px;">
+      <a href="#">장비 목록</a>
+      <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">검수 목록</a>
+      <a href="#">장비 통계</a>
+    </div>
+
+    <!-- 게시판 관리 메뉴 -->
+    <button class="menu-button">게시판 관리</button>
+    <div class="submenu">
+      <a href="#">게시판 관리</a>
+      <a href="#">게시글 관리</a>
+      <a href="#">댓글 관리</a>
+      <a href="#">커뮤니티 통계</a>
+    </div>
+
+    <!-- 신고 관리 메뉴 -->
     <button class="menu-button">신고 관리</button>
     <div class="submenu">
       <a href="#">신고 목록</a>
       <a href="#">처리 내역</a>
     </div>
-    <!-- 쿠폰 관리 메뉴와 하위 메뉴 -->
+
+    <!-- 이벤트 관리 메뉴 -->
+    <button class="menu-button">이벤트 관리</button>
+    <div class="submenu">
+      <a href="#">이벤트 목록</a>
+    </div>
+
+    <!-- 배송 관리 메뉴 -->
+    <button class="menu-button">배송 관리</button>
+    <div class="submenu">
+      <a href="#">배송 현황</a>
+    </div>
+
+    <!-- 쿠폰 관리 메뉴 -->
     <button class="menu-button">쿠폰 관리</button>
     <div class="submenu">
       <a href="#">쿠폰 발급</a>
       <a href="#">쿠폰 조회</a>
-      <a href="#">만료 쿠폰</a>
     </div>
-    <!-- 상품 카테고리 관리 메뉴와 하위 메뉴 -->
-    <button class="menu-button">상품 카테고리 관리</button>
+
+    <!-- 거래 카테고리 관리 메뉴 -->
+    <button class="menu-button">거래 관리</button>
     <div class="submenu">
-      <a href="#">카테고리 등록</a>
-      <a href="#">카테고리 수정</a>
+      <a href="#">매칭 관리</a>
     </div>
-    <!-- 창고 관리 메뉴와 하위 메뉴 -->
-    <button class="menu-button">창고 관리</button>
-    <div class="submenu">
-      <a href="#">재고 현황</a>
-      <a href="#">입출고 내역</a>
-    </div>
-    <!-- 통계 메뉴와 하위 메뉴 -->
+
+    <!-- 통계 메뉴 -->
     <button class="menu-button">통계</button>
     <div class="submenu">
       <a href="#">일간 통계</a>
@@ -107,7 +131,7 @@
 
       <!-- 중앙 하단의 추가 위젯 (이미지의 12번 영역) -->
       <div class="widget widget-small">
-        <div class="widget-header">뉴스</div>
+        <div class="widget-header">캠핑장 소식</div>
         <div class="widget-content">
           <!-- 뉴스 내용 -->
         </div>

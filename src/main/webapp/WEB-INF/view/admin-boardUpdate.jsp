@@ -1,17 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:24
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>관리자 시스템 - 게시글 관리</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-boardUpdate.css">
+    <title>관리자 시스템 - 게시판 관리</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/1admin-boardUpdate.css">
 </head>
 
 <body>
@@ -36,22 +29,13 @@
         <div class="submenu">
             <a href="#">장비 목록</a>
             <a href="#">검수 목록</a>
-            <a href="#">장비 통계</a>
         </div>
 
         <!-- 게시판 관리 메뉴 -->
         <button class="menu-button active">게시판 관리</button>
         <div class="submenu" style="max-height: 200px;">
-            <a href="#">게시판 관리</a>
-            <a href="#">댓글 관리</a>
-            <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">게시글 관리</a>
-            <a href="#">커뮤니티 통계</a>
-        </div>
-
-        <!-- 배송 관리 메뉴 -->
-        <button class="menu-button">배송 관리</button>
-        <div class="submenu">
-            <a href="#">배송 현황</a>
+            <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">게시판 관리</a>
+            <a href="#">게시글 관리</a>
         </div>
 
         <!-- 신고 관리 메뉴 -->
@@ -59,12 +43,6 @@
         <div class="submenu">
             <a href="#">신고 목록</a>
             <a href="#">처리 내역</a>
-        </div>
-
-        <!-- 이벤트 관리 메뉴 -->
-        <button class="menu-button">이벤트 관리</button>
-        <div class="submenu">
-            <a href="#">이벤트 목록</a>
         </div>
 
         <!-- 쿠폰 관리 메뉴 -->
@@ -80,6 +58,14 @@
             <a href="#">매칭 관리</a>
         </div>
 
+        <!-- 상품 카테고리 관리 메뉴 -->
+        <button class="menu-button">상품 카테고리 관리</button>
+        <div class="submenu">
+            <a href="#">카테고리 등록</a>
+            <a href="#">카테고리 수정</a>
+        </div>
+
+
         <!-- 통계 메뉴 -->
         <button class="menu-button">통계</button>
         <div class="submenu">
@@ -93,249 +79,241 @@
     <div id="content">
         <!-- 콘텐츠 헤더 -->
         <div class="content-header">
-            <h2>게시글 관리</h2>
+            <h2>게시판 관리</h2>
         </div>
 
-        <!-- 검색 영역 -->
-        <div class="content-search-info">
-            <span>검색유형</span>
-            <select>
-                <option>게시물 제목</option>
-                <option>게시물 내용</option>
-                <option>회원 닉네임</option>
-                <option>게시판 이름</option>
-            </select>
+        <!-- 탭 메뉴 -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="board-tab">게시판 관리</button>
+            <button class="tab-btn" data-tab="header-tab">말머리 관리</button>
+        </div>
 
-            <span>게시판 카테고리</span>
-            <select>
-                <option>전체</option>
-                <option>공지사항</option>
-                <option>자유게시판</option>
-                <option>이벤트</option>
-                <option>문의게시판</option>
-            </select>
-
-            <span>말머리</span>
-            <select>
-                <option>전체</option>
-                <option>정보</option>
-                <option>질문</option>
-                <option>후기</option>
-                <option>잡담</option>
-            </select>
-
-            <span>신고여부</span>
-            <select>
-                <option>전체</option>
-                <option>신고됨</option>
-                <option>신고안됨</option>
-            </select>
-
-            <!-- 날짜 범위 선택 -->
-            <div class="content-search-date">
-                <input type="date">
-                <span>~</span>
-                <input type="date">
+        <!-- 게시판 관리 탭 콘텐츠 -->
+        <div class="tab-content active" id="board-tab">
+            <div style="margin-bottom: 15px; text-align: right;">
+                <button class="btn btn-primary" id="add-board-btn">+ 게시판 추가</button>
             </div>
 
-            <!-- 검색어 입력 -->
-            <div class="content-search-bar">
-                <input type="search" placeholder="검색어 입력">
-            </div>
-
-            <!-- 검색 버튼 -->
-            <div class="content-search-btn">
-                <input type="button" value="검색하기">
+            <div class="board-table">
+                <table>
+                    <tr>
+                        <th class="col-board-id">게시판 ID</th>
+                        <th class="col-category">카테고리명</th>
+                        <th class="col-admin-level">관리등급</th>
+                        <th class="col-board-name">게시판명</th>
+                        <th class="col-actions">관리</th>
+                    </tr>
+                    <tr>
+                        <td>1001</td>
+                        <td>공지사항</td>
+                        <td><span class="admin-level-badge admin-level-3">최고관리자</span></td>
+                        <td>공지사항</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1002</td>
+                        <td>자유게시판</td>
+                        <td><span class="admin-level-badge admin-level-1">일반관리자</span></td>
+                        <td>자유롭게 대화하는 공간</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1003</td>
+                        <td>질문과답변</td>
+                        <td><span class="admin-level-badge admin-level-2">중간관리자</span></td>
+                        <td>궁금한 내용을 질문하는 곳</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1004</td>
+                        <td>장비리뷰</td>
+                        <td><span class="admin-level-badge admin-level-1">일반관리자</span></td>
+                        <td>장비 사용 후기</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1005</td>
+                        <td>거래게시판</td>
+                        <td><span class="admin-level-badge admin-level-2">중간관리자</span></td>
+                        <td>장비 거래 게시판</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <!-- 게시글 정보 요약 -->
-        <div class="post-count">
-            <div class="post-all">
-                <span>총 게시글 수 : 1,254개</span>
+        <!-- 말머리 관리 탭 콘텐츠 -->
+        <div class="tab-content" id="header-tab">
+            <div style="margin-bottom: 15px; text-align: right;">
+                <button class="btn btn-primary" id="add-header-btn">+ 말머리 추가</button>
             </div>
-            <div class="post-popular">
-                <span>인기글 : 87개</span>
-            </div>
-            <div class="post-reported">
-                <span>신고 게시글 : 32개</span>
+
+            <div class="board-table">
+                <table>
+                    <tr>
+                        <th class="col-header-id">말머리 ID</th>
+                        <th class="col-board-id">게시판 ID</th>
+                        <th class="col-board-name">게시판명</th>
+                        <th class="col-header-name">말머리명</th>
+                        <th class="col-actions">관리</th>
+                    </tr>
+                    <tr>
+                        <td>201</td>
+                        <td>1002</td>
+                        <td>자유게시판</td>
+                        <td>일상</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>202</td>
+                        <td>1002</td>
+                        <td>자유게시판</td>
+                        <td>유머</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>203</td>
+                        <td>1003</td>
+                        <td>질문과답변</td>
+                        <td>장비문의</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>204</td>
+                        <td>1003</td>
+                        <td>질문과답변</td>
+                        <td>사용방법</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>205</td>
+                        <td>1004</td>
+                        <td>장비리뷰</td>
+                        <td>카메라</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>206</td>
+                        <td>1004</td>
+                        <td>장비리뷰</td>
+                        <td>렌즈</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>207</td>
+                        <td>1004</td>
+                        <td>장비리뷰</td>
+                        <td>조명</td>
+                        <td>
+                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
+                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
-        <!-- 게시글 유형 토글 스위치 -->
-        <div class="toggle-container">
-            <div class="toggle-button-group">
-                <button type="button" class="toggle-button active" data-type="all">전체 게시글</button>
-                <button type="button" class="toggle-button" data-type="popular">인기 게시글</button>
-                <button type="button" class="toggle-button" data-type="reported">신고된 게시글</button>
-            </div>
-        </div>
-
-        <!-- 전체 선택 체크박스 -->
-        <div class="select-all-checkbox">
-            <input type="checkbox" id="selectAll"> <label for="selectAll">전체 선택</label>
-        </div>
-
-        <!-- 게시글 목록 테이블 -->
-        <div class="post-table">
-            <table>
-                <tr>
-                    <!-- 테이블 헤더 -->
-                    <th class="col-select"><input type="checkbox"></th>
-                    <th class="col-post-id">게시물 ID</th>
-                    <th class="col-title">게시물 제목</th>
-                    <th class="col-nickname">회원 닉네임</th>
-                    <th class="col-board">게시판 이름</th>
-                    <th class="col-category">게시판 카테고리</th>
-                    <th class="col-header">말머리</th>
-                    <th class="col-date">생성일</th>
-                    <th class="col-views">조회수</th>
-                    <th class="col-likes">추천수</th>
-                    <th class="col-comments">댓글수</th>
-                    <th class="col-bookmarks">북마크</th>
-                    <th class="col-attachment">첨부</th>
-                    <th class="col-popular">인기글</th>
-                    <th class="col-reported">신고</th>
-                    <th class="col-report-type">신고유형</th>
-                    <th class="col-actions">관리</th>
-                </tr>
-
-                <!-- 게시글 데이터 행 -->
-                <tr>
-                    <td class="col-select"><input type="checkbox"></td>
-                    <td>POST001</td>
-                    <td>안녕하세요! 첫 게시글입니다</td>
-                    <td>행복한하루</td>
-                    <td>자유게시판</td>
-                    <td>일상</td>
-                    <td>인사</td>
-                    <td>2023-04-15</td>
-                    <td>256</td>
-                    <td>42</td>
-                    <td>12</td>
-                    <td>5</td>
-                    <td><span class="status-badge status-yes">있음</span></td>
-                    <td><span class="status-badge status-yes">지정</span></td>
-                    <td><span class="status-badge status-no">없음</span></td>
-                    <td>-</td>
-                    <td><button class="btn btn-primary action-btn edit-post-btn">관리</button></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- 게시글 관리 모달 -->
-        <div id="post-modal" class="modal">
+        <!-- 게시판 추가/수정 모달 -->
+        <div id="board-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>게시글 상세 관리</h3>
+                    <h3 id="board-modal-title">게시판 추가</h3>
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form id="post-form">
+                    <form id="board-form">
                         <div class="form-group">
-                            <label for="post-id">게시물 ID</label>
-                            <input type="text" id="post-id" class="form-control" disabled>
+                            <label for="board-id">게시판 ID</label>
+                            <input type="text" id="board-id" class="form-control" placeholder="자동 생성" disabled>
                         </div>
                         <div class="form-group">
-                            <label for="post-title">게시물 제목</label>
-                            <input type="text" id="post-title" class="form-control">
+                            <label for="board-category">카테고리명</label>
+                            <input type="text" id="board-category" class="form-control" placeholder="카테고리 입력" required>
                         </div>
                         <div class="form-group">
-                            <label for="post-content">게시물 내용</label>
-                            <textarea id="post-content" class="form-control" rows="5"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="member-nickname">회원 닉네임</label>
-                            <input type="text" id="member-nickname" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="board-name">게시판 이름</label>
-                            <select id="board-name" class="form-control">
-                                <option>자유게시판</option>
-                                <option>공지사항</option>
-                                <option>리뷰게시판</option>
-                                <option>문의게시판</option>
-                                <option>이벤트게시판</option>
+                            <label for="board-admin-level">관리등급</label>
+                            <select id="board-admin-level" class="form-control" required>
+                                <option value="1">일반관리자</option>
+                                <option value="2">중간관리자</option>
+                                <option value="3">최고관리자</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="board-category">게시판 카테고리</label>
-                            <select id="board-category" class="form-control">
-                                <option>일상</option>
-                                <option>리뷰</option>
-                                <option>이벤트</option>
-                                <option>문의</option>
-                                <option>공지</option>
-                            </select>
+                            <label for="board-name">게시판명</label>
+                            <input type="text" id="board-name" class="form-control" placeholder="게시판명 입력" required>
                         </div>
-                        <div class="form-group">
-                            <label for="header-name">말머리</label>
-                            <select id="header-name" class="form-control">
-                                <option>인사</option>
-                                <option>후기</option>
-                                <option>질문</option>
-                                <option>공지</option>
-                                <option>잡담</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="created-date">생성일</label>
-                            <input type="text" id="created-date" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="view-count">조회수</label>
-                            <input type="number" id="view-count" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="like-count">추천수</label>
-                            <input type="number" id="like-count" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="comment-count">댓글수</label>
-                            <input type="number" id="comment-count" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="bookmark-count">북마크수</label>
-                            <input type="number" id="bookmark-count" class="form-control" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="has-attachment">첨부파일</label>
-                            <select id="has-attachment" class="form-control" disabled>
-                                <option>있음</option>
-                                <option>없음</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="is-popular">인기글 지정</label>
-                            <select id="is-popular" class="form-control">
-                                <option>지정</option>
-                                <option>미지정</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="is-reported">신고 여부</label>
-                            <select id="is-reported" class="form-control" disabled>
-                                <option>신고됨</option>
-                                <option>신고안됨</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="report-type">신고 처리 유형</label>
-                            <select id="report-type" class="form-control">
-                                <option>선택안함</option>
-                                <option>욕설/비방</option>
-                                <option>광고/스팸</option>
-                                <option>음란물</option>
-                                <option>개인정보유출</option>
-                                <option>저작권침해</option>
-                                <option>기타</option>
-                            </select>
-                        </div>
-
                         <div class="form-actions">
-                            <button type="button" class="btn btn-danger" id="delete-post-btn">삭제</button>
-                            <button type="button" class="btn btn-danger" id="cancel-btn">취소</button>
-                            <button type="submit" class="btn btn-primary" id="save-post-btn">저장</button>
+                            <button type="button" class="btn btn-danger" id="cancel-board-btn">취소</button>
+                            <button type="submit" class="btn btn-primary" id="save-board-btn">저장</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 말머리 추가/수정 모달 -->
+        <div id="header-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="header-modal-title">말머리 추가</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="header-form">
+                        <div class="form-group">
+                            <label for="header-id">말머리 ID</label>
+                            <input type="text" id="header-id" class="form-control" placeholder="자동 생성" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="header-board-id">게시판 선택</label>
+                            <select id="header-board-id" class="form-control" required>
+                                <option value="">게시판 선택</option>
+                                <option value="1002">자유게시판</option>
+                                <option value="1003">질문과답변</option>
+                                <option value="1004">장비리뷰</option>
+                                <option value="1005">거래게시판</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="header-name">말머리명</label>
+                            <input type="text" id="header-name" class="form-control" placeholder="말머리명 입력" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="cancel-header-btn">취소</button>
+                            <button type="submit" class="btn btn-primary" id="save-header-btn">저장</button>
                         </div>
                     </form>
                 </div>
@@ -346,11 +324,11 @@
         <div id="delete-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>게시글 삭제 확인</h3>
+                    <h3 id="delete-modal-title">삭제 확인</h3>
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <p id="delete-message" style="margin-bottom: 25px; line-height: 1.5; color: #555;">선택한 게시글을 정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+                    <p id="delete-message" style="margin-bottom: 25px; line-height: 1.5; color: #555;">정말로 삭제하시겠습니까?</p>
                     <div class="form-actions">
                         <button type="button" class="btn btn-primary" id="cancel-delete-btn">취소</button>
                         <button type="button" class="btn btn-danger" id="confirm-delete-btn">삭제</button>
@@ -378,34 +356,47 @@
         });
     });
 
-    // 초기화: 활성화된 메뉴의 하위 메뉴 펼치기
-    document.querySelectorAll('.menu-button.active').forEach(button => {
-        const submenu = button.nextElementSibling;
-        submenu.style.maxHeight = submenu.scrollHeight + 'px';
+    // 탭 전환 기능
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 모든 탭 버튼에서 active 클래스 제거
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            // 현재 클릭한 버튼에 active 클래스 추가
+            this.classList.add('active');
+
+            // 모든 탭 콘텐츠 숨기기
+            tabContents.forEach(content => content.classList.remove('active'));
+            // 클릭한 탭에 해당하는 콘텐츠 표시
+            const tabId = this.getAttribute('data-tab');
+            document.getElementById(tabId).classList.add('active');
+        });
     });
 
-    // 페이지 로드 시 기본 데이터 표시 (전체 게시글)
-    document.addEventListener('DOMContentLoaded', function() {
-        showFilteredPosts('all');
-    });
-
-    // 모달 관련 변수
-    const postModal = document.getElementById('post-modal');
+    // 모달 관련 기능
+    const boardModal = document.getElementById('board-modal');
+    const headerModal = document.getElementById('header-modal');
     const deleteModal = document.getElementById('delete-modal');
     const closeModalButtons = document.querySelectorAll('.close-modal');
 
     // 모달 닫기 버튼
     closeModalButtons.forEach(button => {
         button.addEventListener('click', function() {
-            postModal.style.display = 'none';
+            boardModal.style.display = 'none';
+            headerModal.style.display = 'none';
             deleteModal.style.display = 'none';
         });
     });
 
     // 모달 외부 클릭 시 닫기
     window.addEventListener('click', function(event) {
-        if (event.target === postModal) {
-            postModal.style.display = 'none';
+        if (event.target === boardModal) {
+            boardModal.style.display = 'none';
+        }
+        if (event.target === headerModal) {
+            headerModal.style.display = 'none';
         }
         if (event.target === deleteModal) {
             deleteModal.style.display = 'none';
@@ -413,413 +404,187 @@
     });
 
     // 취소 버튼 클릭 시 모달 닫기
-    document.getElementById('cancel-btn').addEventListener('click', function() {
-        postModal.style.display = 'none';
+    document.getElementById('cancel-board-btn').addEventListener('click', function() {
+        boardModal.style.display = 'none';
+    });
+
+    document.getElementById('cancel-header-btn').addEventListener('click', function() {
+        headerModal.style.display = 'none';
     });
 
     document.getElementById('cancel-delete-btn').addEventListener('click', function() {
         deleteModal.style.display = 'none';
     });
 
-    // 게시글 관리 버튼 클릭 시 모달 표시
-    const editPostButtons = document.querySelectorAll('.edit-post-btn');
-    editPostButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const postId = row.cells[1].textContent;
-            const postTitle = row.cells[2].textContent;
-            const memberNickname = row.cells[3].textContent;
-            const boardName = row.cells[4].textContent;
-            const boardCategory = row.cells[5].textContent;
-            const headerName = row.cells[6].textContent;
-            const createdDate = row.cells[7].textContent;
-            const viewCount = row.cells[8].textContent;
-            const likeCount = row.cells[9].textContent;
-            const commentCount = row.cells[10].textContent;
-            const bookmarkCount = row.cells[11].textContent;
+    // 게시판 폼 제출 처리
+    document.getElementById('board-form').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            // 첨부파일 상태 추출
-            const attachmentStatus = row.cells[12].querySelector('.status-badge').textContent;
+        // 여기에 게시판 추가/수정 처리 코드 작성
+        // 실제 환경에서는 서버로 데이터를 전송하는 AJAX 요청을 구현
 
-            // 인기글 상태 추출
-            const popularStatus = row.cells[13].querySelector('.status-badge').textContent;
+        // 예시: 콘솔에 데이터 출력
+        const boardId = document.getElementById('board-id').value;
+        const category = document.getElementById('board-category').value;
+        const adminLevel = document.getElementById('board-admin-level').value;
+        const boardName = document.getElementById('board-name').value;
 
-            // 신고 상태 추출
-            const reportedStatus = row.cells[14].querySelector('.status-badge').textContent;
-
-            // 신고 처리 유형
-            const reportType = row.cells[15].textContent;
-
-            // 모달 폼에 데이터 설정
-            document.getElementById('post-id').value = postId;
-            document.getElementById('post-title').value = postTitle;
-            document.getElementById('post-content').value = "게시물 내용은 여기에 로드됩니다..."; // 실제로는 API에서 가져올 내용
-            document.getElementById('member-nickname').value = memberNickname;
-            document.getElementById('board-name').value = boardName;
-            document.getElementById('board-category').value = boardCategory;
-            document.getElementById('header-name').value = headerName;
-            document.getElementById('created-date').value = createdDate;
-            document.getElementById('view-count').value = viewCount;
-            document.getElementById('like-count').value = likeCount;
-            document.getElementById('comment-count').value = commentCount;
-            document.getElementById('bookmark-count').value = bookmarkCount;
-            document.getElementById('has-attachment').value = attachmentStatus;
-            document.getElementById('is-popular').value = popularStatus;
-            document.getElementById('is-reported').value = reportedStatus;
-            document.getElementById('report-type').value = reportType !== "-" ? reportType : "선택안함";
-
-            // 모달 표시
-            postModal.style.display = 'block';
+        console.log({
+            action: boardId ? '게시판 수정' : '게시판 추가',
+            boardId,
+            category,
+            adminLevel,
+            boardName
         });
+
+        // 모달 닫기
+        boardModal.style.display = 'none';
+
+        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
+        alert(boardId ? '게시판이 성공적으로 수정되었습니다.' : '게시판이 성공적으로 추가되었습니다.');
+
+        // 페이지 새로고침 (실제 구현 시 필요한 경우)
+        // location.reload();
     });
 
-    // 게시글 삭제 버튼 클릭 시 확인 모달 표시
-    document.getElementById('delete-post-btn').addEventListener('click', function() {
-        const postId = document.getElementById('post-id').value;
-        const postTitle = document.getElementById('post-title').value;
+    // 말머리 폼 제출 처리
+    document.getElementById('header-form').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-        document.getElementById('delete-message').textContent = `"${postTitle}" 게시글을 정말로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`;
-        document.getElementById('confirm-delete-btn').setAttribute('data-id', postId);
+        // 여기에 말머리 추가/수정 처리 코드 작성
+        // 실제 환경에서는 서버로 데이터를 전송하는 AJAX 요청을 구현
 
-        postModal.style.display = 'none';
-        deleteModal.style.display = 'block';
+        // 예시: 콘솔에 데이터 출력
+        const headerId = document.getElementById('header-id').value;
+        const boardId = document.getElementById('header-board-id').value;
+        const headerName = document.getElementById('header-name').value;
+
+        console.log({
+            action: headerId ? '말머리 수정' : '말머리 추가',
+            headerId,
+            boardId,
+            headerName
+        });
+
+        // 모달 닫기
+        headerModal.style.display = 'none';
+
+        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
+        alert(headerId ? '말머리가 성공적으로 수정되었습니다.' : '말머리가 성공적으로 추가되었습니다.');
+
+        // 페이지 새로고침 (실제 구현 시 필요한 경우)
+        // location.reload();
     });
 
-    // 게시글 삭제 확인 버튼 클릭 시 처리
+    // 삭제 확인 버튼 클릭 시 처리
     document.getElementById('confirm-delete-btn').addEventListener('click', function() {
-        const postId = this.getAttribute('data-id');
+        const type = this.getAttribute('data-type');
+        const id = this.getAttribute('data-id');
 
         // 여기에 삭제 처리 코드 작성
         // 실제 환경에서는 서버로 삭제 요청을 보내는 AJAX 구현
 
         console.log({
-            action: '게시글 삭제',
-            postId
+            action: `${type} 삭제`,
+            id
         });
 
         // 모달 닫기
         deleteModal.style.display = 'none';
 
         // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
-        alert('게시글이 성공적으로 삭제되었습니다.');
+        alert(`${type == 'board' ? '게시판' : '말머리'}이(가) 성공적으로 삭제되었습니다.`);
 
         // 페이지 새로고침 (실제 구현 시 필요한 경우)
         // location.reload();
     });
 
-    // 게시글 폼 제출 처리
-    document.getElementById('post-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // 여기에 게시글 수정 처리 코드 작성
-        // 실제 환경에서는 서버로 데이터를 전송하는 AJAX 요청을 구현
-
-        // 예시: 콘솔에 데이터 출력
-        const postId = document.getElementById('post-id').value;
-        const postTitle = document.getElementById('post-title').value;
-        const postContent = document.getElementById('post-content').value;
-        const boardName = document.getElementById('board-name').value;
-        const boardCategory = document.getElementById('board-category').value;
-        const headerName = document.getElementById('header-name').value;
-        const isPopular = document.getElementById('is-popular').value;
-        const reportType = document.getElementById('report-type').value;
-
-        console.log({
-            action: '게시글 수정',
-            postId,
-            postTitle,
-            postContent,
-            boardName,
-            boardCategory,
-            headerName,
-            isPopular,
-            reportType
-        });
-
-        // 모달 닫기
-        postModal.style.display = 'none';
-
-        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
-        alert('게시글이 성공적으로 수정되었습니다.');
-
-        // 페이지 새로고침 (실제 구현 시 필요한 경우)
-        // location.reload();
+    // 초기화: 활성화된 메뉴의 하위 메뉴 펼치기
+    document.querySelectorAll('.menu-button.active').forEach(button => {
+        const submenu = button.nextElementSibling;
+        submenu.style.maxHeight = submenu.scrollHeight + 'px';
     });
 
-    // 토글 버튼 이벤트 처리
-    const toggleButtons = document.querySelectorAll('.toggle-button');
-    toggleButtons.forEach(button => {
+    // 게시판 추가 버튼 클릭 시 모달 표시
+    document.getElementById('add-board-btn').addEventListener('click', function() {
+        document.getElementById('board-modal-title').textContent = '게시판 추가';
+        document.getElementById('board-form').reset();
+        boardModal.style.display = 'block';
+    });
+
+    // 말머리 추가 버튼 클릭 시 모달 표시
+    document.getElementById('add-header-btn').addEventListener('click', function() {
+        document.getElementById('header-modal-title').textContent = '말머리 추가';
+        document.getElementById('header-form').reset();
+        headerModal.style.display = 'block';
+    });
+
+    // 게시판 수정 버튼 클릭 시 모달 표시
+    const editBoardButtons = document.querySelectorAll('.edit-board-btn');
+    editBoardButtons.forEach(button => {
         button.addEventListener('click', function() {
-            toggleButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
+            const row = this.closest('tr');
+            const boardId = row.cells[0].textContent;
+            const category = row.cells[1].textContent;
+            const adminLevel = row.querySelector('.admin-level-badge').classList.contains('admin-level-1') ? '1' :
+                row.querySelector('.admin-level-badge').classList.contains('admin-level-2') ? '2' : '3';
+            const boardName = row.cells[3].textContent;
 
-            const type = this.getAttribute('data-type');
-            showFilteredPosts(type);
+            document.getElementById('board-modal-title').textContent = '게시판 수정';
+            document.getElementById('board-id').value = boardId;
+            document.getElementById('board-category').value = category;
+            document.getElementById('board-admin-level').value = adminLevel;
+            document.getElementById('board-name').value = boardName;
+            boardModal.style.display = 'block';
         });
     });
 
-    // 게시글 필터링 및 테이블 업데이트 함수
-    function showFilteredPosts(type) {
-        // 기존 테이블 행 제거 (헤더 제외)
-        const tableRows = document.querySelectorAll('.post-table table tr:not(:first-child)');
-        tableRows.forEach(row => row.remove());
+    // 말머리 수정 버튼 클릭 시 모달 표시
+    const editHeaderButtons = document.querySelectorAll('.edit-header-btn');
+    editHeaderButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const headerId = row.cells[0].textContent;
+            const boardId = row.cells[1].textContent;
+            const headerName = row.cells[3].textContent;
 
-        // 테이블 참조
-        const table = document.querySelector('.post-table table');
-
-        // 필터링에 따른 데이터
-        let filteredData = [];
-
-        switch(type) {
-            case 'all':
-                // 전체 게시글 데이터
-                filteredData = [
-                    {
-                        id: 'POST001',
-                        title: '안녕하세요! 첫 게시글입니다',
-                        nickname: '행복한하루',
-                        board: '자유게시판',
-                        category: '일상',
-                        header: '인사',
-                        date: '2023-04-15',
-                        views: 256,
-                        likes: 42,
-                        comments: 12,
-                        bookmarks: 5,
-                        attachment: true,
-                        popular: true,
-                        reported: false,
-                        reportType: '-'
-                    }
-                ];
-                break;
-
-            case 'popular':
-                // 인기 게시글 데이터
-                filteredData = [
-                    {
-                        id: 'POST002',
-                        title: '카메라 장비 추천 - 초보자를 위한 가이드',
-                        nickname: '카메라매니아',
-                        board: '리뷰게시판',
-                        category: '리뷰',
-                        header: '정보',
-                        date: '2023-04-10',
-                        views: 1258,
-                        likes: 156,
-                        comments: 45,
-                        bookmarks: 78,
-                        attachment: true,
-                        popular: true,
-                        reported: false,
-                        reportType: '-'
-                    }
-                ];
-                break;
-
-            case 'reported':
-                // 신고된 게시글 데이터
-                filteredData = [
-                    {
-                        id: 'POST003',
-                        title: '이 글은 부적절한 내용을 포함하고 있습니다',
-                        nickname: '익명사용자',
-                        board: '자유게시판',
-                        category: '일상',
-                        header: '잡담',
-                        date: '2023-04-20',
-                        views: 123,
-                        likes: 4,
-                        comments: 28,
-                        bookmarks: 0,
-                        attachment: false,
-                        popular: false,
-                        reported: true,
-                        reportType: '욕설/비방'
-                    }
-                ];
-                break;
-        }
-
-        // 필터링된 데이터로 테이블 행 생성
-        filteredData.forEach(post => {
-            const row = table.insertRow();
-
-            // 체크박스 셀
-            const checkCell = row.insertCell();
-            checkCell.className = 'col-select';
-            checkCell.innerHTML = '<input type="checkbox">';
-
-            // 게시물 ID
-            const idCell = row.insertCell();
-            idCell.textContent = post.id;
-
-            // 게시물 제목
-            const titleCell = row.insertCell();
-            titleCell.textContent = post.title;
-
-            // 닉네임
-            const nicknameCell = row.insertCell();
-            nicknameCell.textContent = post.nickname;
-
-            // 게시판 이름
-            const boardCell = row.insertCell();
-            boardCell.textContent = post.board;
-
-            // 카테고리
-            const categoryCell = row.insertCell();
-            categoryCell.textContent = post.category;
-
-            // 말머리
-            const headerCell = row.insertCell();
-            headerCell.textContent = post.header;
-
-            // 생성일
-            const dateCell = row.insertCell();
-            dateCell.textContent = post.date;
-
-            // 조회수
-            const viewsCell = row.insertCell();
-            viewsCell.textContent = post.views;
-
-            // 추천수
-            const likesCell = row.insertCell();
-            likesCell.textContent = post.likes;
-
-            // 댓글수
-            const commentsCell = row.insertCell();
-            commentsCell.textContent = post.comments;
-
-            // 북마크
-            const bookmarksCell = row.insertCell();
-            bookmarksCell.textContent = post.bookmarks;
-
-            // 첨부파일
-            const attachmentCell = row.insertCell();
-            const attachmentStatus = post.attachment ? 'status-yes' : 'status-no';
-            const attachmentText = post.attachment ? '있음' : '없음';
-            attachmentCell.innerHTML = `<span class="status-badge ${attachmentStatus}">${attachmentText}</span>`;
-
-            // 인기글
-            const popularCell = row.insertCell();
-            const popularStatus = post.popular ? 'status-yes' : 'status-no';
-            const popularText = post.popular ? '지정' : '미지정';
-            popularCell.innerHTML = `<span class="status-badge ${popularStatus}">${popularText}</span>`;
-
-            // 신고여부
-            const reportedCell = row.insertCell();
-            const reportedStatus = post.reported ? 'status-reported' : 'status-no';
-            const reportedText = post.reported ? '신고됨' : '없음';
-            reportedCell.innerHTML = `<span class="status-badge ${reportedStatus}">${reportedText}</span>`;
-
-            // 신고유형
-            const reportTypeCell = row.insertCell();
-            reportTypeCell.textContent = post.reportType;
-
-            // 관리 버튼
-            const actionsCell = row.insertCell();
-            actionsCell.innerHTML = '<button class="btn btn-primary action-btn edit-post-btn">관리</button>';
-        });
-
-        // 게시글 관리 버튼에 이벤트 리스너 재설정
-        const editPostButtons = document.querySelectorAll('.edit-post-btn');
-        editPostButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const postId = row.cells[1].textContent;
-                const postTitle = row.cells[2].textContent;
-                const memberNickname = row.cells[3].textContent;
-                const boardName = row.cells[4].textContent;
-                const boardCategory = row.cells[5].textContent;
-                const headerName = row.cells[6].textContent;
-                const createdDate = row.cells[7].textContent;
-                const viewCount = row.cells[8].textContent;
-                const likeCount = row.cells[9].textContent;
-                const commentCount = row.cells[10].textContent;
-                const bookmarkCount = row.cells[11].textContent;
-
-                // 첨부파일 상태 추출
-                const attachmentStatus = row.cells[12].querySelector('.status-badge').textContent;
-
-                // 인기글 상태 추출
-                const popularStatus = row.cells[13].querySelector('.status-badge').textContent;
-
-                // 신고 상태 추출
-                const reportedStatus = row.cells[14].querySelector('.status-badge').textContent;
-
-                // 신고 처리 유형
-                const reportType = row.cells[15].textContent;
-
-                // 모달 폼에 데이터 설정
-                document.getElementById('post-id').value = postId;
-                document.getElementById('post-title').value = postTitle;
-                document.getElementById('post-content').value = "게시물 내용은 여기에 로드됩니다..."; // 실제로는 API에서 가져올 내용
-                document.getElementById('member-nickname').value = memberNickname;
-                document.getElementById('board-name').value = boardName;
-                document.getElementById('board-category').value = boardCategory;
-                document.getElementById('header-name').value = headerName;
-                document.getElementById('created-date').value = createdDate;
-                document.getElementById('view-count').value = viewCount;
-                document.getElementById('like-count').value = likeCount;
-                document.getElementById('comment-count').value = commentCount;
-                document.getElementById('bookmark-count').value = bookmarkCount;
-                document.getElementById('has-attachment').value = attachmentStatus;
-                document.getElementById('is-popular').value = popularStatus;
-                document.getElementById('is-reported').value = reportedStatus;
-                document.getElementById('report-type').value = reportType !== "-" ? reportType : "선택안함";
-
-                // 모달 표시
-                postModal.style.display = 'block';
-            });
-        });
-
-        // 통계 업데이트
-        updateStats(type);
-    }
-
-    // 통계 정보 업데이트 함수
-    function updateStats(type) {
-        const allCountElement = document.querySelector('.post-all span');
-        const popularCountElement = document.querySelector('.post-popular span');
-        const reportedCountElement = document.querySelector('.post-reported span');
-
-        switch(type) {
-            case 'all':
-                allCountElement.textContent = '총 게시글 수 : 1,254개';
-                popularCountElement.textContent = '인기글 : 87개';
-                reportedCountElement.textContent = '신고 게시글 : 32개';
-                break;
-
-            case 'popular':
-                allCountElement.textContent = '총 게시글 수 : 1,254개';
-                popularCountElement.textContent = '인기글 : 87개 (현재 표시)';
-                reportedCountElement.textContent = '신고 게시글 : 32개';
-                break;
-
-            case 'reported':
-                allCountElement.textContent = '총 게시글 수 : 1,254개';
-                popularCountElement.textContent = '인기글 : 87개';
-                reportedCountElement.textContent = '신고 게시글 : 32개 (현재 표시)';
-                break;
-        }
-    }
-
-    // 전체 선택 체크박스 기능
-    document.querySelector('th.col-select input[type="checkbox"]').addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('td.col-select input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
+            document.getElementById('header-modal-title').textContent = '말머리 수정';
+            document.getElementById('header-id').value = headerId;
+            document.getElementById('header-board-id').value = boardId;
+            document.getElementById('header-name').value = headerName;
+            headerModal.style.display = 'block';
         });
     });
 
-    // selectAll 체크박스 기능
-    document.getElementById('selectAll').addEventListener('change', function() {
-        const headerCheckbox = document.querySelector('th.col-select input[type="checkbox"]');
-        headerCheckbox.checked = this.checked;
+    // 게시판 삭제 버튼 클릭 시 확인 모달 표시
+    const deleteBoardButtons = document.querySelectorAll('.delete-board-btn');
+    deleteBoardButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const boardId = row.cells[0].textContent;
+            const boardName = row.cells[3].textContent;
 
-        const checkboxes = document.querySelectorAll('td.col-select input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
+            document.getElementById('delete-modal-title').textContent = '게시판 삭제';
+            document.getElementById('delete-message').textContent = `"${boardName}" 게시판을 정말로 삭제하시겠습니까? 해당 게시판의 모든 게시글과 말머리도 함께 삭제됩니다.`;
+            document.getElementById('confirm-delete-btn').setAttribute('data-type', 'board');
+            document.getElementById('confirm-delete-btn').setAttribute('data-id', boardId);
+            deleteModal.style.display = 'block';
+        });
+    });
+
+    // 말머리 삭제 버튼 클릭 시 확인 모달 표시
+    const deleteHeaderButtons = document.querySelectorAll('.delete-header-btn');
+    deleteHeaderButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const row = this.closest('tr');
+            const headerId = row.cells[0].textContent;
+            const headerName = row.cells[3].textContent;
+
+            document.getElementById('delete-modal-title').textContent = '말머리 삭제';
+            document.getElementById('delete-message').textContent = `"${headerName}" 말머리를 정말로 삭제하시겠습니까? 해당 말머리가 적용된 모든 게시글의 말머리가 제거됩니다.`;
+            document.getElementById('confirm-delete-btn').setAttribute('data-type', 'header');
+            document.getElementById('confirm-delete-btn').setAttribute('data-id', headerId);
+            deleteModal.style.display = 'block';
         });
     });
 </script>

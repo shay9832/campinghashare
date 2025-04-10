@@ -21,8 +21,8 @@ public class AdminInspectListController {
     @RequestMapping(value="/admin-inspectList.action", method = RequestMethod.GET)
     public String adminInspectList(Model model) {
         IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
-        model.addAttribute("list", dao.list());
-        model.addAttribute("listr", dao.listr());
+        model.addAttribute("list", dao.getList());
+        model.addAttribute("listr", dao.getListr());
         return "admin-inspectList";
     }
 
