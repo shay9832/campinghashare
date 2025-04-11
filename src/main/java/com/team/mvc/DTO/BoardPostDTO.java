@@ -4,12 +4,13 @@ public class BoardPostDTO {
     private int postId, userCode, boardId, postLabelId;
     private String  postTitle, postContent, createdDate;
 
-    private int viewCount, recommendCount, replyCount, isHot, isBlinded;
+    private int viewCount, recommendCount, replyCount, isHot, isBlinded, rowNum;
     private String nickName, boardName, postLabelName, boardCategory;
 
     // 검색 및 페이징 관련
     private String searchType, searchKeyword;
     private Pagenation pagenation;
+
 
     // getter / setter
     public int getPostId() {
@@ -162,5 +163,13 @@ public class BoardPostDTO {
 
     public void setPagenation(Pagenation pagenation) {
         this.pagenation = pagenation;
+    }
+
+    public int getRowNum() {
+        return rowNum;
+    }
+
+    public void setRowNum(int rowNum) {
+        this.rowNum = rowNum;
     }
 }

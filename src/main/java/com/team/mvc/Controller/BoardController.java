@@ -46,9 +46,14 @@ public class BoardController {
         List<BoardPostDTO> hotPost = boardPostService.listHotPost(boardId);
         model.addAttribute("hotPost", hotPost);
 
+
         // 일반 게시물 조회
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 전체 인기글 조회
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
+        model.addAttribute("totalHotPost", totalHotPost);
 
         // 검색 조건 설정
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
