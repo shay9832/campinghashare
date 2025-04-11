@@ -58,7 +58,7 @@
     <div class="mini-menu">
         <button class="add-equip">내 장비 등록</button>
         <a href="#"><i class="fa-solid fa-bell"></i> 알림</a>
-        <a href="#"><i class="fa-solid fa-user"></i> 마이페이지</a>
+        <a href="mypage-main.action"><i class="fa-solid fa-user"></i> 마이페이지</a>
         <a href="#"><i class="fa-solid fa-book"></i> 캠핑일지</a>
     </div>
 </div>
