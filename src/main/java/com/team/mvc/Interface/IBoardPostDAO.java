@@ -11,6 +11,9 @@ public interface IBoardPostDAO {
     // 일반 게시물 리스트 조회
     List<BoardPostDTO> listPostList(BoardPostDTO dto);
 
+    // 전체 인기글 조회
+    List<BoardPostDTO> listTotalHotPost(BoardPostDTO dto);
+
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
 

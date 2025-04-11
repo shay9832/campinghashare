@@ -3,6 +3,7 @@
 <mapper namespace="com.team.mvc.Interface.IBoardPostDAO">
     <resultMap id="boardPostResultMap" type="com.team.mvc.DTO.BoardPostDTO">
         <result column="게시물ID" property="postId"/>
+        <result property="rowNum" column="RNUM" />
         <result column="회원닉네임" property="nickName"/>
         <result column="게시판카테고리" property="boardCategory"/>
         <result column="말머리이름" property="postLabelName"/>
@@ -20,7 +21,7 @@
     <!-- 게시물 전체 수 조회 (인기글 포함) -->
     <select id="getTotalPostCount" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="int">
         SELECT COUNT(*)
-        FROM VW_POST_MANGEMENT
+        FROM VW_POST_MANAGEMENT
         <where>
             "게시판이름" = (SELECT BOARD_NAME
                           FROM BOARD
@@ -52,6 +53,16 @@
         </where>
     </select>
 
+    <!-- 전체 인기글 조회 -->
+    <select id="listTotalHotPost" resultMap="boardPostResultMap">
+        SELECT *
+        FROM VW_POST_MANAGEMENT
+        WHERE "인기글지정여부" = 1
+        AND "블라인드여부" = 0
+        ORDER BY "게시물생성일" DESC
+    </select>
+
+
     <!-- 공지사항 조회 (최대 3개) -->
     <select id="listNotice" resultMap="boardPostResultMap">
         SELECT *
@@ -82,6 +93,7 @@
     </select>
 
 
+    <!-- 일반 게시물 목록 조회 (인기글포함) -->
     <select id="listPostList" parameterType="com.team.mvc.DTO.BoardPostDTO" resultMap="boardPostResultMap">
         SELECT *
         FROM (

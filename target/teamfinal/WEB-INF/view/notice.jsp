@@ -105,9 +105,9 @@
                     <table class="w-100">
                         <thead>
                         <tr class="border-bottom">
-                            <th width="5%" class="p-3 text-center">번호</th>
+                            <th width="6%" class="p-3 text-center">번호</th>
                             <th width="10%" class="p-3 text-center">분류</th>
-                            <th width="48%" class="p-3 text-center">제목</th>
+                            <th width="47%" class="p-3 text-center">제목</th>
                             <th width="10%" class="p-3 text-center">작성자</th>
                             <th width="10%" class="p-3 text-center">작성일</th>
                             <th width="8%" class="p-3 text-center">조회수</th>

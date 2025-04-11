@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>BEST 게시판</title>
@@ -151,9 +152,9 @@
                     <table class="w-100">
                         <thead>
                         <tr class="border-bottom">
-                            <th width="5%" class="p-3 text-center">번호</th>
+                            <th width="6%" class="p-3 text-center">번호</th>
                             <th width="10%" class="p-3 text-center">분류</th>
-                            <th width="48%" class="p-3 text-center">제목</th>
+                            <th width="47%" class="p-3 text-center">제목</th>
                             <th width="10%" class="p-3 text-center">작성자</th>
                             <th width="10%" class="p-3 text-center">작성일</th>
                             <th width="8%" class="p-3 text-center">조회수</th>
@@ -191,96 +192,21 @@
                         </tr>
 
                         <!-- 일반 게시글 -->
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13134</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">첫 캠핑인데 필수 장비 추천해주세요! <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a></td>
-                            <td class="p-3 text-center">캠핑초보</td>
-                            <td class="p-3 text-center">2025-04-04</td>
-                            <td class="p-3 text-center">578</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>89</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13133</td>
-                            <td class="p-3 text-center"><a href="boardimage.action"><span class="board-category-tag solocamping">고독한캠핑방</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardimage-post.action?postId=1">혼캠 1주년 기념 장비 리뷰 (사진 많음) <i class="fa-solid fa-image table-icon"></i> <i class="fa-solid fa-comment table-icon icon-comment"></i> 23</a></td>
-                            <td class="p-3 text-center">솔로캠퍼</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">432</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>76</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13129</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=2">캠핑용 화로대 추천 (가성비 좋은 것) <i class="fa-solid fa-comment table-icon icon-comment"></i> 18</a></td>
-                            <td class="p-3 text-center">불멍러버</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">398</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>65</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13125</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=3">캠핑장에서 먹기 좋은 간단 요리 레시피 공유 <i class="fa-solid fa-comment table-icon icon-comment"></i> 42</a></td>
-                            <td class="p-3 text-center">캠핑셰프</td>
-                            <td class="p-3 text-center">2025-04-02</td>
-                            <td class="p-3 text-center">725</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>128</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13120</td>
-                            <td class="p-3 text-center"><a href="boardimage.action"><span class="board-category-tag solocamping">고독한캠핑방</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardimage-post.action?postId=2">혼자 가기 좋은 강원도 캠핑장 추천 TOP 5 <i class="fa-solid fa-comment table-icon icon-comment"></i> 31</a></td>
-                            <td class="p-3 text-center">산속여행자</td>
-                            <td class="p-3 text-center">2025-04-01</td>
-                            <td class="p-3 text-center">612</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>93</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13115</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=4">캠핑카 구매 전 꼭 확인해야 할 사항들 <i class="fa-solid fa-comment table-icon icon-comment"></i> 27</a></td>
-                            <td class="p-3 text-center">캠핑카마스터</td>
-                            <td class="p-3 text-center">2025-03-31</td>
-                            <td class="p-3 text-center">542</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>87</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13110</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=5">겨울 캠핑 극복하는 방법 (따뜻하게!) <i class="fa-solid fa-comment table-icon icon-comment"></i> 19</a></td>
-                            <td class="p-3 text-center">사계절캠퍼</td>
-                            <td class="p-3 text-center">2025-03-30</td>
-                            <td class="p-3 text-center">487</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>76</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13105</td>
-                            <td class="p-3 text-center"><a href="boardimage.action"><span class="board-category-tag solocamping">고독한캠핑방</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardimage-post.action?postId=3">혼캠 시 안전을 위한 체크리스트 <i class="fa-solid fa-comment table-icon icon-comment"></i> 24</a></td>
-                            <td class="p-3 text-center">안전제일</td>
-                            <td class="p-3 text-center">2025-03-29</td>
-                            <td class="p-3 text-center">523</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>91</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13100</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=6">캠핑 중 찍은 별사진 모음 (천체사진) <i class="fa-solid fa-image table-icon"></i> <i class="fa-solid fa-comment table-icon icon-comment"></i> 37</a></td>
-                            <td class="p-3 text-center">별빛사냥꾼</td>
-                            <td class="p-3 text-center">2025-03-28</td>
-                            <td class="p-3 text-center">689</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>145</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13095</td>
-                            <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag freeboard">자유게시판</span></a></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=7">텐트 관리법 및 수명 연장 팁 <i class="fa-solid fa-comment table-icon icon-comment"></i> 16</a></td>
-                            <td class="p-3 text-center">텐트지키미</td>
-                            <td class="p-3 text-center">2025-03-27</td>
-                            <td class="p-3 text-center">412</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>67</td>
-                        </tr>
+                        <c:forEach var="totalHotPost" items="${totalHotPost}">
+                            <tr class="board-row border-bottom">
+                                <td class="p-3 text-center">${totalHotPost.postId}</td>
+                                <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag
+                                                                                       ${totalHotPost.boardName == '자유게시판' ? 'freeboard' :
+                                                                                         totalHotPost.boardName == '고독한캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a></td>
+                                <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">${totalHotPost.postTitle}
+<%--                                    <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
+                                </td>
+                                <td class="p-3 text-center">${totalHotPost.nickName}</td>
+                                <td class="p-3 text-center">${totalHotPost.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${totalHotPost.viewCount}</td>
+                                <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>${totalHotPost.recommendCount}</td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
