@@ -102,6 +102,21 @@
       <version>3.0.1</version>
     </dependency>
 
+    <!-- AJAX 처리를 위한 Jackson -->
+    <!-- Jackson 데이터 바인딩 -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+
+    <!-- Jackson 데이터 포맷 모듈 (날짜/시간 처리 등) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.17.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
