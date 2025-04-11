@@ -644,7 +644,7 @@
       $(`#` + tabId + `-content`).addClass('active');
 
       // 열려있는 모든 세부 행 닫기
-      $('.matching.css-details').hide();
+      $('.matching-details').hide();
       $('.rental-header').removeClass('active').attr('data-expanded', 'false');
     });
 
@@ -655,7 +655,7 @@
 
       // 현재 열려 있는 다른 세부 행 닫기
       $('.rental-header').not(this).removeClass('active').attr('data-expanded', 'false');
-      $('.matching.css-details').not(`[data-parent="` + rentalId + `"]`).hide();
+      $('.matching-details').not(`[data-parent="` + rentalId + `"]`).hide();
 
       // 현재 행 토글
       if (isExpanded) {
@@ -680,7 +680,7 @@
     });
 
     // 엔터 키 검색
-    $('#search-matching.css').on('keypress', function(e) {
+    $('#search-matching').on('keypress', function(e) {
       if(e.which === 13) {
         performSearch();
       }
@@ -720,7 +720,7 @@
 
   // 검색 실행 함수
   function performSearch() {
-    const searchValue = $('#search-matching.css').val().trim().toLowerCase();
+    const searchValue = $('#search-matching').val().trim().toLowerCase();
 
     if(searchValue === '') {
       // 검색어가 없으면 모든 행 표시

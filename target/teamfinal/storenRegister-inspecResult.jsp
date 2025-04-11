@@ -40,7 +40,6 @@
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="WEB-INF/view/header.jsp" />
 
 <main class="main-content container">
@@ -239,7 +238,6 @@
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="WEB-INF/view/footer.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

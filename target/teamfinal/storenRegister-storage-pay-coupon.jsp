@@ -83,7 +83,7 @@
                             </ul>
                         </td>
                     </tr>
-                    <!-- 네 번째 쿠폰 - 스크롤 테스트용 -->
+                    <!-- 네 번째 쿠폰 -->
                     <tr class="border-bottom bg-secondary">
                         <td class="p-3" style="width: 33.33%;">
                             <div class="form-check form-check-inline justify-content-center">
@@ -99,7 +99,7 @@
                             </ul>
                         </td>
                     </tr>
-                    <!-- 다섯 번째 쿠폰 - 스크롤 테스트용 -->
+                    <!-- 다섯 번째 쿠폰 -->
                     <tr class="border-bottom">
                         <td class="p-3" style="width: 33.33%;">
                             <div class="form-check form-check-inline justify-content-center">
@@ -115,7 +115,7 @@
                             </ul>
                         </td>
                     </tr>
-                    <!-- 여섯 번째 쿠폰 - 스크롤 테스트용 -->
+                    <!-- 여섯 번째 쿠폰 -->
                     <tr class="border-bottom bg-secondary">
                         <td class="p-3" style="width: 33.33%;">
                             <div class="form-check form-check-inline justify-content-center">
@@ -131,7 +131,7 @@
                             </ul>
                         </td>
                     </tr>
-                    <!-- 일곱 번째 쿠폰 - 스크롤 테스트용 -->
+                    <!-- 일곱 번째 쿠폰 -->
                     <tr class="border-bottom">
                         <td class="p-3">
                             <div class="form-check form-check-inline justify-content-center">
@@ -147,7 +147,7 @@
                             </ul>
                         </td>
                     </tr>
-                    <!-- 여덟 번째 쿠폰 - 스크롤 테스트용 -->
+                    <!-- 여덟 번째 쿠폰 -->
                     <tr class="border-bottom bg-secondary">
                         <td class="p-3">
                             <div class="form-check form-check-inline justify-content-center">

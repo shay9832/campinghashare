@@ -286,7 +286,6 @@
     </div>
 </div>
 
-
 <jsp:include page="WEB-INF/view/footer.jsp"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

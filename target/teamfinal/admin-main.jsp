@@ -1,0 +1,155 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko"> <!-- 한국어 페이지로 설정 -->
+<head>
+  <meta charset="UTF-8"> <!-- 문자 인코딩을 UTF-8로 설정하여 한글 등 다양한 문자 지원 -->
+  <title>Admin Title</title> <!-- 브라우저 탭에 표시될 페이지 제목 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-main.css">
+  <link>
+</head>
+
+<body>
+<!-- 헤더 영역 - 페이지 상단 타이틀 표시 -->
+<div id="header">
+  <h1>관리자 시스템</h1>
+</div>
+
+<!-- 컨테이너 - 메뉴와 콘텐츠를 포함하는 메인 영역 -->
+<div id="container">
+  <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 구성 -->
+  <div id="leftMenu">
+    <!-- 회원 관리 메뉴와 하위 메뉴 -->
+    <button class="menu-button">회원 관리</button>
+    <div class="submenu">
+      <a href="#">회원 목록</a>
+      <a href="#">회원 등급 조회</a>
+      <a href="#">제재내역</a>
+    </div>
+    <!-- 신고 관리 메뉴와 하위 메뉴 -->
+    <button class="menu-button">신고 관리</button>
+    <div class="submenu">
+      <a href="#">신고 목록</a>
+      <a href="#">처리 내역</a>
+    </div>
+    <!-- 쿠폰 관리 메뉴와 하위 메뉴 -->
+    <button class="menu-button">쿠폰 관리</button>
+    <div class="submenu">
+      <a href="#">쿠폰 발급</a>
+      <a href="#">쿠폰 조회</a>
+      <a href="#">만료 쿠폰</a>
+    </div>
+    <!-- 상품 카테고리 관리 메뉴와 하위 메뉴 -->
+    <button class="menu-button">상품 카테고리 관리</button>
+    <div class="submenu">
+      <a href="#">카테고리 등록</a>
+      <a href="#">카테고리 수정</a>
+    </div>
+    <!-- 창고 관리 메뉴와 하위 메뉴 -->
+    <button class="menu-button">창고 관리</button>
+    <div class="submenu">
+      <a href="#">재고 현황</a>
+      <a href="#">입출고 내역</a>
+    </div>
+    <!-- 통계 메뉴와 하위 메뉴 -->
+    <button class="menu-button">통계</button>
+    <div class="submenu">
+      <a href="#">일간 통계</a>
+      <a href="#">월간 통계</a>
+      <a href="#">연간 통계</a>
+    </div>
+  </div>
+
+  <!-- 콘텐츠 영역 - 선택된 메뉴에 따라 내용이 표시될 영역 -->
+  <div id="content">
+    <div class="dashboard-grid">
+      <!-- 상단 차트 위젯 (이미지의 8번 영역) -->
+      <div class="widget widget-large">
+        <div class="widget-header">그래프 상세</div>
+        <div class="widget-content chart-container">
+          <div>
+            ${count.totalReportCount}
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측 상단 프로필 위젯 -->
+      <div class="widget widget-profile">
+        <div class="widget-header">프로필</div>
+        <div class="widget-content">
+          <!-- 프로필 내용 -->
+        </div>
+      </div>
+
+      <!-- 좌측 하단 게시물 위젯 (이미지의 9번 영역) -->
+      <div class="widget widget-medium">
+        <div class="widget-header">신고글 목록 <span class="badge">5</span></div>
+        <div class="widget-content">
+          <!-- 게시물 목록 내용 -->
+        </div>
+      </div>
+
+      <!-- 중앙 하단 공지사항 위젯 (이미지의 10번 영역) -->
+      <div class="widget widget-medium">
+        <div class="widget-header">일일 거래 및 금액 종합</div>
+        <div class="widget-content">
+          <!-- 공지사항 내용 -->
+        </div>
+      </div>
+
+      <!-- 좌측 하단의 추가 위젯 (이미지의 11번 영역) -->
+      <div class="widget widget-small">
+        <div class="widget-header">최근 활동로그</div>
+        <div class="widget-content">
+          <!-- 활동로그 내용 -->
+        </div>
+      </div>
+
+      <!-- 중앙 하단의 추가 위젯 (이미지의 12번 영역) -->
+      <div class="widget widget-small">
+        <div class="widget-header">뉴스</div>
+        <div class="widget-content">
+          <!-- 뉴스 내용 -->
+        </div>
+      </div>
+
+      <!-- 우측 하단 채팅 위젯 -->
+      <div class="widget widget-chat">
+        <div class="widget-header">메시지 목록</div>
+        <div class="widget-content">
+          <!-- 메시지 내용 -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- 자바스크립트 - 드롭다운 메뉴 기능 구현 -->
+<script>
+  // 모든 메뉴 버튼 요소를 선택하여 menuButtons 변수에 저장
+  const menuButtons = document.querySelectorAll('.menu-button');
+
+  // 각 메뉴 버튼에 클릭 이벤트 리스너 추가
+  menuButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // 클릭된 버튼에 'active' 클래스를 토글(있으면 제거, 없으면 추가)
+      this.classList.toggle('active');
+
+      // 버튼 다음에 오는 요소(하위메뉴)를 가져옴
+      const submenu = this.nextElementSibling;
+
+      // 하위메뉴가 열려있는지 확인 (maxHeight 스타일 속성이 설정되어 있는지)
+      if (submenu.style.maxHeight) {
+        // 열려있으면 닫기 (maxHeight를 null로 설정)
+        submenu.style.maxHeight = null;
+      } else {
+        // 닫혀있으면 열기 (maxHeight를 내용 높이만큼 설정)
+        submenu.style.maxHeight = submenu.scrollHeight + 'px';
+      }
+    });
+  });
+</script>
+</body>
+</html>

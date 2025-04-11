@@ -279,7 +279,7 @@ body {
 .equipment-index th {
     background-color: #f1f8e9; /* 배경색 - 연한 녹색 */
     padding: 12px 15px; /* 내부 여백 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
+    text-align: center; /* 텍스트 왼쪽 정렬 */
     border-bottom: 2px solid #3f861d; /* 하단 테두리 - 녹색 */
     color: #333; /* 텍스트 색상 */
     font-weight: 500; /* 글자 굵기 */
@@ -293,6 +293,7 @@ body {
     white-space: nowrap; /* 텍스트 줄바꿈 방지 - 한 줄로 표시 */
     overflow: hidden; /* 넘치는 내용 숨김 */
     text-overflow: ellipsis; /* 넘치는 텍스트 ... 처리 */
+    text-align: center;
 }
 
 /* 테이블 행 호버 효과 */
@@ -307,17 +308,14 @@ body {
 }
 
 /* 각 열의 너비 설정 */
-.col-select { width: 25px; } /* 체크박스 열 */
-.col-code { width: 80px; } /* 장비코드 열 */
-.col-type { width: 80px; } /* 렌탈타입 열 */
-.col-name { width: 150px; } /* 장비명 열 */
-.col-category { width: 100px; } /* 카테고리명 열 */
-.col-grade { width: 60px; } /* 등급 열 */
-.col-status { width: 80px; } /* 상태 열 */
-.col-rentals { width: 80px; } /* 대여횟수 열 */
-.col-last-inspection { width: 100px; } /* 마지막 검수일 열 */
-.col-owner { width: 80px; } /* 소유자 열 */
-.col-actions { width: 100px; } /* 관리 버튼 열 */
+.col-select { width: 20px; } /* 체크박스 열 */
+.col-code { width: 70px; } /* 장비코드 열 */
+.col-name { width: 130px; } /* 장비명 열 */
+.col-main-category { width: 80px; } /* 대분류 열 */
+.col-sub-category { width: 80px; } /* 중분류 열 */
+.col-avg-price { width: 80px; } /* 평균가격 열 */
+.col-reg-date { width: 90px; } /* 장비등록일 열 */
+.col-actions { width: 60px; } /* 관리 버튼 열 */
 
 /* ===== 커스텀 스크롤바 ===== */
 .equipment-index::-webkit-scrollbar {
@@ -438,7 +436,7 @@ body {
     border-radius: 4px;
 }
 
-.page-btn:hover {
+.page-btn:hover:not(:disabled) {
     background-color: #f1f8e9;
     border-color: #3f861d;
     color: #3f861d;
@@ -461,4 +459,73 @@ body {
     border-color: #eee;
     color: #bbb;
     cursor: not-allowed;
+}
+
+/* 추가적인 버튼 스타일 - submenu-btn */
+.submenu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 하위 메뉴 버튼 호버 효과 */
+.submenu-btn:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 선택된 메뉴 스타일 */
+.submenu-btn.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}
+
+/* 폼 태그에 기본 마진과 패딩 제거 */
+.submenu form {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* 폼 내부 버튼 스타일 - 원래 a 태그와 동일하게 */
+.submenu form button {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 버튼 호버 효과 - 원래 a 태그와 동일하게 */
+.submenu form button:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 활성화된 버튼 스타일 */
+.submenu form button.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
 }

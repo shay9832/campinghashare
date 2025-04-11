@@ -20,73 +20,117 @@
   <h1>관리자 시스템</h1>
 </div>
 
-<!-- 메인 컨테이너 - 메뉴와 콘텐츠 영역 포함 -->
+<!-- 메인 컨테이너 -->
 <div id="container">
-  <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 -->
+  <!-- 좌측 메뉴 영역 -->
   <div id="leftMenu">
-    <!-- 회원 관리 메뉴 -->
-    <button class="menu-button">회원 관리</button>
-    <div class="submenu">
-      <a href="#">회원 목록</a>
-      <a href="#">활동정지회원</a>
-    </div>
-
     <!-- 장비 관리 메뉴 -->
     <button class="menu-button">장비 관리</button>
     <div class="submenu">
-      <a href="#">장비 목록</a>
-      <a href="#">검수 목록</a>
-      <a href="#">장비 통계</a>
+      <form action="${pageContext.request.contextPath}/admin-equipList.action" method="get">
+        <button type="submit" class="submenu-btn">장비 목록</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
+        <button type="submit" class="submenu-btn">장비 통계</button>
+      </form>
     </div>
 
-    <!-- 게시판 관리 메뉴 -->
-    <button class="menu-button active">게시판 관리</button>
+    <!-- 검수 관리 메뉴 -->
+    <button class="menu-button">검수 관리</button>
     <div class="submenu">
-      <a href="#">게시판 관리</a>
-      <a href="#">게시글 관리</a>
-      <a href="#">댓글 관리</a>
-      <a href="#">커뮤니티 통계</a>
+      <form action="${pageContext.request.contextPath}/admin-inspectList.action" method="get">
+        <button type="submit" class="submenu-btn">검수 관리</button>
+      </form>
+    </div>
+
+    <!-- 매칭 관리 메뉴 -->
+    <button class="menu-button">매칭 관리</button>
+    <div class="submenu">
+      <form action="${pageContext.request.contextPath}/admin-matchingList.action" method="get">
+        <button type="submit" class="submenu-btn">매칭 관리</button>
+      </form>
+    </div>
+
+    <!-- 결제 관리 메뉴 -->
+    <button class="menu-button">결제 관리</button>
+    <div class="submenu">
+      <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">결제 관리</button>
+      </form>
     </div>
 
     <!-- 배송 관리 메뉴 -->
     <button class="menu-button">배송 관리</button>
     <div class="submenu">
-      <a href="#">배송 현황</a>
+      <form action="${pageContext.request.contextPath}/admin-deliveryUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">배송 관리</button>
+      </form>
+    </div>
+
+    <!-- 게시판 관리 메뉴 -->
+    <button class="menu-button">게시판 관리</button>
+    <div class="submenu">
+      <form action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">게시물 관리</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-replyUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">댓글 관리</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-communityStatistics.action" method="get">
+        <button type="submit" class="submenu-btn">커뮤니티 통계</button>
+      </form>
+    </div>
+
+    <!-- 회원 관리 메뉴 -->
+    <button class="menu-button">회원 관리</button>
+    <div class="submenu">
+      <form action="${pageContext.request.contextPath}/admin-userList.action" method="get">
+        <button type="submit" class="submenu-btn">회원 목록</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-userDrop.action" method="get">
+        <button type="submit" class="submenu-btn">회원 제재 관리</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-pointUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">포인트 관리</button>
+      </form>
     </div>
 
     <!-- 신고 관리 메뉴 -->
     <button class="menu-button">신고 관리</button>
     <div class="submenu">
-      <a href="#">신고 목록</a>
-      <a href="#">처리 내역</a>
+      <form action="${pageContext.request.contextPath}/admin-userReport.action" method="get">
+        <button type="submit" class="submenu-btn">신고 목록</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-userReportList.action" method="get">
+        <button type="submit" class="submenu-btn">신고 처리 내역</button>
+      </form>
     </div>
 
-
-    <!-- 이벤트 관리 메뉴 -->
-    <button class="menu-button active">이벤트 관리</button>
-    <div class="submenu" style="max-height: 200px;">
-      <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">이벤트 목록</a>
+    <!-- 포인트 관리 메뉴 -->
+    <button class="menu-button">포인트 관리</button>
+    <div class="submenu">
+      <form action="${pageContext.request.contextPath}/admin-pointUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">포인트 관리</button>
+      </form>
     </div>
 
     <!-- 쿠폰 관리 메뉴 -->
     <button class="menu-button">쿠폰 관리</button>
     <div class="submenu">
-      <a href="#">쿠폰 발급</a>
-      <a href="#">쿠폰 조회</a>
+      <form action="${pageContext.request.contextPath}/admin-couponList.action" method="get">
+        <button type="submit" class="submenu-btn">쿠폰 목록</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-createCoupon.action" method="get">
+        <button type="submit" class="submenu-btn">쿠폰 생성</button>
+      </form>
     </div>
 
-    <!-- 거래 카테고리 관리 메뉴 -->
-    <button class="menu-button">거래 관리</button>
+    <!-- 이벤트 관리 메뉴 -->
+    <button class="menu-button">이벤트 관리</button>
     <div class="submenu">
-      <a href="#">매칭 관리</a>
-    </div>
-
-    <!-- 통계 메뉴 -->
-    <button class="menu-button">통계</button>
-    <div class="submenu">
-      <a href="#">일간 통계</a>
-      <a href="#">월간 통계</a>
-      <a href="#">연간 통계</a>
+      <form action="${pageContext.request.contextPath}/admin-eventUpdate.action" method="get">
+        <button type="submit" class="submenu-btn">이벤트 관리</button>
+      </form>
     </div>
   </div>
 
