@@ -170,8 +170,6 @@
                     </a>
                     <a href="#" class="urgent-item">
 
-                        <div class="item-label">주가 비용 결제 대기</div>
-
                         <div class="item-label">추가 비용 결제 대기</div>
 
                         <div class="item-count">2</div>

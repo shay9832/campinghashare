@@ -1,14 +1,12 @@
 package com.team.mvc.Service;
 
 import com.team.mvc.DTO.DeliveryDTO;
-import com.team.mvc.DTO.MyDeliveryDTO;
 import com.team.mvc.Interface.IDeliveryDAO;
 import com.team.mvc.Interface.IMypageDeliveryService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
