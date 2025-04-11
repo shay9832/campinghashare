@@ -132,15 +132,6 @@ public class UserController {
         }
     }
 
-    // 마이페이지
-    @RequestMapping("/mypage-main.action")
-    public String myPage(HttpSession session) {
-        if (session.getAttribute("loginUser") == null) {
-            return "redirect:/login-user.action";
-        }
-        return "mypage-main";
-    }
-
     // 장비 등록
     @RequestMapping("/equip-register.action")
     public String registerEquipPage(HttpSession session) {
@@ -150,21 +141,4 @@ public class UserController {
         return "equipRegister";
     }
 
-    // 알림
-    @RequestMapping("/notifications.action")
-    public String notifications(HttpSession session) {
-        if (session.getAttribute("loginUser") == null) {
-            return "redirect:/login-user.action";
-        }
-        return "notifications";
-    }
-
-    // 캠핑일지
-    @RequestMapping("/mypage-diary.action")
-    public String campingLog(HttpSession session) {
-        if (session.getAttribute("loginUser") == null) {
-            return "redirect:/login-user.action";
-        }
-        return "mypageDiary";
-    }
 }
