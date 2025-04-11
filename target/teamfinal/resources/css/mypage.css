@@ -672,6 +672,12 @@
     border: 1px solid #f7e9d5;
 }
 
+.btn-pay {
+    background-color: #d3d6d8;
+    color : lightcoral;
+    border: 1px solid #d3d6d8;
+}
+
 .btn-return {
     background-color: #f5e8e8;
     color: #a55a5a;

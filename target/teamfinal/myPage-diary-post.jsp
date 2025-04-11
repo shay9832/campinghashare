@@ -198,9 +198,10 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link">회원 정보 수정</a></li>
-                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
+                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="#" class="sidebar-link">회원 등급</a></li>
+                    <li><a href="#" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="#" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -208,41 +209,38 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
-                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
-                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
-                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
-                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
+                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
+                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-wishlist.action" class="sidebar-link title">
+                <a href="#" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-diary.action" class="sidebar-link title active">
+                <a href="#" class="sidebar-link title active">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-bookmark.action" class="sidebar-link title">
+                <a href="#" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-coupon.action" class="sidebar-link title">
+                <a href="#" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-inquiry.action" class="sidebar-link title">
+                <a href="#" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-leave.action" class="sidebar-link title">
+                <a href="#" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
