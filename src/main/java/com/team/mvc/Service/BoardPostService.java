@@ -1,10 +1,8 @@
 package com.team.mvc.Service;
 
 import com.team.mvc.DTO.BoardPostDTO;
-import com.team.mvc.DTO.CategoryDTO;
 import com.team.mvc.Interface.IBoardPostDAO;
 import com.team.mvc.Interface.IBoardPostService;
-import com.team.mvc.Interface.ICategoryDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -4,7 +4,7 @@ public class BoardPostDTO {
     private int postId, userCode, boardId, postLabelId;
     private String  postTitle, postContent, createdDate;
 
-    private int viewCount, recommentCount, replyCount, isHot, isBlinded;
+    private int viewCount, recommendCount, replyCount, isHot, isBlinded;
     private String nickName, boardName, postLabelName, boardCategory;
 
     // 검색 및 페이징 관련
@@ -76,12 +76,12 @@ public class BoardPostDTO {
         this.viewCount = viewCount;
     }
 
-    public int getRecommentCount() {
-        return recommentCount;
+    public int getRecommendCount() {
+        return recommendCount;
     }
 
-    public void setRecommentCount(int recommentCount) {
-        this.recommentCount = recommentCount;
+    public void setRecommendCount(int recommendCount) {
+        this.recommendCount = recommendCount;
     }
 
     public int getReplyCount() {
