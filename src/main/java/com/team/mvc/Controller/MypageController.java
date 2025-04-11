@@ -152,7 +152,7 @@ public class MypageController {
         return inspecListService.listStorenStoreInspec(user_code);
     }
 
-    @RequestMapping(value="/api/delivery/storen/return", produces="application/json")
+    @RequestMapping(value="/api/inspec/storen/return", produces="application/json")
     @ResponseBody
     public List<MypageInspecListDTO> getStorenReturnInspec() {
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Return : START ===");

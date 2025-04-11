@@ -101,7 +101,7 @@
 
             <!-- 거래 ID 검색 -->
             <div class="search-container">
-                <input type="text" id="search-equipment-id" placeholder="거래 ID를 입력하세요">
+                <input type="text" id="search-service-id" placeholder="거래 ID를 입력하세요">
                 <button type="button" class="search-button" id="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
@@ -321,7 +321,7 @@
                     updateTableContent('#storen-content', data);
 
                     // 검색 필터 다시 적용
-                    if ($('#search-trade-id').val().trim() !== '') {
+                    if ($('#search-service-id').val().trim() !== '') {
                         performSearch();
                     }
                 },
@@ -346,7 +346,7 @@
             $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/delivery/storage';
+            const apiUrl = '${pageContext.request.contextPath}/api/inspec/storage';
 
             // AJAX 요청
             $.ajax({
@@ -361,14 +361,74 @@
                     updateTableContent('#storage-content', data);
 
                     // 검색 필터 다시 적용
-                    if ($('#search-trade-id').val().trim() !== '') {
+                    if ($('#search-service-id').val().trim() !== '') {
                         performSearch();
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
-                    $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                    $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
+            });
+        }
+
+        // 테이블 내용 업데이트 함수
+        function updateTableContent(contentSelector, inspeclist) {
+            console.log("updateTableContent 호출됨, 선택자:", contentSelector, "데이터:", inspeclist);
+            const tbody = $(contentSelector + ' .table-container tbody');
+            tbody.empty();
+
+            if (!inspeclist || inspeclist.length === 0) {
+                tbody.html('<tr><td colspan="11" class="text-center">데이터가 없습니다.</td></tr>');
+                return;
+            }
+
+            // 데이터 행 추가
+            inspeclist.forEach(function(inspec, index) {
+                console.log(`행 ${index} 처리 중:`, inspec);
+
+                // 데이터의 유효성 검사 추가
+                if (!inspec || !inspec.service_id) {
+                    console.warn(`행 ${index}에 유효하지 않은 데이터:`, inspec);
+                    return;
+                }
+
+                // 검수 타입 문자열 '_' 구분자로 잘라내기 - 안전하게 처리
+                let InspecType = inspec.inspec_type || '';
+                if (InspecType && InspecType.includes('_')) {
+                    InspecType = InspecType.split('_')[1];
+                }
+
+                // 값이 없는 경우 기본값 사용
+                const equip_grade = inspec.equip_grade || 'N/A';
+                const majorCategory = inspec.majorCategory || '';
+                const middleCategory = inspec.middleCategory || '';
+
+                // 행 HTML 생성
+                const row = `
+            <tr class="table-row" data-id="${inspec.service_id}">
+                <td>${inspec.service_id || ''}</td>
+                <td>${inspec.delivery_id || ''}</td>
+                <td>${inspec.equip_code || ''}</td>
+                <td>${InspecType || ''}</td>
+                <td class="title-cell delivery-name">${inspec.equip_name || ''}</td>
+                <td>${majorCategory}${middleCategory ? ' > ' + middleCategory : ''}</td>
+                <td>${inspec.inspec_status || ''}</td>
+                <td>
+                    <span class="grade-badge grade-${equip_grade}">
+                        ${equip_grade}
+                    </span>
+                </td>
+                <td>${inspec.inspec_result_action_type || ''}</td>
+                <td>${inspec.completed_date || ''}</td>
+                <td>
+                    <button type="button" class="btn-sm btn-track-external"
+                            data-id="${inspec.service_id}">자세히..</button>
+                </td>
+            </tr>
+        `;
+
+                tbody.append(row);
             });
         }
 
@@ -378,7 +438,7 @@
         });
 
         // 엔터 키 검색
-        $('#search-equipment-id').on('keypress', function(e) {
+        $('#search-service-id').on('keypress', function(e) {
             if(e.which === 13) {
                 performSearch();
             }
@@ -394,7 +454,7 @@
 
     // 검색 실행 함수
     function performSearch() {
-        const searchValue = $('#search-equipment-id').val().trim().toLowerCase();
+        const searchValue = $('#search-service-id').val().trim().toLowerCase();
 
         if(searchValue === '') {
             // 검색어가 없으면 모든 행 표시
