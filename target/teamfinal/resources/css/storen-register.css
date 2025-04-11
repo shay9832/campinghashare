@@ -1,0 +1,602 @@
+/*
+ * storen-register.css
+ * 스토렌 등록 페이지 스타일 정의
+ */
+
+/* 스토렌 컨테이너 */
+.storen-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 스토렌 제목 */
+.storen-title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-primary);
+}
+
+/* 폼 행 */
+.form-row {
+    display: flex;
+    margin-bottom: var(--spacing-lg);
+    align-items: flex-start;
+}
+
+/* 폼 레이블 */
+.form-label {
+    width: 120px;
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    padding-top: var(--spacing-xs);
+}
+
+/* 폼 입력 영역 */
+.form-input {
+    flex: 1;
+}
+
+/* 이미지 업로드 영역 */
+.image-upload {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* 이미지 플레이스홀더 */
+.image-placeholder {
+    width: 150px;
+    height: 150px;
+    border: 1px solid var(--border-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+/* 이미지 플레이스홀더 X 표시 */
+.image-placeholder::before, .image-placeholder::after {
+    content: '';
+    position: absolute;
+    background-color: var(--border-medium);
+}
+
+.image-placeholder::before {
+    width: 100px;
+    height: 1px;
+    transform: rotate(45deg);
+}
+
+.image-placeholder::after {
+    width: 100px;
+    height: 1px;
+    transform: rotate(-45deg);
+}
+
+/* 업로드 버튼 */
+.upload-btn {
+    background-color: var(--color-gray-100);
+    border: 1px solid var(--border-medium);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-left: var(--spacing-sm);
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--font-xs);
+    transition: all var(--transition-normal);
+}
+
+.upload-btn:hover {
+    border-color: var(--color-maple);
+    color: var(--color-maple);
+}
+
+.upload-btn:active {
+    background-color: var(--color-maple);
+    color: var(--color-white);
+}
+
+.upload-btn i {
+    margin-right: var(--spacing-xs);
+}
+
+/* 폼 셀렉트 */
+select, input[type="text"] {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    background-color: var(--bg-primary);
+    font-size: var(--font-xs);
+    transition: border-color var(--transition-normal);
+}
+
+select:focus, input[type="text"]:focus {
+    border-color: var(--color-maple);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.2);
+}
+
+/* 가격 행 */
+.price-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+/* 원본 가격 */
+.price-original {
+    font-size: var(--font-lg);
+    font-weight: var(--font-bold);
+    margin-right: var(--spacing-lg);
+    color: var(--text-primary);
+}
+
+/* 할인 */
+.price-discount {
+    color: var(--color-coral);
+    font-size: var(--font-xs);
+}
+
+/* 평균 가격 */
+.price-average {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    font-size: var(--font-xs);
+}
+
+/* 가격 물음표 */
+.price-question {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--border-medium);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-xxs);
+    color: var(--text-tertiary);
+    margin-left: var(--spacing-xs);
+    cursor: help;
+    position: relative;
+}
+
+.price-question:hover::after {
+    content: '이 가격은 최근 등록된 동일 상품의 평균 가격입니다.';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xxs);
+    white-space: nowrap;
+    z-index: var(--z-tooltip);
+}
+
+/* 크기 옵션 */
+.size-options {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-md);
+}
+
+.size-option {
+    width: 50px;
+    height: 50px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: var(--bg-primary);
+    transition: all var(--transition-normal);
+    font-weight: var(--font-medium);
+}
+
+.size-option:hover {
+    border-color: var(--color-maple);
+}
+
+.size-option.active {
+    background-color: var(--color-beige);
+    border-color: var(--color-maple);
+    color: var(--text-primary);
+}
+
+/* 크기 가이드 */
+.size-guide {
+    margin: var(--spacing-lg) 0;
+    font-size: var(--font-xs);
+    background-color: var(--color-gray-100);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--color-sage);
+}
+
+.size-guide-title {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+    font-weight: var(--font-bold);
+}
+
+.size-guide-item {
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-secondary);
+}
+
+/* 렌탈 정보 */
+.rental-info {
+    display: flex;
+    justify-content: space-between;
+    margin: var(--spacing-lg) 0;
+    border: 1px solid var(--border-medium);
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-100);
+    border-radius: var(--radius-sm);
+    align-items: center;
+}
+
+/* 렌탈 일수 */
+.rental-days {
+    display: flex;
+    align-items: center;
+}
+
+/* 카운터 컨테이너 */
+.counter-container {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    margin: 0 var(--spacing-sm);
+}
+
+/* 감소/증가 버튼 */
+.decrease, .increase {
+    width: 30px;
+    height: 30px;
+    background-color: var(--color-gray-200);
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-normal);
+}
+
+.decrease {
+    border-right: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.increase {
+    border-left: 1px solid var(--border-medium);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.decrease:hover, .increase:hover {
+    background-color: var(--color-gray-300);
+}
+
+/* 카운터 값 */
+.counter-value {
+    min-width: 40px;
+    text-align: center;
+    font-weight: var(--font-bold);
+    padding: 0 var(--spacing-sm);
+}
+
+/* 렌탈 가격 */
+.rental-price {
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+/* 렌탈 총액 */
+.rental-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: var(--font-bold);
+    font-size: var(--font-md);
+    margin-top: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-beige);
+    color: var(--text-primary);
+}
+
+/* 일일 보관 비용 */
+#daily-price, #price-per-day {
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+/* 주의사항 영역 */
+.notice-area {
+    margin: var(--spacing-xl) 0;
+    text-align: center;
+    padding: var(--spacing-md);
+    background-color: var(--color-beige);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-coral-light);
+    color: var(--text-primary);
+    font-weight: var(--font-bold);
+}
+
+/* 버튼 영역 */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-xl);
+}
+
+/* 이전/다음 버튼 */
+.btn-prev, .btn-next {
+    width: 48%;
+    padding: var(--spacing-sm) 0;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    font-weight: var(--font-bold);
+    cursor: pointer;
+    text-align: center;
+    border: none;
+    transition: all var(--transition-normal);
+}
+
+.btn-prev {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-medium);
+    color: var(--text-primary);
+}
+
+.btn-prev:hover {
+    background-color: var(--color-gray-200);
+}
+
+.btn-next {
+    background-color: var(--color-maple);
+    color: var(--color-white);
+    border: none;
+}
+
+.btn-next:hover {
+    background-color: var(--btn-primary-hover-bg);
+}
+
+/* 배송 관련 */
+.delivery-section {
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.main-container_delivery {
+    padding: var(--spacing-md);
+    background-color: var(--color-gray-200);
+    font-weight: var(--font-bold);
+    border-bottom: 1px solid var(--border-medium);
+}
+
+.main-container_delivery_content {
+    padding: var(--spacing-md);
+}
+
+.delivery_pickup, .phone_number, .e-mail {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.e-mail {
+    border-bottom: none;
+}
+
+.main_container_delivery_address {
+    display: flex;
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-medium);
+    background-color: var(--color-gray-100);
+}
+
+.address_input_container {
+    flex: 1;
+    margin-left: var(--spacing-md);
+}
+
+.address_search_row {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.address_search {
+    width: 120px;
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+}
+
+.btn_address {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background-color: var(--color-gray-200);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.btn_address:hover {
+    background-color: var(--color-gray-300);
+}
+
+.address_one, .address_two {
+    width: 100%;
+    padding: var(--spacing-xs);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+/* 비활성화된 입력 필드 스타일 */
+.disabled-field {
+    background-color: var(--color-gray-100);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+/* 검수 결과 테이블 관련 스타일 */
+.w-100.border-collapse {
+    font-size: 0.85rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid white;
+}
+
+/* 모든 셀에 테두리 적용 */
+.w-100.border-collapse th,
+.w-100.border-collapse td {
+    border: 1px solid white;
+}
+
+/* 헤더 셀의 테두리 설정 */
+.w-100.border-collapse thead th {
+    border: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+/* 본문 행의 테두리 설정 */
+.w-100.border-collapse tbody tr {
+    border-bottom: 1px solid white;
+}
+
+
+/* 기준 관련 열(2, 3, 4번째 열) 및 상위 헤더 회색 처리 */
+/* 기준 헤더 (colspan=3 적용된 부분) */
+.w-100.border-collapse thead tr:first-child th:nth-child(2) {
+    background-color: #6c6c6c; /* 중간 회색 */
+    color: #ffffff; /* 어두운 글자색 */
+}
+
+/* 상/중/하 헤더 */
+.w-100.border-collapse thead tr:nth-child(2) th:nth-child(1),
+.w-100.border-collapse thead tr:nth-child(2) th:nth-child(2),
+.w-100.border-collapse thead tr:nth-child(2) th:nth-child(3) {
+    background-color: #6c6c6c; /* 중간 회색 */
+    color: #ffffff; /* 어두운 글자색 */
+}
+
+/* 본문의 기준 열 */
+.w-100.border-collapse tbody td:nth-child(2),
+.w-100.border-collapse tbody td:nth-child(3),
+.w-100.border-collapse tbody td:nth-child(4) {
+    background-color: #f0f0f0; /* 밝은 회색 */
+}
+
+/* 배경색 이미 있는 행(bg-secondary)의 기준 열 */
+.w-100.border-collapse tbody tr.bg-secondary td:nth-child(2),
+.w-100.border-collapse tbody tr.bg-secondary td:nth-child(3),
+.w-100.border-collapse tbody tr.bg-secondary td:nth-child(4) {
+    background-color: #e5e5e5; /* 약간 더 진한 회색 */
+}
+
+/* 점수 열(7번째 열) & 총점에 노란색 적용 */
+/* 헤더의 점수 열 */
+.w-100.border-collapse thead tr:nth-child(2) th:nth-child(7) {
+    background-color: var(--color-mustard);
+    color: #333; /* 어두운 글자색 */
+}
+
+/* 본문의 점수 열 */
+.w-100.border-collapse tbody td:nth-child(7) {
+    background-color: #d8c8aa;
+    color: #333; /* 어두운 글자색 */
+    font-weight: bold; /* 글자 굵게 */
+}
+
+/* 배경색 이미 있는 행(bg-secondary)의 점수 열 */
+.w-100.border-collapse tbody tr.bg-secondary td:nth-child(7) {
+    background-color: #dabc76;
+}
+
+/* 합계 행 점수 셀 - 마지막 행, 마지막 열 */
+.w-100.border-collapse tbody tr.bg-primary td:last-child {
+    background-color: var(--color-mustard);
+    color: #333; /* 어두운 글자색 */
+    font-weight: bold; /* 글자 굵게 */
+}
+
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-label {
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .rental-info {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .storen-container {
+        padding: var(--spacing-lg);
+    }
+
+    .main_container_delivery_address {
+        flex-direction: column;
+    }
+
+    .address_input_container {
+        margin-left: 0;
+        margin-top: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 576px) {
+    .image-placeholder {
+        width: 120px;
+        height: 120px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .btn-prev, .btn-next {
+        width: 100%;
+    }
+
+    .address_search_row {
+        flex-direction: column;
+    }
+
+    .address_search, .btn_address {
+        width: 100%;
+    }
+}
