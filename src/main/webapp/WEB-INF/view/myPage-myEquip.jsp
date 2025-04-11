@@ -905,7 +905,7 @@
             e.preventDefault(); // 기본 동작 방지
             var id = $(this).closest("tr").find("input[name='id']").val();
             // 결제 페이지로 이동
-            window.location.href = "storenRegister-storage-pay.action?id=" + id;
+            window.location.href = "storenregister-storage-pay.action?id=" + id;
         });
 
         // 스토렌 확장 테이블----------------------------------------------------------------------------------------------
