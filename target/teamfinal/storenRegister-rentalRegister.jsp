@@ -59,7 +59,6 @@
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="WEB-INF/view/header.jsp" />
 
 <main class="main-content container">
@@ -200,7 +199,6 @@
             </ul>
         </div>
 
-        <!-- 이전 / 다음 페이지 이동 버튼 -->
         <div class="button-container">
             <button class="btn">이전</button>
             <button class="btn btn-primary">다음</button>
@@ -208,7 +206,6 @@
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="WEB-INF/view/footer.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

@@ -111,7 +111,7 @@
     --transition-slow: 500ms ease;
 
     /* 레이아웃 */
-    --container-max-width: 1200px;
+    --container-max-width: 1500px;
     --header-height: 60px;
     --footer-height: 60px;
     --sidebar-width: 250px;

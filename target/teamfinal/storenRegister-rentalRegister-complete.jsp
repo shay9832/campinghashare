@@ -22,23 +22,19 @@
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="WEB-INF/view/header.jsp"/>
 
 <main class="main-content container">
-    <!-- 프로세스 완료 메시지 표시 -->
     <div class="complete-message">
         '<%=processName%>'이(가) 완료되었습니다.
     </div>
 
-    <!-- 버튼 컨테이너 : 이전 / 다음 페이지 이동 -->
     <div class="button-container">
-        <button class="btn"><%=prevMenu%></button>              <!-- 일반 스타일 버튼 : 장비 목록으로 돌아가기 -->
-        <button class="btn btn-primary"><%=nextMenu%></button>  <!-- 강조 스타일 버튼 : 등록한 글 확인하기 -->
+        <button class="btn"><%=prevMenu%></button>
+        <button class="btn btn-primary"><%=nextMenu%></button>
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="WEB-INF/view/footer.jsp"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

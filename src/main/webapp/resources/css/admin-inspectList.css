@@ -547,3 +547,213 @@ body {
 .content-area.active {
     display: block;
 }
+
+/* 체크리스트 테이블 스타일 */
+.checklist-form-group {
+    margin-bottom: 30px;
+}
+
+.checklist-container {
+    margin-bottom: 15px;
+}
+
+.checklist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed;
+}
+
+.checklist-table th, .checklist-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.checklist-table thead th {
+    background-color: #5b775b;
+    color: white;
+}
+
+.checklist-table th[rowspan="2"] {
+    background-color: #5b775b;
+    color: white;
+    width: 15%;
+}
+
+.checklist-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.checklist-table tbody tr:hover {
+    background-color: #f1f8e9;
+}
+
+.comment-input {
+    width: 95%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.score-cell {
+    font-weight: bold;
+    width: 60px;
+}
+
+.total-row {
+    background-color: #f1f8e9 !important;
+    font-weight: bold;
+}
+
+.total-score {
+    font-size: 16px;
+    color: #3f861d;
+}
+
+.final-grade {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db;
+    border-radius: 4px;
+}
+
+/* 등급 정보 스타일 */
+.grade-info {
+    background-color: #f9f6e9;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.grade-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.grade-info-badge {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.grade-a { background-color: #3498db; }
+.grade-b { background-color: #2ecc71; }
+.grade-c { background-color: #f39c12; }
+.grade-d { background-color: #e74c3c; }
+.grade-e { background-color: #95a5a6; }
+.grade-f { background-color: #7f8c8d; }
+
+/* 추가적인 버튼 스타일 - submenu-btn */
+.submenu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 하위 메뉴 버튼 호버 효과 */
+.submenu-btn:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 선택된 메뉴 스타일 */
+.submenu-btn.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}
+
+/* 폼 태그에 기본 마진과 패딩 제거 */
+.submenu form {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* 폼 내부 버튼 스타일 - 원래 a 태그와 동일하게 */
+.submenu form button {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 버튼 호버 효과 - 원래 a 태그와 동일하게 */
+.submenu form button:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 활성화된 버튼 스타일 */
+.submenu form button.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.status-waiting {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* 검수 상태 배지 스타일 */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-pass {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-fail {
+    background-color: #f8d7da;
+    color: #721c24;
+}
