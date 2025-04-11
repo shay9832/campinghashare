@@ -1,0 +1,462 @@
+/* equipment-register.css */
+
+/* 장비 등록 컨테이너 */
+.equipinfo-container {
+    width: 100%;
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-primary);
+}
+
+/* 장비 정보 항목 */
+.equipinfo-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+}
+
+.equipinfo-item:last-child {
+    margin-bottom: 0;
+}
+
+/* 장비 정보 레이블 */
+.equipinfo-item label {
+    width: 120px;
+    font-weight: var(--font-medium);
+    font-size: var(--font-sm);
+    color: var(--text-primary);
+    padding-top: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* 입력 컨테이너 */
+.input-container {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+/* 검색 컨테이너 */
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+/* 입력 필드 */
+.equipinfo-item input,
+.search-input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-right: 40px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    transition: border-color var(--transition-normal);
+}
+
+.equipinfo-item input:focus,
+.search-input:focus {
+    border-color: var(--color-maple);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(44, 95, 45, 0.2);
+}
+
+/* 돋보기 아이콘 버튼 */
+.search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    z-index: 2;
+}
+
+.search-button:hover {
+    color: var(--color-maple);
+}
+
+/* 비활성화된 입력 필드 */
+input:disabled {
+    background: var(--color-gray-200);
+    cursor: not-allowed;
+}
+
+/* 사진 영역 */
+.photo-area {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    flex: 1;
+}
+
+/* 사진 컨테이너 */
+.photos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+/* 사진 업로드 버튼 - 수정됨 */
+.photo-upload {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed var(--border-medium);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    margin-left: 0;
+}
+
+.photo-upload:hover {
+    border-color: var(--color-maple);
+}
+
+/* 추가 버튼 - 수정됨 */
+.add-photo-btn {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-tertiary);
+    transition: color var(--transition-normal);
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 중앙 아이콘 - 수정됨 */
+.center-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-photo-btn:hover {
+    color: var(--color-maple);
+}
+
+/* 사진 미리보기 */
+.photo-preview {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 사진 삭제 버튼 */
+.remove-photo {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--color-white);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: var(--font-xxs);
+    transition: background-color var(--transition-normal);
+}
+
+.remove-photo:hover {
+    background-color: var(--color-error);
+}
+
+/* 가격 관련 스타일 */
+.price-container {
+    position: relative;
+    width: 100%;
+}
+
+.price-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.price-input {
+    width: 150px !important;
+    text-align: right;
+}
+
+.currency {
+    margin-left: var(--spacing-xs);
+    font-size: var(--font-sm);
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.price-comparison {
+    margin-left: var(--spacing-lg);
+    font-size: var(--font-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.price-diff {
+    color: var(--color-coral);
+    font-weight: var(--font-medium);
+}
+
+.avg-price {
+    color: var(--text-secondary);
+}
+
+.avg-price-value {
+    font-weight: var(--font-medium);
+}
+
+/* 정보 아이콘 툴팁 */
+.info-icon {
+    position: relative;
+    cursor: help;
+    color: var(--text-tertiary);
+}
+
+/* 높이 위치 통일 */
+.search-input,
+.price-input {
+    height: 40px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.search-input,
+.price-input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus,
+.price-input:focus {
+    border-color: #007bff;
+}
+
+/* 장비 이미지 */
+.equipment-image {
+    width: 80px;
+    height: 80px;
+    border: 1px solid var(--border-medium);
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: var(--radius-sm);
+}
+
+.equipment-image::before, .equipment-image::after {
+    content: "";
+    position: absolute;
+    background-color: var(--border-medium);
+    width: 140%;
+    height: 2px;
+    left: -20%;
+    top: 50%;
+}
+
+.equipment-image::before {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+.equipment-image::after {
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+/* 등급 배지 */
+.grade-badge {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    color: var(--color-white);
+    text-align: center;
+    line-height: 25px;
+    font-weight: var(--font-bold);
+    border-radius: 3px;
+    margin-right: 5px;
+    background-color: var(--grade-c);
+}
+
+/* 구분선 */
+.divider {
+    position: relative;
+    margin: var(--spacing-xl) 0;
+    text-align: center;
+    border-top: 1px solid var(--border-medium);
+}
+
+.divider-text {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-primary);
+    padding: 0 var(--spacing-md);
+    color: var(--text-secondary);
+    font-size: var(--font-xs);
+}
+
+/* 정보 텍스트 */
+.info-text {
+    padding: var(--spacing-sm) 0;
+    display: inline-block;
+    color: var(--text-primary);
+}
+
+/* 주의사항 */
+.notice-container {
+    margin-bottom: var(--spacing-xl);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    background-color: var(--color-gray-100);
+    line-height: 1.6;
+    position: relative;
+    margin-top: 60px;
+}
+
+.notice-title {
+    font-size: var(--font-lg);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-maple);
+    text-align: center;
+}
+
+.notice-list {
+    list-style-type: disc;
+    padding-left: var(--spacing-lg);
+    margin: 0;
+}
+
+.notice-list li {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.notice-list li strong {
+    color: var(--text-primary);
+    font-weight: var(--font-semibold);
+}
+
+/* 등록 완료 메시지 */
+.registration-complete {
+    text-align: center;
+    padding: var(--spacing-xl);
+    background-color: var(--color-beige);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-xl) 0;
+}
+
+.complete-icon {
+    font-size: 64px;
+    color: var(--color-maple);
+    margin-bottom: var(--spacing-md);
+}
+
+.complete-title {
+    font-size: var(--font-lg);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--spacing-sm);
+}
+
+.complete-message {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* 크기 안내 */
+.size-note {
+    font-size: var(--font-xs);
+    color: var(--text-tertiary);
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .equipinfo-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .equipinfo-item label {
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
+        padding-top: 0;
+    }
+
+    .input-container {
+        width: 100%;
+    }
+
+    .photo-area {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .equipinfo-container {
+        padding: var(--spacing-md);
+    }
+
+    .price-comparison {
+        margin-left: 0;
+        margin-top: var(--spacing-sm);
+        width: 100%;
+    }
+
+    .notice-container {
+        padding: var(--spacing-md);
+    }
+
+    .notice-container .divider-text {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--bg-primary);
+        padding: 0 var(--spacing-md);
+        color: var(--text-secondary);
+        font-size: var(--font-xs);
+    }
+
+    .notice-list {
+        padding-left: var(--spacing-md);
+    }
+
+    .complete-icon {
+        font-size: 48px;
+    }
+}
