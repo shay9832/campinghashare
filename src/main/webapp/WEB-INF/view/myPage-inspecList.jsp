@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -83,6 +84,7 @@
         </ul>
     </div>
 
+
     <!-- 마이페이지 메인 콘텐츠 -->
     <div class="mypage-main-content">
         <div class="page-header">
@@ -93,205 +95,126 @@
         <!-- 검수 조회 탭 컨테이너 -->
         <div class="tab-container">
             <div class="tabs">
-                <div class="tab active" data-tab="storage" id="storage-tab">보관</div>
-                <div class="tab" data-tab="storen" id="storen-tab">스토렌</div>
+                <div class="tab ${activeTab == 'storen' ? 'active' : ''}" data-tab="storen" id="storen-tab">스토렌</div>
+                <div class="tab ${activeTab == 'storage' ? 'active' : ''}" data-tab="storage" id="storage-tab">보관</div>
             </div>
 
-            <!-- 장비 ID 검색 -->
+            <!-- 거래 ID 검색 -->
             <div class="search-container">
-                <input type="text" id="search-equipment-id" placeholder="장비코드 또는 장비명 검색">
+                <input type="text" id="search-equipment-id" placeholder="거래 ID를 입력하세요">
                 <button type="button" class="search-button" id="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
 
-            <!-- 보관 탭 콘텐츠 -->
-            <div class="tab-content active" id="storage-content">
+            <!-- 스토렌 탭 콘텐츠 -->
+            <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
+                <!-- 소유자/사용자 필터 -->
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                    <!-- 탭 필터 -->
+                    <div class="d-flex flex-wrap align-items-center">
+                        <div class="tab-nav">
+                            <a class="tab-link ${storenTabType == 'store' ? 'active' : ''}" data-storen-tab="store" id="storen-store">입고</a>
+                        </div>
+                        <div class="tab-nav">
+                            <a class="tab-link ${storenTabType == 'return' ? 'active' : ''}" data-storen-tab="return" id="storen-return">반납</a>
+                        </div>
+                    </div>
+
+                    <!-- 정렬 옵션 (오른쪽) -->
+                    <div class="d-flex align-items-center">
+                        <!-- 날짜 필터 -->
+                        <div class="date-filter me-2">
+                            <select class="form-control">
+                                <option>전체 기간</option>
+                                <option>최근 1개월</option>
+                                <option>최근 3개월</option>
+                                <option>최근 6개월</option>
+                            </select>
+                        </div>
+
+                        <!-- 정렬 옵션 -->
+                        <div class="sort-container">
+                            <select class="form-control sort-select">
+                                <option>최신순</option>
+                                <option>높은 점수순</option>
+                                <option>낮은 점수순</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <table class="custom-table table">
                         <thead>
                         <tr>
-                            <th>장비코드</th>
                             <th>거래ID</th>
                             <th>배송ID</th>
+                            <th>장비코드</th>
                             <th>검수유형</th>
                             <th>장비명</th>
                             <th>카테고리</th>
                             <th>검수상태</th>
-                            <th>검수결과등급</th>
+                            <th>장비등급</th>
+                            <th>검수처리유형</th>
                             <th>검수일</th>
                             <th>조회</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="table-row" data-id="1001">
-                            <td>EQ12345</td>
-                            <td>TR56789</td>
-                            <td>DL98765</td>
-                            <td>입고검수</td>
-                            <td>캠핑 텐트 세트</td>
-                            <td>텐트/타프 > 돔텐트</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-A">A</span>
-                            </td>
-                            <td>2023-04-28</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="1001">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="1002">
-                            <td>EQ23456</td>
-                            <td>TR67890</td>
-                            <td>DL87654</td>
-                            <td>출고검수</td>
-                            <td>접이식 테이블 체어</td>
-                            <td>테이블/체어 > 폴딩체어</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-B">B</span>
-                            </td>
-                            <td>2023-04-20</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="1002">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="1003">
-                            <td>EQ34567</td>
-                            <td>TR78901</td>
-                            <td>DL76543</td>
-                            <td>중간검수</td>
-                            <td>캠핑 침낭</td>
-                            <td>침낭/매트 > 동계침낭</td>
-                            <td>
-                                <span class="status-badge status-pending">미완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-C">C</span>
-                            </td>
-                            <td>2023-05-01</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="1003">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="1004">
-                            <td>EQ45678</td>
-                            <td>TR89012</td>
-                            <td>DL65432</td>
-                            <td>입고검수</td>
-                            <td>코펠 세트</td>
-                            <td>취사용품 > 코펠</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-A">A</span>
-                            </td>
-                            <td>2023-03-15</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="1004">조회</button>
-                            </td>
-                        </tr>
+                        <!-- 초기에 로드된 스토렌 입고 검수 데이터 -->
+                        <c:if test="${activeTab == 'storen' && storenTabType == 'store'}">
+                            <c:forEach var="inspec" items="${inspecList}">
+                                <tr class="table-row" data-id="${inspec.service_id}">
+                                    <td>${inspec.service_id}</td>
+                                    <td>${inspec.delivery_id}</td>
+                                    <td>${inspec.equip_code}</td>
+                                    <td>${inspec.inspec_type.split('_')[1]}</td>
+                                    <td class="title-cell delivery-name">${inspec.equip_name}</td>
+                                    <td>${inspec.majorCategory} > ${inspec.middleCategory}</td>
+                                    <td>${inspec.inspec_status}</td>
+                                    <td>
+                                <span class="grade-badge
+                                    grade-${inspec.equip_grade}
+                                ">
+                                        ${inspec.equip_grade}
+                                </span>
+                                    </td>
+                                    <td>${inspec.inspec_result_action_type}</td>
+                                    <td>${inspec.completed_date}</td>
+                                    <td>
+                                        <button type="button" class="btn-sm btn-track-external"
+                                                data-id="${inspec.service_id}">자세히..</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:if>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 스토렌 탭 콘텐츠 -->
-            <div class="tab-content" id="storen-content">
+            <!-- 보관 탭 콘텐츠 -->
+            <div class="tab-content ${activeTab == 'storage' ? 'active' : ''}" id="storage-content">
                 <div class="table-container">
                     <table class="custom-table table">
                         <thead>
                         <tr>
-                            <th>장비코드</th>
                             <th>거래ID</th>
                             <th>배송ID</th>
+                            <th>장비코드</th>
                             <th>검수유형</th>
                             <th>장비명</th>
                             <th>카테고리</th>
                             <th>검수상태</th>
-                            <th>검수결과등급</th>
+                            <th>장비등급</th>
+                            <th>검수처리유형</th>
                             <th>검수일</th>
                             <th>조회</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="table-row" data-id="2001">
-                            <td>EQ56789</td>
-                            <td>TR90123</td>
-                            <td>DL54321</td>
-                            <td>입고검수</td>
-                            <td>등산용 배낭</td>
-                            <td>가방 > 배낭</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-A">A</span>
-                            </td>
-                            <td>2023-04-25</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="2001">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="2002">
-                            <td>EQ67890</td>
-                            <td>TR01234</td>
-                            <td>DL43210</td>
-                            <td>출고검수</td>
-                            <td>캠핑용 의자</td>
-                            <td>테이블/체어 > 릴렉스체어</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-B">B</span>
-                            </td>
-                            <td>2023-04-18</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="2002">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="2003">
-                            <td>EQ78901</td>
-                            <td>TR12345</td>
-                            <td>DL32109</td>
-                            <td>중간검수</td>
-                            <td>야외용 랜턴</td>
-                            <td>캠핑조명 > LED랜턴</td>
-                            <td>
-                                <span class="status-badge status-pending">미완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-D">D</span>
-                            </td>
-                            <td>2023-05-05</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="2003">조회</button>
-                            </td>
-                        </tr>
-                        <tr class="table-row" data-id="2004">
-                            <td>EQ89012</td>
-                            <td>TR23456</td>
-                            <td>DL21098</td>
-                            <td>입고검수</td>
-                            <td>휴대용 가스버너</td>
-                            <td>버너/히터 > 가스버너</td>
-                            <td>
-                                <span class="status-badge status-completed">검수완료</span>
-                            </td>
-                            <td>
-                                <span class="grade-badge grade-C">C</span>
-                            </td>
-                            <td>2023-03-20</td>
-                            <td>
-                                <button type="button" class="btn-sm btn-detail" data-id="2004">조회</button>
-                            </td>
-                        </tr>
+                        <!-- AJAX로 로드될 데이터 -->
                         </tbody>
                     </table>
                 </div>
@@ -300,6 +223,7 @@
     </div>
 </div>
 
+
 <!-- 푸터 인클루드 (JSP 방식) -->
 <jsp:include page="footer.jsp" />
 
@@ -307,7 +231,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 <script>
     $(document).ready(function (){
-        // 탭 전환 기능
+        // 데이터 로드 상태 추적
+        let loadedData = {
+            'storage': false,
+            'storen-return': false,
+            'storen-store': true, // 초기 페이지 로드 시 이미 로드됨
+        };
+
+        // 현재 활성화된 스토렌 서브탭
+        let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
+
+        // 메인 탭 전환 기능
         $('.tab').on('click', function() {
             const tabId = $(this).data('tab');
 
@@ -318,7 +252,125 @@
             // 콘텐츠 활성화
             $('.tab-content').removeClass('active');
             $('#' + tabId + '-content').addClass('active');
+
+            // 스토렌 탭이면 기본적으로 서브탭 store가 활성화, 필요한 데이터 로드
+            if (tabId === 'storen') {
+                $('#storen-content .tab-link').removeClass('active');
+                $('#storen-store').addClass('active');
+                currentStorenSubTab = 'store';
+                loadStorenData(currentStorenSubTab);
+            } else if (tabId === 'storage') {
+                loadStorageData();
+            }
+
+            // 콘텐츠가 바뀌면 검색 결과 재설정
+            if ($('#search-trade-id').val().trim() !== '') {
+                performSearch();
+            }
         });
+
+        // 스토렌 서브탭 전환 기능
+        $('#storen-content .tab-link').on('click', function () {
+            // 서브탭 타입 가져오기
+            currentStorenSubTab = $(this).data('storen-tab');
+            console.log("서브탭 변경: " + currentStorenSubTab);
+
+            // 서브탭 활성화
+            $('#storen-content .tab-link').removeClass('active');
+            $(this).addClass('active');
+
+            // 강제로 데이터 로드 (캐시 무시)
+            const dataKey = 'storen-' + currentStorenSubTab;
+            loadedData[dataKey] = false; // 캐시 상태 재설정
+
+            // 데이터 로드
+            loadStorenData(currentStorenSubTab);
+        });
+
+        // 스토렌 데이터 로드 함수
+        function loadStorenData(subTabType) {
+            // 기본값 설정으로 오류 방지
+            subTabType = subTabType || 'store';
+
+            const dataKey = 'storen-' + subTabType;
+
+            console.log("dataKey = " + dataKey); // 디버깅용
+            console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
+
+            // 이미 로드된 데이터라면 다시 요청하지 않음
+            if (loadedData[dataKey]) {
+                return;
+            }
+
+            // 로딩 표시
+            $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
+
+            // API 엔드포인트 결정
+            const apiUrl = '${pageContext.request.contextPath}/api/inspec/storen/' + subTabType;
+
+            // AJAX 요청
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 데이터 로드 상태 업데이트
+                    loadedData[dataKey] = true;
+
+                    // 테이블 내용 업데이트
+                    updateTableContent('#storen-content', data);
+
+                    // 검색 필터 다시 적용
+                    if ($('#search-trade-id').val().trim() !== '') {
+                        performSearch();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('데이터 로드 실패: ' + error);
+                    $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                }
+            });
+        }
+
+        // 보관 데이터 로드 함수
+        function loadStorageData() {
+
+            const dataKey = 'storage';
+
+            // 이미 로드된 데이터라면 다시 요청하지 않음
+            if (loadedData[dataKey]) {
+                return;
+            }
+
+            // 로딩 표시
+            $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
+
+            // API 엔드포인트 결정
+            const apiUrl = '${pageContext.request.contextPath}/api/delivery/storage';
+
+            // AJAX 요청
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    // 데이터 로드 상태 업데이트
+                    loadedData[dataKey] = true;
+
+                    // 테이블 내용 업데이트
+                    updateTableContent('#storage-content', data);
+
+                    // 검색 필터 다시 적용
+                    if ($('#search-trade-id').val().trim() !== '') {
+                        performSearch();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('데이터 로드 실패: ' + error);
+                    $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                }
+            });
+        }
 
         // 검색 기능
         $('#btn-search').on('click', function() {
