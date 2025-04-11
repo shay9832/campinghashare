@@ -30,7 +30,6 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IEquipmentDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IEquipmentDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/EquipmentDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/EquipmentDAO.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/UserDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserDAO.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-delivery.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-delivery.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-diary-post.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-diary-post.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-diary-write.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-diary-write.jsp" afterDir="false" />
