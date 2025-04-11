@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -17,10 +17,69 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <style>
+        /* 테이블 너무 긴 장비명 줄이기 */
+        .custom-table .title-cell {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* 테이블 행에서 마우스 커서 디폴트 (클릭 불가) */
+        .table-container tr.table-row {
+            cursor: default;
+        }
+        /* 테이블 장비명 열만 왼쪽 정렬 */
+        .custom-table tbody td:nth-child(5) {
+            text-align: left; !important;
+        }
+
+        /* 등급 배지 */
+        .grade-badge.grade-A {
+            background-color: var(--grade-a) !important;
+        }
+
+        .grade-badge.grade-B {
+            background-color: var(--grade-b);
+        !important;
+        }
+
+        .grade-badge.grade-C {
+            background-color: var(--grade-c);
+        !important;
+        }
+
+        .grade-badge.grade-D {
+            background-color: var(--grade-d);
+        !important;
+            color: var(--text-primary);
+        !important;
+        }
+
+        .grade-badge.grade-E {
+            background-color: var(--grade-e);
+        !important;
+            color: var(--text-primary);
+        !important;
+        }
+
+        .grade-badge.grade-F {
+            background-color: var(--grade-f);
+        !important;
+        }
+
+        .grade-badge.grade-NA {
+            background-color: #adb5bd;
+        !important;
+            color: white;
+        !important;
+        }
+
+    </style>
 </head>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
-<jsp:include page="header.jsp" />
+<jsp:include page="header.jsp"/>
 
 <div class="container container-wide mypage-container section">
 
@@ -114,10 +173,12 @@
                     <!-- 탭 필터 -->
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="tab-nav">
-                            <a class="tab-link ${storenTabType == 'store' ? 'active' : ''}" data-storen-tab="store" id="storen-store">입고</a>
+                            <a class="tab-link ${storenTabType == 'store' ? 'active' : ''}" data-storen-tab="store"
+                               id="storen-store">입고</a>
                         </div>
                         <div class="tab-nav">
-                            <a class="tab-link ${storenTabType == 'return' ? 'active' : ''}" data-storen-tab="return" id="storen-return">반납</a>
+                            <a class="tab-link ${storenTabType == 'return' ? 'active' : ''}" data-storen-tab="return"
+                               id="storen-return">반납</a>
                         </div>
                     </div>
 
@@ -165,26 +226,34 @@
                         <!-- 초기에 로드된 스토렌 입고 검수 데이터 -->
                         <c:if test="${activeTab == 'storen' && storenTabType == 'store'}">
                             <c:forEach var="inspec" items="${inspecList}">
+                                <!-- 검수 완료 여부 체크 -->
+                                <c:set var="isCompleted"
+                                       value="${inspec.inspec_status != '검수대기중' && inspec.equip_grade != 'N/A'}"/>
+
+                                <!-- 등급 클래스 처리 - N/A를 NA로 변환 -->
+                                <c:set var="gradeClass"
+                                       value="${inspec.equip_grade == 'N/A' ? 'NA' : inspec.equip_grade}"/>
+
                                 <tr class="table-row" data-id="${inspec.service_id}">
                                     <td>${inspec.service_id}</td>
                                     <td>${inspec.delivery_id}</td>
                                     <td>${inspec.equip_code}</td>
                                     <td>${inspec.inspec_type.split('_')[1]}</td>
-                                    <td class="title-cell delivery-name">${inspec.equip_name}</td>
+                                    <td class="title-cell delivery-name"
+                                        title="${inspec.equip_name}">${inspec.equip_name}</td>
                                     <td>${inspec.majorCategory} > ${inspec.middleCategory}</td>
                                     <td>${inspec.inspec_status}</td>
                                     <td>
-                                <span class="grade-badge
-                                    grade-${inspec.equip_grade}
-                                ">
-                                        ${inspec.equip_grade}
-                                </span>
+                                        <span class="grade-badge grade-${gradeClass}">
+                                                ${inspec.equip_grade}
+                                        </span>
                                     </td>
                                     <td>${inspec.inspec_result_action_type}</td>
                                     <td>${inspec.completed_date}</td>
                                     <td>
                                         <button type="button" class="btn-sm btn-track-external"
-                                                data-id="${inspec.service_id}">자세히..</button>
+                                                data-id="${inspec.service_id}" ${isCompleted ? '' : 'disabled'}>자세히..
+                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -225,24 +294,24 @@
 
 
 <!-- 푸터 인클루드 (JSP 방식) -->
-<jsp:include page="footer.jsp" />
+<jsp:include page="footer.jsp"/>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 <script>
-    $(document).ready(function (){
+    $(document).ready(function () {
         // 데이터 로드 상태 추적
-        let loadedData = {
-            'storage': false,
-            'storen-return': false,
-            'storen-store': true, // 초기 페이지 로드 시 이미 로드됨
-        };
+        // let loadedData = {
+        //     'storage': false,
+        //     'storen-return': false,
+        //     'storen-store': true, // 초기 페이지 로드 시 이미 로드됨
+        // };
 
         // 현재 활성화된 스토렌 서브탭
         let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
 
         // 메인 탭 전환 기능
-        $('.tab').on('click', function() {
+        $('.tab').on('click', function () {
             const tabId = $(this).data('tab');
 
             // 탭 활성화
@@ -264,7 +333,8 @@
             }
 
             // 콘텐츠가 바뀌면 검색 결과 재설정
-            if ($('#search-trade-id').val().trim() !== '') {
+            const inputValue = $('#search-service-id').val();
+            if (typeof inputValue === 'string' && inputValue.trim() !== '') {
                 performSearch();
             }
         });
@@ -279,11 +349,8 @@
             $('#storen-content .tab-link').removeClass('active');
             $(this).addClass('active');
 
-            // 강제로 데이터 로드 (캐시 무시)
-            const dataKey = 'storen-' + currentStorenSubTab;
-            loadedData[dataKey] = false; // 캐시 상태 재설정
 
-            // 데이터 로드
+            // 데이터 로드 (캐시 상태 판단은 loadStorenData 내부에서)
             loadStorenData(currentStorenSubTab);
         });
 
@@ -292,15 +359,15 @@
             // 기본값 설정으로 오류 방지
             subTabType = subTabType || 'store';
 
-            const dataKey = 'storen-' + subTabType;
-
-            console.log("dataKey = " + dataKey); // 디버깅용
-            console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
+            // const dataKey = 'storen-' + subTabType;
+            //
+            // console.log("dataKey = " + dataKey); // 디버깅용
+            // console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
 
             // 이미 로드된 데이터라면 다시 요청하지 않음
-            if (loadedData[dataKey]) {
-                return;
-            }
+            //if (loadedData[dataKey]) {
+            //    return;
+            //}
 
             // 로딩 표시
             $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
@@ -313,9 +380,9 @@
                 url: apiUrl,
                 type: 'GET',
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     // 데이터 로드 상태 업데이트
-                    loadedData[dataKey] = true;
+                    //loadedData[dataKey] = true;
 
                     // 테이블 내용 업데이트
                     updateTableContent('#storen-content', data);
@@ -325,7 +392,7 @@
                         performSearch();
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
                     $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
@@ -338,9 +405,9 @@
             const dataKey = 'storage';
 
             // 이미 로드된 데이터라면 다시 요청하지 않음
-            if (loadedData[dataKey]) {
-                return;
-            }
+            //if (loadedData[dataKey]) {
+            //    return;
+            //}
 
             // 로딩 표시
             $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
@@ -353,9 +420,9 @@
                 url: apiUrl,
                 type: 'GET',
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     // 데이터 로드 상태 업데이트
-                    loadedData[dataKey] = true;
+                    //loadedData[dataKey] = true;
 
                     // 테이블 내용 업데이트
                     updateTableContent('#storage-content', data);
@@ -365,7 +432,7 @@
                         performSearch();
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
                     $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
@@ -384,15 +451,7 @@
             }
 
             // 데이터 행 추가
-            inspeclist.forEach(function(inspec, index) {
-                console.log(`행 ${index} 처리 중:`, inspec);
-
-                // 데이터의 유효성 검사 추가
-                if (!inspec || !inspec.service_id) {
-                    console.warn(`행 ${index}에 유효하지 않은 데이터:`, inspec);
-                    return;
-                }
-
+            inspeclist.forEach(function (inspec) {
                 // 검수 타입 문자열 '_' 구분자로 잘라내기 - 안전하게 처리
                 let InspecType = inspec.inspec_type || '';
                 if (InspecType && InspecType.includes('_')) {
@@ -401,51 +460,68 @@
 
                 // 값이 없는 경우 기본값 사용
                 const equip_grade = inspec.equip_grade || 'N/A';
-                const majorCategory = inspec.majorCategory || '';
-                const middleCategory = inspec.middleCategory || '';
+                // 등급 클래스 설정 (N/A를 NA로 변환)
+                let equip_grade_class = equip_grade === "N/A" ? "NA" : equip_grade;
 
+                // 검수 완료 여부 확인 (서비스 계층에서 확인한 방식과 동일하게)
+                const inspecStatus = inspec.inspec_status || '';
+                const isInspectionCompleted = !(inspecStatus.includes('대기') || equip_grade === 'N/A');
+                console.log(isInspectionCompleted);
+
+                // 서비스 계층의 처리를 무시하지 않으면서 프론트엔드에서 추가 보호
+                const resultActionType = (inspec.inspec_result_action_type && inspec.inspec_result_action_type !== 'null')
+                    ? inspec.inspec_result_action_type
+                    : '검수 대기중';
+
+                const completedDate = (inspec.completed_date && inspec.completed_date !== 'null')
+                    ? inspec.completed_date
+                    : '검수 전';
+
+                // 버튼 상태
+                const buttonDisabled = !isInspectionCompleted ? 'disabled' : '';
+                console.log(buttonDisabled);
                 // 행 HTML 생성
-                const row = `
-            <tr class="table-row" data-id="${inspec.service_id}">
-                <td>${inspec.service_id || ''}</td>
-                <td>${inspec.delivery_id || ''}</td>
-                <td>${inspec.equip_code || ''}</td>
-                <td>${InspecType || ''}</td>
-                <td class="title-cell delivery-name">${inspec.equip_name || ''}</td>
-                <td>${majorCategory}${middleCategory ? ' > ' + middleCategory : ''}</td>
-                <td>${inspec.inspec_status || ''}</td>
-                <td>
-                    <span class="grade-badge grade-${equip_grade}">
-                        ${equip_grade}
-                    </span>
-                </td>
-                <td>${inspec.inspec_result_action_type || ''}</td>
-                <td>${inspec.completed_date || ''}</td>
-                <td>
-                    <button type="button" class="btn-sm btn-track-external"
-                            data-id="${inspec.service_id}">자세히..</button>
-                </td>
-            </tr>
-        `;
+                const row =
+                    '<tr class="table-row" data-id="' + inspec.service_id + '">' +
+                    '<td>' + inspec.service_id + '</td>' +
+                    '<td>' + (inspec.delivery_id || '-') + '</td>' +
+                    '<td>' + inspec.equip_code + '</td>' +
+                    '<td>' + InspecType + '</td>' +
+                    '<td class="title-cell delivery-name" title="' + inspec.equip_name + '">' + inspec.equip_name + '</td>' +
+                    '<td>' + inspec.majorCategory + ' > ' + inspec.middleCategory + '</td>' +
+                    '<td>' + inspec.inspec_status + '</td>' +
+                    '<td>' +
+                    '<span class="grade-badge grade-' + equip_grade_class + '">' +
+                    equip_grade +
+                    '</span>' +
+                    '</td>' +
+                    '<td>' + resultActionType + '</td>' +
+                    '<td>' + completedDate + '</td>' +
+                    '<td>' +
+                    '<button type="button" class="btn-sm btn-track-external" ' +
+                    'data-id="' + inspec.service_id + '" ' + buttonDisabled + '>자세히..</button>' +
+                    '</td>' +
+                    '</tr>';
 
                 tbody.append(row);
             });
         }
 
+
         // 검색 기능
-        $('#btn-search').on('click', function() {
+        $('#btn-search').on('click', function () {
             performSearch();
         });
 
         // 엔터 키 검색
-        $('#search-service-id').on('keypress', function(e) {
-            if(e.which === 13) {
+        $('#search-service-id').on('keypress', function (e) {
+            if (e.which === 13) {
                 performSearch();
             }
         });
 
         // 상세 버튼 클릭 이벤트
-        $('.btn-detail').on('click', function() {
+        $('.btn-detail').on('click', function () {
             const inspectionId = $(this).data('id');
             // 여기에 상세 정보 조회 로직 추가
             alert('검수 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
@@ -456,7 +532,7 @@
     function performSearch() {
         const searchValue = $('#search-service-id').val().trim().toLowerCase();
 
-        if(searchValue === '') {
+        if (searchValue === '') {
             // 검색어가 없으면 모든 행 표시
             $('.table-row').show();
             // empty-state 제거
@@ -469,13 +545,13 @@
         const rows = $('#' + activeTab + '-content .table-row');
         let foundMatch = false;
 
-        rows.each(function() {
+        rows.each(function () {
             const rowData = $(this).text().toLowerCase();
             const equipmentCode = $(this).find('td:eq(0)').text().toLowerCase();
             const equipmentName = $(this).find('td:eq(4)').text().toLowerCase();
 
             // 검색 조건 확인
-            if(equipmentCode.includes(searchValue) || equipmentName.includes(searchValue) || rowData.includes(searchValue)) {
+            if (equipmentCode.includes(searchValue) || equipmentName.includes(searchValue) || rowData.includes(searchValue)) {
                 $(this).show();
                 foundMatch = true;
             } else {
@@ -484,9 +560,9 @@
         });
 
         // 검색 결과가 없는 경우 처리
-        if(!foundMatch) {
+        if (!foundMatch) {
             // 이미 empty-state가 있는지 확인
-            if($('#' + activeTab + '-content .empty-state').length === 0) {
+            if ($('#' + activeTab + '-content .empty-state').length === 0) {
                 $('#' + activeTab + '-content .table-container').after(`
                     <div class="empty-state">
                         <i class="fas fa-search"></i>

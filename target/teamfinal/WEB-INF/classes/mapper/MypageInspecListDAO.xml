@@ -21,7 +21,7 @@
     <select id="listStorenStoreByUserCode" resultType="com.team.mvc.DTO.MypageInspecListDTO" resultMap="InspecResultMap">
         SELECT "거래ID", "배송ID", "장비코드", "검수유형", "장비명"
              , "대분류카테명", "중분류카테명", "검수상태", "검수결과장비등급"
-             , "검수처리유형이름", "검수일", "유저코드", "유저닉네임"
+             , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '스토렌_입고검수'
     </select>
@@ -30,7 +30,7 @@
     <select id="listStorenReturnByUserCode" resultType="com.team.mvc.DTO.MypageInspecListDTO" resultMap="InspecResultMap">
         SELECT "거래ID", "배송ID", "장비코드", "검수유형", "장비명"
              , "대분류카테명", "중분류카테명", "검수상태", "검수결과장비등급"
-             , "검수처리유형이름", "검수일", "유저코드", "유저닉네임"
+             , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '스토렌_반납검수'
     </select>
@@ -39,7 +39,7 @@
     <select id="listStorageStoreByUserCode" resultType="com.team.mvc.DTO.MypageInspecListDTO" resultMap="InspecResultMap">
         SELECT "거래ID", "배송ID", "장비코드", "검수유형", "장비명"
              , "대분류카테명", "중분류카테명", "검수상태", "검수결과장비등급"
-             , "검수처리유형이름", "검수일", "유저코드", "유저닉네임"
+             , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '보관_입고검수'
     </select>
