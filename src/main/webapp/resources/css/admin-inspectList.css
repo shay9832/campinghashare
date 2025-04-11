@@ -723,3 +723,37 @@ body {
     font-weight: bold;
     border-left: 2px solid #3f861d;
 }
+
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.status-waiting {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+/* 검수 상태 배지 스타일 */
+.status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-pass {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-fail {
+    background-color: #f8d7da;
+    color: #721c24;
+}

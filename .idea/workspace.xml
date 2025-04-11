@@ -14,8 +14,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminEquipListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminEquipListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminEquipListDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminEquipListDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminInspectListDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminInspectListDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-boardUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-boardUpdate.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-communityStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-communityStatistics.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-couponList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-couponList.jsp" afterDir="false" />
@@ -33,32 +35,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-replyUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-replyUpdate.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userDrop.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userDrop.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReport.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReport.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReportList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReportList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-boardUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-boardUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-communityStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-communityStatistics.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-couponList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-couponList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-createCoupon.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-createCoupon.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-deliveryUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-deliveryUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipStatistics.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-eventUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-eventUpdate.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-matchingList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-matchingList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-payUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-payUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-pointUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-pointUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-postUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-postUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-replyUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-replyUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userDrop.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userDrop.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReport.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReport.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReportList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReportList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminEquipListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminEquipListController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminEquipListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminEquipListDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminEquipListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminEquipListController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminEquipListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminEquipListDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-boardUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-boardUpdate.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-communityStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-communityStatistics.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-couponList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-couponList.jsp" afterDir="false" />
@@ -76,28 +54,7 @@
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-replyUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-replyUpdate.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userDrop.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userDrop.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReport.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReport.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReportList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReportList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-boardUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-boardUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-communityStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-communityStatistics.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-couponList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-couponList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-createCoupon.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-createCoupon.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-deliveryUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-deliveryUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipStatistics.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-eventUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-eventUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-matchingList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-matchingList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-payUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-payUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-pointUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-pointUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-postUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-postUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-replyUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-replyUpdate.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userDrop.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userDrop.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userList.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReport.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReport.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReportList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReportList.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -313,7 +270,7 @@
       <workItem from="1744199253989" duration="3022000" />
       <workItem from="1744240968099" duration="29123000" />
       <workItem from="1744283569113" duration="4252000" />
-      <workItem from="1744326357649" duration="3865000" />
+      <workItem from="1744326357649" duration="24411000" />
     </task>
     <servers />
   </component>

@@ -1,12 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:28
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="ko"> <!-- 한국어 페이지 설정 -->
 <head>
@@ -70,7 +65,7 @@
 
     <!-- 게시판 관리 메뉴 -->
     <button class="menu-button">게시판 관리</button>
-    <div class="submenu" style="max-height: 200px;">
+    <div class="submenu">
       <form action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="get">
         <button type="submit" class="submenu-btn">게시물 관리</button>
       </form>
@@ -278,7 +273,16 @@
               <td>${inspect.categoryName}</td>
               <td>${inspect.inspectList}</td>
               <td>${inspect.adminId}</td>
-              <td><button class="process-btn" onclick="openInspectionModal(this)">검수처리</button></td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                  </c:when>
+                  <c:otherwise>
+                    <button class="process-btn disabled" disabled>처리완료</button>
+                  </c:otherwise>
+                </c:choose>
+              </td>
                 <%--검수결과에 따른 결과처리--%>
               <td>
                 <c:if test="${inspect.inspectResult eq '상'}">
@@ -292,7 +296,16 @@
                 </c:if>
               </td>
               <td>${inspect.inspectComment}</td>
-              <td><span class="status-badge status-pass">${inspect.inspectState}</span></td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                  </c:otherwise>
+                </c:choose>
+              </td>
             </tr>
           </c:forEach>
 
@@ -322,39 +335,53 @@
           </tr>
 
           <!--2차 검수 데이터 행-->
-          <c:forEach var="inspectr" items="${listr}">
+          <c:forEach var="inspect" items="${listr}">
             <tr>
               <td class="checkbox-column"><input type="checkbox"></td>
-              <td>${inspectr.equipCode}</td>
-              <td>${inspectr.inspectName}</td>
-              <td>${inspectr.equipName}</td>
-              <td>${inspectr.categoryName}</td>
-              <td>${inspectr.inspectList}</td>
-              <td>${inspectr.adminId}</td>
-              <td><button class="process-btn" onclick="openInspectionModal(this)">검수처리</button></td>
+              <td>${inspect.equipCode}</td>
+              <td>${inspect.inspectName}</td>
+              <td>${inspect.equipName}</td>
+              <td>${inspect.categoryName}</td>
+              <td>${inspect.inspectList}</td>
+              <td>${inspect.adminId}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                  </c:when>
+                  <c:otherwise>
+                    <button class="process-btn disabled" disabled>처리완료</button>
+                  </c:otherwise>
+                </c:choose>
+              </td>
                 <%--검수결과에 따른 결과처리--%>
               <td>
-                <c:if test="${inspectr.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspectr.inspectResult}</span>
+                <c:if test="${inspect.inspectResult eq '상'}">
+                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
                 </c:if>
-                <c:if test="${inspectr.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspectr.inspectResult}</span>
+                <c:if test="${inspect.inspectResult eq '중'}">
+                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
                 </c:if>
-                <c:if test="${inspectr.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspectr.inspectResult}</span>
+                <c:if test="${inspect.inspectResult eq '하'}">
+                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
                 </c:if>
               </td>
-              <td>${inspectr.inspectComment}</td>
-              <td><span class="status-badge status-pass">${inspectr.inspectState}</span></td>
+              <td>${inspect.inspectComment}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                  </c:otherwise>
+                </c:choose>
+              </td>
             </tr>
           </c:forEach>
         </table>
       </div>
     </div>
-
-
-
-
     <!-- 검수처리 모달 -->
     <div id="inspectionModal" class="modal">
       <div class="modal-content">
@@ -368,6 +395,8 @@
             <input type="hidden" name="platformDeliveryId" id="platformDeliveryId">
             <input type="hidden" name="platformDeliveryReturnId" id="platformDeliveryReturnId">
             <input type="hidden" name="equipGradeId" id="equipGradeId">
+            <input type="hidden" name="inspecGradeId" id="inspecGradeId">
+            <input type="hidden" name="adminId" id="adminId">
 
             <div class="form-group">
               <label for="equipCode">장비코드</label>
@@ -412,46 +441,71 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>외관 보존 상태</td>
-                    <td><input type="radio" name="외관보존상태" value="상" class="grade-checkbox"> 사용감 거의 없음, 신품 수준 외관</td>
-                    <td><input type="radio" name="외관보존상태" value="중" class="grade-checkbox"> 마모 등 경미한 사용감 있음</td>
-                    <td><input type="radio" name="외관보존상태" value="하" class="grade-checkbox"> 뚜렷한 사용 흔적, 외관 낡고 변색</td>
-                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                    <td class="score-cell">20</td>
-                  </tr>
-                  <tr>
-                    <td>물리적 무손상 상태</td>
-                    <td><input type="radio" name="물리적무손상상태" value="상" class="grade-checkbox"> 파손 없음</td>
-                    <td><input type="radio" name="물리적무손상상태" value="중" class="grade-checkbox"> 작은 손상 있음</td>
-                    <td><input type="radio" name="물리적무손상상태" value="하" class="grade-checkbox"> 심한 손상 있음</td>
-                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                    <td class="score-cell">20</td>
-                  </tr>
-                  <tr>
-                    <td>청결/세정 상태</td>
-                    <td><input type="radio" name="청결세정상태" value="상" class="grade-checkbox"> 오염 없음</td>
-                    <td><input type="radio" name="청결세정상태" value="중" class="grade-checkbox"> 약간의 오염 있음</td>
-                    <td><input type="radio" name="청결세정상태" value="하" class="grade-checkbox"> 심한 오염 있음</td>
-                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                    <td class="score-cell">20</td>
-                  </tr>
-                  <tr>
-                    <td>부속품 완비</td>
-                    <td><input type="radio" name="부속품완비" value="상" class="grade-checkbox"> 부속품(매뉴얼 등) 모두 보유</td>
-                    <td><input type="radio" name="부속품완비" value="중" class="grade-checkbox"> 일부 부속품 누락</td>
-                    <td><input type="radio" name="부속품완비" value="하" class="grade-checkbox"> 필수 부속품 누락</td>
-                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                    <td class="score-cell">20</td>
-                  </tr>
-                  <tr>
-                    <td>기능 작동성</td>
-                    <td><input type="radio" name="기능작동성" value="상" class="grade-checkbox"> 기능 모두 정상 작동</td>
-                    <td><input type="radio" name="기능작동성" value="중" class="grade-checkbox"> 일부 기능 약간 미흡</td>
-                    <td><input type="radio" name="기능작동성" value="하" class="grade-checkbox"> 기능 중 하나 이상 심각한 문제 있음</td>
-                    <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                    <td class="score-cell">20</td>
-                  </tr>
+                  <!-- DB에서 가져온 항목을 동적으로 표시 -->
+                  <c:forEach var="item" items="${getItemList}">
+                    <tr>
+                      <td>${item.inspecItemName}</td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" value="상" class="grade-checkbox">
+                          ${item.inspecItemDescHigh}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" value="중" class="grade-checkbox">
+                          ${item.inspecItemDescMid}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" value="하" class="grade-checkbox">
+                          ${item.inspecItemDescLow}
+                      </td>
+                      <td><input type="text" name="comment_${item.inspecItemId}" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                  </c:forEach>
+
+                  <!-- 데이터가 없는 경우 기본 항목 표시 -->
+                  <c:if test="${empty getItemList}">
+                    <tr>
+                      <td>외관 보존 상태</td>
+                      <td><input type="radio" name="외관보존상태" value="상" class="grade-checkbox"> 사용감 거의 없음, 신품 수준 외관</td>
+                      <td><input type="radio" name="외관보존상태" value="중" class="grade-checkbox"> 마모 등 경미한 사용감 있음</td>
+                      <td><input type="radio" name="외관보존상태" value="하" class="grade-checkbox"> 뚜렷한 사용 흔적, 외관 낡고 변색</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                    <tr>
+                      <td>물리적 무손상 상태</td>
+                      <td><input type="radio" name="물리적무손상상태" value="상" class="grade-checkbox"> 파손 없음</td>
+                      <td><input type="radio" name="물리적무손상상태" value="중" class="grade-checkbox"> 작은 손상 있음</td>
+                      <td><input type="radio" name="물리적무손상상태" value="하" class="grade-checkbox"> 심한 손상 있음</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                    <tr>
+                      <td>청결/세정 상태</td>
+                      <td><input type="radio" name="청결세정상태" value="상" class="grade-checkbox"> 오염 없음</td>
+                      <td><input type="radio" name="청결세정상태" value="중" class="grade-checkbox"> 약간의 오염 있음</td>
+                      <td><input type="radio" name="청결세정상태" value="하" class="grade-checkbox"> 심한 오염 있음</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                    <tr>
+                      <td>부속품 완비</td>
+                      <td><input type="radio" name="부속품완비" value="상" class="grade-checkbox"> 부속품(매뉴얼 등) 모두 보유</td>
+                      <td><input type="radio" name="부속품완비" value="중" class="grade-checkbox"> 일부 부속품 누락</td>
+                      <td><input type="radio" name="부속품완비" value="하" class="grade-checkbox"> 필수 부속품 누락</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                    <tr>
+                      <td>기능 작동성</td>
+                      <td><input type="radio" name="기능작동성" value="상" class="grade-checkbox"> 기능 모두 정상 작동</td>
+                      <td><input type="radio" name="기능작동성" value="중" class="grade-checkbox"> 일부 기능 약간 미흡</td>
+                      <td><input type="radio" name="기능작동성" value="하" class="grade-checkbox"> 기능 중 하나 이상 심각한 문제 있음</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td class="score-cell">20</td>
+                    </tr>
+                  </c:if>
+
                   <tr class="total-row">
                     <td colspan="4" style="text-align: right;"><strong>합계</strong></td>
                     <td id="totalScore" class="total-score">100</td>
@@ -463,12 +517,42 @@
               <div class="grade-info">
                 <p><strong>[등급 판정 기준]</strong></p>
                 <div class="grade-badges">
-                  <span class="grade-info-badge grade-a">A</span> 100-90점
-                  <span class="grade-info-badge grade-b">B</span> 89-80점
-                  <span class="grade-info-badge grade-c">C</span> 79-70점
-                  <span class="grade-info-badge grade-d">D</span> 69-60점
-                  <span class="grade-info-badge grade-e">E</span> 59-50점
-                  <span class="grade-info-badge grade-f">F</span> 49점 이하 (스토렌/렌탈 이용 불가)
+                  <!-- 등급 정보를 DB에서 가져오거나 기본값 표시 -->
+                  <c:choose>
+                    <c:when test="${not empty getGradeList}">
+                      <c:forEach var="grade" items="${getGradeList}">
+                        <c:choose>
+                          <c:when test="${grade.inspecGradeName == 'A'}">
+                            <span class="grade-info-badge grade-a">${grade.inspecGradeName}</span> 100-90점
+                          </c:when>
+                          <c:when test="${grade.inspecGradeName == 'B'}">
+                            <span class="grade-info-badge grade-b">${grade.inspecGradeName}</span> 89-80점
+                          </c:when>
+                          <c:when test="${grade.inspecGradeName == 'C'}">
+                            <span class="grade-info-badge grade-c">${grade.inspecGradeName}</span> 79-70점
+                          </c:when>
+                          <c:when test="${grade.inspecGradeName == 'D'}">
+                            <span class="grade-info-badge grade-d">${grade.inspecGradeName}</span> 69-60점
+                          </c:when>
+                          <c:when test="${grade.inspecGradeName == 'E'}">
+                            <span class="grade-info-badge grade-e">${grade.inspecGradeName}</span> 59-50점
+                          </c:when>
+                          <c:when test="${grade.inspecGradeName == 'F'}">
+                            <span class="grade-info-badge grade-f">${grade.inspecGradeName}</span> 49점 이하 (스토렌/렌탈 이용 불가)
+                          </c:when>
+                        </c:choose>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                      <!-- 기본 등급 정보 -->
+                      <span class="grade-info-badge grade-a">A</span> 100-90점
+                      <span class="grade-info-badge grade-b">B</span> 89-80점
+                      <span class="grade-info-badge grade-c">C</span> 79-70점
+                      <span class="grade-info-badge grade-d">D</span> 69-60점
+                      <span class="grade-info-badge grade-e">E</span> 59-50점
+                      <span class="grade-info-badge grade-f">F</span> 49점 이하 (스토렌/렌탈 이용 불가)
+                    </c:otherwise>
+                  </c:choose>
                 </div>
               </div>
             </div>
@@ -486,6 +570,8 @@
         </div>
       </div>
     </div>
+
+
     <script>
       // 전역 변수 선언
       let currentRow = null;
@@ -624,7 +710,9 @@
         console.log("사용 중인 라디오 버튼 name들:", Array.from(uniqueNames));
       }
 
-      // 모달 열기 함수
+
+
+      // 검수 모달 열기 함수 수정
       function openInspectionModal(button) {
         try {
           // 현재 행의 데이터 가져오기
@@ -638,21 +726,33 @@
           const inspectionType = currentRow.cells[2]?.textContent || '';
           const equipName = currentRow.cells[3]?.textContent || '';
           const categoryName = currentRow.cells[4]?.textContent || '';
+          const inspectResult = currentRow.cells[8]?.textContent || '';
 
-          // 모달 폼에 데이터 설정
+          // 이미 검수 완료된 항목인지 확인
+          if (inspectResult && inspectResult.trim() !== '') {
+            alert('이미 검수 처리가 완료된 항목입니다.');
+            return;
+          }
+
+          // 모달 폼에 기본 데이터 설정
           document.getElementById('equipCode').value = equipCode;
-          document.getElementById('deliveryId').value = 'DELV-' + equipCode; // equipCode를 사용하여 의미 있는 ID 생성
           document.getElementById('inspectionType').value = inspectionType;
           document.getElementById('equipName').value = equipName;
           document.getElementById('equipCategory').value = categoryName;
 
-          // 검수 유형에 따라 ID 설정 - 숫자만 사용
+          // platformDeliveryId와 platformDeliveryReturnId 초기화
+          document.getElementById('platformDeliveryId').value = '';
+          document.getElementById('platformDeliveryReturnId').value = '';
+
+          // 검수 유형에 따라 배송 ID 또는 반환 ID 설정
           if (inspectionType === '입고검수') {
-            document.getElementById('platformDeliveryId').value = equipCode; // 접두어 제거
+            document.getElementById('platformDeliveryId').value = equipCode;
             document.getElementById('platformDeliveryReturnId').value = '';
-          } else {
+            document.getElementById('deliveryId').value = 'DELV-' + equipCode;
+          } else if (inspectionType === '스토렌반환검수') {
             document.getElementById('platformDeliveryId').value = '';
-            document.getElementById('platformDeliveryReturnId').value = equipCode; // 접두어 제거
+            document.getElementById('platformDeliveryReturnId').value = equipCode;
+            document.getElementById('deliveryId').value = 'DELV-RTN-' + equipCode;
           }
 
           // 현재 날짜와 시간 설정
@@ -668,122 +768,110 @@
           // 체크리스트 초기화
           initChecklistFunctionality();
 
+          // 등급 정보 로드 (AJAX 호출)
+          loadEquipGradeInfo();
+
           // 모달 표시
           modal.style.display = 'block';
+
+          // 디버깅
+          console.log('모달 열기 - platformDeliveryId:', document.getElementById('platformDeliveryId').value);
+          console.log('모달 열기 - platformDeliveryReturnId:', document.getElementById('platformDeliveryReturnId').value);
         } catch (error) {
           console.error('검수 모달 열기 오류:', error);
           alert('검수 처리 준비 중 오류가 발생했습니다.');
         }
       }
 
-      // 모달 닫기 함수
-      function closeInspectionModal() {
-        modal.style.display = 'none';
-        // 폼 리셋 및 전역 변수 초기화
-        const form = document.getElementById('inspectionForm');
-        if (form) {
-          form.reset();
-        }
-      }
+      // 등급 정보 로드 함수 (AJAX 사용)
+      function loadEquipGradeInfo() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '${pageContext.request.contextPath}/admin-getEquipGrades.action', true);
 
-      // 체크리스트 초기화 함수
-      function initChecklistFunctionality() {
-        const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-
-        rows.forEach(row => {
-          // 각 행에 있는 라디오 버튼에 이벤트 리스너 추가
-          const radios = row.querySelectorAll('input[type="radio"]');
-          radios.forEach(radio => {
-            radio.addEventListener('change', updateScores);
-          });
-        });
-
-        // 초기 점수 계산
-        updateScores();
-      }
-
-      // 점수 업데이트 함수
-      function updateScores() {
-        try {
-          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-          let totalScore = 0; // 총점 초기화
-
-          rows.forEach(row => {
-            const scoreCell = row.querySelector('.score-cell');
-            if (!scoreCell) return;
-
-            // 이 행의 모든 라디오 버튼 가져오기
-            const radios = row.querySelectorAll('input[type="radio"]');
-            let score = 20; // 기본 점수 20점
-
-            // 선택된 라디오 버튼 찾기
-            const selectedRadio = Array.from(radios).find(radio => radio.checked);
-
-            if (selectedRadio) {
-              const selectedGrade = selectedRadio.value;
-
-              // 등급별 점수 설정
-              switch(selectedGrade) {
-                case '상':
-                  score = 20; // 감점 없음
-                  break;
-                case '중':
-                  score = 13; // 중간 점수
-                  break;
-                case '하':
-                  score = 6; // 낮은 점수
-                  break;
-                default:
-                  score = 20; // 기본값
-              }
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            try {
+              const gradeInfo = JSON.parse(xhr.responseText);
+              updateGradeInfoDisplay(gradeInfo);
+            } catch (e) {
+              console.error('등급 정보 파싱 오류:', e);
             }
+          }
+        };
 
-            // 점수 업데이트
-            scoreCell.textContent = score;
+        xhr.onerror = function() {
+          console.error('등급 정보 요청 실패');
+        };
 
-            // 총점 계산에 추가
-            totalScore += score;
-          });
+        xhr.send();
+      }
 
-          // 총점 업데이트
-          const totalScoreElement = document.getElementById('totalScore');
-          if (totalScoreElement) {
-            totalScoreElement.textContent = totalScore;
+      // 등급 정보 표시 업데이트
+      function updateGradeInfoDisplay(gradeInfo) {
+        const gradeInfoContainer = document.querySelector('.grade-badges');
+        if (!gradeInfoContainer || !gradeInfo || !gradeInfo.length) return;
+
+        let gradeHtml = '';
+
+        gradeInfo.forEach(grade => {
+          const className = `grade-${grade.equipGradeName.toLowerCase()}`;
+          let rangeText = '';
+
+          // 등급별 점수 범위 설정
+          if (grade.equipGradeName === 'A') {
+            rangeText = '100-90점';
+          } else if (grade.equipGradeName === 'B') {
+            rangeText = '89-80점';
+          } else if (grade.equipGradeName === 'C') {
+            rangeText = '79-70점';
+          } else if (grade.equipGradeName === 'D') {
+            rangeText = '69-60점';
+          } else if (grade.equipGradeName === 'E') {
+            rangeText = '59-50점';
+          } else if (grade.equipGradeName === 'F') {
+            rangeText = '49점 이하 (스토렌/렌탈 이용 불가)';
           }
 
-          // 등급 계산 및 업데이트
-          updateFinalGrade(totalScore);
-        } catch (error) {
-          console.error('점수 계산 오류:', error);
-        }
+          gradeHtml += `<span class="grade-info-badge ${className}">${grade.equipGradeName}</span> ${rangeText} `;
+        });
+
+        gradeInfoContainer.innerHTML = gradeHtml;
       }
 
-      // 최종 등급 업데이트 함수
+      // 최종 등급 업데이트 함수 개선
       function updateFinalGrade(totalScore) {
         const finalGradeElement = document.getElementById('finalGrade');
         if (!finalGradeElement) return;
 
         let gradeClass = '';
         let grade = '';
+        let equipGradeId = 1; // 기본값
 
+        // 등급 결정
         if (totalScore >= 90) {
           grade = 'A';
           gradeClass = 'grade-a';
+          equipGradeId = 1;
         } else if (totalScore >= 80) {
           grade = 'B';
           gradeClass = 'grade-b';
+          equipGradeId = 2;
         } else if (totalScore >= 70) {
           grade = 'C';
           gradeClass = 'grade-c';
+          equipGradeId = 3;
         } else if (totalScore >= 60) {
           grade = 'D';
           gradeClass = 'grade-d';
+          equipGradeId = 4;
         } else if (totalScore >= 50) {
           grade = 'E';
           gradeClass = 'grade-e';
+          equipGradeId = 5;
         } else {
           grade = 'F';
           gradeClass = 'grade-f';
+          equipGradeId = 6;
         }
 
         finalGradeElement.textContent = grade;
@@ -792,24 +880,39 @@
         // 등급 ID 설정
         const equipGradeIdElement = document.getElementById('equipGradeId');
         if (equipGradeIdElement) {
-          let equipGradeId;
-          switch(grade) {
-            case 'A': equipGradeId = 1; break;
-            case 'B': equipGradeId = 2; break;
-            case 'C': equipGradeId = 3; break;
-            case 'D': equipGradeId = 4; break;
-            case 'E': equipGradeId = 5; break;
-            case 'F': equipGradeId = 6; break;
-            default: equipGradeId = 1;
-          }
           equipGradeIdElement.value = equipGradeId;
+        }
+
+        // inspecGradeId 설정 - 등급에 따라 다른 검수 등급 할당
+        const inspecGradeIdElement = document.getElementById('inspecGradeId');
+        if (inspecGradeIdElement) {
+          // A, B 등급은 1(상), C, D 등급은 2(중), E, F 등급은 3(하)
+          if (grade === 'A' || grade === 'B') {
+            inspecGradeIdElement.value = 1; // 상
+          } else if (grade === 'C' || grade === 'D') {
+            inspecGradeIdElement.value = 2; // 중
+          } else {
+            inspecGradeIdElement.value = 3; // 하
+          }
+        }
+
+        // 관리자 ID 설정
+        const adminIdElement = document.getElementById('adminId');
+        if (adminIdElement) {
+          // 세션에서 관리자 ID 가져오기
+          const adminId = '${sessionScope.adminId}' || 'ADMIN1';
+          adminIdElement.value = adminId;
         }
       }
 
-      // 폼 제출 처리 함수
+      // 폼 제출 처리 함수 개선
       function handleFormSubmit(event) {
-        // 폼 제출 일시 중지
+        // 폼 제출 기본 동작 방지
         event.preventDefault();
+
+        // 이벤트 핸들러가 두 번 호출되는 것을 방지하기 위한 플래그
+        if (event.submitting) return;
+        event.submitting = true;
 
         try {
           // 실제 체크리스트 테이블의 각 행에서 라디오 버튼 검증
@@ -817,22 +920,18 @@
           let isValid = true;
           let commentText = '';
 
+          // 유효성 검사 로직
           for (let i = 0; i < rows.length; i++) {
             const row = rows[i];
-
-            // 항목명 가져오기 (첫 번째 셀의 텍스트)
             const itemName = row.cells[0].textContent.trim();
-
-            // 이 행의 모든 라디오 버튼 가져오기
             const radios = row.querySelectorAll('input[type="radio"]');
-
-            // 선택된 라디오 버튼이 있는지 확인
             const isChecked = Array.from(radios).some(radio => radio.checked);
 
             if (!isChecked) {
               isValid = false;
               alert(`'${itemName}' 항목을 평가해주세요.`);
-              return; // 첫 번째 오류에서 함수 종료
+              event.submitting = false;
+              return;
             }
 
             // 코멘트 수집
@@ -842,36 +941,96 @@
             }
           }
 
-          // 유효성 검사 통과 시 UI 업데이트 진행
+          // 유효성 검사 통과 시 AJAX 요청 준비
           if (isValid && currentRow) {
-            // 필요한 ID 값들 가져오기
-            const equipCode = document.getElementById('equipCode').value;
-            const inspectionType = document.getElementById('inspectionType').value;
+            // 폼 데이터 생성
+            const form = document.getElementById('inspectionForm');
+            const formData = new FormData(form);
 
-            // 검수 유형에 따라 ID 설정
-            if (inspectionType === '입고검수') {
-              document.getElementById('platformDeliveryId').value = 'DELV-' + equipCode;
-              document.getElementById('platformDeliveryReturnId').value = '';
-            } else {
-              document.getElementById('platformDeliveryId').value = '';
-              document.getElementById('platformDeliveryReturnId').value = 'DELV-RTN-' + equipCode;
+            // platformDeliveryId 또는 platformDeliveryReturnId 중 하나는 값이 있는지 확인
+            const platformDeliveryId = document.getElementById('platformDeliveryId').value;
+            const platformDeliveryReturnId = document.getElementById('platformDeliveryReturnId').value;
+
+            if (!platformDeliveryId && !platformDeliveryReturnId) {
+              alert('배송 ID 또는 반환 ID가 설정되지 않았습니다.');
+              event.submitting = false;
+              return;
             }
 
-            // 폼 실제 제출
-            document.getElementById('inspectionForm').submit();
+            // 코멘트 추가
+            formData.append('inspecComment', commentText || '자동 검수 처리');
+
+            // 최종 등급 정보 추가
+            const finalGrade = document.getElementById('finalGrade').textContent;
+            formData.append('finalGrade', finalGrade);
+
+            // AJAX 요청 설정
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+
+            // 응답 처리
+            xhr.onload = function() {
+              // 플래그 초기화
+              event.submitting = false;
+
+              if (xhr.status === 200) {
+                try {
+                  const response = JSON.parse(xhr.responseText);
+                  if (response.success) {
+                    alert('검수 처리가 완료되었습니다.');
+                    // UI 업데이트
+                    updateUIAfterSubmission(commentText, finalGrade);
+                    closeInspectionModal();
+                  } else {
+                    if (response.message && response.message.includes('이미 검수 처리가 완료된 항목')) {
+                      alert('이미 검수 처리가 완료된 항목입니다.');
+                      closeInspectionModal();
+                    } else {
+                      alert('검수 처리 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
+                    }
+                  }
+                } catch (e) {
+                  // JSON 파싱 실패 시 응답 텍스트 확인
+                  if (xhr.responseText.includes('success') || xhr.responseText.includes('완료')) {
+                    alert('검수 처리가 완료되었습니다.');
+                    // UI 업데이트
+                    updateUIAfterSubmission(commentText, finalGrade);
+                    closeInspectionModal();
+                  } else if (xhr.responseText.includes('이미 검수 처리가 완료된 항목')) {
+                    alert('이미 검수 처리가 완료된 항목입니다.');
+                    closeInspectionModal();
+                  } else {
+                    console.error('응답 처리 오류', e);
+                    alert('서버 응답을 처리할 수 없습니다.');
+                  }
+                }
+              } else {
+                alert('서버 오류: ' + xhr.status);
+              }
+            };
+
+            // 오류 처리
+            xhr.onerror = function() {
+              event.submitting = false;
+              alert('네트워크 오류가 발생했습니다.');
+            };
+
+            // 요청 전송
+            xhr.send(formData);
+          } else {
+            // 플래그 초기화
+            event.submitting = false;
           }
         } catch (error) {
+          event.submitting = false;
           console.error('폼 제출 오류:', error);
           alert('검수 처리 중 오류가 발생했습니다: ' + error.message);
         }
       }
 
-      // UI 업데이트 함수
-      function updateUIAfterSubmission(commentText) {
+      // UI 업데이트 함수 개선
+      function updateUIAfterSubmission(commentText, finalGrade) {
         if (!currentRow) return;
-
-        // 최종 등급 가져오기
-        const finalGrade = document.getElementById('finalGrade').textContent;
 
         // 등급에 따른 결과 설정
         let resultType, resultClass;
@@ -894,6 +1053,14 @@
 
         // 검수상태 업데이트
         updateCellWithBadge(currentRow.cells[10], '검수 완료', 'status-pass');
+
+        // 버튼 비활성화 (이미 처리됨)
+        const processBtn = currentRow.querySelector('.process-btn');
+        if (processBtn) {
+          processBtn.disabled = true;
+          processBtn.classList.add('disabled');
+          processBtn.textContent = '처리완료';
+        }
       }
 
       // 셀 배지 업데이트 헬퍼 함수
@@ -929,3 +1096,4 @@
   </div>
 </div>
 </body>
+</html>

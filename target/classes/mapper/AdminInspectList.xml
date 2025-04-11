@@ -4,45 +4,106 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.team.mvc.Interface.IAdminInspectListDAO">
-    <resultMap id="admin-inspectList" type="com.team.mvc.DTO.AdminInspectListDTO">
-        <result column="장비코드" property="equipCode"/>
-        <result column="검수유형" property="inspectName"/>
-        <result column="장비명" property="equipName"/>
-        <result column="카테고리명" property="categoryName"/>
-        <result column="검수항목" property="inspectList"/>
-        <result column="관리자ID" property="adminId"/>
-        <result column="검수결과" property="inspectResult"/>
-        <result column="검수코멘트" property="inspectComment"/>
-        <result column="검수상태" property="inspectState"/>
-    </resultMap>
 
-    <select id="getList" resultMap="admin-inspectList">
-        SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
-        FROM VW_INSPEC_LIST_AND_PD
+    <!-- 기존 검수 목록 조회 쿼리 -->
+    <select id="getList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        <!-- 1차 검수 목록 조회 -->
+        SELECT
+        e.EQUIP_CODE as equipCode,
+        '입고검수' as inspectName,
+        en.EQUIP_NAME as equipName,
+        c.CATEGORY_NAME as categoryName,
+        i.INSPEC_ITEM_NAME as inspectList,
+        a.ADMIN_ID as adminId,
+        ig.INSPEC_GRADE_NAME as inspectResult,
+        il.INSPEC_COMMENT as inspectComment,
+        CASE
+        WHEN ir.INSPEC_RESULT_ID IS NOT NULL THEN '검수완료'
+        ELSE '검수중'
+        END as inspectState
+        FROM INSPEC_LIST il
+        JOIN PLATFORM_DELIVERY pd ON il.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
+        JOIN EQUIPMENT_REGISTRATION e ON pd.PAY_ID = e.EQUIP_ID
+        JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+        JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+        JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
+        JOIN INSPEC_ITEM i ON ci.INSPEC_ITEM_ID = i.INSPEC_ITEM_ID
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+        LEFT JOIN INSPEC_RESULT ir ON il.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
+        ORDER BY il.INSPEC_LIST_ID DESC
     </select>
 
-    <select id="getListr" resultMap="admin-inspectList">
-        SELECT "장비코드", "검수유형", "장비명", "카테고리명", "검수항목","관리자ID","검수결과","검수코멘트","검수상태"
-        FROM VW_INSPEC_LIST_AND_PDR
+    <select id="getListr" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        <!-- 2차 검수 목록 조회 (반환 검수) -->
+        SELECT
+        e.EQUIP_CODE as equipCode,
+        '스토렌반환검수' as inspectName,
+        en.EQUIP_NAME as equipName,
+        c.CATEGORY_NAME as categoryName,
+        i.INSPEC_ITEM_NAME as inspectList,
+        a.ADMIN_ID as adminId,
+        ig.INSPEC_GRADE_NAME as inspectResult,
+        il.INSPEC_COMMENT as inspectComment,
+        CASE
+        WHEN ir.INSPEC_RESULT_ID IS NOT NULL THEN '검수완료'
+        ELSE '검수중'
+        END as inspectState
+        FROM INSPEC_LIST il
+        JOIN PLATFORM_DELIVERY_RETURN pdr ON il.PLATFORM_DELIVERY_RETURN_ID = pdr.PLATFORM_DELIVERY_RETURN_ID
+        JOIN PLATFORM_DELIVERY pd ON pdr.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
+        JOIN EQUIPMENT_REGISTRATION e ON pd.PAY_ID = e.EQUIP_ID
+        JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+        JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+        JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
+        JOIN INSPEC_ITEM i ON ci.INSPEC_ITEM_ID = i.INSPEC_ITEM_ID
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+        LEFT JOIN INSPEC_RESULT ir ON il.PLATFORM_DELIVERY_RETURN_ID = ir.PLATFORM_DELIVERY_RETURN_ID
+        ORDER BY il.INSPEC_LIST_ID DESC
     </select>
 
+    <!-- 검수 항목 조회 -->
+    <select id="getItemList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            INSPEC_ITEM_ID as inspecItemId,
+            INSPEC_ITEM_NAME as inspecItemName,
+            INSPEC_ITEM_DESC_HIGH as inspecItemDescHigh,
+            INSPEC_ITEM_DESC_MID as inspecItemDescMid,
+            INSPEC_ITEM_DESC_LOW as inspecItemDescLow
+        FROM INSPEC_ITEM
+    </select>
 
-    <!-- 검수 결과 추가 - DTO를 통한 프로시저 호출 -->
-    <insert id="add" parameterType="com.team.mvc.DTO.AdminInspectListDTO">
-        <!-- 프로시저 호출 방식으로 변경 -->
-        CALL INSPECT_RESULT(
-        #{platformDeliveryId, jdbcType=INTEGER},
-        #{platformDeliveryReturnId, jdbcType=INTEGER},
-        #{equipGradeId, jdbcType=INTEGER}
-        )
-    </insert>
+    <!-- 검수 등급 조회 -->
+    <select id="getGradeList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            INSPEC_GRADE_ID as inspecGradeId,
+            INSPEC_GRADE_NAME as inspecGradeName,
+            INSPEC_GRADE_DEDUCTION as inspecGradeDeduction
+        FROM INSPEC_GRADE
+        ORDER BY INSPEC_GRADE_ID
+    </select>
 
-    <!-- 프로시저 직접 호출 메소드 -->
-    <update id="callINSPECT_RESULT" statementType="CALLABLE">
+    <!-- 장비 목록 조회 -->
+    <select id="getEquipList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            e.EQUIP_CODE as equipCode,
+            en.EQUIP_NAME as equipName,
+            c.CATEGORY_NAME as categoryName
+        FROM EQUIPMENT_REGISTRATION e
+                 JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+    </select>
+
+    <!-- 확장된 검수 결과 등록 프로시저 호출 -->
+    <update id="callINSPECT_RESULT_EXTENDED">
         {CALL INSPECT_RESULT(
                 #{platformDeliveryId, jdbcType=INTEGER, mode=IN},
                 #{platformDeliveryReturnId, jdbcType=INTEGER, mode=IN},
-                #{equipGradeId, jdbcType=INTEGER, mode=IN}
+                #{inspecGradeId, jdbcType=INTEGER, mode=IN},
+                #{equipGradeId, jdbcType=INTEGER, mode=IN},
+                #{adminId, jdbcType=VARCHAR, mode=IN},
+                #{inspecComment, jdbcType=VARCHAR, mode=IN}
               )}
     </update>
 </mapper>

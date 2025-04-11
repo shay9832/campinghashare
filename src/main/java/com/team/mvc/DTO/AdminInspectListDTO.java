@@ -11,14 +11,19 @@ public class AdminInspectListDTO {
 
 
 
+    private int inspecItemId;
+    private String inspecItemName;
+    private String inspecItemDescHigh;
+    private String inspecItemDescMid;
+    private String inspecItemDescLow;
+    private int inspecGradeId;
+    private String inspecGradeName;
+    private int inspecGradeDeduction;
 
 
 
 
-
-
-
-    //getter setter
+    //getter setter구성
 
     public Integer getPlatformDeliveryId() {
         return platformDeliveryId;
@@ -115,5 +120,70 @@ public class AdminInspectListDTO {
 
     public void setInspectState(String inspectState) {
         this.inspectState = inspectState;
+    }
+
+
+    public int getInspecItemId() {
+        return inspecItemId;
+    }
+
+    public void setInspecItemId(int inspecItemId) {
+        this.inspecItemId = inspecItemId;
+    }
+
+    public String getInspecItemName() {
+        return inspecItemName;
+    }
+
+    public void setInspecItemName(String inspecItemName) {
+        this.inspecItemName = inspecItemName;
+    }
+
+    public String getInspecItemDescHigh() {
+        return inspecItemDescHigh;
+    }
+
+    public void setInspecItemDescHigh(String inspecItemDescHigh) {
+        this.inspecItemDescHigh = inspecItemDescHigh;
+    }
+
+    public String getInspecItemDescMid() {
+        return inspecItemDescMid;
+    }
+
+    public void setInspecItemDescMid(String inspecItemDescMid) {
+        this.inspecItemDescMid = inspecItemDescMid;
+    }
+
+    public String getInspecItemDescLow() {
+        return inspecItemDescLow;
+    }
+
+    public void setInspecItemDescLow(String inspecItemDescLow) {
+        this.inspecItemDescLow = inspecItemDescLow;
+    }
+
+    public int getInspecGradeId() {
+        return inspecGradeId;
+    }
+
+    public void setInspecGradeId(int inspecGradeId) {
+        this.inspecGradeId = inspecGradeId;
+    }
+
+    public String getInspecGradeName() {
+        return inspecGradeName;
+    }
+
+    public void setInspecGradeName(String inspecGradeName) {
+        this.inspecGradeName = inspecGradeName;
+    }
+
+    public int getInspecGradeDeduction() {
+        return inspecGradeDeduction;
+    }
+
+    public void setInspecGradeDeduction(int inspecGradeDeduction) {
+        this.inspecGradeDeduction = inspecGradeDeduction;
     }
 }

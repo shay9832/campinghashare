@@ -71,7 +71,7 @@
 
         <!-- 게시판 관리 메뉴 -->
         <button class="menu-button">게시판 관리</button>
-        <div class="submenu" style="max-height: 200px;">
+        <div class="submenu">
             <form action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="get">
                 <button type="submit" class="submenu-btn">게시물 관리</button>
             </form>
