@@ -2,6 +2,7 @@ package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.DeliveryDTO;
 import com.team.mvc.DTO.MyEquipDTO;
+import com.team.mvc.DTO.MypageInspecListDTO;
 import com.team.mvc.Interface.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ public class MypageController {
     private IMypageMyEquipService myEquipService;
     @Autowired
     private IMypageDeliveryService deliveryService;
+    @Autowired
+    private IMypageInspecListService inspecListService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -112,8 +115,50 @@ public class MypageController {
 
     // 마이페이지-검수 결과 조회
     @RequestMapping(value="/mypage-inspecList.action")
-    public String mypageInspecList() {
+    public String mypageInspecList(Model model) {
+
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : START ===");
+        int userCode = 2; // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+
+        // 초기에는 스토렌 입고 검수내역만 로드
+        List<MypageInspecListDTO> storenStoreInspec = inspecListService.listStorenStoreInspec(userCode);
+        model.addAttribute("inspecList", storenStoreInspec);
+        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
+        model.addAttribute("storenTabType", "store"); // 초기 서브탭 지정
+
+        System.out.println("storenStoreInspec size : " + storenStoreInspec.size());
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : END ===");
+
         return "myPage-inspecList";
+    }
+
+    // AJAX 요청 처리
+    @RequestMapping(value="/api/inspec/storage", produces="application/json")
+    @ResponseBody
+    public List<MypageInspecListDTO> getStorageStoreInspec() {
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STORAGE Store : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STORAGE Store : END ===");
+        return inspecListService.listStorageStoreInspec(user_code);
+
+    }
+
+    @RequestMapping(value="/api/inspec/storen/store", produces="application/json")
+    @ResponseBody
+    public List<MypageInspecListDTO> getStorenStoreInspec() {
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : END ===");
+        return inspecListService.listStorenStoreInspec(user_code);
+    }
+
+    @RequestMapping(value="/api/delivery/storen/return", produces="application/json")
+    @ResponseBody
+    public List<MypageInspecListDTO> getStorenReturnInspec() {
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Return : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Return : END ===");
+        return inspecListService.listStorenReturnInspec(user_code);
     }
 
     // 마이페이지-배송 조회/내역
@@ -135,7 +180,7 @@ public class MypageController {
         return "myPage-delivery";
     }
 
-    // AJAX 요청을 처리할 메소드들은 동일하게 유지
+    // AJAX 요청 처리
     @RequestMapping(value="/api/delivery/storage", produces="application/json")
     @ResponseBody
     public List<DeliveryDTO> getStorageDeliveries() {
