@@ -10,26 +10,94 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminDeliveryUpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminDeliveryUpdateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminMatchingListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminMatchingListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminPayUpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminPayUpdateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminPayUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminPayUpdateDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminDeliveryUpdateDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminDeliveryUpdateDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminMatchingListDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminMatchingListDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminEquipListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminEquipListController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminEquipListDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminEquipListDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-boardUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-boardUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-communityStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-communityStatistics.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-couponList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-couponList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createCoupon.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createCoupon.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-deliveryUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-deliveryUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-equipList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-equipList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-equipStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-equipStatistics.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-eventUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-eventUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-matchingList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-matchingList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-payUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-payUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-pointUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-pointUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-postUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-postUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-replyUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-replyUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userDrop.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userDrop.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userList.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReport.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReport.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReportList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userReportList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-boardUpdate.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-boardUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-boardUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-communityStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-communityStatistics.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-couponList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-couponList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-createCoupon.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-createCoupon.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-deliveryUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-deliveryUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-equipStatistics.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-eventUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-eventUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-inspectList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-matchingList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-matchingList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-payUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-payUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-pointUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-pointUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-postUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-postUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-replyUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-replyUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userDrop.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userDrop.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReport.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReport.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReportList.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-userReportList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminEquipListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminEquipListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminEquipListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/AdminEquipListDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminEquipListController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminEquipListController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminEquipListDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/AdminEquipListDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-boardUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-boardUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-communityStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-communityStatistics.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-couponList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-couponList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createCoupon.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createCoupon.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-deliveryUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-deliveryUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-equipList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-equipList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-equipStatistics.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-equipStatistics.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-eventUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-eventUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-inspectList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-inspectList.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-matchingList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-matchingList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-payUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-payUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-pointUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-pointUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-postUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-postUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-replyUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-replyUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userDrop.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userDrop.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userList.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReport.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReport.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReportList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-userReportList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-boardUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-boardUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-communityStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-communityStatistics.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-couponList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-couponList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-createCoupon.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-createCoupon.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-deliveryUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-deliveryUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipStatistics.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-equipStatistics.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-eventUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-eventUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-inspectList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-matchingList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-matchingList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-payUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-payUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-pointUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-pointUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-postUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-postUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-replyUpdate.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-replyUpdate.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userDrop.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userDrop.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userList.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReport.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReport.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReportList.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-userReportList.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,8 +108,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
-        <option value="Interface" />
         <option value="spring-beans.schema" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -83,41 +151,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.teamfinal [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
-    "Maven.teamfinal [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Tomcat 서버.Tomcat 10.1.39.executor": "Run",
-    "git-widget-placeholder": "8-jaehoon",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/huni/Desktop/campinghashare/src/main/webapp/WEB-INF",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.teamfinal [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.teamfinal [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Tomcat 서버.Tomcat 10.1.39.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;8-jaehoon&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/huni/Desktop/campinghashare/src/main/webapp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "oracle"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;oracle&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="com.team.mvc.Interface" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/webapp" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF" />
       <recent name="$PROJECT_DIR$/src/main/webapp/WEB-INF/view" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\java\com\team\mvc\Controller" />
       <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\resources\mapper" />
-      <recent name="C:\Users\es\IdeaProjects\teamfinal\src\main\java\com\team\mvc\Interface" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/webapp/resources/css" />
@@ -130,7 +198,6 @@
   <component name="RunManager">
     <configuration name="Tomcat 10.1.39" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 10.1.39" ALTERNATIVE_JRE_ENABLED="false" nameIsGenerated="true">
       <option name="SHOW_DIALOG_ON_UPDATE" value="false" />
-      <option name="UPDATING_POLICY" value="restart-server" />
       <deployment>
         <artifact name="teamfinal:war exploded">
           <settings>
@@ -244,7 +311,9 @@
       <workItem from="1744161803402" duration="17763000" />
       <workItem from="1744187834118" duration="833000" />
       <workItem from="1744199253989" duration="3022000" />
-      <workItem from="1744240968099" duration="15788000" />
+      <workItem from="1744240968099" duration="29123000" />
+      <workItem from="1744283569113" duration="4252000" />
+      <workItem from="1744326357649" duration="3865000" />
     </task>
     <servers />
   </component>
@@ -264,6 +333,17 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-userDrop.jsp</url>
+          <line>23</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

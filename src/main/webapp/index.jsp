@@ -63,6 +63,27 @@
 <a href=WEB-INF/view/boardMain.jsp target="_blank">boardMain.jsp</a><br>
 <br><br>
 
+
+<a href="http://localhost:8080/admin-boardUpdate.action">게시판관리</a><br>
+<a href="http://localhost:8080/admin-communityStatistics.action">커뮤니티통계</a><br>
+<a href="http://localhost:8080/admin-couponList.action">쿠폰목록</a><br>
+<a href="http://localhost:8080/admin-createCoupon.action">쿠폰생성</a><br>
+<a href="http://localhost:8080/admin-deliveryUpdate.action">배송관리</a><br>
+<a href="http://localhost:8080/admin-equipList.action">장비목록</a><br>
+<a href="http://localhost:8080/admin-equipStatistics.action">장비통계</a><br>
+<a href="http://localhost:8080/admin-eventUpdate.action">이벤트관리</a><br>
+<a href="http://localhost:8080/admin-inspectList.action">검수목록</a><br>
+<a href="http://localhost:8080/admin-main.action">대시보드</a><br>
+<a href="http://localhost:8080/admin-matchingList.action">매칭목록</a><br>
+<a href="http://localhost:8080/admin-payUpdate.action">결제관리</a><br>
+<a href="http://localhost:8080/admin-pointUpdate.action">포인트관리</a><br>
+<a href="http://localhost:8080/admin-postUpdate.action">게시물관리</a><br>
+<a href="http://localhost:8080/admin-replyUpdate.action">댓글관리</a><br>
+<a href="http://localhost:8080/admin-userDrop.action">회원제재관리</a><br>
+<a href="http://localhost:8080/admin-userList.action">회원목록</a><br>
+<a href="http://localhost:8080/admin-userReport.action">신고관리</a><br>
+<a href="http://localhost:8080/admin-userReportList.action">신고목록</a><br>
+
 <a href= target="_blank"></a><br>
 </body>
 </html>
