@@ -20,7 +20,7 @@
     <!-- 게시물 전체 수 조회 (인기글 포함) -->
     <select id="getTotalPostCount" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="int">
         SELECT COUNT(*)
-        FROM VW_POST_MANAGEMENT
+        FROM VW_POST_MANGEMENT
         <where>
             "게시판이름" = (SELECT BOARD_NAME
                           FROM BOARD
@@ -153,4 +153,5 @@
         DELETE FROM POST
         WHERE POST_ID = #{postId}
     </delete>
+
 </mapper>

@@ -62,7 +62,7 @@
             AND "블라인드여부" = 0
             ORDER BY "게시물생성일" DESC
              )
-        WHERE ROWNUM <= 3
+        WHERE ROWNUM &lt;= 3
     </select>
 
     <!-- 인기글 조회 (특정 게시판의 최대 3개) -->
@@ -78,7 +78,7 @@
             AND "블라인드여부" = 0
             ORDER BY "게시물생성일" DESC
              )
-        WHERE ROWNUM <= 3
+        WHERE ROWNUM &lt;= 3
     </select>
 
 
@@ -116,7 +116,7 @@
         </where>
         ORDER BY "게시물생성일" DESC
         ) A
-        WHERE ROWNUM <= #{pagenation.endRow}
+        WHERE ROWNUM &lt;= #{pagenation.endRow}
         )
         WHERE RNUM >= #{pagenation.startRow}
     </select>
