@@ -1,0 +1,36 @@
+# ================================
+# ▶ 기본 줄바꿈 통일 (LF)
+# ================================
+* text=auto eol=lf
+
+# ================================
+# ▶ 운영체제별 스크립트 예외
+# ================================
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.sh    text eol=lf
+
+# ================================
+# ▶ 백엔드 소스코드 (Java/Spring)
+# ================================
+*.java        text eol=lf
+*.xml         text eol=lf
+*.properties  text eol=lf
+*.yml         text eol=lf
+
+# ================================
+# ▶ 프론트엔드 관련
+# ================================
+*.jsp    text eol=lf
+*.html   text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+
+# ================================
+# ▶ 기타 설정/환경 파일
+# ================================
+*.md      text eol=lf
+*.txt     text eol=lf
+*.gitignore text eol=lf
+.gitattributes text eol=lf
