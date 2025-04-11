@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IEquipmentDAO">
-    <resultMap id="equipmentResultMap" type="com.team.mvc.DTO.EquipmentDTO">
-        <result column="MAJOR_CATEGORY_NAME" property="majorCategory"/>
-        <result column="MIDDLE_CATEGORY_NAME" property="middleCategory"/>
-        <result column="BRAND_NAME" property="brand"/>
-    </resultMap>
+
+<resultMap id="equipmentResultMap" type="com.team.mvc.DTO.EquipmentDTO">
+    <result column="MAJOR_CATEGORY_NAME" property="majorCategory"/>
+    <result column="MIDDLE_CATEGORY_NAME" property="middleCategory"/>
+    <result column="BRAND_NAME" property="brand"/>
+</resultMap>
+
+    <!-- 장비코드 생성 -->
+    <insert id="insertEquipCode" parameterType="com.team.mvc.DTO.EquipmentDTO" statementType="CALLABLE">
+        -- 장비 코드 생성
+        <selectKey keyProperty="equip_code" resultType="int" order="BEFORE">
+            SELECT EQUIP_CODE_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        -- 생성된 장비 코드를 EQUIP_CODE 테이블에 삽입
+        INSERT INTO EQUIP_CODE(EQUIP_CODE) VALUES (#{equip_code})
+    </insert>
+
+    <insert id="insertEquipmentRegistration" parameterType="com.team.mvc.DTO.EquipmentDTO">
+        INSERT INTO EQUIPMENT_REGISTRATION(
+            EQUIP_ID, EQUIP_CODE, USER_CODE, CATEGORY_ID, EQUIP_NAME_ID, ORIGINAL_PRICE, CREATED_DATE
+        )
+        VALUES (
+                   EQUIPMENT_REGISTRATION_SEQ.NEXTVAL,
+                   #{equip_code},
+                   #{user_code},
+                   #{category_id},
+                   #{equip_name_id},
+                   #{original_price},
+                   SYSDATE
+               )
+    </insert>
+
+    <select id="getEquipNameId" resultType="Integer">
+        SELECT EQUIP_NAME_ID
+        FROM EQUIP_NAME
+        WHERE BRAND_ID = #{brandId}
+          AND EQUIP_NAME = #{equipName}
+    </select>
+    
+    <select id="listEquipNamesByBrand" resultType="java.lang.String">
+        SELECT EQUIP_NAME
+        FROM EQUIP_NAME
+        WHERE BRAND_ID = #{brandId}
+        ORDER BY EQUIP_NAME
+    </select>
+
     <!-- 유저 코드로 장비 정보 조회 -->
     <select id="listByUserCode" resultType="com.team.mvc.DTO.EquipmentDTO" resultMap="equipmentResultMap">
         SELECT EQUIP_ID, EQUIP_CODE, USER_CODE, CATEGORY_ID
@@ -21,6 +63,5 @@
         FROM EQUIP_NAME
         WHERE EQUIP_NAME_ID = #{equip_name_id}
     </select>
-
 
 </mapper>

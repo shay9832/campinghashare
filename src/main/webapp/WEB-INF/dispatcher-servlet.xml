@@ -18,6 +18,12 @@
 
     <mvc:resources mapping="/resources/**" location="/resources/" />
 
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
     <bean id="localDataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="oracle.jdbc.driver.OracleDriver"/>
         <property name="url" value="jdbc:oracle:thin:@211.238.142.179:1521:xe"/>
@@ -35,5 +41,9 @@
 
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 파일 업로드를 위한 MultipartResolver 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
     </bean>
 </beans>
