@@ -2,10 +2,53 @@ package com.team.mvc.DTO;
 
 public class AdminInspectListDTO {
 
-    //장비코드,검수유형,장비명,카테고리명,검수항목,관리자ID,검수결과,검수코멘트,검수상태
 
     private int equipCode;
     private String inspectName, equipName, categoryName, inspectList, adminId, inspectResult, inspectComment, inspectState;
+
+
+    private Integer platformDeliveryId, platformDeliveryReturnId, equipGradeId;
+
+
+
+    private int inspecItemId;
+    private String inspecItemName;
+    private String inspecItemDescHigh;
+    private String inspecItemDescMid;
+    private String inspecItemDescLow;
+    private int inspecGradeId;
+    private String inspecGradeName;
+    private int inspecGradeDeduction;
+
+
+
+
+    //getter setter구성
+
+    public Integer getPlatformDeliveryId() {
+        return platformDeliveryId;
+    }
+
+    public void setPlatformDeliveryId(Integer platformDeliveryId) {
+        this.platformDeliveryId = platformDeliveryId;
+    }
+
+    public Integer getPlatformDeliveryReturnId() {
+        return platformDeliveryReturnId;
+    }
+
+    public void setPlatformDeliveryReturnId(Integer platformDeliveryReturnId) {
+        this.platformDeliveryReturnId = platformDeliveryReturnId;
+    }
+
+    public Integer getEquipGradeId() {
+        return equipGradeId;
+    }
+
+    public void setEquipGradeId(Integer equipGradeId) {
+        this.equipGradeId = equipGradeId;
+    }
+
 
     public int getEquipCode() {
         return equipCode;
@@ -77,5 +120,70 @@ public class AdminInspectListDTO {
 
     public void setInspectState(String inspectState) {
         this.inspectState = inspectState;
+    }
+
+
+    public int getInspecItemId() {
+        return inspecItemId;
+    }
+
+    public void setInspecItemId(int inspecItemId) {
+        this.inspecItemId = inspecItemId;
+    }
+
+    public String getInspecItemName() {
+        return inspecItemName;
+    }
+
+    public void setInspecItemName(String inspecItemName) {
+        this.inspecItemName = inspecItemName;
+    }
+
+    public String getInspecItemDescHigh() {
+        return inspecItemDescHigh;
+    }
+
+    public void setInspecItemDescHigh(String inspecItemDescHigh) {
+        this.inspecItemDescHigh = inspecItemDescHigh;
+    }
+
+    public String getInspecItemDescMid() {
+        return inspecItemDescMid;
+    }
+
+    public void setInspecItemDescMid(String inspecItemDescMid) {
+        this.inspecItemDescMid = inspecItemDescMid;
+    }
+
+    public String getInspecItemDescLow() {
+        return inspecItemDescLow;
+    }
+
+    public void setInspecItemDescLow(String inspecItemDescLow) {
+        this.inspecItemDescLow = inspecItemDescLow;
+    }
+
+    public int getInspecGradeId() {
+        return inspecGradeId;
+    }
+
+    public void setInspecGradeId(int inspecGradeId) {
+        this.inspecGradeId = inspecGradeId;
+    }
+
+    public String getInspecGradeName() {
+        return inspecGradeName;
+    }
+
+    public void setInspecGradeName(String inspecGradeName) {
+        this.inspecGradeName = inspecGradeName;
+    }
+
+    public int getInspecGradeDeduction() {
+        return inspecGradeDeduction;
+    }
+
+    public void setInspecGradeDeduction(int inspecGradeDeduction) {
+        this.inspecGradeDeduction = inspecGradeDeduction;
     }
 }
