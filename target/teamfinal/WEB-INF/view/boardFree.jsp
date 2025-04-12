@@ -245,9 +245,9 @@
                         </c:forEach>
 
                         <!-- 일반 게시글 -->
-                        <c:forEach var="postList" items="${postList}">
+                        <c:forEach var="postList" items="${postList}" varStatus="status">
                             <tr class="board-row border-bottom">
-                                <td class="p-3 text-center">${postList.rowNum}</td>
+                                <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                                 <td class="p-3 text-center"><span class="board-category-tag
                                                             ${postList.postLabelName == '묻고답하기' ? 'question' :
                                                               postList.postLabelName == '후기' ? 'review' :
