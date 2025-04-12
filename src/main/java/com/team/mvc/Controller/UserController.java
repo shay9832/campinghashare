@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -16,74 +15,76 @@ public class UserController {
     @Autowired
     private SqlSession sqlSession;
 
-    // 로그인 페이지 요청
+    // 로그인 페이지 진입
     @RequestMapping(value = "/login-user.action", method = RequestMethod.GET)
     public String loginPage() {
         return "login-user";
     }
 
-    // 로그인 처리 (유저 코드 포함)
+    // 로그인 처리
     @RequestMapping(value = "/login-user.action", method = RequestMethod.POST)
     public String login(UserDTO dto, HttpSession session, RedirectAttributes redirect) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        UserDTO loginUser = dao.login(dto);
+        UserDTO loginUser = dao.getUserByIdAndPw(dto); // ID + PW 기준 조회
 
         if (loginUser != null) {
+            // 로그인 성공 시 session 저장
             session.setAttribute("loginUser", loginUser);
             session.setAttribute("userCode", loginUser.getUserCode());
             return "redirect:/main.action";
         } else {
+            // 로그인 실패 시 쿼리 파라미터로 에러 전달
             redirect.addAttribute("error", "1");
             return "redirect:/login-user.action";
         }
     }
 
-    // 메인 페이지 - 회원/비회원 모두 접근 가능
+    // 메인 페이지 진입
     @RequestMapping(value = "/main.action", method = RequestMethod.GET)
     public String mainPage() {
-        return "main"; // JSP 내부(header 포함)에서 sessionScope.loginUser로 분기
+        return "main";
     }
 
     // 로그아웃 처리
     @RequestMapping(value = "/logout.action", method = RequestMethod.GET)
     public String logout(HttpSession session) {
-        session.invalidate();
+        session.invalidate(); // 세션 무효화
         return "redirect:/main.action";
     }
 
-    // 회원가입 폼 진입
+    // 회원가입 첫 단계 - PASS 인증 후 이름, 전화번호 받는 페이지
     @RequestMapping(value = "/registeruser-tel.action", method = RequestMethod.GET)
     public String registerTelPage() {
         return "registerUser-tel";
     }
 
-    // PASS 인증 후 → 이름/전화번호
-    // FlashAttribute로 전달
+    // PASS 인증 완료 → 이름/전화번호 FlashAttribute로 다음 페이지 전달
     @RequestMapping(value = "/registeruser-tel-verify.action", method = RequestMethod.POST)
     public String verifyUser(@RequestParam("userName") String userName,
                              @RequestParam("userTel") String userTel,
                              RedirectAttributes redirect) {
         redirect.addFlashAttribute("userName", userName);
         redirect.addFlashAttribute("userTel", userTel);
-        return "redirect:/registeruser-tel.action";
+        return "redirect:/registerUser-tel.action";
     }
 
-    // 다음 단계
+    // 회원가입 ID/Nickname 입력 페이지
     @RequestMapping(value = "/registeruser-id.action", method = RequestMethod.GET)
     public String registerUserIdPage() {
         return "registerUser-id";
     }
 
-    // 회원가입 완료 처리
-    @RequestMapping(value = "/register.action", method = RequestMethod.POST)
-    public String register(UserDTO dto) {
+    // 회원 정보 저장 처리
+    @RequestMapping(value = "/insertUser.action", method = RequestMethod.POST)
+    public String insertUser(UserDTO dto) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
 
+        // 시퀀스를 통해 USER_CODE 채번
         int userCode = dao.getNextUserCode();
         dto.setUserCode(userCode);
 
-        dao.register(dto);
-        dao.insertNicknameLog(dto);
+        dao.insertUser(dto);          // USERS 테이블 등록
+        dao.insertNicknameLog(dto);  // NICKNAME_LOG 테이블 등록
 
         return "redirect:/login-user.action";
     }
@@ -93,7 +94,7 @@ public class UserController {
     @ResponseBody
     public String idCheck(@RequestParam("userId") String userId) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        int count = dao.idCheck(userId);
+        int count = dao.getUserCountById(userId);
         return (count == 0) ? "usable" : "duplicated";
     }
 
@@ -102,7 +103,7 @@ public class UserController {
     @ResponseBody
     public String nicknameCheck(@RequestParam("nickname") String nickname) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        int count = dao.nicknameCheck(nickname);
+        int count = dao.getNicknameCount(nickname);
         return (count == 0) ? "usable" : "duplicated";
     }
 
@@ -120,10 +121,10 @@ public class UserController {
                                 @RequestParam("newPassword") String newPassword,
                                 RedirectAttributes redirect) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        int verified = dao.verifyUser(userId, userName, userTel);
+        int verified = dao.getUserCountByIdNameTel(userId, userName, userTel);
 
         if (verified == 1) {
-            dao.updatePassword(userId, newPassword);
+            dao.updateUserPassword(userId, newPassword);
             redirect.addFlashAttribute("resetSuccess", true);
             return "redirect:/login-user.action";
         } else {
@@ -132,7 +133,7 @@ public class UserController {
         }
     }
 
-    // 장비 등록
+    // 장비 등록 페이지 접근 시 로그인 체크
     @RequestMapping("/equip-register.action")
     public String registerEquipPage(HttpSession session) {
         if (session.getAttribute("loginUser") == null) {
@@ -140,5 +141,4 @@ public class UserController {
         }
         return "equipRegister";
     }
-
 }

@@ -118,11 +118,13 @@
     </style>
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
+
+<jsp:include page="header.jsp"/>
+
 <div class="container">
     <div class="register-container">
         <h2 class="register-title">회원가입</h2>
-        <form action="${pageContext.request.contextPath}/register.action" method="post">
+        <form action="${pageContext.request.contextPath}/insertUser.action" method="post">
             <div class="form-group">
                 <label class="form-label">이름</label>
                 <input type="text" class="form-input" name="userName" value="${loginUser.userName}" readonly>
@@ -159,7 +161,9 @@
         </form>
     </div>
 </div>
-<jsp:include page="footer.jsp"></jsp:include>
+
+<jsp:include page="footer.jsp"/>
+
 <script>
     function checkNickname() {
         const nickname = document.getElementById('nickname').value;

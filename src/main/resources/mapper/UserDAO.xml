@@ -5,8 +5,8 @@
 
 <mapper namespace="com.team.mvc.Interface.IUserDAO">
 
-    <!-- 로그인 -->
-    <select id="login" parameterType="com.team.mvc.DTO.UserDTO" resultType="com.team.mvc.DTO.UserDTO">
+    <!-- 로그인 쿼리 -->
+    <select id="getUserByIdAndPw" parameterType="com.team.mvc.DTO.UserDTO" resultType="com.team.mvc.DTO.UserDTO">
         SELECT
             U.USER_ID,
             U.USER_PW AS password,
@@ -34,7 +34,7 @@
     </select>
 
     <!-- USER 등록 -->
-    <insert id="register" parameterType="com.team.mvc.DTO.UserDTO">
+    <insert id="insertUser" parameterType="com.team.mvc.DTO.UserDTO">
         INSERT INTO USERS (
             USER_ID, USER_PW, USER_NAME, USER_TEL,
             USER_CODE, SIGNUP_TYPE_ID, CREATED_DATE
@@ -45,7 +45,7 @@
                )
     </insert>
 
-    <!-- NICKNAME_LOG 등록 -->
+    <!-- 닉네임 로그 등록 -->
     <insert id="insertNicknameLog" parameterType="com.team.mvc.DTO.UserDTO">
         INSERT INTO NICKNAME_LOG (
             NICKNAME_LOG_ID, USER_CODE, NICKNAME, LAST_UPDATED_DATE
@@ -55,17 +55,18 @@
                )
     </insert>
 
-    <!-- 중복 확인 -->
-    <select id="idCheck" parameterType="java.lang.String" resultType="int">
+    <!-- USER_ID 중복 확인 -->
+    <select id="getUserCountById" parameterType="java.lang.String" resultType="int">
         SELECT COUNT(*) FROM USERS WHERE USER_ID = #{userId}
     </select>
 
-    <select id="nicknameCheck" parameterType="java.lang.String" resultType="int">
+    <!-- 닉네임 중복 확인 -->
+    <select id="getNicknameCount" parameterType="java.lang.String" resultType="int">
         SELECT COUNT(*) FROM NICKNAME_LOG WHERE NICKNAME = #{nickname}
     </select>
 
-    <!-- 비밀번호 재설정 시 확인 -->
-    <select id="verifyUser" resultType="int">
+    <!-- 이름+전화번호+아이디로 사용자 존재 여부 확인 -->
+    <select id="getUserCountByIdNameTel" resultType="int">
         SELECT COUNT(*)
         FROM USERS
         WHERE USER_ID = #{userId}
@@ -73,8 +74,8 @@
           AND USER_TEL = #{userTel}
     </select>
 
-    <!-- 비밀번호 재설정 처리-->
-    <update id="updatePassword">
+    <!-- 사용자 비밀번호 변경 -->
+    <update id="updateUserPassword">
         UPDATE USERS SET USER_PW = #{newPassword}
         WHERE USER_ID = #{userId}
     </update>

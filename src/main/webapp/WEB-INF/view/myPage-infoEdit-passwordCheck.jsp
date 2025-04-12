@@ -94,7 +94,7 @@
                 <h3 class="mb-4 text-center">회원 정보를 수정하기 위해서는<br>비밀번호를 입력해야 합니다.</h3>
 
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'reaedonly')" value="reasony" readonly>
+                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'readonly')" value="reasony" readonly>
                 </div>
 
                 <div class="form-group mt-3">

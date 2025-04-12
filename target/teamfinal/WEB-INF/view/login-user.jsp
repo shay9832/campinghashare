@@ -117,6 +117,7 @@
     </style>
 </head>
 <body>
+
 <div class="page-wrapper">
     <main class="main-content">
         <div class="login-container">
@@ -157,7 +158,6 @@
         </div>
     </main>
 </div>
-
 
 <!-- 로그인 실패 시 알림 출력 -->
 <script>

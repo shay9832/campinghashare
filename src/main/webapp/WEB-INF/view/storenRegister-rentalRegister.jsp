@@ -50,13 +50,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>13-storen-rental-register.jsp</title>
+
+    <title>storenRegister-rentalRegister.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="header.jsp" />
 
 <main class="main-content container">
@@ -131,7 +133,7 @@
                         <span class="info-icon tooltip-trigger ml-1">
                             <i class="fas fa-question-circle text-secondary"></i>
                             <span class="tooltip-content">
-                                '평균 신품 가격'은 유저들이 해당 장비에 대해 입력한 데이터를 기반으로 산출됩니다. (보통 브랜드 공식 홈페이지, 쇼핑몰 가격을 기준으로 입력)
+                                유저들이 직접 입력한 해당 장비 '신품 가격'의 평균입니다. (보통 공식 홈페이지, 쇼핑몰 가격 기준으로 입력)
                             </span>
                         </span>
                         <% } %>
@@ -153,7 +155,7 @@
                             <span class="info-icon tooltip-trigger ml-1">
                                 <i class="fas fa-question-circle text-secondary"></i>
                                 <span class="tooltip-content">
-                                    '평균 렌탈 가격'은 유저들이 해당 장비에 대해 입력한 데이터를 기반으로 산출됩니다.
+                                    유저들이 직접 입력한 해당 장비 '렌탈 가격'의 평균입니다.
                                 </span>
                             </span>
                             <% } %>
@@ -197,7 +199,6 @@
             </ul>
         </div>
 
-        <!-- 이전 / 다음 페이지 이동 버튼 -->
         <div class="button-container">
             <button class="btn">이전</button>
             <button class="btn btn-primary">다음</button>
@@ -205,10 +206,9 @@
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="footer.jsp" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // 브랜드가 '기타'인지 확인
