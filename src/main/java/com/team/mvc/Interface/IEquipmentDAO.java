@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IEquipmentDAO {
@@ -13,7 +14,7 @@ public interface IEquipmentDAO {
     int insertEquipCode(EquipmentDTO dto);
 
 
-    List<String> listEquipNamesByBrand(@Param("brandId") int brandId);
+    List<Map<String, Object>> listEquipNamesByBrand(@Param("brandId") int brandId);
 
     // 장비명 ID 조회
     Integer getEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);

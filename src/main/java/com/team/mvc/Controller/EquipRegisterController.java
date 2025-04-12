@@ -109,41 +109,33 @@ public class EquipRegisterController {
     }
 
 
-    // 장비명 검색창에 장비명 데이터 불러오기
+    // 검색창에 장비명, 신품가격 데이터 불러오기
     @RequestMapping(value = "/listequipnamesbybrandid.action")
     @ResponseBody
-    public List<String> listEquipNamesByBrand(@RequestParam("brand") String brand) {
-//        System.out.println("브랜드명: " + brand);
-
-        // 임시 데이터 반환
-//        List<String> sampleEquipNames = new ArrayList<>();
-//        sampleEquipNames.add("아메니티 돔 M");
-//        sampleEquipNames.add("랜드 브리즈 M");
-//        sampleEquipNames.add("랜드 로지 Pro. M");
-//        sampleEquipNames.add("기타");
-//
-//        return sampleEquipNames;
+    public List<Map<String, Object>> listEquipNamesByBrand(@RequestParam("brand") String brand) {
+        System.out.println("브랜드명: " + brand);
 
         try {
-            // 브랜드 ID 조화
+            // 브랜드 ID 조회
             List<BrandDTO> brandList = sqlSession.getMapper(IBrandDAO.class).getBrandByName(brand);
-//          System.out.println("브랜드 목록 조회 결과: " + (brandList != null ? brandList.size() : "null"));
+            System.out.println("브랜드 목록 조회 결과: " + (brandList != null ? brandList.size() : "null"));
 
             if (brandList == null || brandList.isEmpty()) {
-                return Collections.singletonList("기타");
+                return Collections.emptyList();
             }
 
             int brandId = brandList.get(0).getBrandId();
 
             // 해당 브랜드의 장비명 목록 조회
-            List<String> equipNames = sqlSession.getMapper(IEquipmentDAO.class).listEquipNamesByBrand(brandId);
+            List<Map<String, Object>> equipList = sqlSession.getMapper(IEquipmentDAO.class).listEquipNamesByBrand(brandId);
+            System.out.println("장비명 목록 조회 결과: " + (equipList != null ? equipList.size() : "null"));
 
-            return equipNames;
+            return equipList;
 
         } catch (Exception e) {
             System.out.println("에러 발생: " + e.toString());
-            // 로깅 및 에러 처리
-            return Collections.singletonList("기타");
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 
