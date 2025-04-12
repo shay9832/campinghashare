@@ -40,6 +40,20 @@
     </init-param>
   </filter>
 
+  <!-- 필터 정의 -->
+  <filter>
+    <filter-name>adminSessionFilter</filter-name>
+    <filter-class>com.team.mvc.Filter.AdminSessionFilter</filter-class>
+  </filter>
+
+  <!-- 필터 매핑 - 모든 admin- URL에 적용 -->
+  <filter-mapping>
+    <filter-name>adminSessionFilter</filter-name>
+    <url-pattern>/admin-*</url-pattern>
+  </filter-mapping>
+
+  <!-- admin-login.action은 필터에서 예외 처리됨 -->
+
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>

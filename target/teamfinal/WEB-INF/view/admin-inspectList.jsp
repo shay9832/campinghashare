@@ -204,8 +204,8 @@
     <div class="toggle-container">
       <div class="toggle-button-group">
         <button type="button" class="toggle-button active" data-stage="all">전체 검수</button>
-        <button type="button" class="toggle-button" data-stage="primary">1차 검수</button>
-        <button type="button" class="toggle-button" data-stage="secondary">2차 검수</button>
+        <button type="button" class="toggle-button" data-stage="primary">플랫폼 검수</button>
+        <button type="button" class="toggle-button" data-stage="secondary">플랫폼 반환 검수</button>
       </div>
     </div>
 
@@ -234,10 +234,93 @@
             <th class="col-status">검수상태</th>
           </tr>
 
-          <!-- 검수 데이터 행 -->
-
-
-
+          <!-- 전체 검수 데이터 행 - 1차 및 2차 검수 데이터 모두 표시 -->
+          <c:forEach var="inspect" items="${list}">
+            <tr>
+              <td class="checkbox-column"><input type="checkbox"></td>
+              <td>${inspect.equipCode}</td>
+              <td>${inspect.inspectName}</td>
+              <td>${inspect.equipName}</td>
+              <td>${inspect.categoryName}</td>
+              <td>${inspect.inspectList}</td>
+              <td>${inspect.adminId}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                  </c:when>
+                  <c:otherwise>
+                    <button class="process-btn disabled" disabled>처리완료</button>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+              <td>
+                <c:if test="${inspect.inspectResult eq '상'}">
+                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '중'}">
+                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '하'}">
+                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                </c:if>
+              </td>
+              <td>${inspect.inspectComment}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+          </c:forEach>
+          <c:forEach var="inspect" items="${listr}">
+            <tr>
+              <td class="checkbox-column"><input type="checkbox"></td>
+              <td>${inspect.equipCode}</td>
+              <td>${inspect.inspectName}</td>
+              <td>${inspect.equipName}</td>
+              <td>${inspect.categoryName}</td>
+              <td>${inspect.inspectList}</td>
+              <td>${inspect.adminId}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                  </c:when>
+                  <c:otherwise>
+                    <button class="process-btn disabled" disabled>처리완료</button>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+              <td>
+                <c:if test="${inspect.inspectResult eq '상'}">
+                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '중'}">
+                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
+                </c:if>
+                <c:if test="${inspect.inspectResult eq '하'}">
+                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                </c:if>
+              </td>
+              <td>${inspect.inspectComment}</td>
+              <td>
+                <c:choose>
+                  <c:when test="${empty inspect.inspectResult}">
+                    <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:otherwise>
+                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                  </c:otherwise>
+                </c:choose>
+              </td>
+            </tr>
+          </c:forEach>
         </table>
       </div>
     </div>
@@ -591,12 +674,39 @@
           };
         }
 
+        // 세션 상태 확인
+        checkSessionStatus();
+
         // 메뉴 초기화 - 장비 관리 메뉴 초기 상태 설정 (페이지에 맞게 열어두기)
         initMenu();
 
         // 이벤트 리스너 등록
         registerEventListeners();
       });
+
+      // 세션 상태 확인 함수
+      function checkSessionStatus() {
+        // 페이지 로드 시 또는 주기적으로 세션 상태 확인
+        fetch(window.location.href, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+                .then(response => {
+                  if (response.status === 401) {
+                    // 세션이 만료된 경우 로그인 페이지로 리다이렉트
+                    window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
+                  }
+                })
+                .catch(error => {
+                  console.error('세션 체크 오류:', error);
+                });
+      }
+
+      // 로그아웃 함수
+      function logout() {
+        window.location.href = `${pageContext.request.contextPath}/admin-logout.action`;
+      }
 
       // 메뉴 초기화 함수
       function initMenu() {
@@ -697,24 +807,12 @@
         }
       }
 
-      // 디버깅 함수 - 실제 사용 중인 라디오 버튼 name 출력
-      function debugRadioNames() {
-        console.log("=== 라디오 버튼 name 속성 디버깅 ===");
-        const radioButtons = document.querySelectorAll('input[type="radio"]');
-        const uniqueNames = new Set();
-
-        radioButtons.forEach(radio => {
-          uniqueNames.add(radio.name);
-        });
-
-        console.log("사용 중인 라디오 버튼 name들:", Array.from(uniqueNames));
-      }
-
-
-
-      // 검수 모달 열기 함수 수정
+      // 검수 모달 열기 함수
       function openInspectionModal(button) {
         try {
+          // 세션 상태 확인
+          checkSessionStatus();
+
           // 현재 행의 데이터 가져오기
           currentRow = button.closest('tr');
           if (!currentRow) {
@@ -765,6 +863,19 @@
                   String(now.getSeconds()).padStart(2, '0');
           document.getElementById('processDate').value = formattedDate;
 
+          // adminId 설정 - 세션에서 가져오기
+          const adminIdElement = document.getElementById('adminId');
+          if (adminIdElement) {
+            // 세션에서 관리자 ID 가져오기 (여기서는 그대로 사용)
+            const adminId = '${sessionScope.adminId}';
+            if (!adminId) {
+              alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+              window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
+              return;
+            }
+            adminIdElement.value = adminId;
+          }
+
           // 체크리스트 초기화
           initChecklistFunctionality();
 
@@ -774,21 +885,251 @@
           // 모달 표시
           modal.style.display = 'block';
 
-          // 디버깅
-          console.log('모달 열기 - platformDeliveryId:', document.getElementById('platformDeliveryId').value);
-          console.log('모달 열기 - platformDeliveryReturnId:', document.getElementById('platformDeliveryReturnId').value);
         } catch (error) {
           console.error('검수 모달 열기 오류:', error);
           alert('검수 처리 준비 중 오류가 발생했습니다.');
         }
       }
 
+      // 폼 제출 처리 함수
+      function handleFormSubmit(event) {
+        // 폼 제출 기본 동작 방지
+        event.preventDefault();
+
+        // 세션 상태 확인
+        checkSessionStatus();
+
+        // 이벤트 핸들러가 두 번 호출되는 것을 방지하기 위한 플래그
+        if (event.submitting) return;
+        event.submitting = true;
+
+        try {
+          // 실제 체크리스트 테이블의 각 행에서 라디오 버튼 검증
+          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+          let isValid = true;
+          let commentText = '';
+
+          // 유효성 검사 로직
+          for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const itemName = row.cells[0].textContent.trim();
+            const radios = row.querySelectorAll('input[type="radio"]');
+            const isChecked = Array.from(radios).some(radio => radio.checked);
+
+            if (!isChecked) {
+              isValid = false;
+              alert(`'${itemName}' 항목을 평가해주세요.`);
+              event.submitting = false;
+              return;
+            }
+
+            // 코멘트 수집
+            const commentInput = row.querySelector('.comment-input');
+            if (commentInput && commentInput.value.trim() !== '') {
+              commentText += `${itemName}: ${commentInput.value.trim()}\n`;
+            }
+          }
+
+          // 유효성 검사 통과 시 AJAX 요청 준비
+          if (isValid && currentRow) {
+            // 폼 데이터 생성
+            const form = document.getElementById('inspectionForm');
+            const formData = new FormData(form);
+
+            // platformDeliveryId 또는 platformDeliveryReturnId 중 하나는 값이 있는지 확인
+            const platformDeliveryId = document.getElementById('platformDeliveryId').value;
+            const platformDeliveryReturnId = document.getElementById('platformDeliveryReturnId').value;
+
+            if (!platformDeliveryId && !platformDeliveryReturnId) {
+              alert('배송 ID 또는 반환 ID가 설정되지 않았습니다.');
+              event.submitting = false;
+              return;
+            }
+
+            // adminId 확인 - 세션에서 가져오기
+            const adminId = document.getElementById('adminId').value;
+            if (!adminId) {
+              alert('관리자 ID가 설정되지 않았습니다. 다시 로그인해주세요.');
+              window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
+              event.submitting = false;
+              return;
+            }
+
+            // 코멘트 추가
+            formData.append('inspecComment', commentText || '자동 검수 처리');
+
+            // 최종 등급 정보 추가
+            const finalGrade = document.getElementById('finalGrade').textContent;
+            formData.append('finalGrade', finalGrade);
+
+            // AJAX 요청 설정
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            // 응답 처리
+            xhr.onload = function() {
+              // 플래그 초기화
+              event.submitting = false;
+
+              if (xhr.status === 401) {
+                // 세션이 만료된 경우
+                alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
+                return;
+              }
+
+              if (xhr.status === 200) {
+                try {
+                  const response = JSON.parse(xhr.responseText);
+                  if (response.success) {
+                    alert('검수 처리가 완료되었습니다.');
+                    // UI 업데이트
+                    updateUIAfterSubmission(commentText, finalGrade);
+                    closeInspectionModal();
+                  } else {
+                    if (response.message && response.message.includes('이미 검수 처리가 완료된 항목')) {
+                      alert('이미 검수 처리가 완료된 항목입니다.');
+                      closeInspectionModal();
+                    } else {
+                      alert('검수 처리 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
+                    }
+                  }
+                } catch (e) {
+                  // JSON 파싱 실패 시 응답 텍스트 확인
+                  if (xhr.responseText.includes('success') || xhr.responseText.includes('완료')) {
+                    alert('검수 처리가 완료되었습니다.');
+                    // UI 업데이트
+                    updateUIAfterSubmission(commentText, finalGrade);
+                    closeInspectionModal();
+                  } else if (xhr.responseText.includes('이미 검수 처리가 완료된 항목')) {
+                    alert('이미 검수 처리가 완료된 항목입니다.');
+                    closeInspectionModal();
+                  } else {
+                    console.error('응답 처리 오류', e);
+                    alert('서버 응답을 처리할 수 없습니다.');
+                  }
+                }
+              } else {
+                alert('서버 오류: ' + xhr.status);
+              }
+            };
+
+            // 오류 처리
+            xhr.onerror = function() {
+              event.submitting = false;
+              alert('네트워크 오류가 발생했습니다.');
+            };
+
+            // 요청 전송
+            xhr.send(formData);
+          } else {
+            // 플래그 초기화
+            event.submitting = false;
+          }
+        } catch (error) {
+          event.submitting = false;
+          console.error('폼 제출 오류:', error);
+          alert('검수 처리 중 오류가 발생했습니다: ' + error.message);
+        }
+      }
+
+      // 체크리스트 초기화 함수
+      function initChecklistFunctionality() {
+        try {
+          const tableBody = document.querySelector('#checklistTable tbody');
+          if (!tableBody) {
+            console.warn('체크리스트 테이블 본문을 찾을 수 없습니다.');
+            return;
+          }
+
+          const rows = tableBody.querySelectorAll('tr:not(.total-row)');
+          if (!rows || rows.length === 0) {
+            console.warn('체크리스트 행이 없습니다.');
+            return;
+          }
+
+          rows.forEach(row => {
+            // 각 행에 있는 라디오 버튼에 이벤트 리스너 추가
+            const radios = row.querySelectorAll('input[type="radio"]');
+            if (radios && radios.length > 0) {
+              radios.forEach(radio => {
+                radio.addEventListener('change', updateScores);
+              });
+            }
+          });
+
+          // 초기 점수 계산
+          updateScores();
+        } catch (error) {
+          console.error('체크리스트 초기화 오류:', error);
+        }
+      }
+
+      // 점수 업데이트 함수
+      function updateScores() {
+        try {
+          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+          let totalScore = 0;
+          const totalRows = rows.length;
+          const scorePerRow = 100 / totalRows;
+
+          rows.forEach(row => {
+            const scoreCell = row.querySelector('.score-cell');
+            if (!scoreCell) return;
+
+            const radios = row.querySelectorAll('input[type="radio"]');
+            let score = 0;
+
+            const selectedRadio = Array.from(radios).find(radio => radio.checked);
+
+            if (selectedRadio) {
+              const selectedGrade = selectedRadio.value;
+
+              switch(selectedGrade) {
+                case '상':
+                  score = scorePerRow;
+                  break;
+                case '중':
+                  score = scorePerRow * 0.65;
+                  break;
+                case '하':
+                  score = scorePerRow * 0.3;
+                  break;
+                default:
+                  score = 0;
+              }
+            }
+
+            scoreCell.textContent = score.toFixed(1);
+            totalScore += score;
+          });
+
+          const totalScoreElement = document.getElementById('totalScore');
+          if (totalScoreElement) {
+            totalScoreElement.textContent = totalScore.toFixed(1);
+          }
+
+          updateFinalGrade(totalScore);
+        } catch (error) {
+          console.error('점수 계산 오류:', error);
+        }
+      }
+
       // 등급 정보 로드 함수 (AJAX 사용)
       function loadEquipGradeInfo() {
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', '${pageContext.request.contextPath}/admin-getEquipGrades.action', true);
+        xhr.open('GET', `${pageContext.request.contextPath}/admin-inspectList.action`, true);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
         xhr.onload = function() {
+          if (xhr.status === 401) {
+            // 세션이 만료된 경우
+            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+            window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
+            return;
+          }
+
           if (xhr.status === 200) {
             try {
               const gradeInfo = JSON.parse(xhr.responseText);
@@ -838,7 +1179,7 @@
         gradeInfoContainer.innerHTML = gradeHtml;
       }
 
-      // 최종 등급 업데이트 함수 개선
+      // 최종 등급 업데이트 함수
       function updateFinalGrade(totalScore) {
         const finalGradeElement = document.getElementById('finalGrade');
         if (!finalGradeElement) return;
@@ -898,137 +1239,20 @@
 
         // 관리자 ID 설정
         const adminIdElement = document.getElementById('adminId');
-        if (adminIdElement) {
+        if (adminIdElement && !adminIdElement.value) {
           // 세션에서 관리자 ID 가져오기
-          const adminId = '${sessionScope.adminId}' || 'ADMIN1';
-          adminIdElement.value = adminId;
-        }
-      }
-
-      // 폼 제출 처리 함수 개선
-      function handleFormSubmit(event) {
-        // 폼 제출 기본 동작 방지
-        event.preventDefault();
-
-        // 이벤트 핸들러가 두 번 호출되는 것을 방지하기 위한 플래그
-        if (event.submitting) return;
-        event.submitting = true;
-
-        try {
-          // 실제 체크리스트 테이블의 각 행에서 라디오 버튼 검증
-          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-          let isValid = true;
-          let commentText = '';
-
-          // 유효성 검사 로직
-          for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const itemName = row.cells[0].textContent.trim();
-            const radios = row.querySelectorAll('input[type="radio"]');
-            const isChecked = Array.from(radios).some(radio => radio.checked);
-
-            if (!isChecked) {
-              isValid = false;
-              alert(`'${itemName}' 항목을 평가해주세요.`);
-              event.submitting = false;
-              return;
-            }
-
-            // 코멘트 수집
-            const commentInput = row.querySelector('.comment-input');
-            if (commentInput && commentInput.value.trim() !== '') {
-              commentText += `${itemName}: ${commentInput.value.trim()}\n`;
-            }
-          }
-
-          // 유효성 검사 통과 시 AJAX 요청 준비
-          if (isValid && currentRow) {
-            // 폼 데이터 생성
-            const form = document.getElementById('inspectionForm');
-            const formData = new FormData(form);
-
-            // platformDeliveryId 또는 platformDeliveryReturnId 중 하나는 값이 있는지 확인
-            const platformDeliveryId = document.getElementById('platformDeliveryId').value;
-            const platformDeliveryReturnId = document.getElementById('platformDeliveryReturnId').value;
-
-            if (!platformDeliveryId && !platformDeliveryReturnId) {
-              alert('배송 ID 또는 반환 ID가 설정되지 않았습니다.');
-              event.submitting = false;
-              return;
-            }
-
-            // 코멘트 추가
-            formData.append('inspecComment', commentText || '자동 검수 처리');
-
-            // 최종 등급 정보 추가
-            const finalGrade = document.getElementById('finalGrade').textContent;
-            formData.append('finalGrade', finalGrade);
-
-            // AJAX 요청 설정
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.action, true);
-
-            // 응답 처리
-            xhr.onload = function() {
-              // 플래그 초기화
-              event.submitting = false;
-
-              if (xhr.status === 200) {
-                try {
-                  const response = JSON.parse(xhr.responseText);
-                  if (response.success) {
-                    alert('검수 처리가 완료되었습니다.');
-                    // UI 업데이트
-                    updateUIAfterSubmission(commentText, finalGrade);
-                    closeInspectionModal();
-                  } else {
-                    if (response.message && response.message.includes('이미 검수 처리가 완료된 항목')) {
-                      alert('이미 검수 처리가 완료된 항목입니다.');
-                      closeInspectionModal();
-                    } else {
-                      alert('검수 처리 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
-                    }
-                  }
-                } catch (e) {
-                  // JSON 파싱 실패 시 응답 텍스트 확인
-                  if (xhr.responseText.includes('success') || xhr.responseText.includes('완료')) {
-                    alert('검수 처리가 완료되었습니다.');
-                    // UI 업데이트
-                    updateUIAfterSubmission(commentText, finalGrade);
-                    closeInspectionModal();
-                  } else if (xhr.responseText.includes('이미 검수 처리가 완료된 항목')) {
-                    alert('이미 검수 처리가 완료된 항목입니다.');
-                    closeInspectionModal();
-                  } else {
-                    console.error('응답 처리 오류', e);
-                    alert('서버 응답을 처리할 수 없습니다.');
-                  }
-                }
-              } else {
-                alert('서버 오류: ' + xhr.status);
-              }
-            };
-
-            // 오류 처리
-            xhr.onerror = function() {
-              event.submitting = false;
-              alert('네트워크 오류가 발생했습니다.');
-            };
-
-            // 요청 전송
-            xhr.send(formData);
+          const adminId = '${sessionScope.adminId}';
+          if (adminId) {
+            adminIdElement.value = adminId;
           } else {
-            // 플래그 초기화
-            event.submitting = false;
+            // 관리자 ID가 없으면 세션 만료로 판단하고 로그인 페이지로 이동
+            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+            window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
           }
-        } catch (error) {
-          event.submitting = false;
-          console.error('폼 제출 오류:', error);
-          alert('검수 처리 중 오류가 발생했습니다: ' + error.message);
         }
       }
 
-      // UI 업데이트 함수 개선
+      // UI 업데이트 함수
       function updateUIAfterSubmission(commentText, finalGrade) {
         if (!currentRow) return;
 
@@ -1079,19 +1303,42 @@
         badge.className = 'status-badge ' + className;
       }
 
-      // 윈도우 클릭 이벤트 - 모달 외부 클릭 시 닫기
-      window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-          closeInspectionModal();
-        }
-      });
+      // 모달 닫기 함수
+      function closeInspectionModal() {
+        try {
+          const modal = document.getElementById('inspectionModal');
+          if (modal) {
+            modal.style.display = 'none';
+          }
 
-      // ESC 키 누를 때 모달 닫기
-      document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape' && modal.style.display === 'block') {
-          closeInspectionModal();
+          // 폼 초기화
+          const form = document.getElementById('inspectionForm');
+          if (form) {
+            form.reset();
+          }
+
+          // 라디오 버튼 초기화
+          const radioButtons = document.querySelectorAll('input[type="radio"]');
+          if (radioButtons) {
+            radioButtons.forEach(radio => {
+              radio.checked = false;
+            });
+          }
+
+          // 코멘트 입력 필드 초기화
+          const commentInputs = document.querySelectorAll('.comment-input');
+          if (commentInputs) {
+            commentInputs.forEach(input => {
+              input.value = '';
+            });
+          }
+
+          // 현재 선택된 행 참조 초기화
+          currentRow = null;
+        } catch (error) {
+          console.error('모달 닫기 오류:', error);
         }
-      });
+      }
     </script>
   </div>
 </div>
