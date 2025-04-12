@@ -74,6 +74,9 @@ public class AdminInspectListController {
         return "redirect:/admin-login.action";
     }
 
+    /**
+     * 검수 목록 페이지 (GET 요청 처리)
+     */
     @RequestMapping(value="/admin-inspectList.action", method = RequestMethod.GET)
     public String adminInspectList(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         // 세션 검증
@@ -82,63 +85,45 @@ public class AdminInspectListController {
             return "redirect:/admin-login.action";
         }
 
-        IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
-        model.addAttribute("list", dao.getList());
-        model.addAttribute("listr", dao.getListr());
-        model.addAttribute("getItemList", dao.getItemList());
-        model.addAttribute("getGradeList", dao.getGradeList());
-        model.addAttribute("getEquipList", dao.getEquipList());
-        return "admin-inspectList";
-    }
-
-    /**
-     * 장비 등급 정보를 가져오는 AJAX 핸들러
-     */
-    @GetMapping(value = "/admin-inspectList.action", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Object> getEquipGrades(HttpSession session) {
-        // 세션 검증
-        if (session.getAttribute("adminId") == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "로그인이 필요합니다.");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        }
-
         try {
+            // MyBatis Mapper 인터페이스 가져오기
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
-            List<Map<String, Object>> gradeLists = dao.getGradeLists();
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            // 모든 필요한 데이터를 한 번에 모델에 추가
+            model.addAttribute("list", dao.getList());
+            model.addAttribute("listr", dao.getListr());
+            model.addAttribute("getItemList", dao.getItemList());
+            model.addAttribute("getGradeList", dao.getGradeList());
+            model.addAttribute("getEquipList", dao.getEquipList());
+            model.addAttribute("equipGrades", dao.getGradeLists()); // 추가: 등급 정보를 모델에 직접 포함
 
-            return new ResponseEntity<>(gradeLists, headers, HttpStatus.OK);
+            return "admin-inspectList";
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            redirectAttributes.addFlashAttribute("error", "데이터를 가져오는 중 오류가 발생했습니다: " + e.getMessage());
+            return "redirect:/admin-login.action";
         }
     }
 
     /**
-     * AJAX 요청에 대응하는 검수 결과 처리 메소드
+     * 검수 결과 처리 (POST 요청 처리)
      */
-    @PostMapping(value="/admin-inspectList.action", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> adminInspectListAdd(
+    @PostMapping("/admin-inspectList.action")
+    public String adminInspectListAdd(
             @RequestParam(value = "platformDeliveryId", required = false) String platformDeliveryIdStr,
             @RequestParam(value = "platformDeliveryReturnId", required = false) String platformDeliveryReturnIdStr,
             @RequestParam(value = "inspecGradeId", required = false, defaultValue = "1") Integer inspecGradeId,
             @RequestParam(value = "equipGradeId", required = false, defaultValue = "0") Integer equipGradeId,
             @RequestParam(value = "adminId", required = false) String adminId,
             @RequestParam(value = "inspecComment", required = false, defaultValue = "") String inspecComment,
-            HttpSession session) {
-
-        Map<String, Object> response = new HashMap<>();
+            @RequestParam(value = "finalGrade", required = false) String finalGrade,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         // 세션 검증
         if (session.getAttribute("adminId") == null) {
-            response.put("success", false);
-            response.put("message", "로그인 세션이 만료되었습니다. 다시 로그인해주세요.");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            redirectAttributes.addFlashAttribute("error", "관리자 로그인이 필요합니다.");
+            return "redirect:/admin-login.action";
         }
 
         try {
@@ -155,10 +140,10 @@ public class AdminInspectListController {
                     if (adminId != null && !adminId.trim().isEmpty()) {
                         // 실제 환경에서는 권한 검증 로직 추가
                         validAdminId = adminId;
+                    } else {
+                        // adminId가 제공되지 않은 경우 세션의 ID 사용
+                        adminId = validAdminId;
                     }
-
-                    // 디버깅 로그 추가
-                    System.out.println("사용할 관리자 ID: " + validAdminId);
 
                     // "DELV-123" 형식에서 숫자만 추출
                     String numericPart = platformDeliveryIdStr.replaceAll("[^0-9]", "");
@@ -166,10 +151,8 @@ public class AdminInspectListController {
                         platformDeliveryId = Integer.parseInt(numericPart);
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("배송 ID 변환 실패: " + platformDeliveryIdStr);
-                    response.put("success", false);
-                    response.put("message", "배송 ID 형식이 올바르지 않습니다: " + platformDeliveryIdStr);
-                    return ResponseEntity.badRequest().body(response);
+                    redirectAttributes.addFlashAttribute("error", "배송 ID 형식이 올바르지 않습니다: " + platformDeliveryIdStr);
+                    return "redirect:/admin-inspectList.action";
                 }
             }
 
@@ -181,30 +164,54 @@ public class AdminInspectListController {
                         platformDeliveryReturnId = Integer.parseInt(numericPart);
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("반환 ID 변환 실패: " + platformDeliveryReturnIdStr);
-                    response.put("success", false);
-                    response.put("message", "반환 ID 형식이 올바르지 않습니다: " + platformDeliveryReturnIdStr);
-                    return ResponseEntity.badRequest().body(response);
+                    redirectAttributes.addFlashAttribute("error", "반환 ID 형식이 올바르지 않습니다: " + platformDeliveryReturnIdStr);
+                    return "redirect:/admin-inspectList.action";
                 }
             }
 
             // 둘 다 null인지 검증
             if (platformDeliveryId == null && platformDeliveryReturnId == null) {
-                response.put("success", false);
-                response.put("message", "배송 ID 또는 반환 ID가 필요합니다.");
-                return ResponseEntity.badRequest().body(response);
+                redirectAttributes.addFlashAttribute("error", "배송 ID 또는 반환 ID가 필요합니다.");
+                return "redirect:/admin-inspectList.action";
             }
 
-            // adminId가 없으면 세션에서 가져옴
-            if (adminId == null || adminId.trim().isEmpty()) {
-                adminId = (String) session.getAttribute("adminId");
+            // 등급 정보 업데이트 - finalGrade에 따라 equipGradeId 설정
+            if (finalGrade != null) {
+                switch (finalGrade) {
+                    case "A":
+                        equipGradeId = 1;
+                        inspecGradeId = 1; // 상
+                        break;
+                    case "B":
+                        equipGradeId = 2;
+                        inspecGradeId = 1; // 상
+                        break;
+                    case "C":
+                        equipGradeId = 3;
+                        inspecGradeId = 2; // 중
+                        break;
+                    case "D":
+                        equipGradeId = 4;
+                        inspecGradeId = 2; // 중
+                        break;
+                    case "E":
+                        equipGradeId = 5;
+                        inspecGradeId = 3; // 하
+                        break;
+                    case "F":
+                        equipGradeId = 6;
+                        inspecGradeId = 3; // 하
+                        break;
+                }
             }
 
             // 디버깅 로그 추가
             System.out.println("프로시저 호출 정보: delivery=" + platformDeliveryId
                     + ", return=" + platformDeliveryReturnId
                     + ", grade=" + equipGradeId
+                    + ", inspecGradeId=" + inspecGradeId
                     + ", adminId=" + adminId
+                    + ", finalGrade=" + finalGrade
                     + ", comment=" + inspecComment);
 
             // MyBatis Mapper 인터페이스 가져오기
@@ -214,17 +221,14 @@ public class AdminInspectListController {
             dao.callINSPECT_RESULT_EXTENDED(platformDeliveryId, platformDeliveryReturnId,
                     inspecGradeId, equipGradeId, adminId, inspecComment);
 
-            // 성공 응답 설정
-            response.put("success", true);
-            response.put("message", "검수 결과가 성공적으로 등록되었습니다.");
-
-            return ResponseEntity.ok(response);
+            // 성공 메시지 설정
+            redirectAttributes.addFlashAttribute("message", "검수 결과가 성공적으로 등록되었습니다.");
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "검수 결과 등록 중 오류가 발생했습니다: " + e.getMessage());
-            return ResponseEntity.internalServerError().body(response);
+            redirectAttributes.addFlashAttribute("error", "검수 결과 등록 중 오류가 발생했습니다: " + e.getMessage());
         }
+
+        return "redirect:/admin-inspectList.action";
     }
 }
