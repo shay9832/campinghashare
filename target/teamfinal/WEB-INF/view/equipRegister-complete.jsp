@@ -33,7 +33,7 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="#" class="btn"><%= prevMenu %></a>
+            <a href="mypage-myequip.action" class="btn"><%= prevMenu %></a>
             <a href="#" class="btn btn-primary"><%= nextMenu %></a>
         </div>
     </main>

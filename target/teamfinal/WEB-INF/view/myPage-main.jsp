@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <!-- 마이페이지 전용 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage.css">
-    <!-- 화살표 버튼 CSS -->
-<%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/arrow-buttons.css">--%>
     <!-- 마이페이지 사이드바 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
@@ -23,8 +21,7 @@
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
-<div class="container mypage-container section">
-
+<div class="container container-wide mypage-container section">
     <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
         <div class="sidebar-title">마이 페이지</div>
@@ -34,10 +31,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
-                    <li><a href="#" class="sidebar-link">회원 등급</a></li>
-                    <li><a href="#" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="#" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -45,42 +41,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
-                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-<<<<<<< Updated upstream
-                    <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
-=======
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
->>>>>>> Stashed changes
+                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-wishlist.action" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-leave.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -174,11 +169,9 @@
                         <div class="item-count">5</div>
                     </a>
                     <a href="#" class="urgent-item">
-<<<<<<< Updated upstream
-                        <div class="item-label">주가 비용 결제 대기</div>
-=======
+
                         <div class="item-label">추가 비용 결제 대기</div>
->>>>>>> Stashed changes
+
                         <div class="item-count">2</div>
                     </a>
                 </div>

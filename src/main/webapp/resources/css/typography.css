@@ -218,6 +218,49 @@ a.no-underline {
     font-weight: var(--font-bold);
 }
 
+
+/* 툴팁 트리거 및 내용 */
+.tooltip-trigger {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-content {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xxs);
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    white-space: nowrap;
+    display: inline-block;
+    width: max-content;
+}
+
+.tooltip-trigger:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-content::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: 10px;
+    border-width: 5px 5px 0;
+    border-style: solid;
+    border-color: var(--color-gray-800) transparent transparent transparent;
+}
+
+
+
 /* 반응형 폰트 조정 */
 @media (max-width: 992px) {
     h1, .h1 {
