@@ -135,6 +135,11 @@
             font-weight: var(--font-semibold);
         }
     </style>
+    <script>
+        function goToWrite() {
+            window.location.href = "boardfree-write.action";
+        }
+    </script>
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -416,7 +421,7 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>
                     </div>

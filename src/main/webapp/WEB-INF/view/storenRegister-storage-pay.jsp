@@ -25,13 +25,15 @@
 %>
 <html>
 <head>
-    <title>스토렌 신청(보관비 결제)</title>
+    <title>storenRegister-storage-pay.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
+
+<jsp:include page="header.jsp"/>
 
 <main class="main-content container">
     <div class="storen-container">
@@ -216,9 +218,9 @@
     </div>
 </main>
 
-<jsp:include page="footer.jsp"></jsp:include>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<jsp:include page="footer.jsp"/>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <!-- 다음 우편번호/주소 API 소스 코드 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
