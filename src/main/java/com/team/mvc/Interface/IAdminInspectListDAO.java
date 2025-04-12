@@ -1,21 +1,41 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminInspectListDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.ArrayList;
+import java.util.List;
 
+@Mapper
 public interface IAdminInspectListDAO {
 
-    /*select*/
+    // 검수 목록 조회
+    List<AdminInspectListDTO> getList();
 
-    // 입고반환
-    public ArrayList<IAdminInspectListDAO> list();
+    // 반품 검수 목록 조회
+    List<AdminInspectListDTO> getListr();
 
-    //스토렌반환
-    public ArrayList<IAdminInspectListDAO> listr();
+    // 검수 항목 테이블 조회
+    List<AdminInspectListDTO> getItemList();
+
+    // 검수항목_등급 테이블 조회
+    List<AdminInspectListDTO> getGradeList();
+
+    //장비 등급 테이블 조회
+    List<AdminInspectListDTO> getEquipList();
 
 
-    /*insert*/
-    //검수결과 처리
-    public int add(AdminInspectListDTO ai);
+
+    // 검수 결과 추가 - DTO 사용
+    void add(AdminInspectListDTO dto);
+
+    // 확장된 프로시저 호출 메소드
+    void callINSPECT_RESULT_EXTENDED(
+            @Param("platformDeliveryId") Integer platformDeliveryId,
+            @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
+            @Param("inspecGradeId") Integer inspecGradeId,
+            @Param("equipGradeId") Integer equipGradeId,
+            @Param("adminId") String adminId,
+            @Param("inspecComment") String inspecComment
+    );
 }

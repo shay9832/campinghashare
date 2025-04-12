@@ -35,45 +35,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스토렌 신청 (렌탈비 결제)</title>
+
+    <title>storenMatching-rental-pay.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // 결제 수단 버튼 선택 처리
-            $(".form-check-input").click(function() {
-                // 모든 결제 옵션에서 active 클래스 제거
-                $(".form-check-input").prop("checked", false);
-                // 선택된 결제 옵션에 active 클래스 추가
-                $(this).prop("checked", true);
-            });
-
-            // 쿠폰 적용 버튼 클릭 이벤트
-            $(".btn-secondary").click(function() {
-                // 실제 구현 시 쿠폰 적용 모달 또는 페이지 이동 처리
-                alert("쿠폰 적용 기능은 구현 예정입니다.");
-            });
-
-            // 체크박스 토글 처리
-            $("#confirm_order").change(function() {
-                if($(this).is(":checked")) {
-                    $(".btn-primary").prop("disabled", false);
-                } else {
-                    $(".btn-primary").prop("disabled", true);
-                }
-            });
-
-            // 초기 상태에서 결제 버튼 비활성화
-            $(".btn-primary").prop("disabled", true);
-        });
-    </script>
 </head>
 <body>
 
 <!-- 헤더 포함 -->
-<jsp:include page="header.jsp"></jsp:include>
+<jsp:include page="header.jsp"/>
 
 <main class="main-content container">
     <div class="storen-container">
@@ -269,7 +241,38 @@
 </main>
 
 <!-- 푸터 포함 -->
-<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 결제 수단 버튼 선택 처리
+        $(".form-check-input").click(function() {
+            // 모든 결제 옵션에서 active 클래스 제거
+            $(".form-check-input").prop("checked", false);
+            // 선택된 결제 옵션에 active 클래스 추가
+            $(this).prop("checked", true);
+        });
+
+        // 쿠폰 적용 버튼 클릭 이벤트
+        $(".btn-secondary").click(function() {
+            // 실제 구현 시 쿠폰 적용 모달 또는 페이지 이동 처리
+            alert("쿠폰 적용 기능은 구현 예정입니다.");
+        });
+
+        // 체크박스 토글 처리
+        $("#confirm_order").change(function() {
+            if($(this).is(":checked")) {
+                $(".btn-primary").prop("disabled", false);
+            } else {
+                $(".btn-primary").prop("disabled", true);
+            }
+        });
+
+        // 초기 상태에서 결제 버튼 비활성화
+        $(".btn-primary").prop("disabled", true);
+    });
+</script>
 
 <!-- 다음 우편번호/주소 API 소스 코드 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

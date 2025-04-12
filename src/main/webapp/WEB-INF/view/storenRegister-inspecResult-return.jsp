@@ -12,13 +12,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스토렌 신청 (반환 예정 주소 확인)</title>
+
+    <title>storenRegister-inspecResult-return.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="header.jsp" />
 
 <main class="main-content container">
@@ -74,11 +76,9 @@
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="footer.jsp" />
 
-<!-- 아이콘 라이브러리 자바스크립트로 로드 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <!-- 다음 우편번호/주소 API 소스 코드 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

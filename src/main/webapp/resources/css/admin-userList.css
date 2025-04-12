@@ -314,3 +314,72 @@ body {
     background-color: #3f861d; /* 배경색 - 녹색 */
     color: white; /* 텍스트 색상 */
 }
+
+/* 추가적인 버튼 스타일 - submenu-btn */
+.submenu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 하위 메뉴 버튼 호버 효과 */
+.submenu-btn:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 선택된 메뉴 스타일 */
+.submenu-btn.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}
+
+/* 폼 태그에 기본 마진과 패딩 제거 */
+.submenu form {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* 폼 내부 버튼 스타일 - 원래 a 태그와 동일하게 */
+.submenu form button {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 버튼 호버 효과 - 원래 a 태그와 동일하게 */
+.submenu form button:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 활성화된 버튼 스타일 */
+.submenu form button.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}

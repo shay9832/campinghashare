@@ -1,12 +1,14 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>footer.jsp</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 </head>
 <body>
 
-<%--footer영역--%>
+<%-- footer 영역 --%>
 <footer>
     <div class="footer-container">
         <div class="footer-menu">
@@ -23,14 +25,17 @@
                 <option value="#">옵션 3</option>
             </select>
         </div>
-
-        <script>
-            function handleDropdown(select) {
-                const url = select.value;
-                if (url) location.href = url;
-            }
-        </script>
     </div>
 </footer>
+
+<script>
+    function handleDropdown(select) {
+        const url = select.value;
+        if (url) {
+            location.href = url;
+        }
+    }
+</script>
+
 </body>
 </html>
