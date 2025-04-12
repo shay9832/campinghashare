@@ -479,7 +479,7 @@
             <input type="hidden" name="platformDeliveryReturnId" id="platformDeliveryReturnId">
             <input type="hidden" name="equipGradeId" id="equipGradeId">
             <input type="hidden" name="inspecGradeId" id="inspecGradeId">
-            <input type="hidden" name="adminId" id="adminId">
+            <input type="hidden" name="adminId" id="adminId" value="${sessionScope.adminId}">
 
             <div class="form-group">
               <label for="equipCode">장비코드</label>
@@ -602,27 +602,16 @@
                 <div class="grade-badges">
                   <!-- 등급 정보를 DB에서 가져오거나 기본값 표시 -->
                   <c:choose>
-                    <c:when test="${not empty getGradeList}">
-                      <c:forEach var="grade" items="${getGradeList}">
+                    <c:when test="${not empty equipGrades}">
+                      <c:forEach var="grade" items="${equipGrades}">
+                        <span class="grade-info-badge grade-${fn:toLowerCase(grade.equipGradeName)}">${grade.equipGradeName}</span>
                         <c:choose>
-                          <c:when test="${grade.inspecGradeName == 'A'}">
-                            <span class="grade-info-badge grade-a">${grade.inspecGradeName}</span> 100-90점
-                          </c:when>
-                          <c:when test="${grade.inspecGradeName == 'B'}">
-                            <span class="grade-info-badge grade-b">${grade.inspecGradeName}</span> 89-80점
-                          </c:when>
-                          <c:when test="${grade.inspecGradeName == 'C'}">
-                            <span class="grade-info-badge grade-c">${grade.inspecGradeName}</span> 79-70점
-                          </c:when>
-                          <c:when test="${grade.inspecGradeName == 'D'}">
-                            <span class="grade-info-badge grade-d">${grade.inspecGradeName}</span> 69-60점
-                          </c:when>
-                          <c:when test="${grade.inspecGradeName == 'E'}">
-                            <span class="grade-info-badge grade-e">${grade.inspecGradeName}</span> 59-50점
-                          </c:when>
-                          <c:when test="${grade.inspecGradeName == 'F'}">
-                            <span class="grade-info-badge grade-f">${grade.inspecGradeName}</span> 49점 이하 (스토렌/렌탈 이용 불가)
-                          </c:when>
+                          <c:when test="${grade.equipGradeName == 'A'}">100-90점</c:when>
+                          <c:when test="${grade.equipGradeName == 'B'}">89-80점</c:when>
+                          <c:when test="${grade.equipGradeName == 'C'}">79-70점</c:when>
+                          <c:when test="${grade.equipGradeName == 'D'}">69-60점</c:when>
+                          <c:when test="${grade.equipGradeName == 'E'}">59-50점</c:when>
+                          <c:when test="${grade.equipGradeName == 'F'}">49점 이하 (스토렌/렌탈 이용 불가)</c:when>
                         </c:choose>
                       </c:forEach>
                     </c:when>
@@ -880,7 +869,7 @@
           initChecklistFunctionality();
 
           // 등급 정보 로드 (AJAX 호출)
-          loadEquipGradeInfo();
+          //loadEquipGradeInfo();
 
           // 모달 표시
           modal.style.display = 'block';
