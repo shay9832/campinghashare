@@ -6,10 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="contextPath" content="${pageContext.request.contextPath}">
     <title>관리자페이지 - 장비리스트</title> <!-- 브라우저 탭에 표시될 제목 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-equipList.css">
 </head>
@@ -20,72 +23,117 @@
     <h1>관리자 시스템</h1>
 </div>
 
-<!-- 메인 컨테이너 - 메뉴와 콘텐츠 영역 포함 -->
+<!-- 메인 컨테이너 -->
 <div id="container">
-    <!-- 좌측 메뉴 영역 - 드롭다운 메뉴 -->
+    <!-- 좌측 메뉴 영역 -->
     <div id="leftMenu">
-        <!-- 회원 관리 메뉴 -->
-        <button class="menu-button">회원 관리</button>
-        <div class="submenu">
-            <a href="#">회원 목록</a>
-            <a href="#">제재내역</a>
-        </div>
-
         <!-- 장비 관리 메뉴 -->
-        <button class="menu-button active">장비 관리</button>
-        <div class="submenu" style="max-height: 200px;">
-            <a href="#" style="color: #3f861d; font-weight: bold; border-left: 2px solid #3f861d;">장비 목록</a>
-            <a href="#">검수 목록</a>
-            <a href="#">장비 통계</a>
+        <button class="menu-button">장비 관리</button>
+        <div class="submenu">
+            <form action="${pageContext.request.contextPath}/admin-equipList.action" method="get">
+                <button type="submit" class="submenu-btn">장비 목록</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
+                <button type="submit" class="submenu-btn">장비 통계</button>
+            </form>
         </div>
 
-        <!-- 게시판 관리 메뉴 -->
-        <button class="menu-button">게시판 관리</button>
+        <!-- 검수 관리 메뉴 -->
+        <button class="menu-button">검수 관리</button>
         <div class="submenu">
-            <a href="#">게시판 관리</a>
-            <a href="#">게시글 관리</a>
-            <a href="#">댓글 관리</a>
-            <a href="#">커뮤니티 통계</a>
+            <form action="${pageContext.request.contextPath}/admin-inspectList.action" method="get">
+                <button type="submit" class="submenu-btn">검수 관리</button>
+            </form>
         </div>
 
-        <!-- 신고 관리 메뉴 -->
-        <button class="menu-button">신고 관리</button>
+        <!-- 매칭 관리 메뉴 -->
+        <button class="menu-button">매칭 관리</button>
         <div class="submenu">
-            <a href="#">신고 목록</a>
-            <a href="#">처리 내역</a>
+            <form action="${pageContext.request.contextPath}/admin-matchingList.action" method="get">
+                <button type="submit" class="submenu-btn">매칭 관리</button>
+            </form>
         </div>
 
-        <!-- 이벤트 관리 메뉴 -->
-        <button class="menu-button">이벤트 관리</button>
+        <!-- 결제 관리 메뉴 -->
+        <button class="menu-button">결제 관리</button>
         <div class="submenu">
-            <a href="#">이벤트 목록</a>
+            <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">결제 관리</button>
+            </form>
         </div>
 
         <!-- 배송 관리 메뉴 -->
         <button class="menu-button">배송 관리</button>
         <div class="submenu">
-            <a href="#">배송 현황</a>
+            <form action="${pageContext.request.contextPath}/admin-deliveryUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">배송 관리</button>
+            </form>
+        </div>
+
+        <!-- 게시판 관리 메뉴 -->
+        <button class="menu-button">게시판 관리</button>
+        <div class="submenu">
+            <form action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">게시물 관리</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-replyUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">댓글 관리</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-communityStatistics.action" method="get">
+                <button type="submit" class="submenu-btn">커뮤니티 통계</button>
+            </form>
+        </div>
+
+        <!-- 회원 관리 메뉴 -->
+        <button class="menu-button">회원 관리</button>
+        <div class="submenu">
+            <form action="${pageContext.request.contextPath}/admin-userList.action" method="get">
+                <button type="submit" class="submenu-btn">회원 목록</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-userDrop.action" method="get">
+                <button type="submit" class="submenu-btn">회원 제재 관리</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-pointUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">포인트 관리</button>
+            </form>
+        </div>
+
+        <!-- 신고 관리 메뉴 -->
+        <button class="menu-button">신고 관리</button>
+        <div class="submenu">
+            <form action="${pageContext.request.contextPath}/admin-userReport.action" method="get">
+                <button type="submit" class="submenu-btn">신고 목록</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-userReportList.action" method="get">
+                <button type="submit" class="submenu-btn">신고 처리 내역</button>
+            </form>
+        </div>
+
+        <!-- 포인트 관리 메뉴 -->
+        <button class="menu-button">포인트 관리</button>
+        <div class="submenu">
+            <form action="${pageContext.request.contextPath}/admin-pointUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">포인트 관리</button>
+            </form>
         </div>
 
         <!-- 쿠폰 관리 메뉴 -->
         <button class="menu-button">쿠폰 관리</button>
         <div class="submenu">
-            <a href="#">쿠폰 발급</a>
-            <a href="#">쿠폰 조회</a>
+            <form action="${pageContext.request.contextPath}/admin-couponList.action" method="get">
+                <button type="submit" class="submenu-btn">쿠폰 목록</button>
+            </form>
+            <form action="${pageContext.request.contextPath}/admin-createCoupon.action" method="get">
+                <button type="submit" class="submenu-btn">쿠폰 생성</button>
+            </form>
         </div>
 
-        <!-- 거래 관리 메뉴 -->
-        <button class="menu-button">거래 관리</button>
+        <!-- 이벤트 관리 메뉴 -->
+        <button class="menu-button">이벤트 관리</button>
         <div class="submenu">
-            <a href="#">매칭 관리</a>
-        </div>
-
-        <!-- 통계 메뉴 -->
-        <button class="menu-button">통계</button>
-        <div class="submenu">
-            <a href="#">일간 통계</a>
-            <a href="#">월간 통계</a>
-            <a href="#">연간 통계</a>
+            <form action="${pageContext.request.contextPath}/admin-eventUpdate.action" method="get">
+                <button type="submit" class="submenu-btn">이벤트 관리</button>
+            </form>
         </div>
     </div>
 
@@ -106,31 +154,49 @@
         <!-- 검색 영역 - 장비 검색 필터링 옵션 -->
         <div class="content-search-info">
             <span>검색유형</span>
-            <select>
-                <option>장비코드</option>
-                <option>장비명</option>
-                <option>소유자명</option>
+            <select name="searchType">
+                <option value="equipCode">장비코드</option>
+                <option value="equipName">장비명</option>
+                <option value="ownerName">소유자명</option>
             </select>
 
-            <span>등급</span>
-            <select>
-                <option>전체</option>
-                <option>텐트/타프</option>
-                <option>침낭/매트</option>
-                <option>캠핑 가구</option>
-                <option>조리도구</option>
-                <option>랜턴/조명</option>
-                <option>기타</option>
+            <!-- 대분류 선택 -->
+            <span>대분류</span>
+            <select name="mainCategory" id="mainCategory">
+                <option value="">전체</option>
+                <c:forEach var="category" items="${mainCategories}">
+                    <option value="${category.categoryCode}">${category.categoryName}</option>
+                </c:forEach>
+                <!-- 테스트용 주석 예시 데이터
+                <option value="TENT">텐트/타프</option>
+                <option value="SLEEP">침낭/매트</option>
+                <option value="FURN">캠핑 가구</option>
+                <option value="COOK">조리도구</option>
+                <option value="LIGHT">랜턴/조명</option>
+                <option value="ETC">기타</option>
+                -->
+            </select>
+
+            <!-- 중분류 선택 -->
+            <span>중분류</span>
+            <select name="subCategory" id="subCategory">
+                <option value="">전체</option>
+                <!-- 대분류 선택 시 Ajax로 로드됨 -->
+                <!-- 테스트용 주석 예시 데이터
+                <option value="TENT01">텐트</option>
+                <option value="TENT02">타프</option>
+                <option value="TENT03">그라운드시트</option>
+                -->
             </select>
 
             <!-- 검색어 입력 -->
             <div class="content-search-bar">
-                <input type="search" placeholder="검색어 입력">
+                <input type="search" name="searchKeyword" placeholder="검색어 입력">
             </div>
 
             <!-- 검색 버튼 -->
             <div class="content-search-btn">
-                <input type="button" value="검색하기">
+                <input type="button" id="searchBtn" value="검색하기">
             </div>
         </div>
 
@@ -139,16 +205,16 @@
             <!-- 장비 정보 요약 - 주요 통계 -->
             <div class="equipment-count">
                 <div class="equipment-all">
-                    <span>총 장비 : 287대</span>
+                    <span>총 장비 : <c:out value="${stats.totalCount}"/>대</span>
                 </div>
                 <div class="equipment-available">
-                    <span>대여 가능 : 152대</span>
+                    <span>대여 가능 : <c:out value="${stats.availableCount}"/>대</span>
                 </div>
                 <div class="equipment-rented">
-                    <span>대여 중 : 98대</span>
+                    <span>대여 중 : <c:out value="${stats.rentedCount}"/>대</span>
                 </div>
                 <div class="equipment-maintenance">
-                    <span>정비 중 : 37대</span>
+                    <span>정비 중 : <c:out value="${stats.maintenanceCount}"/>대</span>
                 </div>
             </div>
 
@@ -159,116 +225,77 @@
 
             <!-- 장비 목록 테이블 - 가로 스크롤 가능 -->
             <div class="equipment-index">
-                <table>
+                <table class="main-menu">
+                    <thead>
                     <tr>
-                        <!-- 테이블 헤더 - 각 열의 제목 -->
+                        <!-- 간소화된 테이블 헤더 -->
                         <th class="col-select">선택</th>
-                        <th class="col-code">장비코드</th>
-                        <th class="col-type">렌탈타입</th>
+                        <th class="col-code">장비코드 / 소유자</th>
                         <th class="col-name">장비명</th>
-                        <th class="col-category">카테고리</th>
-                        <th class="col-grade">등급</th>
-                        <th class="col-status">상태</th>
-                        <th class="col-rentals">대여횟수</th>
-                        <th class="col-last-inspection">마지막 검수일</th>
-                        <th class="col-owner">소유자</th>
+                        <th class="col-main-category">대분류</th>
+                        <th class="col-sub-category">중분류</th>
+                        <th class="col-avg-price">평균가격</th>
+                        <th class="col-reg-date">장비등록일</th>
                         <th class="col-actions">관리</th>
                     </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 일반렌탈 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
 
-                    <!-- 장비 데이터 행 -->
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP001</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>코베아 익스페디션 텐트 4인용</td>
-                        <td>텐트/타프</td>
-                        <td><span class="grade-badge grade-s">S</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>32</td>
-                        <td>2025-04-01</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP002</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>네이처하이크 침낭 겨울용</td>
-                        <td>침낭/매트</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-rented">대여중</span></td>
-                        <td>18</td>
-                        <td>2025-03-18</td>
-                        <td>산린이</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP003</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>콜맨 파이어플레이스 투버너</td>
-                        <td>조리도구</td>
-                        <td><span class="grade-badge grade-s">S</span></td>
-                        <td><span class="status-badge status-rented">대여중</span></td>
-                        <td>45</td>
-                        <td>2025-03-25</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP004</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>헬리녹스 체어원 XL</td>
-                        <td>캠핑 가구</td>
-                        <td><span class="grade-badge grade-b">B</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>27</td>
-                        <td>2025-03-12</td>
-                        <td>캠퍼맘</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP005</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>블랙다이아몬드 헤드램프</td>
-                        <td>랜턴/조명</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-maintenance">정비중</span></td>
-                        <td>39</td>
-                        <td>2025-04-03</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
+                    <!-- 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
+<%--                    <c:forEach var="equip" items="${equipList}">--%>
+<%--                        <tr>--%>
+<%--                            <td class="checkbox-column"><input type="checkbox" value="${equip.equipId}"></td>--%>
+<%--                            <td>${equip.equipCode}</td>--%>
+<%--                            <td>--%>
+<%--                                <span class="rental-type-badge ${equip.rentalType eq 'STORE' ? 'type-store' : 'type-regular'}">--%>
+<%--                                        ${equip.rentalType eq 'STORE' ? '스토렌' : '일반렌탈'}--%>
+<%--                                </span>--%>
+<%--                            </td>--%>
+<%--                            <td>${equip.equipName}</td>--%>
+<%--                            <td>${equip.mainCategoryName}</td>--%>
+<%--                            <td>${equip.subCategoryName}</td>--%>
+<%--                            <td><span class="grade-badge grade-${equip.grade.toLowerCase()}">${equip.grade}</span></td>--%>
+<%--                            <td><fmt:formatNumber value="${equip.avgPrice}" pattern="#,###"/>원</td>--%>
+<%--                            <td>--%>
+<%--                                <span class="status-badge--%>
+<%--                                    ${equip.status eq 'AVAILABLE' ? 'status-available' :--%>
+<%--                                    equip.status eq 'RENTED' ? 'status-rented' : 'status-maintenance'}">--%>
+<%--                                        ${equip.status eq 'AVAILABLE' ? '대여가능' :--%>
+<%--                                                equip.status eq 'RENTED' ? '대여중' : '정비중'}--%>
+<%--                                </span>--%>
+<%--                            </td>--%>
+<%--                            <td>${equip.rentalCount}</td>--%>
+<%--                            <td><fmt:formatDate value="${equip.regDate}" pattern="yyyy-MM-dd"/></td>--%>
+<%--                            <td>${equip.ownerName}</td>--%>
+<%--                            <td>--%>
+<%--                                <button class="action-btn info-btn" data-equip-id="2">정보</button>--%>
+<%--                                <button class="action-btn inspect-btn" data-equip-id="2">검수</button>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
+<%--                    </c:forEach>--%>
+                    </tbody>
                 </table>
             </div>
 
+
             <!-- 페이지네이션 -->
-            <div class="pagination">
+            <div class="pagination" id="pagination">
                 <button class="page-btn first-page">&laquo;</button>
                 <button class="page-btn prev-page">&lt;</button>
                 <div class="page-numbers">
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${not empty regularPaging and regularPaging.totalPage > 0}">--%>
+<%--                            <c:forEach var="i" begin="${regularPaging.startPage}" end="${regularPaging.endPage}">--%>
+<%--                                <button class="page-btn ${i eq regularPaging.currentPage ? 'active' : ''}"--%>
+<%--                                        data-page="${i}">${i}</button>--%>
+<%--                            </c:forEach>--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
+<%--                            <button class="page-btn active" data-page="1">1</button>--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
                 </div>
                 <button class="page-btn next-page">&gt;</button>
                 <button class="page-btn last-page">&raquo;</button>
@@ -280,16 +307,16 @@
             <!-- 장비 정보 요약 - 주요 통계 -->
             <div class="equipment-count">
                 <div class="equipment-all">
-                    <span>총 스토렌 장비 : 142대</span>
+                    <span>총 스토렌 장비 : 대</span>
                 </div>
                 <div class="equipment-available">
-                    <span>대여 가능 : 82대</span>
+                    <span>대여 가능 : 대</span>
                 </div>
                 <div class="equipment-rented">
-                    <span>대여 중 : 43대</span>
+                    <span>대여 중 :대</span>
                 </div>
                 <div class="equipment-maintenance">
-                    <span>정비 중 : 17대</span>
+                    <span>정비 중 : 대</span>
                 </div>
             </div>
 
@@ -300,116 +327,55 @@
 
             <!-- 장비 목록 테이블 - 가로 스크롤 가능 -->
             <div class="equipment-index">
-                <table>
+                <table class="main-menu">
+                    <thead>
                     <tr>
-                        <!-- 테이블 헤더 - 각 열의 제목 -->
+                        <!-- 간소화된 테이블 헤더 -->
                         <th class="col-select">선택</th>
-                        <th class="col-code">장비코드</th>
-                        <th class="col-type">렌탈타입</th>
+                        <th class="col-code">장비코드 / 소유자</th>
                         <th class="col-name">장비명</th>
-                        <th class="col-category">카테고리</th>
-                        <th class="col-grade">등급</th>
-                        <th class="col-status">상태</th>
-                        <th class="col-rentals">대여횟수</th>
-                        <th class="col-last-inspection">마지막 검수일</th>
-                        <th class="col-owner">소유자</th>
+                        <th class="col-main-category">대분류</th>
+                        <th class="col-sub-category">중분류</th>
+                        <th class="col-avg-price">평균가격</th>
+                        <th class="col-reg-date">장비등록일</th>
                         <th class="col-actions">관리</th>
                     </tr>
-
-                    <!-- 스토렌 장비 데이터 행 -->
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP001</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>코베아 익스페디션 텐트 4인용</td>
-                        <td>텐트/타프</td>
-                        <td><span class="grade-badge grade-s">S</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>32</td>
-                        <td>2025-04-01</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP003</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>콜맨 파이어플레이스 투버너</td>
-                        <td>조리도구</td>
-                        <td><span class="grade-badge grade-s">S</span></td>
-                        <td><span class="status-badge status-rented">대여중</span></td>
-                        <td>45</td>
-                        <td>2025-03-25</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP005</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>블랙다이아몬드 헤드램프</td>
-                        <td>랜턴/조명</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-maintenance">정비중</span></td>
-                        <td>39</td>
-                        <td>2025-04-03</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP006</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>스노우피크 애드온 타프</td>
-                        <td>텐트/타프</td>
-                        <td><span class="grade-badge grade-s">S</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>28</td>
-                        <td>2025-03-29</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP008</td>
-                        <td><span class="rental-type-badge type-store">스토렌</span></td>
-                        <td>MSR 포켓로켓 2 버너</td>
-                        <td>조리도구</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>41</td>
-                        <td>2025-03-20</td>
-                        <td>스토렌</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- 스토렌 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
+                    <c:forEach var="equip" items="${getLists}">
+                        <tr>
+                            <td class="checkbox-column"><input type="checkbox"></td>
+                            <td>${equip.STOREN_ID}</td>
+                            <td>${equip.EQUIP_CODE}</td>
+                            <td>${equip.USER_CODE}</td>
+                            <td>${equip.SIZE_ID}</td>
+                            <td>${equip.EQUIP_SIZE_NAME}</td>
+                            <td>${equip.REQUIRED_SPACE}</td>
+                            <td><button class="action-btn">수정하기</button></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
                 </table>
             </div>
 
             <!-- 페이지네이션 -->
-            <div class="pagination">
+            <div class="pagination" id="storePagination">
                 <button class="page-btn first-page">&laquo;</button>
                 <button class="page-btn prev-page">&lt;</button>
                 <div class="page-numbers">
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${not empty storePaging and storePaging.totalPage > 0}">--%>
+<%--                            <c:forEach var="i" begin="${storePaging.startPage}" end="${storePaging.endPage}">--%>
+<%--                                <button class="page-btn ${i eq storePaging.currentPage ? 'active' : ''}"--%>
+<%--                                        data-page="${i}">${i}</button>--%>
+<%--                            </c:forEach>--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
+<%--                            <button class="page-btn active" data-page="1">1</button>--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
                 </div>
                 <button class="page-btn next-page">&gt;</button>
                 <button class="page-btn last-page">&raquo;</button>
@@ -421,16 +387,16 @@
             <!-- 장비 정보 요약 - 주요 통계 -->
             <div class="equipment-count">
                 <div class="equipment-all">
-                    <span>총 일반렌탈 장비 : 145대</span>
+                    <span>총 일반렌탈 장비 : 대</span>
                 </div>
                 <div class="equipment-available">
-                    <span>대여 가능 : 70대</span>
+                    <span>대여 가능 : 대</span>
                 </div>
                 <div class="equipment-rented">
-                    <span>대여 중 : 55대</span>
+                    <span>대여 중 : 대</span>
                 </div>
                 <div class="equipment-maintenance">
-                    <span>정비 중 : 20대</span>
+                    <span>정비 중 : s대</span>
                 </div>
             </div>
 
@@ -441,116 +407,55 @@
 
             <!-- 장비 목록 테이블 - 가로 스크롤 가능 -->
             <div class="equipment-index">
-                <table>
-                    <tr>
-                        <!-- 테이블 헤더 - 각 열의 제목 -->
-                        <th class="col-select">선택</th>
-                        <th class="col-code">장비코드</th>
-                        <th class="col-type">렌탈타입</th>
-                        <th class="col-name">장비명</th>
-                        <th class="col-category">카테고리</th>
-                        <th class="col-grade">등급</th>
-                        <th class="col-status">상태</th>
-                        <th class="col-rentals">대여횟수</th>
-                        <th class="col-last-inspection">마지막 검수일</th>
-                        <th class="col-owner">소유자</th>
-                        <th class="col-actions">관리</th>
-                    </tr>
-
-                    <!-- 일반렌탈 장비 데이터 행 -->
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP002</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>네이처하이크 침낭 겨울용</td>
-                        <td>침낭/매트</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-rented">대여중</span></td>
-                        <td>18</td>
-                        <td>2025-03-18</td>
-                        <td>산린이</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP004</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>헬리녹스 체어원 XL</td>
-                        <td>캠핑 가구</td>
-                        <td><span class="grade-badge grade-b">B</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>27</td>
-                        <td>2025-03-12</td>
-                        <td>캠퍼맘</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP007</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>캠프랜드 접이식 테이블</td>
-                        <td>캠핑 가구</td>
-                        <td><span class="grade-badge grade-c">C</span></td>
-                        <td><span class="status-badge status-available">대여가능</span></td>
-                        <td>15</td>
-                        <td>2025-03-10</td>
-                        <td>참살이</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP009</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>베어본즈 캠핑랜턴</td>
-                        <td>랜턴/조명</td>
-                        <td><span class="grade-badge grade-b">B</span></td>
-                        <td><span class="status-badge status-maintenance">정비중</span></td>
-                        <td>22</td>
-                        <td>2025-04-02</td>
-                        <td>밤산책</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="checkbox-column"><input type="checkbox"></td>
-                        <td>CP010</td>
-                        <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-                        <td>캠프23 다용도 칼</td>
-                        <td>조리도구</td>
-                        <td><span class="grade-badge grade-a">A</span></td>
-                        <td><span class="status-badge status-rented">대여중</span></td>
-                        <td>13</td>
-                        <td>2025-03-22</td>
-                        <td>요리왕</td>
-                        <td>
-                            <button class="action-btn">정보</button>
-                            <button class="action-btn">검수</button>
-                        </td>
-                    </tr>
+                <table class="main-menu">
+                <thead>
+                <tr>
+                    <!-- 간소화된 테이블 헤더 -->
+                    <th class="col-select">선택</th>
+                    <th class="col-code">장비코드 / 소유자</th>
+                    <th class="col-name">장비명</th>
+                    <th class="col-main-category">대분류</th>
+                    <th class="col-sub-category">중분류</th>
+                    <th class="col-avg-price">평균가격</th>
+                    <th class="col-reg-date">장비등록일</th>
+                    <th class="col-actions">관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <!-- 일반렌탈 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
+                    <c:forEach var="equip" items="${getList}">
+                        <tr>
+                            <td class="checkbox-column"><input type="checkbox"></td>
+                            <td>${equip.EQUIP_CODE}</td>
+                            <td>${equip.EQUIP_NAME}</td>
+                            <td>${equip.MAJOR_CATEGORY_NAME}</td>
+                            <td>${equip.MIDDLE_CATEGORY_NAME}</td>
+                            <td>${equip.ORIGINAL_PRICE}원</td>
+                            <td>${equip.CREATED_DATE}</td>
+                            <td><button class="action-btn">수정하기</button></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
                 </table>
             </div>
 
             <!-- 페이지네이션 -->
-            <div class="pagination">
+            <div class="pagination" id="regularPagination">
                 <button class="page-btn first-page">&laquo;</button>
                 <button class="page-btn prev-page">&lt;</button>
                 <div class="page-numbers">
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <button class="page-btn">5</button>
+<%--                    <c:choose>--%>
+<%--                        <c:when test="${not empty regularPaging and regularPaging.totalPage > 0}">--%>
+<%--                            <c:forEach var="i" begin="${regularPaging.startPage}" end="${regularPaging.endPage}">--%>
+<%--                                <button class="page-btn ${i eq regularPaging.currentPage ? 'active' : ''}"--%>
+<%--                                        data-page="${i}">${i}</button>--%>
+<%--                            </c:forEach>--%>
+<%--                        </c:when>--%>
+<%--                        <c:otherwise>--%>
+<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
+<%--                            <button class="page-btn active" data-page="1">1</button>--%>
+<%--                        </c:otherwise>--%>
+<%--                    </c:choose>--%>
                 </div>
                 <button class="page-btn next-page">&gt;</button>
                 <button class="page-btn last-page">&raquo;</button>
@@ -578,7 +483,7 @@
     // 페이지 로드 시 실행할 초기화 코드
     document.addEventListener('DOMContentLoaded', function() {
         // 장비 관리 메뉴 초기 상태 설정 - 페이지에 맞게 열어두기
-        const equipmentMenu = document.querySelectorAll('.menu-button')[1];
+        const equipmentMenu = document.querySelectorAll('.menu-button')[0];
         equipmentMenu.classList.add('active');
         const submenu = equipmentMenu.nextElementSibling;
         submenu.style.maxHeight = submenu.scrollHeight + "px";
@@ -627,89 +532,176 @@
                 checkbox.checked = this.checked;
             });
         });
-    });
 
-    // 각 페이지네이션 영역 설정
-    document.querySelectorAll('.pagination').forEach(pagination => {
-        const pageButtons = pagination.querySelectorAll('.page-numbers .page-btn');
-        const firstPageBtn = pagination.querySelector('.first-page');
-        const prevPageBtn = pagination.querySelector('.prev-page');
-        const nextPageBtn = pagination.querySelector('.next-page');
-        const lastPageBtn = pagination.querySelector('.last-page');
+        // 대분류 선택 시 중분류 로드
+        document.getElementById('mainCategory').addEventListener('change', function() {
+            const mainCategoryCode = this.value;
+            if (!mainCategoryCode) {
+                // 전체 선택 시 중분류 초기화
+                const subCategorySelect = document.getElementById('subCategory');
+                subCategorySelect.innerHTML = '<option value="">전체</option>';
+                return;
+            }
 
-        // 현재 페이지를 관리하는 상태 변수
-        let currentPage = 1;
-        const totalPages = 5; // 예시로 5페이지로 설정 (실제로는 데이터 기반으로 계산)
+            // Ajax를 사용하여 중분류 데이터 로드
+            const contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/getSubCategories.action?mainCategoryCode=' + mainCategoryCode)
+                .then(response => response.json())
+                .then(data => {
+                    const subCategorySelect = document.getElementById('subCategory');
+                    subCategorySelect.innerHTML = '<option value="">전체</option>';
 
-        // 페이지 버튼 클릭 이벤트
-        pageButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // 현재 활성화된 버튼에서 active 클래스 제거
-                pagination.querySelector('.page-btn.active').classList.remove('active');
-                // 클릭한 버튼에 active 클래스 추가
-                this.classList.add('active');
-                // 현재 페이지 업데이트
-                currentPage = parseInt(this.textContent);
+                    data.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.categoryCode;
+                        option.textContent = category.categoryName;
+                        subCategorySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('중분류 로드 중 오류 발생:', error));
+        });
 
-                // 처음/이전/다음/마지막 버튼 상태 업데이트
-                updateNavigationButtons();
+        // 검색 버튼 클릭 이벤트
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const searchType = document.querySelector('select[name="searchType"]').value;
+            const mainCategory = document.getElementById('mainCategory').value;
+            const subCategory = document.getElementById('subCategory').value;
+            const searchKeyword = document.querySelector('input[name="searchKeyword"]').value;
+
+            // 현재 활성화된 탭 확인
+            const activeTab = document.querySelector('.rental-tab.active').getAttribute('data-tab');
+            let rentalType = '';
+
+            if (activeTab === 'store-rentals') {
+                rentalType = 'STORE';
+            } else if (activeTab === 'regular-rentals') {
+                rentalType = 'REGULAR';
+            }
+
+            // 검색 파라미터 구성
+            const params = new URLSearchParams();
+            params.append('searchType', searchType);
+            if (mainCategory) params.append('mainCategory', mainCategory);
+            if (subCategory) params.append('subCategory', subCategory);
+            if (searchKeyword) params.append('searchKeyword', searchKeyword);
+            if (rentalType) params.append('rentalType', rentalType);
+
+            // 검색 요청
+            const contextPath = '${pageContext.request.contextPath}';
+            window.location.href = contextPath + '/admin-equipList.action?' + params.toString();
+        });
+
+        // 각 페이지네이션 설정 및 페이지 이동 처리
+        function setupPagination(paginationId, rentalType) {
+            const pagination = document.getElementById(paginationId);
+            if (!pagination) return;
+
+            const pageButtons = pagination.querySelectorAll('.page-numbers .page-btn');
+            const firstPageBtn = pagination.querySelector('.first-page');
+            const prevPageBtn = pagination.querySelector('.prev-page');
+            const nextPageBtn = pagination.querySelector('.next-page');
+            const lastPageBtn = pagination.querySelector('.last-page');
+
+            // 현재 활성화된 버튼에서 페이지 번호 가져오기
+            const activeButton = pagination.querySelector('.page-btn.active');
+            let currentPage = activeButton ? parseInt(activeButton.getAttribute('data-page')) : 1;
+
+            // 마지막 페이지 번호 가져오기
+            const lastPageNumber = pageButtons.length > 0
+                ? parseInt(pageButtons[pageButtons.length - 1].getAttribute('data-page'))
+                : 1;
+
+            // 페이지 이동 함수
+            function navigateToPage(pageNumber) {
+                // 현재 URL에서 쿼리 파라미터 가져오기
+                const urlParams = new URLSearchParams(window.location.search);
+
+                // 페이지 번호 설정
+                urlParams.set('page', pageNumber);
+
+                // 렌탈 타입이 있으면 설정
+                if (rentalType) {
+                    urlParams.set('rentalType', rentalType);
+                }
+
+                // 페이지 이동
+                const contextPath = '${pageContext.request.contextPath}';
+                window.location.href = contextPath + '/admin-equipList.action?' + urlParams.toString();
+            }
+
+            // 페이지 버튼 클릭 이벤트
+            pageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const pageNumber = parseInt(this.getAttribute('data-page'));
+                    navigateToPage(pageNumber);
+                });
+            });
+
+            // 처음 페이지 버튼 클릭 이벤트
+            if (firstPageBtn) {
+                firstPageBtn.addEventListener('click', function() {
+                    if (currentPage !== 1) {
+                        navigateToPage(1);
+                    }
+                });
+            }
+
+            // 이전 페이지 버튼 클릭 이벤트
+            if (prevPageBtn) {
+                prevPageBtn.addEventListener('click', function() {
+                    if (currentPage > 1) {
+                        navigateToPage(currentPage - 1);
+                    }
+                });
+            }
+
+            // 다음 페이지 버튼 클릭 이벤트
+            if (nextPageBtn) {
+                nextPageBtn.addEventListener('click', function() {
+                    if (currentPage < lastPageNumber) {
+                        navigateToPage(currentPage + 1);
+                    }
+                });
+            }
+
+            // 마지막 페이지 버튼 클릭 이벤트
+            if (lastPageBtn) {
+                lastPageBtn.addEventListener('click', function() {
+                    if (currentPage !== lastPageNumber) {
+                        navigateToPage(lastPageNumber);
+                    }
+                });
+            }
+
+            // 버튼 상태 업데이트
+            if (firstPageBtn) firstPageBtn.disabled = currentPage === 1;
+            if (prevPageBtn) prevPageBtn.disabled = currentPage === 1;
+            if (nextPageBtn) nextPageBtn.disabled = currentPage === lastPageNumber;
+            if (lastPageBtn) lastPageBtn.disabled = currentPage === lastPageNumber;
+        }
+
+        // 각 탭별 페이지네이션 설정
+        setupPagination('pagination', null);
+        setupPagination('storePagination', 'STORE');
+        setupPagination('regularPagination', 'REGULAR');
+
+        // 장비 정보 버튼 클릭 이벤트
+        document.querySelectorAll('.info-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const equipId = this.getAttribute('data-equip-id');
+                const contextPath = '${pageContext.request.contextPath}';
+                window.location.href = contextPath + '/admin-equipDetail.action?equipId=' + equipId;
             });
         });
 
-        // 처음 페이지 버튼 클릭 이벤트
-        firstPageBtn.addEventListener('click', function() {
-            if (currentPage !== 1) {
-                goToPage(1);
-            }
+        // 장비 검수 버튼 클릭 이벤트
+        document.querySelectorAll('.inspect-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const equipId = this.getAttribute('data-equip-id');
+                const contextPath = '${pageContext.request.contextPath}';
+                window.location.href = contextPath + '/admin-equipInspect.action?equipId=' + equipId;
+            });
         });
-
-        // 이전 페이지 버튼 클릭 이벤트
-        prevPageBtn.addEventListener('click', function() {
-            if (currentPage > 1) {
-                goToPage(currentPage - 1);
-            }
-        });
-
-        // 다음 페이지 버튼 클릭 이벤트
-        nextPageBtn.addEventListener('click', function() {
-            if (currentPage < totalPages) {
-                goToPage(currentPage + 1);
-            }
-        });
-
-        // 마지막 페이지 버튼 클릭 이벤트
-        lastPageBtn.addEventListener('click', function() {
-            if (currentPage !== totalPages) {
-                goToPage(totalPages);
-            }
-        });
-
-        // 특정 페이지로 이동하는 함수
-        function goToPage(pageNumber) {
-            // 현재 활성화된 버튼에서 active 클래스 제거
-            pagination.querySelector('.page-btn.active').classList.remove('active');
-            // 새 페이지 버튼에 active 클래스 추가
-            pageButtons[pageNumber - 1].classList.add('active');
-            // 현재 페이지 업데이트
-            currentPage = pageNumber;
-
-            // 처음/이전/다음/마지막 버튼 상태 업데이트
-            updateNavigationButtons();
-        }
-
-        // 네비게이션 버튼 상태 업데이트 함수
-        function updateNavigationButtons() {
-            // 첫 페이지일 경우 처음/이전 버튼 비활성화
-            firstPageBtn.disabled = currentPage === 1;
-            prevPageBtn.disabled = currentPage === 1;
-
-            // 마지막 페이지일 경우 다음/마지막 버튼 비활성화
-            nextPageBtn.disabled = currentPage === totalPages;
-            lastPageBtn.disabled = currentPage === totalPages;
-        }
-
-        // 초기 상태 설정
-        updateNavigationButtons();
     });
 </script>
 </body>

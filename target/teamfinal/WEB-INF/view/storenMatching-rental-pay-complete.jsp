@@ -26,36 +26,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스토렌 신청 (렌탈비 결제 완료)</title>
+
+    <title>storenMatching-rental-pay-complete.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/matching.css">
 
-    <style>
-        .order-info {
-            background-color: var(--color-beige);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin: var(--spacing-md) 0;
-        }
-
-        .info-highlight {
-            color: var(--color-maple);
-            font-weight: var(--font-bold);
-        }
-
-        .order-detail {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-md);
-            margin: var(--spacing-md) 0;
-        }
-    </style>
 </head>
 <body>
 
-<!-- 헤더 포함 -->
-<jsp:include page="header.jsp"></jsp:include>
+<jsp:include page="header.jsp"/>
 
 <main class="main-content container">
     <!-- 완료 메시지 표시 -->
@@ -94,7 +75,6 @@
         </div>
     </div>
 
-    <!-- 버튼 컨테이너 : 이전 / 다음 페이지 이동 -->
     <div class="button-container">
         <button class="btn" onclick="location.href='myequipment.action'"><%= prevMenu %></button>
         <button class="btn btn-primary" onclick="location.href='myrental.action'"><%= nextMenu %></button>
@@ -102,8 +82,8 @@
 </main>
 
 <!-- 푸터 포함 -->
-<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"/>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </body>
 </html>

@@ -2,10 +2,12 @@
 <html>
 <head>
     <title>공지사항</title>
-    <!-- CSS 파일 로드 -->
-    <link rel="stylesheet" href="../../resources/css/main.css">
+
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS 파일 로드 -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+
     <style>
         /* 게시판 특화 스타일 */
         .board-category-tag {
@@ -77,7 +79,7 @@
     </style>
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
+<jsp:include page="header.jsp"/>
 
 <div class="page-wrapper">
     <div class="container section" style="width: 100%; max-width: 1500px; padding: 0 15px; margin: 0 auto;">
@@ -253,7 +255,7 @@
     </div>
 </div>
 
-<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"/>
 </body>
 
 </html>

@@ -234,7 +234,8 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    right: 0;
+    height: 60px; /* 원하는 높이 */
     z-index: 9999;
     background-color: white;
     padding: 10px 20px;
@@ -242,6 +243,13 @@
     display: none;
     justify-content: space-between;
     align-items: center;
+    display: none; /* 기본은 숨김 */
+
+}
+
+/* 스크롤 시 나타날 때 */
+.mini-header.active {
+    display: flex;
 }
 
 .mini-header .logo {

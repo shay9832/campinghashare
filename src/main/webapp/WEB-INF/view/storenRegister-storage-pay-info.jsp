@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>결제 정보 확인</title>
+    <title>storenRegister-storage-pay-info.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body class="bg-light">
 <div class="container py-4">
@@ -35,6 +36,7 @@
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     // 취소 버튼 클릭 시 호출되는 함수
     function cancelPayment() {
@@ -63,5 +65,6 @@
         }
     }
 </script>
+
 </body>
 </html>

@@ -304,13 +304,6 @@ public class EquipRegisterController {
         }
     }
 
-
-    // 마이페이지-내 장비목록 페이지로
-    @RequestMapping("/mypage-myequip.action")
-    public String myEquip(Model model) {
-        return "myPage-myEquip";
-    }
-
 }
 
 
