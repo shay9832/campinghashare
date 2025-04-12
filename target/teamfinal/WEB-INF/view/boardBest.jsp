@@ -163,33 +163,17 @@
                         </thead>
                         <tbody>
                         <!-- 공지사항 -->
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑하쉐어 커뮤니티 이용 규칙 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">1,245</td>
-                            <td class="p-3 text-center">32</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">포인트 제도 안내 및 게시글 작성 가이드</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">987</td>
-                            <td class="p-3 text-center">45</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">876</td>
-                            <td class="p-3 text-center">28</td>
-                        </tr>
+                        <c:forEach var="notice" items="${notice}">
+                            <tr class="board-row notice border-bottom">
+                                <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
+                                <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
+                                <td class="p-3 title-cell"><a href="notice.action">${notice.postTitle}</a></td>
+                                <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                                <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${notice.viewCount}</td>
+                                <td class="p-3 text-center">${notice.recommendCount}</td>
+                            </tr>
+                        </c:forEach>
 
                         <!-- 일반 게시글 -->
                         <c:forEach var="totalHotPost" items="${totalHotPost}" varStatus="status">
@@ -199,7 +183,7 @@
                                                                                        ${totalHotPost.boardName == '자유게시판' ? 'freeboard' :
                                                                                          totalHotPost.boardName == '고독한캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a></td>
                                 <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">${totalHotPost.postTitle}
-<%--                                    <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
+                                <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
                                 <td class="p-3 text-center">${totalHotPost.createdDate.substring(0, 10)}</td>
@@ -207,6 +191,13 @@
                                 <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>${totalHotPost.recommendCount}</td>
                             </tr>
                         </c:forEach>
+
+
+                        <c:if test="${empty totalHotPost && empty notice}">
+                            <tr class="board-row border-bottom">
+                                <td colspan="7" class="p-3 text-center">게시글이 없습니다.</td>
+                            </tr>
+                        </c:if>
                         </tbody>
                     </table>
                 </div>
