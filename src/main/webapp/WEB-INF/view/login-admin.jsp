@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>login-admin.jsp</title>
+    <title>관리자 로그인</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         .login-container {
@@ -44,7 +46,6 @@
             display: block;
         }
 
-        /* placeholder 통일 */
         .login-input::placeholder {
             font-size: var(--font-sm);
             font-family: inherit;
@@ -74,47 +75,6 @@
             margin: 20px 0;
             font-size: var(--font-sm);
         }
-
-        .social-login {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .social-text {
-            color: var(--text-secondary);
-            font-size: var(--font-xs);
-            margin-bottom: 20px;
-        }
-
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .kakao-icon {
-            background-color: #fee500;
-        }
-
-        .naver-icon {
-            background-color: #1ec800;
-        }
-
-        .login-help {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--text-secondary);
-            font-size: var(--font-xs);
-        }
     </style>
 </head>
 <body>
@@ -123,24 +83,27 @@
         <div class="login-container">
             <div class="login-logo">
                 <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고">
-                <h1 class="login-title">로그인</h1>
+                <h1 class="login-title">관리자 로그인</h1>
             </div>
 
-            <form action="${pageContext.request.contextPath}/login.action" method="post">
-                <input type="text" name="userId" placeholder="아이디" class="login-input" required>
-                <input type="password" name="password" placeholder="비밀번호" class="login-input" required>
-
+            <form action="${pageContext.request.contextPath}/admin/login-admin.action" method="post">
+                <input type="text" name="adminId" placeholder="아이디" class="login-input" required>
+                <input type="password" name="adminPw" placeholder="비밀번호" class="login-input" required>
                 <button type="submit" class="login-button">로그인</button>
             </form>
 
             <div class="login-options">
-                <a href="${pageContext.request.contextPath}/password/reset.action" class="text-secondary">비밀번호 재설정</a>
-                <a href="${pageContext.request.contextPath}/signup.action" class="text-secondary">계정 등록</a>
+                <a href="${pageContext.request.contextPath}/admin/registeradmin-id.action" class="text-secondary">관리자 등록</a>
             </div>
         </div>
     </main>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<c:if test="${error eq '1'}">
+    <script>
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+    </script>
+</c:if>
+
 </body>
 </html>

@@ -97,7 +97,9 @@
     </style>
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
+
+<jsp:include page="header.jsp"/>
+
 <div class="container">
     <div class="register-container">
         <h2 class="register-title">회원가입</h2>
@@ -158,7 +160,8 @@
         </form>
     </div>
 </div>
-<jsp:include page="footer.jsp"></jsp:include>
+
+<jsp:include page="footer.jsp"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>

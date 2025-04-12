@@ -120,7 +120,7 @@
     <div class="register-container">
         <h2 class="register-title">회원가입</h2>
 
-        <form action="${pageContext.request.contextPath}/register.action" method="post" id="registerForm">
+        <form action="${pageContext.request.contextPath}/insertUser.action" method="post" id="registerForm">
 
             <!-- FlashAttribute로 전달된 값 표시 -->
             <div class="form-group">

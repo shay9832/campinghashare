@@ -31,13 +31,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스토렌 검수 결과</title>
+
+    <title>storenRegister-inspecResult.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+
 </head>
 <body>
 
-<!-- 헤더 포함 -->
 <jsp:include page="header.jsp" />
 
 <main class="main-content container">
@@ -217,7 +219,10 @@
                                 <div class="d-flex align-items-center position-relative">
                                     <span class="grade-badge grade-F mr-1">F</span>
                                     <span>49점 이하 (스토렌/렌탈 이용 불가)</span>
-                                    <i class="fas fa-question-circle ml-1 text-secondary tooltip-trigger" data-tooltip="F 등급 장비의 경우, 소유자분께 즉시 반환됩니다."></i>
+                                    <div class="info-icon tooltip-trigger">
+                                        <i class="fa-solid fa-circle-question"></i>
+                                        <div class="tooltip-content">F 등급 장비의 경우, 소유자분께 즉시 반환됩니다.</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -233,31 +238,28 @@
     </div>
 </main>
 
-<!-- 푸터 포함 -->
 <jsp:include page="footer.jsp" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
-    // 문서 로딩 완료 후 함수 실행
-    document.addEventListener('DOMContentLoaded', function() {
-        // 툴팁 기능
-        const tooltipTriggers = document.querySelectorAll('.tooltip-trigger');
-        tooltipTriggers.forEach(function(trigger) {
-            trigger.addEventListener('mouseenter', function() {
-                const tooltip = document.createElement('div');
-                tooltip.className = 'tooltip-content';
-                tooltip.textContent = this.getAttribute('data-tooltip');
-                this.appendChild(tooltip);
-            });
+    document.addEventListener('DOMContentLoaded', function () {
 
-            trigger.addEventListener('mouseleave', function() {
-                const tooltip = this.querySelector('.tooltip-content');
-                if (tooltip) {
-                    tooltip.remove();
-                }
+        // 툴팁 이벤트 처리
+        $(document).on('mouseenter', '.tooltip-trigger', function() {
+            $(this).find('.tooltip-content').css({
+                visibility: 'visible',
+                opacity: '1'
+            });
+        });
+
+        $(document).on('mouseleave', '.tooltip-trigger', function() {
+            $(this).find('.tooltip-content').css({
+                visibility: 'hidden',
+                opacity: '0'
             });
         });
     });
+
 </script>
 </body>
 </html>

@@ -1,12 +1,12 @@
 package com.team.mvc.DTO;
 
 public class UserDTO {
+    private int userCode;
     private String userId;
     private String password;
     private String userName;
     private String nickname;
     private String userTel;
-    private int userCode;
 
     public UserDTO() {}
 
