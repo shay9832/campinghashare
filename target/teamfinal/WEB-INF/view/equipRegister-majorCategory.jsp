@@ -1,8 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--<%@ include file="checkLogin.jsp"%>--%>
 <html>
 <head>
-    <title>1-major-category.jsp</title>
+    <title>equipRegister-majorCategory.jsp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 
@@ -55,7 +56,7 @@
             </c:forEach>
         </div> <!-- 누락된 category-grid 닫는 태그 추가 -->
 
-        <!-- 버튼 컨테이너 클래스 변경 -->
+        <!-- 버튼 컨테이너 -->
         <div class="button-container">
             <a href="#" class="btn">이전</a>
             <a href="#" class="btn btn-primary" onclick="goToNextStep()">다음</a>

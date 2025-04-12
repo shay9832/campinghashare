@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IAttachmentDAO">
+    <insert id="insertAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        INSERT INTO ATTACHMENT_EQUIP_REG (ATTACHMENT_EQUIP_REG_ID, EQUIP_CODE, ATTACHMENT_NAME, ATTACHMENT_PATH,
+                                          ATTACHMENT_SIZE, ATTACHMENT_ORDER, CREATED_DATE)
+        VALUES (ATTACHMENT_EQUIP_REG_SEQ.NEXTVAL, #{equipCode}, #{attachmentName}, #{attachmentPath}, #{attachmentSize},
+                #{attachmentOrder}, SYSDATE)
+    </insert>
+</mapper>

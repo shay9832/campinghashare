@@ -64,7 +64,7 @@
             display: none;
         }
 
-        /* 모달 스타일 */
+        /* 모달 스타일 수정 */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -75,43 +75,30 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 9999;
         }
 
         .modal {
-            background-color: var(--bg-primary);
-            padding: 20px;
-            border-radius: var(--radius-md);
+            background-color: white;
+            padding: var(--spacing-lg, 20px);
+            border-radius: var(--radius-md, 8px);
             min-width: 400px;
             text-align: center;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-lg, 0 4px 8px rgba(0, 0, 0, 0.1));
         }
 
         .modal-header {
-            font-size: var(--font-md);
-            font-weight: var(--font-bold);
-            margin-bottom: var(--spacing-lg);
+            font-size: var(--font-md, 18px);
+            font-weight: var(--font-bold, bold);
+            margin-bottom: var(--spacing-lg, 20px);
+            color: var(--text-primary, #333);
         }
 
         .modal-footer {
             display: flex;
             justify-content: center;
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-lg);
-        }
-
-        .title-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-sm);
-            font-size: var(--font-sm);
-            margin-bottom: var(--spacing-lg);
-            background-color: #f0f7ff;
-        }
-
-        .image-upload-container {
-            margin-bottom: var(--spacing-lg);
+            gap: var(--spacing-md, 10px);
+            margin-top: var(--spacing-lg, 20px);
         }
     </style>
 </head>
@@ -128,19 +115,19 @@
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link">
+                        <a href="boardbest.action" class="sidebar-link">
                             <i class="fa-solid fa-star"></i>
                             <span>BEST</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="BoardFree.jsp" class="sidebar-link">
+                        <a href="boardfree.action" class="sidebar-link">
                             <i class="fa-solid fa-comments"></i>
                             <span>자유게시판</span>
                         </a>
                     </li>
                     <li class="sidebar-menu-item">
-                        <a href="#" class="sidebar-link active">
+                        <a href="boardimage.action" class="sidebar-link active">
                             <i class="fa-solid fa-person-hiking"></i>
                             <span>고독한캠핑방</span>
                         </a>
@@ -179,31 +166,34 @@
     </div>
 </div>
 
-<!-- 확인 모달 -->
-<div class="modal-overlay" id="confirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
-    <div class="modal" style="background-color: white; padding: 20px; border-radius: 8px; min-width: 400px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="modal-header" style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">게시글을 등록 하시겠습니까?</div>
-        <div class="modal-footer" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-            <button class="btn btn-secondary" id="cancelBtn">취소</button>
-            <button class="btn btn-primary" id="confirmBtn">확인</button>
-        </div>
+<!-- 모달 배경 -->
+<div class="modal-backdrop"></div>
+
+<!-- 확인 모달 수정 -->
+<div class="modal" id="confirmModal">
+    <div class="modal-header">
+        <h5 class="modal-title">게시글을 등록 하시겠습니까?</h5>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelBtn">취소</button>
+        <button class="btn btn-primary" id="confirmBtn">확인</button>
     </div>
 </div>
 
-<!-- 성공 모달 -->
-<div class="modal-overlay" id="successModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999; align-items: center; justify-content: center;">
-    <div class="modal" style="background-color: white; padding: 20px; border-radius: 8px; min-width: 400px; text-align: center; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <div class="modal-header" style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">게시글이 등록 되었습니다.</div>
-        <div class="modal-footer" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-            <button class="btn btn-primary" id="okBtn">확인</button>
-        </div>
+<!-- 성공 모달 수정 -->
+<div class="modal" id="successModal">
+    <div class="modal-header">
+        <h5 class="modal-title">게시글이 등록 되었습니다.</h5>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" id="okBtn">확인</button>
     </div>
 </div>
 
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const fileInput = document.getElementById('fileInput');
         const imagePreviewArea = document.querySelector('.image-preview-area');
         const uploadBtn = document.querySelector('.image-upload-btn');
@@ -224,7 +214,7 @@
         });
 
         // 이미지 업로드 처리
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             const files = this.files;
 
             for (let i = 0; i < files.length; i++) {
@@ -236,7 +226,7 @@
 
                 const reader = new FileReader();
 
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     // 미리보기 엘리먼트 생성
                     const preview = document.createElement('div');
                     preview.className = 'image-preview';
@@ -250,7 +240,7 @@
                     const removeBtn = document.createElement('div');
                     removeBtn.className = 'remove-btn';
                     removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
-                    removeBtn.addEventListener('click', function() {
+                    removeBtn.addEventListener('click', function () {
                         preview.remove();
                     });
                     preview.appendChild(removeBtn);
@@ -264,53 +254,49 @@
         });
 
         // 등록 버튼 클릭 시 확인 모달 표시
-        submitBtn.addEventListener('click', function() {
-            console.log("등록 버튼 클릭됨");
-            const title = document.getElementById('title').value.trim();
-            if (!title) {
-                alert('제목을 입력해주세요.');
-                return;
-            }
+        if (submitBtn && confirmModal) {
+            submitBtn.addEventListener('click', function () {
+                console.log('등록 버튼 클릭됨');
+                const title = document.getElementById('title').value.trim();
+                if (!title) {
+                    alert('제목을 입력해주세요.');
+                    return;
+                }
 
-            const previews = document.querySelectorAll('.image-preview');
-            if (previews.length === 0) {
-                alert('최소 한 개 이상의 이미지를 업로드해주세요.');
-                return;
-            }
+                const previews = document.querySelectorAll('.image-preview');
+                if (previews.length === 0) {
+                    alert('최소 한 개 이상의 이미지를 업로드해주세요.');
+                    return;
+                }
 
-            // 모달 표시
-            if (confirmModal) {
-                confirmModal.style.display = 'flex';
-                console.log("확인 모달 표시됨");
-            } else {
-                console.error("확인 모달 요소를 찾을 수 없음");
-            }
-        });
+                if (confirmModal) {
+                    confirmModal.classList.add('show');
+                    document.querySelector('.modal-backdrop').classList.add('show');
+                }
+            });
+        }
 
         // 취소 버튼 클릭 시 모달 닫기
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
-                console.log("취소 버튼 클릭됨");
-                confirmModal.style.display = 'none';
+        if (cancelBtn && confirmModal) {
+            cancelBtn.addEventListener('click', function () {
+                console.log('취소 버튼 클릭됨');
+                confirmModal.classList.remove('show');
+                document.querySelector('.modal-backdrop').classList.remove('show');
             });
-        } else {
-            console.error("취소 버튼 요소를 찾을 수 없음");
         }
 
         // 확인 버튼 클릭 시 성공 모달로 전환
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', function() {
-                console.log("확인 버튼 클릭됨");
-                confirmModal.style.display = 'none';
-                successModal.style.display = 'flex';
+        if (confirmBtn && confirmModal && successModal) {
+            confirmBtn.addEventListener('click', function () {
+                console.log('확인 버튼 클릭됨');
+                confirmModal.classList.remove('show');
+                successModal.classList.add('show');
             });
-        } else {
-            console.error("확인 버튼 요소를 찾을 수 없음");
         }
 
         // 성공 모달의 확인 버튼 클릭 시 고독한 캠핑방으로 이동
         if (okBtn) {
-            okBtn.addEventListener('click', function() {
+            okBtn.addEventListener('click', function () {
                 console.log("성공 모달 확인 버튼 클릭됨");
                 window.location.href = 'boardimage.action';
             });
@@ -319,7 +305,7 @@
         }
 
         // 취소 버튼 클릭 시 고독한 캠핑방으로 이동
-        document.querySelector('.btn-secondary').addEventListener('click', function() {
+        document.querySelector('.btn-secondary').addEventListener('click', function () {
             window.location.href = 'boardimage.action';
         });
     });

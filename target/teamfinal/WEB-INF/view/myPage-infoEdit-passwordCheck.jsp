@@ -20,7 +20,7 @@
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
-<div class="container mypage-container section">
+<div class="container container-wide mypage-container section">
 
     <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
@@ -31,14 +31,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-<<<<<<< Updated upstream
-                    <li><a href="myPage-infoEdit.jsp" class="sidebar-link active">회원 정보 수정</a></li>
-=======
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link active">회원 정보 수정</a></li>
->>>>>>> Stashed changes
-                    <li><a href="#" class="sidebar-link">회원 등급</a></li>
-                    <li><a href="#" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="#" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link active">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -46,44 +41,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-<<<<<<< Updated upstream
-                    <li><a href="#" class="sidebar-link">내 장비 목록</a></li>
-                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
-=======
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
-                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
->>>>>>> Stashed changes
+                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-wishlist.action" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-leave.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -102,7 +94,7 @@
                 <h3 class="mb-4 text-center">회원 정보를 수정하기 위해서는<br>비밀번호를 입력해야 합니다.</h3>
 
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'reaedonly')" value="reasony" readonly>
+                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'readonly')" value="reasony" readonly>
                 </div>
 
                 <div class="form-group mt-3">

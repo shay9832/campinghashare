@@ -21,7 +21,7 @@
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
-<div class="container mypage-container section">
+<div class="container container-wide mypage-container section">
     <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
         <div class="sidebar-title">마이 페이지</div>
@@ -31,14 +31,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-<<<<<<< Updated upstream
-                    <li><a href="myPage-infoEdit.jsp" class="sidebar-link active">회원 정보 수정</a></li>
-=======
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link active">회원 정보 수정</a></li>
->>>>>>> Stashed changes
-                    <li><a href="#" class="sidebar-link">회원 등급</a></li>
-                    <li><a href="#" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="#" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link active">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -46,44 +41,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-<<<<<<< Updated upstream
-                    <li><a href="#" class="sidebar-link">내 장비 목록</a></li>
-                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="#" class="sidebar-link">내가 작성한 글</a></li>
-=======
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내 장비 목록</a></li>
-                    <li><a href="#" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
->>>>>>> Stashed changes
+                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-wishlist.action" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-leave.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -150,17 +142,17 @@
     $(document).ready(function() {
         // 닉네임 수정 버튼 클릭
         $("#edit-nickname-btn").click(function() {
-            window.location.href = 'myPage-infoEdit-nickname.jsp';
+            window.location.href = 'mypage-infoedit-nickname.action';
         });
 
         // 이메일 수정 버튼 클릭
         $("#edit-email-btn").click(function() {
-            window.location.href = 'myPage-infoEdit-email.jsp';
+            window.location.href = 'myPage-infoedit-email.action';
         });
 
         // 비밀번호 변경 버튼 클릭
         $("#change-password-btn").click(function() {
-            window.location.href = 'myPage-infoEdit-passwordCheck.jsp';
+            window.location.href = 'myPage-infoedit-passwordcheck.action';
         });
     });
 </script>

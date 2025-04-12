@@ -241,7 +241,7 @@
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <!-- 메인 이미지 -->
                 <div class="main-image">
-                    <img src="/resources/images/postmain.jpg" alt="캠핑 메인 이미지" />
+                    <img src="/resources/images/board-main.jpg" alt="캠핑 메인 이미지" />
                 </div>
 
                 <!-- BEST 게시판 -->

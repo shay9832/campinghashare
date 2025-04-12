@@ -1,54 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>스토렌 신청</title>
+    <title>storenRegister-storage-info.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            let count = 1;
-            let dailyPrice = 3000;
 
-            $('.size-option').click(function() {
-                $('.size-option').removeClass('active');
-                $(this).addClass('active');
-                dailyPrice = parseInt($(this).data('price'));
-                $('#storageCost').text(dailyPrice.toLocaleString());
-                $('#dailyPrice').text(dailyPrice.toLocaleString());
-                updateRentalPrice();
-            });
-
-            $('.decrease').click(function() {
-                let days = parseInt($('#rentalDays').val()) || 1;
-                if (days > 1) {
-                    $('#rentalDays').val(days - 1).trigger('input');
-                }
-            });
-
-            $('.increase').click(function() {
-                let days = parseInt($('#rentalDays').val()) || 1;
-                if (days < 30) {
-                    $('#rentalDays').val(days + 1).trigger('input');
-                }
-            });
-
-            $('#rentalDays').on('input change', function() {
-                updateRentalPrice();
-            });
-
-            function updateRentalPrice() {
-                const days = parseInt($('#rentalDays').val()) || 1;
-                const total = dailyPrice * days * 30;
-                $('#totalPrice').text(total.toLocaleString());
-            }
-
-            updateRentalPrice();
-        });
-    </script>
 </head>
 <body>
-<jsp:include page="header.jsp"></jsp:include>
+
+<jsp:include page="header.jsp"/>
+
 <main class="main-content container">
     <div class="storen-container">
         <h1 class="page-title page-title-storen-register">스토렌 신청(보관 정보 입력)</h1>
@@ -78,7 +40,7 @@
                     <div class="form-input d-flex align-items-center">
                         <span class="info-text">3,050,000 원</span>
                         <div class="d-flex align-items-center ml-4">
-                            <span class="price-diff">평균 대비 22%▲</span>
+                            <span class="price-diff">(평균 대비 22%▲)</span>
                             <span class="text-secondary ml-2">평균 신품 가격 2,500,000원</span>
                             <div class="info-icon tooltip-trigger ml-2">
                                 <i class="fa-solid fa-circle-question"></i>
@@ -127,7 +89,6 @@
                                 <button class="increase">+</button>
                             </div>
                             <span class="ml-2">개월(30일 기준)</span>
-                            <div class="ml-4" style="font-weight: bold">일일 보관 비용: <span id="dailyPrice" style="font-weight: bold">3,000</span>원</div>
                         </div>
                     </div>
                 </div>
@@ -161,8 +122,51 @@
     </div>
 </main>
 
-<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"/>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+    $(document).ready(function() {
+        let count = 1;
+        let dailyPrice = 3000;
+
+        $('.size-option').click(function() {
+            $('.size-option').removeClass('active');
+            $(this).addClass('active');
+            dailyPrice = parseInt($(this).data('price'));
+            $('#storageCost').text(dailyPrice.toLocaleString());
+            $('#dailyPrice').text(dailyPrice.toLocaleString());
+            updateRentalPrice();
+        });
+
+        $('.decrease').click(function() {
+            let days = parseInt($('#rentalDays').val()) || 1;
+            if (days > 1) {
+                $('#rentalDays').val(days - 1).trigger('input');
+            }
+        });
+
+        $('.increase').click(function() {
+            let days = parseInt($('#rentalDays').val()) || 1;
+            if (days < 30) {
+                $('#rentalDays').val(days + 1).trigger('input');
+            }
+        });
+
+        $('#rentalDays').on('input change', function() {
+            updateRentalPrice();
+        });
+
+        function updateRentalPrice() {
+            const days = parseInt($('#rentalDays').val()) || 1;
+            const total = dailyPrice * days * 30;
+            $('#totalPrice').text(total.toLocaleString());
+        }
+
+        updateRentalPrice();
+    });
+</script>
+
 </body>
 </html>
