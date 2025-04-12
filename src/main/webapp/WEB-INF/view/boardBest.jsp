@@ -192,9 +192,9 @@
                         </tr>
 
                         <!-- 일반 게시글 -->
-                        <c:forEach var="totalHotPost" items="${totalHotPost}">
+                        <c:forEach var="totalHotPost" items="${totalHotPost}" varStatus="status">
                             <tr class="board-row border-bottom">
-                                <td class="p-3 text-center">${totalHotPost.postId}</td>
+                                <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                                 <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag
                                                                                        ${totalHotPost.boardName == '자유게시판' ? 'freeboard' :
                                                                                          totalHotPost.boardName == '고독한캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a></td>
