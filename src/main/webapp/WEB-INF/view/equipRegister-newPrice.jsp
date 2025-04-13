@@ -17,6 +17,7 @@
             border-radius: 0 0 4px 4px;
             z-index: 1000;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
         }
 
         .dropdown-item {
@@ -24,6 +25,9 @@
             cursor: pointer;
             transition: background-color 0.3s;
             border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .dropdown-item:last-child {
@@ -37,6 +41,13 @@
         .search-container {
             position: relative;
         }
+
+        .dropdown-item-price {
+            color: #999;
+            font-size: 0.85em;
+            margin-left: 8px;
+        }
+
     </style>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -54,34 +65,8 @@
                 handleFileSelect(this.files);
             });
 
-
-            // 검색창 검색어 드랍다운 호출
-            setupEquipNameDropdown();
-
-            /*
-            // 장비명 입력 필드에 대한 이벤트 리스너
-            $("#equipNameSearch").on('input', function() {
-                // 장비명이 입력된 경우에만 가격 비교 정보를 표시
-                if ($(this).val().trim().length > 0) {
-                    updatePriceComparison();
-                    $("#priceComparison").show();
-                } else {
-                    $("#priceComparison").hide();
-                }
-            });
-             */
-
-            /*
-            // 가격 입력 처리
-            $("#priceInput").on('input', function() {
-                if (!isBrandOther() && $("#equipNameSearch").val().trim().length > 0) {
-                    updatePriceComparison();
-                    $("#priceComparison").show();
-                } else {
-                    $("#priceComparison").hide();
-                }
-            });
-            */
+            // 장비 폼 초기화
+            initializeEquipmentForm();
 
             // 툴팁 이벤트 처리 수정
             $(document).on('mouseenter', '.tooltip-trigger', function () {
@@ -101,34 +86,6 @@
             const brandValue = $("#brandInput").val();
             return brandValue === "기타";
         }
-
-        /*
-        // 브랜드 값에 따라 UI 설정
-        function setupUIBasedOnBrand() {
-            if (isBrandOther()) {
-                // 장비명 입력 필드를 직접 입력 모드로 변경
-                $("#equipNameSearch").attr("placeholder", "장비명 직접 입력");
-                $("#equipNameSearch").attr("readonly", false);
-                $(".search-button").hide(); // 검색 버튼 숨기기
-
-                // 가격 비교 정보 숨기기
-                $("#priceComparison").hide();
-            } else {
-                // 장비명 입력 필드를 검색 모드로 설정
-                $("#equipNameSearch").attr("placeholder", "장비명 검색 및 선택");
-                $("#equipNameSearch").attr("readonly", false);
-                $(".search-button").show(); // 검색 버튼 표시
-
-                // 가격 입력 시 가격 비교 정보 표시
-                if ($("#priceInput").val() && $("#equipNameSearch").val().trim().length > 0) {
-                    updatePriceComparison();
-                    $("#priceComparison").show();
-                } else {
-                    $("#priceComparison").hide();
-                }
-            }
-        }
-        */
 
         // 파일 선택 처리 함수
         function handleFileSelect(files) {
@@ -182,30 +139,157 @@
             photoDiv.remove();
         }
 
-        // 가격 비교 업데이트 함수
-        <%--function updatePriceComparison() {--%>
-        <%--    const inputPrice = parseInt($("#priceInput").val().replace(/,/g, '')) || 0;--%>
-        <%--    const avgPrice = 2500000; // 예시 평균 가격, 실제로는 서버에서 가져와야 함--%>
-
-        <%--    if (inputPrice > 0) {--%>
-        <%--        const diff = ((inputPrice - avgPrice) / avgPrice * 100).toFixed(0);--%>
-        <%--        const symbol = diff >= 0 ? "▲" : "▼";--%>
-        <%--        const absDiff = Math.abs(diff);--%>
-
-        <%--        $("#priceDiff").html(`(평균 대비 ${absDiff}%${symbol})`);--%>
-        <%--        $("#priceDiff").css('color', diff >= 0 ? '#d9534f' : '#5cb85c');--%>
-        <%--    }--%>
-        <%--}--%>
-
         // 추가: setupUIBasedOnBrand 함수 빈 구현 (원래 주석 처리되어 있음)
         function setupUIBasedOnBrand() {
             // 원래 주석처리된 함수이지만, ready 함수에서 호출되므로 빈 함수로 구현
         }
 
+        /**
+         * 브랜드 ID에 따라 장비명 목록을 가져와 드롭다운에 표시하는 함수
+         * @param {string} brandId - 선택된 브랜드 ID
+         */
+        function fetchEquipNames(brandId) {
+            // 기존 드롭다운 요소 초기화
+            $("#equipNameDropdown").remove();
+            $(".search-container").append('<div id="equipNameDropdown" style="display:none;"></div>');
 
-        // 검색창 드랍다운 함수
-        function setupEquipNameDropdown() {
+            // AJAX로 장비명 목록 조회
+            $.ajax({
+                url: "${pageContext.request.contextPath}/listequipnamesbybrandid.action",
+                type: "GET",
+                data: { brand: brandId },
+                success: function(data) {
+                    console.log("받은 장비명 목록:", data);
+
+                    // 데이터 로드 완료 표시
+                    window.equipNameData = data;
+                    window.dataLoaded = true;
+
+                    // 검색어가 입력된 경우 필터링 적용
+                    updateEquipNameDropdown($("#equipNameSearch").val());
+                    $("#equipNameDropdown").show();
+                },
+                error: function(xhr, status, error) {
+                    console.error("장비명 요청 오류:", error);
+                    $("#equipNameDropdown").html('<div class="dropdown-item">장비명을 불러올 수 없습니다</div>');
+                    $("#equipNameDropdown").show();
+                }
+            });
+        }
+
+        /**
+         * 검색어에 따라 장비명 드롭다운 목록을 업데이트하는 함수
+         * @param {string} searchTerm - 검색어
+         */
+        function updateEquipNameDropdown(searchTerm) {
+            if (!window.equipNameData) {
+                return;
+            }
+
+            searchTerm = searchTerm.toLowerCase();
+
+            // 필터링 전에 데이터 구조 로깅
+            console.log("필터링할 데이터:", JSON.stringify(window.equipNameData));
+
+            let filteredItems = window.equipNameData.filter(item => {
+                // 항목 데이터 로깅
+                console.log("항목 데이터:", item);
+
+                // 문자열인 경우
+                if (typeof item === 'string') {
+                    return item.toLowerCase().includes(searchTerm);
+                }
+
+                // 객체인 경우
+                if (typeof item === 'object' && item !== null) {
+                    // 객체의 키 로깅
+                    console.log("객체 키:", Object.keys(item));
+
+                    // equipName 속성 확인
+                    if (item.equipName && typeof item.equipName === 'string') {
+                        return item.equipName.toLowerCase().includes(searchTerm);
+                    }
+
+                    // 모든 문자열 속성 확인
+                    for (const key in item) {
+                        if (typeof item[key] === 'string' && item[key].toLowerCase().includes(searchTerm)) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            });
+
+            if (filteredItems.length > 0) {
+                let items = '';
+                $.each(filteredItems, function(index, item) {
+                    let name = '';
+                    let price = 0;
+
+                    // 아이템 유형에 따라 처리
+                    if (typeof item === 'string') {
+                        // 문자열인 경우
+                        name = item;
+                        price = 0;
+                    } else if (typeof item === 'object' && item !== null) {
+                        // 객체인 경우
+                        // 장비명을 찾는 로직 개선
+                        if (item.equipName) name = item.equipName;
+                        else if (item.EQUIPNAME) name = item.EQUIPNAME;
+                        else if (item.equip_name) name = item.equip_name;
+                        else if (item.name) name = item.name;
+                        else if (item[0]) name = item[0];
+                        else {
+                            // 객체 내 첫 번째 문자열 속성 찾기
+                            for (const key in item) {
+                                if (typeof item[key] === 'string') {
+                                    name = item[key];
+                                    break;
+                                }
+                            }
+                        }
+
+                        // 여전히 이름을 찾지 못했다면 [object Object] 대신 "(이름 없음)" 표시
+                        if (!name) name = "(이름 없음)";
+
+                        // 가격 정보 찾기
+                        price = (name === '기타') ? 0 : (
+                            item.price || item.PRICE || item.original_price || item.ORIGINAL_PRICE || 0
+                        );
+                    }
+
+                    // 중복 항목 방지를 위한 배열
+                    if (!window.processedNames) window.processedNames = [];
+
+                    // 이미 처리된 이름이면 스킵
+                    if (window.processedNames.includes(name)) return;
+                    window.processedNames.push(name);
+
+                    const priceStr = (name !== '기타' && price > 0) ?
+                        ' <span class="dropdown-item-price">(평균 ' + Number(price).toLocaleString() + '원)</span>' : '';
+
+                    items += '<div class="dropdown-item" data-name="' + name + '" data-price="' + price + '">'
+                        + name
+                        + priceStr
+                        + '</div>';
+                });
+
+                $("#equipNameDropdown").html(items);
+            } else {
+                $("#equipNameDropdown").html('<div class="dropdown-item" data-name="기타" data-price="0">기타</div>');
+            }
+
+            // 다음 검색을 위해 processedNames 초기화
+            window.processedNames = [];
+        }
+
+        /**
+         * 장비명 검색 및 드롭다운 기능 설정
+         */
+        function setupEquipNameSearch() {
             try {
+                // 브랜드명 가져오기
                 const brand = "${brand}";
                 console.log("브랜드명:", brand);
 
@@ -214,71 +298,74 @@
                 $(".search-container").append('<div id="equipNameDropdown" style="display:none;"></div>');
 
                 // 전역에서 사용할 장비명 데이터 변수
-                let equipNameData = [];
+                window.equipNameData = [];
+                window.dataLoaded = false;
 
-                // AJAX로 장비명 데이터 가져오기
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/listequipnamesbybrandid.action",
-                    type: "GET",
-                    data: { brand: brand },
-                    success: function(data) {
-                        console.log("받은 장비명 목록:", data);
-                        equipNameData = data; // 데이터 저장
-
-                        // 검색창 클릭 시 드롭다운 표시
-                        $("#equipNameSearch").on('click focus', function() {
-                            updateDropdown($(this).val());
-                            $("#equipNameDropdown").show();
-                        });
-
-                        // 검색 필터링 처리
-                        $("#equipNameSearch").on('input', function() {
-                            updateDropdown($(this).val());
-                        });
-
-                        // 드롭다운 항목 클릭 이벤트
-                        $(document).on('click', '.dropdown-item', function() {
-                            $("#equipNameSearch").val($(this).text());
-                            $("#equipNameDropdown").hide();
-                        });
-
-                        // 문서 클릭 시 드롭다운 숨김
-                        $(document).on('click', function(e) {
-                            if (!$(e.target).closest('.search-container').length) {
-                                $("#equipNameDropdown").hide();
-                            }
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("장비명 요청 오류:", error);
+                // 검색창 클릭 시 데이터 로드 및 드롭다운 표시
+                $("#equipNameSearch").on('click focus', function() {
+                    if (!window.dataLoaded) {
+                        // 데이터가 로드되지 않은 경우에만 AJAX 요청
+                        fetchEquipNames(brand);
+                    } else {
+                        // 이미 데이터가 로드된 경우 드롭다운만 표시
+                        updateEquipNameDropdown($(this).val());
+                        $("#equipNameDropdown").show();
                     }
                 });
 
-                // 드롭다운 업데이트 함수
-                function updateDropdown(searchTerm) {
-                    searchTerm = searchTerm.toLowerCase();
+                // 검색 필터링 처리
+                $("#equipNameSearch").on('input', function() {
+                    if (window.dataLoaded) {
+                        updateEquipNameDropdown($(this).val());
+                        $("#equipNameDropdown").show();
+                    }
+                });
 
-                    // 검색어로 필터링
-                    const filteredNames = equipNameData.filter(name =>
-                        name.toLowerCase().includes(searchTerm)
-                    );
+                // 드롭다운 항목 클릭 이벤트
+                $(document).on('click', '#equipNameDropdown .dropdown-item', function() {
+                    const equipName = $(this).data('name');
+                    const price = $(this).data('price');
 
-                    if (filteredNames.length > 0) {
-                        let items = '';
-                        $.each(filteredNames, function(index, name) {
-                            items += '<div class="dropdown-item">' + name + '</div>';
-                        });
-                        $("#equipNameDropdown").html(items);
+                    $("#equipNameSearch").val(equipName);
+
+                    // 가격 입력란에 자동 입력 (0보다 큰 경우)
+                    if (price && price > 0) {
+                        $("#priceInput").val(Number(price).toLocaleString());
                     } else {
-                        $("#equipNameDropdown").html('<div class="dropdown-item">기타</div>');
+                        // 가격 정보가 없거나 0인 경우 입력란을 비움
+                        $("#priceInput").val('');
                     }
 
-                    $("#equipNameDropdown").show();
-                }
+                    $("#equipNameDropdown").hide();
+                });
 
+                // 문서 클릭 시 드롭다운 숨김
+                $(document).on('click', function(e) {
+                    if (!$(e.target).closest('.search-container').length) {
+                        $("#equipNameDropdown").hide();
+                    }
+                });
             } catch (error) {
-                console.error("setupEquipNameDropdown 함수 오류:", error);
+                console.error("setupEquipNameSearch 함수 오류:", error);
             }
+        }
+
+        /**
+         * 페이지 로드 시 실행될 초기화 함수
+         */
+        function initializeEquipmentForm() {
+            setupEquipNameSearch();
+
+            // 가격 입력 필드에 숫자 포맷팅 적용
+            $("#priceInput").on('input', function() {
+                // 숫자만 추출
+                let value = $(this).val().replace(/[^0-9]/g, '');
+
+                // 천 단위 콤마 추가하여 표시
+                if (value) {
+                    $(this).val(Number(value).toLocaleString());
+                }
+            });
         }
 
         // 장비 등록 폼 제출
@@ -314,29 +401,28 @@
             }
 
             // AJAX로 폼 제출
-            <%--$.ajax({--%>
-            <%--    url: $("#equipmentForm").attr("action"),--%>
-            <%--    type: "POST",--%>
-            <%--    data: formData,--%>
-            <%--    processData: false,  // FormData와 함께 사용 시 필수--%>
-            <%--    contentType: false,  // FormData와 함께 사용 시 필수--%>
-            <%--    success: function(response) {--%>
-            <%--        // 성공 시 처리--%>
-            <%--        window.location.href = "${pageContext.request.contextPath}/equipregister-complete.action";--%>
-            <%--    },--%>
-            <%--    error: function(xhr, status, error) {--%>
-            <%--        // 에러 처리--%>
-            <%--        console.error("Error:", error);--%>
-            <%--        alert("파일 업로드 중 오류가 발생했습니다.");--%>
-            <%--    }--%>
-            <%--});--%>
+            $.ajax({
+                url: $("#equipmentForm").attr("action"),
+                type: "POST",
+                data: formData,
+                processData: false,  // FormData와 함께 사용 시 필수
+                contentType: false,  // FormData와 함께 사용 시 필수
+                success: function(response) {
+                    // 성공 시 처리
+                    window.location.href = "${pageContext.request.contextPath}/equipregister-complete.action";
+                },
+                error: function(xhr, status, error) {
+                    // 에러 처리
+                    console.error("Error:", error);
+                    alert("파일 업로드 중 오류가 발생했습니다.");
+                }
+            });
 
             // 일시적으로 AJAX 대신 직접 폼 제출
             document.getElementById("equipmentForm").submit();
             return false;
         }
     </script>
-
 </head>
 <body>
 <div class="page-wrapper">
@@ -346,11 +432,12 @@
         <h1 class="page-title">내 장비 등록</h1>
 
 
-        <form id="equipmentForm" method="POST" action="${pageContext.request.contextPath}/equipregister-complete.action" enctype="multipart/form-data">
+        <form id="equipmentForm" method="POST" action="${pageContext.request.contextPath}/equipregister-complete.action"
+              enctype="multipart/form-data">
 
-            <input type="hidden" name="majorCategory" value="${majorCategory}" />
-            <input type="hidden" name="middleCategory" value="${middleCategory}" />
-            <input type="hidden" name="brand" value="${brand}" />
+            <input type="hidden" name="majorCategory" value="${majorCategory}"/>
+            <input type="hidden" name="middleCategory" value="${middleCategory}"/>
+            <input type="hidden" name="brand" value="${brand}"/>
 
             <div class="equipinfo-container">
                 <div class="equipinfo-item">
@@ -364,7 +451,8 @@
                                 <label for="photoInput" class="add-photo-btn">
                                     <span class="center-icon"><i class="fa-solid fa-plus"></i></span>
                                 </label>
-                                <input type="file" id="photoInput" name="photos" accept="image/*" multiple style="display: none;">
+                                <input type="file" id="photoInput" name="photos" accept="image/*" multiple
+                                       style="display: none;">
                             </div>
                         </div>
                     </div>
@@ -435,7 +523,8 @@
 
             <!-- 버튼 컨테이너 -->
             <div class="button-container">
-                <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}" class="btn">이전</a>
+                <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}"
+                   class="btn">이전</a>
                 <button type="button" class="btn btn-primary" onclick="submitEquipmentForm()">등록</button>
             </div>
         </form>
