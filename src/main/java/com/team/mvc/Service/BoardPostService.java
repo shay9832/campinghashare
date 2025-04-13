@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -32,6 +33,13 @@ public class BoardPostService implements IBoardPostService {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.listHotPost(boardId);
     }
+
+    @Override
+    public List<BoardPostDTO> listTotalHotPost(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.listTotalHotPost(dto);
+    }
+
 
     @Override
     public int getTotalPostCount (BoardPostDTO dto) {

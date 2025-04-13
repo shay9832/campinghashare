@@ -234,7 +234,7 @@
 
         <!-- 이전/다음 버튼 -->
         <div class="button-container">
-            <a href="storenMatching-request.jsp" class="btn">이전</a>
+            <a href="../../storenMatching-request.jsp" class="btn">이전</a>
             <a href="storenMatching-rental-pay-complete.jsp" class="btn btn-primary" disabled>결제하기</a>
         </div>
     </div>

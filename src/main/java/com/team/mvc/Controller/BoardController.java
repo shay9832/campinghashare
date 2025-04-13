@@ -24,7 +24,19 @@ public class BoardController {
     }
 
     @RequestMapping("/boardbest.action")
-    public String boardBest(){
+    public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
+                            @RequestParam(value = "size", defaultValue = "10") int size,
+                            Model model) {
+        // 전체 인기글 조회
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(null);
+
+        // 페이징 처리
+        int totalPostCount = totalHotPost.size();
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+
+        model.addAttribute("totalHotPost", totalHotPost);
+        model.addAttribute("pagenation", pagenation);
+
         return "boardBest";
     }
 
@@ -45,6 +57,7 @@ public class BoardController {
         // 인기글 조회 (최대 3개)
         List<BoardPostDTO> hotPost = boardPostService.listHotPost(boardId);
         model.addAttribute("hotPost", hotPost);
+
 
         // 일반 게시물 조회
         BoardPostDTO dto = new BoardPostDTO();

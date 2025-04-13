@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>자유게시판</title>
@@ -191,8 +192,10 @@
                         </select>
 
                         <div style="display: flex; margin-left: 20px;">
-                            <a href="#" class="filter-btn active" style="border-radius: 4px; margin-right: 10px;  min-width: 80px; text-align: center;">전체</a>
-                            <a href="#" class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
+                            <a href="#" class="filter-btn active"
+                               style="border-radius: 4px; margin-right: 10px;  min-width: 80px; text-align: center;">전체</a>
+                            <a href="#" class="filter-btn"
+                               style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
                         </div>
                     </div>
                 </div>
@@ -202,9 +205,9 @@
                     <table class="w-100">
                         <thead>
                         <tr class="border-bottom">
-                            <th width="5%" class="p-3 text-center">번호</th>
+                            <th width="6%" class="p-3 text-center">번호</th>
                             <th width="10%" class="p-3 text-center">분류</th>
-                            <th width="48%" class="p-3 text-center">제목</th>
+                            <th width="47%" class="p-3 text-center">제목</th>
                             <th width="10%" class="p-3 text-center">작성자</th>
                             <th width="10%" class="p-3 text-center">작성일</th>
                             <th width="8%" class="p-3 text-center">조회수</th>
@@ -213,172 +216,65 @@
                         </thead>
                         <tbody>
                         <!-- 공지사항 -->
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">자유게시판 이용 규칙 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">1,245</td>
-                            <td class="p-3 text-center">32</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">876</td>
-                            <td class="p-3 text-center">28</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">987</td>
-                            <td class="p-3 text-center">45</td>
-                        </tr>
+                        <c:forEach var="notice" items="${notice}">
+                            <tr class="board-row notice border-bottom">
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="notice-tag">공지</span></a></td>
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="board-category-tag notice">공지</span></a></td>
+                                <td class="p-3 title-cell"><a href="notice.action">${notice.postTitle}</a></td>
+                                <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                                <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${notice.viewCount}</td>
+                                <td class="p-3 text-center">${notice.recommendCount}</td>
+                            </tr>
+                        </c:forEach>
 
                         <!-- 인기글 -->
-                        <tr class="board-row hot-post border-bottom">
-                            <td class="p-3 text-center"><span class="hot-number">인기</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">좋은 캠핑장 추천 부탁드려요!</a></td>
-                            <td class="p-3 text-center">물멍러버</td>
-                            <td class="p-3 text-center">2025-04-04</td>
-                            <td class="p-3 text-center">428</td>
-                            <td class="p-3 text-center">78</td>
-                        </tr>
-                        <tr class="board-row hot-post border-bottom">
-                            <td class="p-3 text-center"><span class="hot-number">인기</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=2">캠핑 요리 장비 추천 (사진 많음)</a></td>
-                            <td class="p-3 text-center">캠핑셰프</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">392</td>
-                            <td class="p-3 text-center">65</td>
-                        </tr>
-                        <tr class="board-row hot-post border-bottom">
-                            <td class="p-3 text-center"><span class="hot-number">인기</span></td>
-                            <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=3">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
-                            <td class="p-3 text-center">웃음사냥꾼</td>
-                            <td class="p-3 text-center">2025-04-02</td>
-                            <td class="p-3 text-center">512</td>
-                            <td class="p-3 text-center">98</td>
-                        </tr>
+                        <c:forEach var="hotPost" items="${hotPost}">
+                            <tr class="board-row hot-post border-bottom">
+                                <td class="p-3 text-center"><span class="hot-number">인기</span></td>
+                                <td class="p-3 text-center"><span class="board-category-tag
+                                                            ${hotPost.postLabelName == '묻고답하기' ? 'question' :
+                                                            hotPost.postLabelName == '후기' ? 'review' :
+                                                            hotPost.postLabelName == '잡담' ? 'chat' :
+                                                            hotPost.postLabelName == '아무말대잔치' ? 'freeboard' : ''}">${hotPost.postLabelName}</span>
+                                </td>
+                                <td class="p-3 title-cell"><a
+                                        href="boardfree-post.action?postId=${hotPost.postId}">${hotPost.postTitle}</a>
+                                </td>
+                                <td class="p-3 text-center">${hotPost.nickName}</td>
+                                <td class="p-3 text-center">${hotPost.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${hotPost.viewCount}</td>
+                                <td class="p-3 text-center">${hotPost.recommendCount}</td>
+                            </tr>
+                        </c:forEach>
 
                         <!-- 일반 게시글 -->
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13134</td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">텐트 추천 부탁드려요 (4인용)</a></td>
-                            <td class="p-3 text-center">텐트초보</td>
-                            <td class="p-3 text-center">2025-04-04</td>
-                            <td class="p-3 text-center">87</td>
-                            <td class="p-3 text-center">12</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13133</td>
-                            <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">충청도 바다뷰 캠핑장 다녀왔어요!</a></td>
-                            <td class="p-3 text-center">바다사랑</td>
-                            <td class="p-3 text-center">2025-04-04</td>
-                            <td class="p-3 text-center">124</td>
-                            <td class="p-3 text-center">23</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13132</td>
-                            <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">아무말 대잔치 (웃긴 캠핑 에피소드)</a></td>
-                            <td class="p-3 text-center">웃음사냥꾼</td>
-                            <td class="p-3 text-center">2025-04-04</td>
-                            <td class="p-3 text-center">215</td>
-                            <td class="p-3 text-center">42</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13131</td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑카 대여 어디가 좋나요?</a></td>
-                            <td class="p-3 text-center">제주여행자</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">156</td>
-                            <td class="p-3 text-center">18</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13130</td>
-                            <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 화로대 추천 (가성비 좋은 것)</a></td>
-                            <td class="p-3 text-center">불멍러버</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">198</td>
-                            <td class="p-3 text-center">35</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13129</td>
-                            <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑 중 만난 야생동물 이야기</a></td>
-                            <td class="p-3 text-center">자연사랑</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">227</td>
-                            <td class="p-3 text-center">44</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13128</td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">가족 캠핑 초보인데 팁 부탁드려요</a></td>
-                            <td class="p-3 text-center">행복한아빠</td>
-                            <td class="p-3 text-center">2025-04-02</td>
-                            <td class="p-3 text-center">183</td>
-                            <td class="p-3 text-center">29</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13127</td>
-                            <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">새로 산 침낭 추천합니다 (겨울용)</a></td>
-                            <td class="p-3 text-center">따뜻하게</td>
-                            <td class="p-3 text-center">2025-04-02</td>
-                            <td class="p-3 text-center">135</td>
-                            <td class="p-3 text-center">22</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13126</td>
-                            <td class="p-3 text-center"><span class="board-category-tag chat">잡담</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑장에서 마주친 웃긴 상황</a></td>
-                            <td class="p-3 text-center">유머왕</td>
-                            <td class="p-3 text-center">2025-04-01</td>
-                            <td class="p-3 text-center">246</td>
-                            <td class="p-3 text-center">56</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13125</td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 테이블 추천 부탁드립니다</a></td>
-                            <td class="p-3 text-center">테이블고수</td>
-                            <td class="p-3 text-center">2025-04-01</td>
-                            <td class="p-3 text-center">167</td>
-                            <td class="p-3 text-center">24</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13131</td>
-                            <td class="p-3 text-center"><span class="board-category-tag question">묻고답하기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑카 대여 어디가 좋나요? <i class="fa-solid fa-comment table-icon icon-comment"></i> 12</a></td>
-                            <td class="p-3 text-center">제주여행자</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">156</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>18</td>
-                        </tr>
-                        <tr class="board-row border-bottom">
-                            <td class="p-3 text-center">13130</td>
-                            <td class="p-3 text-center"><span class="board-category-tag review">후기</span></td>
-                            <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">캠핑용 화로대 추천 (가성비 좋은 것) <i class="fa-solid fa-image table-icon"></i> <i class="fa-solid fa-comment table-icon icon-comment"></i> 21</a></td>
-                            <td class="p-3 text-center">불멍러버</td>
-                            <td class="p-3 text-center">2025-04-03</td>
-                            <td class="p-3 text-center">198</td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>35</td>
-                        </tr>
+                        <c:forEach var="postList" items="${postList}" varStatus="status">
+                            <tr class="board-row border-bottom">
+                                <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
+                                <td class="p-3 text-center"><span class="board-category-tag
+                                                            ${postList.postLabelName == '묻고답하기' ? 'question' :
+                                                              postList.postLabelName == '후기' ? 'review' :
+                                                              postList.postLabelName == '잡담' ? 'chat' :
+                                                              postList.postLabelName == '아무말대잔치' ? 'freeboard' : ''}">${postList.postLabelName}</span>
+                                </td>
+                                <td class="p-3 title-cell"><a
+                                        href="boardfree-post.action?postId=${postList.postId}">${postList.postTitle}</a>
+                                </td>
+                                <td class="p-3 text-center">${postList.nickName}</td>
+                                <td class="p-3 text-center">${postList.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${postList.viewCount}</td>
+                                <td class="p-3 text-center">${postList.recommendCount}</td>
+                            </tr>
+                        </c:forEach>
+
+                        <c:if test="${empty postList && empty hotPost && empty notice}">
+                            <tr class="board-row border-bottom">
+                                <td colspan="7" class="p-3 text-center">게시글이 없습니다.</td>
+                            </tr>
+                        </c:if>
                         </tbody>
                     </table>
                 </div>
@@ -387,35 +283,64 @@
                 <div style="display: flex; align-items: center; margin-top: 30px; width: 100%;">
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
-                        <div class="d-flex border rounded">
-                            <select class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
-                                <option>제목+내용</option>
-                                <option>제목</option>
-                                <option>내용</option>
-                                <option>작성자</option>
-                            </select>
-                            <input type="text" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요" style="padding: 8px 10px; font-size: 13px;">
-                            <button class="btn border-0" style="background-color: #f8f9fa; padding: 8px 10px;">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
+                        <form action="boardfree.action" method="get">
+                            <div class="d-flex border rounded">
+                                <select name="searchType" class="form-control-sm border-0"
+                                        style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
+                                    <option value="titlecontent" ${searchType == 'titlecontent' ? 'selected' : ''}>
+                                        제목+내용
+                                    </option>
+                                    <option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
+                                    <option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
+                                    <option value="writer" ${searchType == 'writer' ? 'selected' : ''}>작성자</option>
+                                </select>
+                                <input type="text" name="searchKeyword" value="${searchKeyword}"
+                                       class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요"
+                                       style="padding: 8px 10px; font-size: 13px;">
+                                <button type="submit" class="btn border-0"
+                                        style="background-color: #f8f9fa; padding: 8px 10px;">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
                     <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
-                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-left"></i></a>
-                            <a href="#" class="btn btn-primary btn-sm">1</a>
-                            <a href="#" class="btn btn-sm">2</a>
-                            <a href="#" class="btn btn-sm">3</a>
-                            <a href="#" class="btn btn-sm">4</a>
-                            <a href="#" class="btn btn-sm">5</a>
-                            <a href="#" class="btn btn-sm">6</a>
-                            <a href="#" class="btn btn-sm">7</a>
-                            <a href="#" class="btn btn-sm">8</a>
-                            <a href="#" class="btn btn-sm">9</a>
-                            <a href="#" class="btn btn-sm">10</a>
-                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-right"></i></a>
+                            <!-- 첫 페이지로 -->
+                            <c:if test="${pagenation.pageNum > 1}">
+                                <a href="boardfree.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                    <i class="fa-solid fa-angles-left"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 이전 블록으로 -->
+                            <c:if test="${pagenation.startPage > pagenation.blockSize}">
+                                <a href="boardfree.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 페이지 번호 -->
+                            <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
+                                <a href="boardfree.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
+                            </c:forEach>
+
+                            <!-- 다음 블록으로 -->
+                            <c:if test="${pagenation.endPage < pagenation.totalPage}">
+                                <a href="boardfree.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 마지막 페이지로 -->
+                            <c:if test="${pagenation.pageNum < pagenation.totalPage}">
+                                <a href="boardfree.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </a>
+                            </c:if>
                         </div>
                     </div>
 
