@@ -59,6 +59,75 @@
         .custom-table tbody td:nth-child(3) {
             text-align: left; !important;
         }
+        /* 버튼 안 보이는 문제 해결 위한 css 추가 */
+        /* 조회 열 명시적 표시 */
+        .custom-table th:nth-child(9),
+        .custom-table td:nth-child(9) {
+            display: table-cell !important;
+            visibility: visible !important;
+            width: auto !important;
+        }
+
+        /* 테이블 열 너비 조정 */
+        .custom-table {
+            width: 100%;
+            table-layout: fixed; /* 고정 레이아웃 사용 */
+        }
+
+        /* ID 열 - 좁게 */
+        .custom-table th:nth-child(1),
+        .custom-table td:nth-child(1) {
+            width: 8%;
+        }
+
+        /* 배송 유형 */
+        .custom-table th:nth-child(2),
+        .custom-table td:nth-child(2) {
+            width: 8%;
+        }
+
+        /* 물품명 - 가장 넓게 */
+        .custom-table th:nth-child(3),
+        .custom-table td:nth-child(3) {
+            width: 20%;
+        }
+
+        /* 발송인, 수취인 */
+        .custom-table th:nth-child(4),
+        .custom-table td:nth-child(4),
+        .custom-table th:nth-child(5),
+        .custom-table td:nth-child(5) {
+            width: 8%;
+        }
+
+        /* 배송 상태 */
+        .custom-table th:nth-child(6),
+        .custom-table td:nth-child(6) {
+            width: 10%;
+        }
+
+        /* 배송 시작일, 종료일 */
+        .custom-table th:nth-child(7),
+        .custom-table td:nth-child(7),
+        .custom-table th:nth-child(8),
+        .custom-table td:nth-child(8) {
+            width: 10%;
+        }
+
+        /* 조회 버튼 열 - 좁게 */
+        .custom-table th:nth-child(9),
+        .custom-table td:nth-child(9) {
+            width: 8%;
+        }
+
+        /* 테이블 셀 내용 처리 */
+        .custom-table td,
+        .custom-table th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>

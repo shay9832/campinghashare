@@ -33,6 +33,86 @@
         .custom-table tbody td:nth-child(5) {
             text-align: left; !important;
         }
+        /* 테이블 열 너비 조정 */
+        .custom-table {
+            width: 100%;
+            table-layout: fixed; /* 고정 레이아웃 사용 */
+        }
+
+        /* 거래ID */
+        .custom-table th:nth-child(1),
+        .custom-table td:nth-child(1) {
+            width: 7%;
+        }
+
+        /* 배송ID */
+        .custom-table th:nth-child(2),
+        .custom-table td:nth-child(2) {
+            width: 7%;
+        }
+
+        /* 장비코드 */
+        .custom-table th:nth-child(3),
+        .custom-table td:nth-child(3) {
+            width: 7%;
+        }
+
+        /* 검수유형 */
+        .custom-table th:nth-child(4),
+        .custom-table td:nth-child(4) {
+            width: 7%;
+        }
+
+        /* 장비명 - 가장 넓게 */
+        .custom-table th:nth-child(5),
+        .custom-table td:nth-child(5) {
+            width: 15%;
+        }
+
+        /* 카테고리 */
+        .custom-table th:nth-child(6),
+        .custom-table td:nth-child(6) {
+            width: 12%;
+        }
+
+        /* 검수상태 */
+        .custom-table th:nth-child(7),
+        .custom-table td:nth-child(7) {
+            width: 8%;
+        }
+
+        /* 장비등급 */
+        .custom-table th:nth-child(8),
+        .custom-table td:nth-child(8) {
+            width: 8%;
+        }
+
+        /* 검수처리유형 */
+        .custom-table th:nth-child(9),
+        .custom-table td:nth-child(9) {
+            width: 10%;
+        }
+
+        /* 검수일 */
+        .custom-table th:nth-child(10),
+        .custom-table td:nth-child(10) {
+            width: 10%;
+        }
+
+        /* 조회 버튼 열 */
+        .custom-table th:nth-child(11),
+        .custom-table td:nth-child(11) {
+            width: 9%;
+        }
+
+        /* 테이블 셀 내용 처리 */
+        .custom-table td,
+        .custom-table th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 8px;
+        }
 
         /* 등급 배지 */
         .grade-badge.grade-A {
