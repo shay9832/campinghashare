@@ -16,8 +16,8 @@
       <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-request.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/storenMatching-request.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/matching.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/matching.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal.war" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal.war" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/matching.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/matching.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenMatching-request.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/storenMatching-request.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
