@@ -25,7 +25,6 @@ public interface IAdminInspectListDAO {
     //장비 등급 테이블 조회
     List<AdminInspectListDTO> getEquipList();
 
-    List<Map<String, Object>> getGradeLists();
 
 
 

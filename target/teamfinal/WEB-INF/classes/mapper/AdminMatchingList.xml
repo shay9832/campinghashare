@@ -1,7 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IAdminMatchingListDAO">
-    <select id="getList" resultType="com.team.mvc.DTO.AdminMatchingListDTO">
 
+    <resultMap id="storen-matching" type="com.team.mvc.DTO.AdminMatchingListDTO">
+        <result column="스토렌ID" property="storenId"/>
+        <result column="장비_코드" property="equipCode"/>
+        <result column="스토렌_제목" property="storenTitle"/>
+        <result column="스토렌매칭신청자코드" property="storenMatchingReq"/>
+        <result column="렌탈_시작일" property="rentalStart"/>
+        <result column="렌탈_종료일" property="rentalEnd"/>
+        <result column="매칭신청일" property="matchingStart"/>
+        <result column="승인여부" property="approveStatus"/>
+        <result column="승인_일자" property="approveDate"/>
+    </resultMap>
+    <resultMap id="rental-matching" type="com.team.mvc.DTO.AdminMatchingListDTO">
+        <result column="렌탈ID" property="rentalId"/>
+        <result column="장비_코드" property="equipCode"/>
+        <result column="렌탈_제목" property="rentalTitle"/>
+        <result column="렌탈매칭신청자코드" property="rentalMatchingReq"/>
+        <result column="렌탈_시작일" property="rentalStart"/>
+        <result column="렌탈_종료일" property="rentalEnd"/>
+        <result column="매칭신청일" property="matchingStart"/>
+        <result column="승인여부" property="approveStatus"/>
+        <result column="승인_일자" property="approveDate"/>
+    </resultMap>
+    <select id="getList" resultMap="storen-matching">
+        SELECT "스토렌ID", "장비_코드", "스토렌_제목", "스토렌매칭신청자코드", "렌탈_시작일", "렌탈_종료일", "매칭신청일", "승인여부", "승인_일자"
+        FROM VW_STOREN_AND_MATCHING
+    </select>
+
+    <select id="getLists" resultMap="rental-matching">
+        SELECT "렌탈ID", "장비코드", "렌탈제목", "신청자코드", "렌탈시작일", "렌탈종료일", "매칭신청일", "승인여부", "승인일자"
+        FROM VW_RENTAL_AND_MATCHING
     </select>
 </mapper>

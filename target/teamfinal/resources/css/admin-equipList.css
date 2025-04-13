@@ -309,13 +309,22 @@ body {
 
 /* 각 열의 너비 설정 */
 .col-select { width: 20px; } /* 체크박스 열 */
-.col-code { width: 70px; } /* 장비코드 열 */
+.col-code { width: 100px; } /* 장비코드 열 */
 .col-name { width: 130px; } /* 장비명 열 */
 .col-main-category { width: 80px; } /* 대분류 열 */
 .col-sub-category { width: 80px; } /* 중분류 열 */
 .col-avg-price { width: 80px; } /* 평균가격 열 */
 .col-reg-date { width: 90px; } /* 장비등록일 열 */
 .col-actions { width: 60px; } /* 관리 버튼 열 */
+.col-storen-id { width: 60px; } /* 스토렌 아이디 열 */
+.col-size-id { width: 60px; } /* 사이즈 아이디 열 */
+.col-size-name { width: 60px; } /* 사이즈 이름 열 */
+.col-required { width: 60px; } /* 창고공간 열 */
+.col-storage-price { width: 60px; } /* 보관 가격 열 */
+.col-storen-month { width: 60px; } /* 스토렌 기간 열 */
+.col-title { width: 60px; } /* 스토렌 제목 열 */
+.col-content { width: 60px; } /* 스토렌 내용 열 */
+.col-rental-price { width: 60px; } /* 렌탈 가격 열 */
 
 /* ===== 커스텀 스크롤바 ===== */
 .equipment-index::-webkit-scrollbar {
