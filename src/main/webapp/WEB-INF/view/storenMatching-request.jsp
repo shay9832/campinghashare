@@ -76,7 +76,7 @@
 
 <body>
 <header>
-    <jsp:include page="WEB-INF/view/header.jsp"/>
+    <jsp:include page="header.jsp"/>
 </header>
 
 <!-- [A] 매칭 신청 확인 모달 1 - 매칭 신청 여부 확인 -->
@@ -257,7 +257,7 @@
     </div>
 </div>
 
-<jsp:include page="WEB-INF/view/footer.jsp"/>
+<jsp:include page="footer.jsp"/>
 
 <!-- [G] 스크립트 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
