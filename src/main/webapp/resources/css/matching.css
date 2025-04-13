@@ -278,6 +278,29 @@ hr {
     cursor: not-allowed;
 }
 
+.match-btn:focus,
+.match-btn:active {
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    color: inherit;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--color-maple);
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.match-btn.btn-primary:active,
+.match-btn.btn-primary:focus {
+    background-color: var(--color-maple) !important;
+    color: white !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 /* 컨텐츠 섹션 */
 .content-section h3 {
     font-size: 18px;
