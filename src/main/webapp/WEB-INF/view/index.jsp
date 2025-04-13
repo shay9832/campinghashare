@@ -33,7 +33,7 @@
 <a href="storenRegister-rentalRegister.jsp" target="_blank">storenRegister-rentalRegister.jsp</a><br>
 <a href="storenRegister-rentalRegister-complete.jsp" target="_blank">storenRegister-rentalRegister-complete.jsp</a><br>
 <a href="rentalSearch-main.jsp" target="_blank">rentalSearch-main.jsp</a><br>
-<a href="../../storenMatching-request.jsp" target="_blank">storenMatching-request.jsp</a><br>
+<a href="storenMatching-request.jsp" target="_blank">storenMatching-request.jsp</a><br>
 <a href="storenMatching-rental-pay.jsp" target="_blank">storenMatching-rental-pay.jsp</a><br>
 <a href="storenMatching-rental-pay-complete.jsp" target="_blank">storenMatching-rental-pay-complete.jsp</a><br>
 <br><br>

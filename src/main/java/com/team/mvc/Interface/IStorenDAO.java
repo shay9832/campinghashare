@@ -14,4 +14,10 @@ public interface IStorenDAO {
 
     // 처음 스토렌 신청했을 때의 스토렌 정보 가져오기
     StorenDTO getStorenByEquipCode(@Param("user_code") int user_code, @Param("equip_code") int equip_code);
+
+
+    //매칭 신청 수가 1 이상인 스토렌 장비 리스트 조회
+    ArrayList<StorenDTO> listMatchingStorenByUserCode(@Param("user_code") int user_code);
+    // 내가 매칭 신청한 스토렌 장비 리스트 조회
+    ArrayList<StorenDTO> listMyStorenApplicationsByUserCode(int user_code);
 }

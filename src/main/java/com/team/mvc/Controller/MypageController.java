@@ -1,16 +1,17 @@
 package com.team.mvc.Controller;
 
-import com.team.mvc.DTO.DeliveryDTO;
-import com.team.mvc.DTO.MyEquipDTO;
-import com.team.mvc.DTO.MypageInspecListDTO;
+import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class MypageController {
@@ -24,6 +25,8 @@ public class MypageController {
     private IMypageDeliveryService deliveryService;
     @Autowired
     private IMypageInspecListService inspecListService;
+    @Autowired
+    private IMypageMatchingService matchingService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -86,15 +89,6 @@ public class MypageController {
     // 마이페이지-내가 소유한 장비
     @RequestMapping(value="/mypage-myequip.action")
     public String mypageMyEquip(Model model) {
-        //IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
-
-        //List<StorenDTO> storenList = storenService.getStorenListWithEquipment(2);
-
-        // &&로그인 완성 후 세션에서 받은 유저 코드로 매개변수 수정해야함!!
-        //ArrayList<EquipmentDTO> equipList = equipDao.listByUserCode(2);
-        //model.addAttribute("equipList", equipList);
-        //model.addAttribute("storenList", storenList);
-
         System.out.println("=== MypageController : mypageMyEquip() : START ===");
 
         MyEquipDTO data = myEquipService.listMyEquip(2); // 로그인 이후 세션에서 받아오는 걸로 교체 예정
@@ -102,6 +96,7 @@ public class MypageController {
         System.out.println("EquipList size: " + data.getEquipList().size()); // 콘솔 출력
         System.out.println("StorenMap size: " + data.getStorenMap().size()); // 콘솔 출력
         System.out.println("firstStorenList size: " + data.getFirstStorenList().size()); // 콘솔 출력
+        System.out.println("firstStorenList start_date : " + data.getFirstStorenList().getFirst().getRental_start_date());
 
         model.addAttribute("equipList", data.getEquipList());
         model.addAttribute("storenMap", data.getStorenMap());
@@ -170,12 +165,12 @@ public class MypageController {
         int userCode = 2; // 로그인 이후 세션에서 받아오는 걸로 교체 예정
 
         // 초기에는 스토렌 소유자 배송내역만 로드
-        List<DeliveryDTO> storenUserDeliveries = deliveryService.getStorenOwnerDeliveries(userCode);
-        model.addAttribute("deliveryList", storenUserDeliveries);
+        List<DeliveryDTO> storenOwnerDeliveries = deliveryService.getStorenOwnerDeliveries(userCode);
+        model.addAttribute("deliveryList", storenOwnerDeliveries);
         model.addAttribute("activeTab", "storen"); // 초기 탭 지정
         model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
 
-        System.out.println("deliveryList size : " + storenUserDeliveries.size());
+        System.out.println("deliveryList size : " + storenOwnerDeliveries.size());
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
         return "myPage-delivery";
     }
@@ -221,8 +216,73 @@ public class MypageController {
     // 마이페이지-매칭 조회/내역
     @RequestMapping(value="/mypage-matchinglist.action")
     public String mypageMatchingList(Model model) {
+        System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : START ===");
+        int userCode = 2; // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+
+        // 초기에는 스토렌 소유자의 매칭 신청이 들어온 내역만 로드
+        List<StorenDTO> storenOwnerList = matchingService.listStroenOwnerTab(userCode);
+        model.addAttribute("MatchingList", storenOwnerList);
+        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
+        model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+
+        System.out.println("deliveryList size : " + storenOwnerList.size());
+        System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : END ===");
+
         return "myPage-matchingList";
     }
+
+    // AJAX 요청 처리 - 스토렌 소유자 탭
+    @RequestMapping(value="/api/matching/storen/owner", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> getStorenOwnerMatching() {
+        System.out.println("=== MypageController : getStorenOwnerMatching() - AJAX - STOREN Owner : START ===");
+        int userCode = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : getStorenOwnerMatching() - AJAX - STOREN Owner : END ===");
+        return matchingService.listStroenOwnerTab(userCode);
+    }
+
+    //AJAX 요청 처리 - 스토렌 유저 탭
+    @RequestMapping(value="/api/matching/storen/user", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> getStorenUserMatching() {
+        System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN User : START ===");
+        int user_code = 2; // 세션에서 가져와야 함
+        System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN User : END ===");
+        return matchingService.listStorenUserTab(user_code);
+    }
+
+    // AJAX 요청 처리 - 스토렌 매칭 상세 정보
+    @RequestMapping(value="/api/matching/storen/details/{transaction_id}", produces="application/json")
+    @ResponseBody
+    public List<MatchingRequestDTO> getStorenMatchingDetails(@PathVariable("transaction_id") int transactionId) {
+        System.out.println("=== MypageController : getStorenMatchingDetails() - AJAX - STOREN Details : START ===");
+        System.out.println("Transaction ID: " + transactionId);
+
+        // 거래 ID에 대한 모든 매칭 요청 정보 가져오기
+        List<MatchingRequestDTO> matchingRequests = matchingService.listStorenRequestTab(transactionId, "스토렌_매칭완료");
+
+        System.out.println("=== MypageController : getStorenMatchingDetails() - AJAX - STOREN Details : END ===");
+        return matchingRequests;
+    }
+
+    // 매칭 승인 처리를 위한 AJAX 요청 처리
+    @RequestMapping(value="/api/matching/approve", produces="application/json")
+    @ResponseBody
+    public Map<String, Object> approveMatching(int transactionId, int userCode) {
+        System.out.println("=== MypageController : approveMatching() - AJAX - Approve : START ===");
+        Map<String, Object> result = new HashMap<>();
+
+        // 서비스에서 매칭 승인 처리 로직 필요
+        // 예: matchingService.approveMatching(transactionId, userCode);
+
+        result.put("success", true);
+        result.put("message", "매칭이 승인되었습니다.");
+
+        System.out.println("=== MypageController : approveMatching() - AJAX - Approve : END ===");
+        return result;
+    }
+
+
 
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")
