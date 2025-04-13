@@ -165,13 +165,17 @@
                         <!-- 공지사항 -->
                         <c:forEach var="notice" items="${notice}">
                             <tr class="board-row notice border-bottom">
-                                <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                                <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="notice-tag">공지</span></a></td>
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="board-category-tag notice">공지</span></a></td>
                                 <td class="p-3 title-cell"><a href="notice.action">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
-                                <td class="p-3 text-center">${notice.recommendCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${notice.recommendCount}
+                                </td>
                             </tr>
                         </c:forEach>
 
@@ -180,15 +184,19 @@
                             <tr class="board-row border-bottom">
                                 <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                                 <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag
-                                                                                       ${totalHotPost.boardName == '자유게시판' ? 'freeboard' :
-                                                                                         totalHotPost.boardName == '고독한캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a></td>
-                                <td class="p-3 title-cell"><a href="boardfree-post.action?postId=1">${totalHotPost.postTitle}
-                                <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
+                                                                                       ${totalHotPost.boardName == '자유 게시판' ? 'freeboard' :
+                                                                                         totalHotPost.boardName == '고독한 캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a>
+                                </td>
+                                <td class="p-3 title-cell"><a
+                                        href="boardfree-post.action?postId=1">${totalHotPost.postTitle}
+                                        <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
                                 <td class="p-3 text-center">${totalHotPost.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${totalHotPost.viewCount}</td>
-                                <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>${totalHotPost.recommendCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${totalHotPost.recommendCount}
+                                </td>
                             </tr>
                         </c:forEach>
 
@@ -206,46 +214,82 @@
                 <div style="display: flex; align-items: center; margin-top: 30px; width: 100%;">
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
-                        <div class="d-flex border rounded">
-                            <select class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
-                                <option>제목+내용</option>
-                                <option>제목</option>
-                                <option>내용</option>
-                                <option>작성자</option>
-                            </select>
-                            <input type="text" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요" style="padding: 8px 10px; font-size: 13px;">
-                            <button class="btn border-0" style="background-color: #f8f9fa; padding: 8px 10px;">
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                            </button>
-                        </div>
+                        <form action="boardfree.action" method="get">
+                            <div class="d-flex border rounded">
+                                <select name="searchType" class="form-control-sm border-0"
+                                        style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
+                                    <option value="titlecontent" ${searchType == 'titlecontent' ? 'selected' : ''}>
+                                        제목+내용
+                                    </option>
+                                    <option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
+                                    <option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
+                                    <option value="writer" ${searchType == 'writer' ? 'selected' : ''}>작성자</option>
+                                </select>
+                                <input type="text" name="searchKeyword" value="${searchKeyword}"
+                                       class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요"
+                                       style="padding: 8px 10px; font-size: 13px;">
+                                <button type="submit" class="btn border-0"
+                                        style="background-color: #f8f9fa; padding: 8px 10px;">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
                     <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
-                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-left"></i></a>
-                            <a href="#" class="btn btn-primary btn-sm">1</a>
-                            <a href="#" class="btn btn-sm">2</a>
-                            <a href="#" class="btn btn-sm">3</a>
-                            <a href="#" class="btn btn-sm">4</a>
-                            <a href="#" class="btn btn-sm">5</a>
-                            <a href="#" class="btn btn-sm">6</a>
-                            <a href="#" class="btn btn-sm">7</a>
-                            <a href="#" class="btn btn-sm">8</a>
-                            <a href="#" class="btn btn-sm">9</a>
-                            <a href="#" class="btn btn-sm">10</a>
-                            <a href="#" class="btn btn-sm"><i class="fa-solid fa-chevron-right"></i></a>
+                            <!-- 첫 페이지로 -->
+                            <c:if test="${pagenation.pageNum > 1}">
+                                <a href="boardfree.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
+                                    <i class="fa-solid fa-angles-left"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 이전 블록으로 -->
+                            <c:if test="${pagenation.startPage > pagenation.blockSize}">
+                                <a href="boardfree.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 페이지 번호 -->
+                            <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
+                                <a href="boardfree.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
+                            </c:forEach>
+
+                            <!-- 다음 블록으로 -->
+                            <c:if test="${pagenation.endPage < pagenation.totalPage}">
+                                <a href="boardfree.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </a>
+                            </c:if>
+
+                            <!-- 마지막 페이지로 -->
+                            <c:if test="${pagenation.pageNum < pagenation.totalPage}">
+                                <a href="boardfree.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
+                                    <i class="fa-solid fa-angles-right"></i>
+                                </a>
+                            </c:if>
                         </div>
                     </div>
 
-                    <!-- 오른쪽 여백 - 균형을 맞추기 위한 빈 공간 -->
-                    <div style="flex: 1; display: flex; justify-content: flex-end;"></div>
+                    <!-- 글쓰기 버튼 - 오른쪽 -->
+                    <div style="flex: 1; display: flex; justify-content: flex-end;">
+                        <button class="btn btn-primary" onclick="goToWrite()">
+                            <i class="fa-solid fa-pen"></i> 글쓰기
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<jsp:include page="footer.jsp"></jsp:include>
+    <jsp:include page="footer.jsp"></jsp:include>
 </body>
 </html>

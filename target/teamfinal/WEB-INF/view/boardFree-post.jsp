@@ -496,6 +496,157 @@
             animation: fadeIn 0.3s ease-in-out;
         }
     </style>
+    <script>
+        // 댓글 등록 이벤트 처리
+        document.getElementById('commentSubmit').addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+            const content = document.getElementById('contentArea').value;
+
+            if(content.trim() === '') {
+                alert('댓글 내용을 입력해주세요.');
+                return;
+            }
+
+            // AJAX를 사용하여 댓글 등록 요청
+            fetch('api/reply/add.action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    postId: postId,
+                    replyContent: content
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        // 성공적으로 등록된 경우 페이지 새로고침
+                        location.reload();
+                    } else {
+                        alert('댓글 등록에 실패했습니다: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('댓글 등록 중 오류가 발생했습니다.');
+                });
+        });
+
+        // 답글 등록 이벤트 처리
+        document.querySelectorAll('.reply-submit').forEach(button => {
+            button.addEventListener('click', function() {
+                const parentId = this.getAttribute('data-parent-id');
+                const replyArea = this.closest('.comment-reply-area');
+                const content = replyArea.querySelector('.comment-reply-input').value;
+
+                if(content.trim() === '') {
+                    alert('답글 내용을 입력해주세요.');
+                    return;
+                }
+
+                // AJAX를 사용하여 답글 등록 요청
+                fetch('api/reply/add.action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        postId: '${post.postId}', // JSP EL 표현식 사용
+                        rootReplyId: parentId,
+                        replyContent: content
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success) {
+                            // 성공적으로 등록된 경우 페이지 새로고침
+                            location.reload();
+                        } else {
+                            alert('답글 등록에 실패했습니다: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('답글 등록 중 오류가 발생했습니다.');
+                    });
+            });
+        });
+
+        // 댓글 삭제 이벤트 처리
+        document.querySelectorAll('.delete-reply').forEach(button => {
+            button.addEventListener('click', function() {
+                if(!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+                    return;
+                }
+
+                const replyId = this.getAttribute('data-id');
+
+                // AJAX를 사용하여 댓글 삭제 요청
+                fetch('api/reply/delete.action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        replyId: replyId
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success) {
+                            // 성공적으로 삭제된 경우 페이지 새로고침
+                            location.reload();
+                        } else {
+                            alert('댓글 삭제에 실패했습니다: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('댓글 삭제 중 오류가 발생했습니다.');
+                    });
+            });
+        });
+
+
+        // 추천(좋아요) 버튼 이벤트 처리
+        document.getElementById('likeButton').addEventListener('click', function() {
+            const postId = this.getAttribute('data-post-id');
+
+            // AJAX를 사용하여 추천 토글 요청
+            fetch('api/post/recommend.action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    postId: postId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        // 추천 수 업데이트
+                        document.getElementById('likeCount').textContent = '추천 ' + data.recommendCount;
+
+                        // 추천 버튼 상태 업데이트 (활성화/비활성화)
+                        if(data.recommended) {
+                            this.classList.add('active');
+                        } else {
+                            this.classList.remove('active');
+                        }
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('추천 처리 중 오류가 발생했습니다.');
+                });
+        });
+
+    </script>
+
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -538,58 +689,46 @@
                 <div class="post-container">
                     <div class="post-header">
                         <div>
-                            <h1 class="post-title">주말 캠핑에서 찍은 사진</h1>
+                            <h1 class="post-title">${post.postTitle}</h1>
                             <div class="post-info">
                                 <div class="post-author">
                                     <img src="/api/placeholder/24/24" alt="작성자 아이콘">
-                                    불멍러버
+                                    ${post.nickName}
                                 </div>
-                                <div class="post-date">2025.04.05 00:00</div>
-                                <div class="post-views">조회수 856</div>
-                                <div class="post-likes">추천 68</div>
-                                <button class="report-btn">신고</button>
+                                <div class="post-date">${post.createdDate}</div>
+                                <div class="post-views">조회수 ${post.viewCount}</div>
+                                <div class="post-likes">추천 ${post.recommendCount}</div>
+                                <button class="report-btn" data-id="${post.postId}">신고</button>
                             </div>
                         </div>
                     </div>
                     <div class="post-body">
-                        <p>지난 주말 양평 근처 캠핑장에서 찍은 사진을 공유합니다.</p>
+                        ${post.postContent}
 
-                        <p>지난 달에 새로 구입한 소토(SOTO) 화로대를 사용했는데, 장작도 잘 타고 불꽃 모양도 예뻐서
-                            정말 좋았습니다. 화로대 위에 그릴을 올려 고기도 구워 먹을 수 있어서 일석이조였어요.</p>
-
-                        <p>핫초코는 정말 최고의 조합이었습니다. 별 구경은 도시에서는 느낄 수 없는 힐링을 선사해줍니다.</p>
-
-                        <div class="post-images">
-                            <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="이미지1">
+                        <!-- 첨부 이미지가 있는 경우 표시 -->
+                        <c:if test="${not empty post.attachments}">
+                            <div class="post-images">
+                                <c:forEach var="attachment" items="${post.attachments}">
+                                    <div class="post-image">
+                                        <img src="${attachment.attachmentPath}" alt="${attachment.attachmentName}">
+                                    </div>
+                                </c:forEach>
                             </div>
-                            <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="이미지2">
-                            </div>
-                            <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="이미지3">
-                            </div>
-                            <div class="post-image">
-                                <img src="/api/placeholder/120/120" alt="이미지4">
-                            </div>
-                        </div>
-
-                        <p>여러분도 캠핑 가실 때 꼭 몬당하키 시간을 가져보세요. 머리가 맑아지고 생각이 정리되는 느낌이 들거에요.
-                            다음에는 더 좋은 장소에서 더 멋진 몬당하키 사진을 찍어 올리겠습니다.</p>
+                        </c:if>
                     </div>
 
                     <div class="p-4 border-top">
                         <div class="post-actions">
                             <div class="like-area">
-                                <button class="btn btn-icon" id="likeButton">
+                                <button class="btn btn-icon" id="likeButton" data-post-id="${post.postId}">
                                     <i class="fas fa-heart icon-heart"></i>
                                 </button>
-                                <span class="font-bold" id="likeCount">추천 77</span>
+                                <span class="font-bold" id="likeCount">추천 ${post.recommendCount}</span>
                             </div>
                             <div class="btn-group">
-                                <button class="btn btn-sm">이전글</button>
-                                <button class="btn btn-sm">목록</button>
-                                <button class="btn btn-sm">다음글</button>
+                                <button class="btn btn-sm" onclick="location.href='boardfree-post.action?postId=${prevPostId}'">이전글</button>
+                                <button class="btn btn-sm" onclick="location.href='boardfree.action'">목록</button>
+                                <button class="btn btn-sm" onclick="location.href='boardfree-post.action?postId=${nextPostId}'">다음글</button>
                             </div>
                         </div>
                     </div>
@@ -598,111 +737,106 @@
                 <!-- 댓글 영역 -->
                 <div class="comments-container">
                     <div class="comment-list">
-                        <!-- 첫 번째 댓글 -->
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <div class="comment-author">
-                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
-                                    <span>캠핑초보</span>
-                                </div>
-                                <div style="display: flex; gap: 15px; align-items: center;">
-                                    <div class="comment-date">2025.04.05 00:00</div>
-                                    <button class="report-btn">신고</button>
-                                </div>
-                            </div>
-                            <div class="comment-text">
-                                저도 몬당하키 정말 좋아합니다. 특히 캠핑 갔을 때 밤에 화로대 앞에서 맥주 한 캔 마시면서 불멍 하는 시간이 하루 중 최고의 순간인 것 같아요.
-                            </div>
-                            <div class="comment-actions">
-                                <button class="comment-btn reply-toggle">답글</button>
-                            </div>
-                            <div class="comment-reply-area">
-                                <div class="comment-input-area">
-                                    <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
-                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
-                                    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
-                                        <div>
-                                            <button class="btn btn-outline-primary btn-sm"><i
-                                                    class="fa-solid fa-paperclip"></i>첨부파일
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-sm cancel-reply">취소</button>
-                                            <button class="btn btn-primary btn-sm">등록</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <c:choose>
+                            <c:when test="${not empty replies}">
+                                <c:forEach var="reply" items="${replies}">
+                                    <!-- 댓글 표시 - 대댓글이 아닌 경우만 표시 -->
+                                    <c:if test="${empty reply.rootReplyId}">
+                                        <div class="comment-item" id="reply-${reply.replyId}">
+                                            <div class="comment-header">
+                                                <div class="comment-author">
+                                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
+                                                    <span>${reply.nickname}</span>
+                                                </div>
+                                                <div style="display: flex; gap: 15px; align-items: center;">
+                                                    <div class="comment-date">${reply.createdDate}</div>
+                                                    <button class="report-btn" data-id="${reply.replyId}">신고</button>
+                                                </div>
+                                            </div>
+                                            <div class="comment-text">
+                                                    ${reply.replyContent}
+                                            </div>
+                                            <div class="comment-actions">
+                                                <button class="comment-btn reply-toggle">답글</button>
+                                                <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
+                                                <c:if test="${reply.userCode eq sessionScope.userCode}">
+                                                    <button class="comment-btn delete-reply" data-id="${reply.replyId}">삭제</button>
+                                                </c:if>
+                                            </div>
+                                            <div class="comment-reply-area">
+                                                <div class="comment-input-area">
+                                                    <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
+                                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                                                    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                                                        <div>
+                                                            <button class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-paperclip"></i>첨부파일</button>
+                                                        </div>
+                                                        <div>
+                                                            <button class="btn btn-sm cancel-reply">취소</button>
+                                                            <button class="btn btn-primary btn-sm reply-submit" data-parent-id="${reply.replyId}">등록</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                        <!-- 대댓글 -->
-                        <div class="comment-item reply-comment">
-                            <div class="comment-header">
-                                <div class="comment-author">
-                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
-                                    <span>불멍러버</span>
-                                </div>
-                                <div style="display: flex; gap: 15px; align-items: center;">
-                                    <div class="comment-date">2025.04.05 00:00</div>
-                                    <button class="report-btn">신고</button>
-                                </div>
-                            </div>
-                            <div class="comment-text">
-                                맞아요! 맥주와 함께하는 불멍도 정말 좋죠. 저도 종종 즐기는 조합입니다.
-                            </div>
-                            <div class="comment-actions">
-                                <button class="comment-btn">삭제</button>
-                                <button class="comment-btn reply-toggle">답글</button>
-                            </div>
-                            <div class="comment-reply-area">
-                                <div class="comment-input-area">
-                                    <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
-                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
-                                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                                        <button class="btn btn-sm cancel-reply">취소</button>
-                                        <button class="btn btn-primary btn-sm">등록</button>
+                                            <!-- 이 댓글에 달린 대댓글 표시 -->
+                                            <c:forEach var="childReply" items="${replies}">
+                                                <c:if test="${childReply.rootReplyId eq reply.replyId}">
+                                                    <div class="comment-item reply-comment">
+                                                        <div class="comment-header">
+                                                            <div class="comment-author">
+                                                                <img src="/api/placeholder/24/24" alt="작성자 아이콘">
+                                                                <span>${childReply.nickname}</span>
+                                                            </div>
+                                                            <div style="display: flex; gap: 15px; align-items: center;">
+                                                                <div class="comment-date">${childReply.createdDate}</div>
+                                                                <button class="report-btn" data-id="${childReply.replyId}">신고</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="comment-text">
+                                                                ${childReply.replyContent}
+                                                        </div>
+                                                        <div class="comment-actions">
+                                                            <button class="comment-btn reply-toggle">답글</button>
+                                                            <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
+                                                            <c:if test="${childReply.userCode eq sessionScope.userCode}">
+                                                                <button class="comment-btn delete-reply" data-id="${childReply.replyId}">삭제</button>
+                                                            </c:if>
+                                                        </div>
+                                                        <div class="comment-reply-area">
+                                                            <div class="comment-input-area">
+                                                                <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
+                                                                <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                                                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
+                                                                    <button class="btn btn-sm cancel-reply">취소</button>
+                                                                    <button class="btn btn-primary btn-sm reply-submit" data-parent-id="${reply.replyId}">등록</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                            </c:forEach>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="comment-item">
+                                    <div class="comment-text">
+                                        아직 댓글이 없습니다. 첫 댓글을 작성해보세요!
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- 두 번째 댓글 -->
-                        <div class="comment-item">
-                            <div class="comment-header">
-                                <div class="comment-author">
-                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
-                                    <span>장작캠퍼</span>
-                                </div>
-                                <div style="display: flex; gap: 15px; align-items: center;">
-                                    <div class="comment-date">2025.04.05 00:00</div>
-                                    <button class="report-btn">신고</button>
-                                </div>
-                            </div>
-                            <div class="comment-text">
-                                요즘은 휴대용 화로대도 많이 나와서 차박할 때도 간편하게 불멍을 즐길 수 있어서 좋더라구요. 사진 속 소토 화로대 저도 갖고 있는데 정말 좋아요!
-                            </div>
-                            <div class="comment-actions">
-                                <button class="comment-btn reply-toggle">답글</button>
-                            </div>
-                            <div class="comment-reply-area">
-                                <div class="comment-input-area">
-                                    <textarea class="comment-reply-input" rows="4" placeholder="댓글을 작성해주세요"></textarea>
-                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
-                                    <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                                        <button class="btn btn-sm cancel-reply">취소</button>
-                                        <button class="btn btn-primary btn-sm">등록</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
+                    <!-- 댓글 작성 영역 -->
                     <div class="p-3">
                         <textarea id="contentArea" class="form-control mb-2" rows="3" placeholder="댓글을 작성해주세요"></textarea>
                         <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
                         <div class="d-flex justify-content-between">
                             <button class="btn btn-outline-primary"><i class="fa-solid fa-paperclip"></i>첨부파일</button>
-                            <button class="btn btn-primary">등록</button>
+                            <button class="btn btn-primary" id="commentSubmit" data-post-id="${post.postId}">등록</button>
                         </div>
                     </div>
                 </div>

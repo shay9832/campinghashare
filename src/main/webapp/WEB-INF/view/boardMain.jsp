@@ -1,4 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <html>
 <head>
     <title>커뮤니티 메인</title>
@@ -87,6 +90,11 @@
             text-overflow: ellipsis;
         }
 
+        .post-title .attachment-icon {
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
+
         .created-date {
             width: 100px;
             text-align: center;
@@ -133,11 +141,18 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .simple-card-image i {
             font-size: 48px;
             color: var(--color-gray-400);
+        }
+
+        .simple-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .simple-card-content {
@@ -222,18 +237,31 @@
                             <span>BEST</span>
                         </a>
                     </li>
-                    <li class="sidebar-menu-item">
-                        <a href="boardfree.action" class="sidebar-link">
-                            <i class="fa-solid fa-comments"></i>
-                            <span>자유게시판</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-menu-item">
-                        <a href="boardimage.action" class="sidebar-link">
-                            <i class="fa-solid fa-person-hiking"></i>
-                            <span>고독한캠핑방</span>
-                        </a>
-                    </li>
+
+                    <!-- 동적으로 커뮤니티 게시판 목록 표시 -->
+                    <c:forEach var="board" items="${communityBoards}">
+                        <c:choose>
+                            <c:when test="${board.boardName eq '자유 게시판'}">
+                                <a href="boardfree.action" class="sidebar-link">
+                                    <i class="fa-solid fa-comments"></i>
+                                    <span>${board.boardName}</span>
+                                </a>
+                            </c:when>
+                            <c:when test="${board.boardName eq '고독한 캠핑방'}">
+                                <a href="boardimage.action" class="sidebar-link">
+                                    <i class="fa-solid fa-person-hiking"></i>
+                                    <span>${board.boardName}</span>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- 다른 게시판의 경우 -->
+                                <a href="board${board.boardName}.action" class="sidebar-link">
+                                    <i class="fa-solid fa-folder"></i>
+                                    <span>${board.boardName}</span>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
                 </ul>
             </aside>
 
@@ -241,7 +269,7 @@
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <!-- 메인 이미지 -->
                 <div class="main-image">
-                    <img src="/resources/images/board-main.jpg" alt="캠핑 메인 이미지" />
+                    <img src="/resources/images/board-main.jpg" alt="캠핑 메인 이미지"/>
                 </div>
 
                 <!-- BEST 게시판 -->
@@ -253,279 +281,168 @@
                         <a href="boardbest.action" class="more-btn">+</a>
                     </div>
                     <div class="post-list">
-                        <div class="post-item">
-                            <div class="post-number">1</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>45</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=1">첫 캠핑인데 뭐가 필요할까요?</a>
+                        <c:forEach var="post" items="${bestPosts}" varStatus="status">
+                            <div class="post-item">
+                                <div class="post-number">${status.index + 1}</div>
+                                <div class="post-rec"><i class="fa-solid fa-heart"></i>${post.recommendCount}</div>
+                                <div class="post-title">
+                                    <c:choose>
+                                        <c:when test="${post.boardName eq '자유 게시판'}">
+                                            <a href="boardfree-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                        </c:when>
+                                        <c:when test="${post.boardName eq '고독한 캠핑장'}">
+                                            <a href="boardimage-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="boardUrlName" value=""/>
+                                            <c:choose>
+                                                <c:when test="${not empty post.boardName}">
+                                                    <c:set var="boardUrlName"
+                                                           value="${fn:toLowerCase(fn:replace(post.boardName, ' ', ''))}"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:set var="boardUrlName" value="board"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <a href="${boardUrlName}-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <c:if test="${not empty post.attachments}">
+                                        <span class="attachment-icon">
+                                            <i class="fa-solid fa-paperclip"></i>
+                                        </span>
+                                    </c:if>
+                                </div>
+                                <div class="created-date">
+                                        ${fn:substring(post.createdDate, 0, 10)}
+                                </div>
                             </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">2</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>55</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=2">가성비 좋은 캠핑장비 추천해요!</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">3</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>75</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=3">불멍할 때 듣기 좋은 음악 추천</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">4</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>30</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=4">캠핑장에서 요리하는 꿀팁</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">5</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>63</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=5">초간단 화로대 리뷰</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
+                        </c:forEach>
                     </div>
                 </div>
 
-                <!-- 자유게시판 -->
-                <div class="board-wrapper">
-                    <div class="board-header">
-                        <h3>
-                            <a href="boardfree.action" class="text-primary">자유게시판</a>
-                        </h3>
-                        <a href="boardfree.action" class="more-btn">+</a>
-                    </div>
-                    <div class="post-list">
-                        <div class="post-item">
-                            <div class="post-number">1</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>10</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=6">이번 주말 캠핑 갈 사람?</a>
+                <!-- 동적으로 각 게시판 출력 -->
+                <c:forEach var="board" items="${communityBoards}">
+                    <c:set var="boardId" value="${board.boardId}"/>
+                    <c:set var="boardPosts" value="${boardHotPosts[boardId]}"/>
+
+                    <!-- 해당 게시판에 게시글이 있는 경우에만 표시 -->
+                    <c:if test="${not empty boardPosts}">
+                        <div class="board-wrapper">
+                            <div class="board-header">
+                                <h3>
+                                    <c:choose>
+                                        <c:when test="${board.boardName eq '자유 게시판'}">
+                                            <a href="boardfree.action" class="text-primary">${board.boardName}</a>
+                                        </c:when>
+                                        <c:when test="${board.boardName eq '고독한 캠핑방'}">
+                                            <a href="boardimage.action" class="text-primary">${board.boardName}</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="boardUrlName"
+                                                   value="${fn:toLowerCase(fn:replace(board.boardName, ' ', ''))}"/>
+                                            <a href="board${boardUrlName}.action"
+                                               class="text-primary">${board.boardName}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </h3>
+                                <c:choose>
+                                    <c:when test="${board.boardName eq '자유 게시판'}">
+                                        <a href="boardfree.action" class="more-btn">+</a>
+                                    </c:when>
+                                    <c:when test="${board.boardName eq '고독한 캠핑방'}">
+                                        <a href="boardimage.action" class="more-btn">+</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="boardUrlName"
+                                               value="${fn:toLowerCase(fn:replace(board.boardName, ' ', ''))}"/>
+                                        <a href="board${boardUrlName}.action" class="more-btn">+</a>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                            <div class="created-date">2025-03-30</div>
+
+                            <!-- 고독한캠핑방은 카드 형식, 다른 게시판은 리스트 형식 -->
+                            <c:choose>
+                                <c:when test="${board.boardName eq '고독한 캠핑방'}">
+                                    <div class="posts-grid">
+                                        <c:forEach var="post" items="${boardPosts}">
+                                            <!-- 수정된 부분: 명확한 링크 지정 -->
+                                            <a href="boardimage-post.action?postId=${post.postId}" class="simple-card">
+                                                <div class="simple-card-image">
+                                                    <c:choose>
+                                                        <c:when test="${not empty post.attachments}">
+                                                            <img src="${post.attachments[0].attachmentPath}"
+                                                                 alt="${post.postTitle}"/>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="fa-solid fa-mountain-sun"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                                <div class="simple-card-content">
+                                                    <h3 class="simple-card-title">${post.postTitle}</h3>
+                                                    <div class="simple-card-author">${post.nickName}</div>
+                                                    <div class="simple-card-footer">
+                                                        <div class="created-date">
+                                                                ${fn:substring(post.createdDate, 0, 10)}
+                                                        </div>
+                                                        <div class="simple-card-stats">
+                                                            <div class="simple-card-stat">
+                                                                <i class="fa-solid fa-eye"></i>
+                                                                <span>${post.viewCount}</span>
+                                                            </div>
+                                                            <div class="simple-card-stat">
+                                                                <i class="fa-solid fa-heart"></i>
+                                                                <span>${post.recommendCount}</span>
+                                                            </div>
+                                                            <div class="simple-card-stat">
+                                                                <i class="fa-solid fa-comment"></i>
+                                                                <span>${post.replyCount}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </c:forEach>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="post-list">
+                                        <c:forEach var="post" items="${boardPosts}" varStatus="status">
+                                            <div class="post-item">
+                                                <div class="post-number">${status.index + 1}</div>
+                                                <div class="post-rec">
+                                                    <i class="fa-solid fa-heart"></i>${post.recommendCount}
+                                                </div>
+                                                <div class="post-title">
+                                                    <!-- 수정된 부분: 명확하게 게시판 유형별 링크 설정 -->
+                                                    <c:choose>
+                                                        <c:when test="${board.boardName eq '자유 게시판'}">
+                                                            <a href="boardfree-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <a href="board${fn:toLowerCase(fn:replace(board.boardName, ' ', ''))}-post.action?postId=${post.postId}">
+                                                                    ${post.postTitle}
+                                                            </a>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                    <c:if test="${not empty post.attachments && fn:length(post.attachments) > 0}">
+                            <span class="attachment-icon">
+                                <i class="fa-solid fa-paperclip"></i>
+                            </span>
+                                                    </c:if>
+                                                </div>
+                                                <div class="created-date">
+                                                        ${fn:substring(post.createdDate, 0, 10)}
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
-                        <div class="post-item">
-                            <div class="post-number">2</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>5</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=7">캠핑장 추천해주세요~</a>
-                            </div>
-                            <div class="created-date">2025-03-30</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">3</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>3</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=8">텐트 안에서 자는게 불편해요!</a>
-                            </div>
-                            <div class="created-date">2025-03-30</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">4</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>8</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=9">중고 캠핑 장비 어디서 사나요?</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                        <div class="post-item">
-                            <div class="post-number">5</div>
-                            <div class="post-rec"><i class="fa-solid fa-heart"></i>15</div>
-                            <div class="post-title">
-                                <a href="boardfree-post.action?postId=10">제주도 캠핑 후기(사진 많음)</a>
-                            </div>
-                            <div class="created-date">2025-03-29</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 고독한캠핑방 (심플 카드 형식) -->
-                <div class="board-wrapper">
-                    <div class="board-header">
-                        <h3>
-                            <a href="boardimage.action" class="text-primary">고독한캠핑방</a>
-                        </h3>
-                        <a href="boardimage.action" class="more-btn">+</a>
-                    </div>
-                    <div class="posts-grid">
-                        <!-- 심플 카드 1 -->
-                        <a href="boardimage-post.action?postId=1" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-mountain-sun"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">강원도 양양 혼캠 다녀왔습니다</h3>
-                                <div class="simple-card-author">혼캠러버</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-31</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>254</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>42</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>15</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 심플 카드 2 -->
-                        <a href="boardimage-post.action?postId=2" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-map-location-dot"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">혼자 캠핑가기 좋은 곳 추천</h3>
-                                <div class="simple-card-author">산속여행자</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-30</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>189</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>18</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>8</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 심플 카드 3 -->
-                        <a href="boardimage-post.action?postId=3" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-music"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">고독한 캠핑을 위한 음악 리스트</h3>
-                                <div class="simple-card-author">음악캠퍼</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-29</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>145</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>15</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>5</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 심플 카드 4 -->
-                        <a href="boardimage-post.action?postId=4" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">혼캠러를 위한 안전 수칙</h3>
-                                <div class="simple-card-author">안전제일</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-28</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>178</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>12</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>9</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 심플 카드 5 -->
-                        <a href="boardimage-post.action?postId=5" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-campground"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">소형 텐트 추천 부탁드립니다</h3>
-                                <div class="simple-card-author">텐트마스터</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-27</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>152</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>8</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>11</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <!-- 심플 카드 6 -->
-                        <a href="boardimage-post.action?postId=6" class="simple-card">
-                            <div class="simple-card-image">
-                                <i class="fa-solid fa-fire"></i>
-                            </div>
-                            <div class="simple-card-content">
-                                <h3 class="simple-card-title">별빛 아래 혼자 즐기는 불멍</h3>
-                                <div class="simple-card-author">불멍러버</div>
-                                <div class="simple-card-footer">
-                                    <div class="simple-card-date">2025-03-26</div>
-                                    <div class="simple-card-stats">
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>206</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-heart"></i>
-                                            <span>24</span>
-                                        </div>
-                                        <div class="simple-card-stat">
-                                            <i class="fa-solid fa-comment"></i>
-                                            <span>7</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                    </c:if>
+                </c:forEach>
             </div>
         </div>
     </div>
