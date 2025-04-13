@@ -10,172 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/MatchingDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/UserDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IUserDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IUserDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/UserDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/UserDAO.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-boardUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-communityStatistics.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-couponList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-createCoupon.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-deliveryUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-equipList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-equipStatistics.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-eventUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-inspectList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-main.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-matchingList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-payUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-pointUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-postUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-replyUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-userDrop.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-userList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-userReport.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/admin-userReportList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/event.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/event.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/header.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/login-admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/login-admin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/login-user.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/login-user.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/main-afterLogin.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/main-beforeLogin.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/notice.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/notice.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerAdmin-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerAdmin-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-sns-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-sns-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-tel.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/registerUser-tel.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/rentalSearch-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/rentalSearch-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-rental-pay-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-rental-pay-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-rental-pay.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-rental-pay.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-request.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenMatching-request.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-inspecResult-return.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-inspecResult-return.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-inspecResult.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-inspecResult.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-rentalRegister-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-rentalRegister-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-rentalRegister.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-rentalRegister.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-info.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-info.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-coupon.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-coupon.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-info.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay-info.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/storenRegister-storage-pay.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/event.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/index.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/login-user-searchId.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-diary-post.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-diary-write.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-diary.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-infoEdit-email.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-infoEdit-nickname.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-infoEdit-passwordCheck.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-infoEdit.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-inquiry-post.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-inquiry-write.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-inquiry.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-main.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-myEquip.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/myPage-myPost.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/notice.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/rentalSearch-main.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenMatching-rental-pay-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenMatching-rental-pay.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenMatching-request.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-inspecResult-return.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-inspecResult.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-rentalRegister-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-rentalRegister.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-storage-info.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-storage-pay-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-storage-pay-coupon.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-storage-pay-info.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/storenRegister-storage-pay.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/UserDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/UserDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IUserDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IUserDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/mapper/UserDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/UserDAO.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-delivery.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-delivery.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-inspecList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-inspecList.jsp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/teamfinal.war" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal.war" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-boardUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-communityStatistics.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-couponList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-createCoupon.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-deliveryUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-equipList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-equipStatistics.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-eventUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-inspectList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-main.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-matchingList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-payUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-pointUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-postUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-replyUpdate.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-userDrop.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-userList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-userReport.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/admin-userReportList.action" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/UserDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/UserDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IUserDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IUserDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/UserDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/UserDAO.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/event.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/event.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/header.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/header.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/login-admin.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/login-admin.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/login-user.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/login-user.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/main-afterLogin.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/main-beforeLogin.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-infoEdit-passwordCheck.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/notice.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/notice.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerAdmin-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerAdmin-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-sns-id.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-sns-id.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-tel.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/registerUser-tel.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/rentalSearch-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/rentalSearch-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-rental-pay-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-rental-pay-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-rental-pay.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-rental-pay.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-request.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenMatching-request.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-inspecResult-return.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-inspecResult-return.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-inspecResult.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-inspecResult.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-rentalRegister-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-rentalRegister-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-rentalRegister.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-rentalRegister.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-info.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-info.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-complete.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-complete.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-coupon.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-coupon.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-info.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay-info.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/storenRegister-storage-pay.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/event.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/index.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/login-user-searchId.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-diary-post.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-diary-write.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-diary.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-infoEdit-email.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-infoEdit-nickname.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-infoEdit-passwordCheck.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-infoEdit.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-inquiry-post.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-inquiry-write.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-inquiry.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-main.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-myEquip.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/myPage-myPost.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/notice.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/rentalSearch-main.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenMatching-rental-pay-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenMatching-rental-pay.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenMatching-request.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-inspecResult-return.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-inspecResult.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-rentalRegister-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-rentalRegister.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-storage-info.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-storage-pay-complete.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-storage-pay-coupon.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-storage-pay-info.jsp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/storenRegister-storage-pay.jsp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/index.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/index.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-delivery.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-delivery.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-inspecList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-inspecList.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/기타자료/20250403_all.sql" beforeDir="false" afterPath="$PROJECT_DIR$/기타자료/20250403_all.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,8 +30,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jsp File" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -220,8 +64,10 @@
     &quot;Maven.teamfinal [org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Tomcat Server.Tomcat 10.1.39.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.myPage-inspecList.jsp.executor&quot;: &quot;Run&quot;,
     &quot;Tomcat 서버.Tomcat 10.1.39.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;eunsol&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;yujin&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/es/IdeaProjects/teamfinal/src/main/resources&quot;,
@@ -267,7 +113,8 @@
         </artifact>
       </deployment>
       <server-settings>
-        <option name="BASE_DIRECTORY_NAME" value="174b88e6-e1b5-420b-b50d-79c7f802b22d" />
+        <option name="BASE_DIRECTORY_NAME" value="5b7de238-bf50-43bb-a043-5fb5dc216520" />
+        <option name="HTTP_PORT" value="3306" />
       </server-settings>
       <predefined_log_file enabled="true" id="Tomcat" />
       <predefined_log_file enabled="true" id="Tomcat Catalina" />
@@ -275,7 +122,7 @@
       <predefined_log_file id="Tomcat Host Manager" />
       <predefined_log_file id="Tomcat Localhost Access" />
       <RunnerSettings RunnerId="Debug">
-        <option name="DEBUG_PORT" value="58644" />
+        <option name="DEBUG_PORT" value="51349" />
       </RunnerSettings>
       <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
         <option name="USE_ENV_VARIABLES" value="true" />
@@ -341,10 +188,6 @@
         <option name="Make" enabled="true" />
         <option name="BuildArtifacts" enabled="true">
           <artifact name="teamfinal:war exploded" />
-          <artifact name="teamfinal:war" />
-        </option>
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="teamfinal:war exploded" />
         </option>
       </method>
     </configuration>
@@ -378,6 +221,10 @@
       <workItem from="1744332722474" duration="2639000" />
       <workItem from="1744379717784" duration="35000" />
       <workItem from="1744379763089" duration="9585000" />
+      <workItem from="1744449400555" duration="3000" />
+      <workItem from="1744449943661" duration="598000" />
+      <workItem from="1744450598089" duration="4000" />
+      <workItem from="1744535794179" duration="1765000" />
     </task>
     <servers />
   </component>
