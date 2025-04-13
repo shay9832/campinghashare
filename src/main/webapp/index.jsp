@@ -75,7 +75,7 @@
 <a href="http://localhost:8080/admin-inspectList.action">검수목록</a><br>
 <a href="http://localhost:8080/admin-main.action">대시보드</a><br>
 <a href="http://localhost:8080/admin-matchingList.action">매칭목록</a><br>
-<a href="http://localhost:8080/admin-payUpdate.action">결제관리</a><br>
+<a href="http://localhost:8080/admin-payment.action">결제관리</a><br>
 <a href="http://localhost:8080/admin-pointUpdate.action">포인트관리</a><br>
 <a href="http://localhost:8080/admin-postUpdate.action">게시물관리</a><br>
 <a href="http://localhost:8080/admin-replyUpdate.action">댓글관리</a><br>
