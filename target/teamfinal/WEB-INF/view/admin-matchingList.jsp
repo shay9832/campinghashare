@@ -48,7 +48,7 @@
     <!-- 결제 관리 메뉴 -->
     <button class="menu-button">결제 관리</button>
     <div class="submenu">
-      <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+      <form action="${pageContext.request.contextPath}/admin-payment.action" method="get">
         <button type="submit" class="submenu-btn">결제 관리</button>
       </form>
     </div>
@@ -204,10 +204,10 @@
         <table>
           <tr>
             <!-- 테이블 헤더 - 각 열의 제목 -->
-            <th class="col-rental-id">스토렌ID</th>
+            <th class="col-storen-id">스토렌ID</th>
             <th class="col-equip-code">장비코드</th>
-            <th class="col-rental-title">스토렌제목</th>
-            <th class="col-rental-required-code">매칭신청자코드</th>
+            <th class="col-storen-title">스토렌제목</th>
+            <th class="col-storen-required-code">매칭신청자코드</th>
             <th class="col-rental-start">렌탈시작일</th>
             <th class="col-rental-end">렌탈종료일</th>
             <th class="col-matching-start">매칭신청일</th>
@@ -215,19 +215,18 @@
             <th class="col-approve-start">승인일자</th>
           </tr>
           <!-- 스토렌현황 데이터 행 -->
-
           <!--스토렌ID, "장비_코드", "스토렌_제목", "스토렌매칭신청자코드", "렌탈_시작일", "렌탈_종료일", "매칭신청일", "승인여부", "승인_일자"-->
-          <c:forEach var="rental" items="${getList}">
+          <c:forEach var="storen" items="${getList}">
             <tr>
-             <td>${rental.rentalId}</td>
-             <td>${rental.equipCode}</td>
-             <td>${rental.rentalTitle}</td>
-             <td>${rental.rentalMatchingReq}</td>
-             <td>${rental.rentalStart}</td>
-             <td>${rental.rentalEnd}</td>
-             <td>${rental.matchingStart}</td>
-             <td>${rental.approveStatus}</td>
-             <td>${rental.approveDate}</td>
+             <td>${storen.storenId}</td>
+             <td>${storen.equipCode}</td>
+             <td>${storen.storenTitle}</td>
+             <td>${storen.storenMatchingReq}</td>
+             <td>${storen.rentalStart}</td>
+             <td>${storen.rentalEnd}</td>
+             <td>${storen.matchingStart}</td>
+             <td>${storen.approveStatus}</td>
+             <td>${storen.approveDate}</td>
             </tr>
           </c:forEach>
         </table>

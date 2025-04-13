@@ -9,5 +9,5 @@ public interface IAdminMatchingListDAO {
 
     /*select*/
     List<AdminMatchingListDTO> getList();
-    List<AdminEventUpdateDTO> getLists();
+    List<AdminMatchingListDTO> getLists();
 }

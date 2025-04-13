@@ -15,14 +15,14 @@
     </resultMap>
     <resultMap id="rental-matching" type="com.team.mvc.DTO.AdminMatchingListDTO">
         <result column="렌탈ID" property="rentalId"/>
-        <result column="장비_코드" property="equipCode"/>
-        <result column="렌탈_제목" property="rentalTitle"/>
-        <result column="렌탈매칭신청자코드" property="rentalMatchingReq"/>
-        <result column="렌탈_시작일" property="rentalStart"/>
-        <result column="렌탈_종료일" property="rentalEnd"/>
+        <result column="장비코드" property="equipCode"/>
+        <result column="렌탈제목" property="rentalTitle"/>
+        <result column="신청자코드" property="rentalMatchingReq"/>
+        <result column="렌탈시작일" property="rentalStart"/>
+        <result column="렌탈종료일" property="rentalEnd"/>
         <result column="매칭신청일" property="matchingStart"/>
         <result column="승인여부" property="approveStatus"/>
-        <result column="승인_일자" property="approveDate"/>
+        <result column="승인일자" property="approveDate"/>
     </resultMap>
     <select id="getList" resultMap="storen-matching">
         SELECT "스토렌ID", "장비_코드", "스토렌_제목", "스토렌매칭신청자코드", "렌탈_시작일", "렌탈_종료일", "매칭신청일", "승인여부", "승인_일자"
