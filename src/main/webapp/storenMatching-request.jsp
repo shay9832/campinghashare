@@ -21,6 +21,9 @@
     int avgRentalPrice = 20000;
     int dailyRentalPrice = 25000;
 
+    // 이미지 관련 임시 데이터
+    int totalImages = 5;
+
     // 기타 브랜드 여부 확인
     boolean isOtherBrand = "기타".equals(brand);
 
@@ -55,7 +58,6 @@
     String avgRentalPriceFormatted = nf.format(avgRentalPrice);
     String dailyRentalPriceFormatted = nf.format(dailyRentalPrice);
 %>
-
 <html>
 <head>
     <title>storenMatching-request.jsp</title>
@@ -65,18 +67,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
     <!-- 내부 리소스 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/matching.css">
-
-    <!-- favicon 추가 - 404 오류 방지 -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 
 <body>
 <header>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="WEB-INF/view/header.jsp"/>
 </header>
 
 <!-- [A] 매칭 신청 확인 모달 1 - 매칭 신청 여부 확인 -->
@@ -109,16 +109,14 @@
                 <div class="main-image-container">
                     <div class="main-image">
                         <button class="image-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
-                        <span class="image-counter">1/5</span>
                         <button class="image-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+                        <span class="image-counter">1/<%= totalImages %></span>
                     </div>
                 </div>
                 <div class="thumbnail-container d-flex">
-                    <div class="thumbnail active"></div>
-                    <div class="thumbnail"></div>
-                    <div class="thumbnail"></div>
-                    <div class="thumbnail"></div>
-                    <div class="thumbnail"></div>
+                    <% for(int i=0; i<totalImages; i++) { %>
+                    <div class="thumbnail <%= (i==0) ? "active" : "" %>" data-index="<%= i %>"></div>
+                    <% } %>
                 </div>
                 <div class="user-info d-flex align-items-center mb-2">
                     <span class="font-medium">가나초콜릿</span>
@@ -257,7 +255,7 @@
     </div>
 </div>
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="WEB-INF/view/footer.jsp"/>
 
 <!-- [G] 스크립트 -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -275,6 +273,9 @@
     var selectedPrice = "<%= selectedPrice != null ? selectedPrice : "0원" %>";
     let lastValidDays = selectedDays !== "0" ? parseInt(selectedDays) : 0;
     let lastValidPrice = selectedPrice !== "0원" ? selectedPrice : "0원";
+
+    // 이미지 관련 설정
+    var totalImages = <%= totalImages %>;
 </script>
 
 <script type="text/javascript">
@@ -388,32 +389,38 @@
         });
     }
 
-    // [3] 이미지 내비게이션 초기화 함수
+    // [3] 이미지 내비게이션 초기화 함수 (개선)
     function initializeImageNavigation() {
         let currentImageIndex = 0;
-        const totalImages = 5;
 
         // 이미지 카운터 업데이트 함수
         function updateImageCounter() {
-            document.querySelector('.image-counter').textContent = `${currentImageIndex + 1}/${totalImages}`;
+            const counterText = (currentImageIndex + 1) + '/' + totalImages;
+            document.querySelector('.image-counter').textContent = counterText;
         }
 
         // 썸네일 활성화 상태 업데이트 함수
         function updateThumbnailActive() {
             document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-                thumb.classList.toggle('active', index === currentImageIndex);
+                if (index === currentImageIndex) {
+                    thumb.classList.add('active');
+                } else {
+                    thumb.classList.remove('active');
+                }
             });
         }
 
         // 이전 버튼 클릭 이벤트
-        document.querySelector('.prev-btn')?.addEventListener('click', () => {
+        document.querySelector('.prev-btn').addEventListener('click', function(e) {
+            e.preventDefault(); // 기본 동작 방지
             currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
             updateImageCounter();
             updateThumbnailActive();
         });
 
         // 다음 버튼 클릭 이벤트
-        document.querySelector('.next-btn')?.addEventListener('click', () => {
+        document.querySelector('.next-btn').addEventListener('click', function(e) {
+            e.preventDefault(); // 기본 동작 방지
             currentImageIndex = (currentImageIndex + 1) % totalImages;
             updateImageCounter();
             updateThumbnailActive();
@@ -421,34 +428,100 @@
 
         // 썸네일 클릭 이벤트
         document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-            thumb.addEventListener('click', () => {
+            thumb.addEventListener('click', function() {
                 currentImageIndex = index;
                 updateImageCounter();
                 updateThumbnailActive();
             });
         });
+
+        // 초기 상태 설정
+        updateImageCounter();
+        updateThumbnailActive();
     }
 
-    // [4] 툴팁 초기화 함수
+    // [4] 툴팁 초기화 함수 (화살표 없는 툴팁 사용)
     function initializeTooltips() {
-        // 모든 툴팁 트리거에 마우스 진입/이탈 이벤트 등록
+        // 모든 툴팁 트리거에 이벤트 등록
         document.querySelectorAll('.tooltip-trigger').forEach((trigger) => {
-            // 마우스 진입 시 툴팁 표시
-            trigger.addEventListener('mouseenter', function () {
-                const tooltip = this.querySelector('.tooltip-content');
-                if (tooltip) {
-                    tooltip.style.display = 'block';
-                }
+            const tooltip = trigger.querySelector('.tooltip-content');
+            if (!tooltip) return;
+
+            // 툴팁에 기본 클래스 추가
+            tooltip.classList.add('tooltip-top');
+
+            // 마우스 진입 시
+            trigger.addEventListener('mouseenter', function(e) {
+                // 툴팁 표시
+                tooltip.style.display = 'block';
+
+                // 위치 계산
+                positionTooltip(tooltip, trigger);
             });
 
             // 마우스 이탈 시 툴팁 숨김
-            trigger.addEventListener('mouseleave', function () {
-                const tooltip = this.querySelector('.tooltip-content');
-                if (tooltip) {
-                    tooltip.style.display = 'none';
-                }
+            trigger.addEventListener('mouseleave', function() {
+                tooltip.style.display = 'none';
             });
         });
+
+        // 스크롤 시 열려 있는 툴팁 위치 조정
+        window.addEventListener('scroll', function() {
+            const visibleTooltips = document.querySelectorAll('.tooltip-content[style*="display: block"]');
+            visibleTooltips.forEach(tooltip => {
+                const trigger = tooltip.parentElement;
+                if (trigger) positionTooltip(tooltip, trigger);
+            });
+        });
+
+        // 윈도우 크기 변경 시 열려 있는 툴팁 위치 조정
+        window.addEventListener('resize', function() {
+            const visibleTooltips = document.querySelectorAll('.tooltip-content[style*="display: block"]');
+            visibleTooltips.forEach(tooltip => {
+                const trigger = tooltip.parentElement;
+                if (trigger) positionTooltip(tooltip, trigger);
+            });
+        });
+    }
+
+    // 툴팁 위치 계산 함수
+    function positionTooltip(tooltip, trigger) {
+        // 트리거 요소의 위치 정보
+        const triggerRect = trigger.getBoundingClientRect();
+
+        // 툴팁 요소의 크기
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+
+        // 윈도우 크기
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        // 기본 위치 - 트리거 위에 표시 (간격 약간 줄임)
+        let top = triggerRect.top - tooltipHeight - 5;
+        let left = triggerRect.left + (triggerRect.width / 2) - (tooltipWidth / 2);
+
+        // 상단에 공간이 부족한 경우 아래에 표시
+        const showBelow = top < 10;
+        if (showBelow) {
+            top = triggerRect.bottom + 5; // 간격 조정
+            tooltip.classList.remove('tooltip-top');
+            tooltip.classList.add('tooltip-bottom');
+        } else {
+            tooltip.classList.remove('tooltip-bottom');
+            tooltip.classList.add('tooltip-top');
+        }
+
+        // 좌우 공간 확인 및 조정
+        if (left < 10) {
+            left = 10; // 왼쪽 경계에 맞춤
+        } else if (left + tooltipWidth > windowWidth - 10) {
+            left = windowWidth - tooltipWidth - 10; // 오른쪽 경계에 맞춤
+        }
+
+        // 위치 설정
+        tooltip.style.top = `${top}px`;
+        tooltip.style.left = `${left}px`;
     }
 </script>
 
