@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IMatchingRequestDAO">
+
+    <!-- 거래 id와 거래유형으로 해당 거래 id에 매칭신청한 사용자 목록을 불러오는 메소드-->
+    <select id="listRequestByTransactionIdType" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+        SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
+             , RENTAL_START_DATE, RENTAL_END_DATE, RENTAL_DURATION
+             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, NVL(PAYMENT_DATE, '결제대기') AS PAYMENT_DATE
+             , MATCHING_REQ_ID
+        FROM VW_RENTAL_APPLICANT
+        WHERE TRANSACTION_ID = #{transaction_id} AND TRANSACTION_TYPE = #{transaction_type}
+    </select>
+
+</mapper>

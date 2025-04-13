@@ -248,17 +248,17 @@
 
             <!-- 스토렌 탭 콘텐츠 -->
             <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
-                <!-- 소유자/사용자 필터 -->
+                <!-- 입고/반납 필터 -->
                 <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
                     <!-- 탭 필터 -->
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="tab-nav">
                             <a class="tab-link ${storenTabType == 'store' ? 'active' : ''}" data-storen-tab="store"
-                               id="storen-store">입고</a>
+                               id="storen-store">입고검수</a>
                         </div>
                         <div class="tab-nav">
                             <a class="tab-link ${storenTabType == 'return' ? 'active' : ''}" data-storen-tab="return"
-                               id="storen-return">반납</a>
+                               id="storen-return">반납검수</a>
                         </div>
                     </div>
 
