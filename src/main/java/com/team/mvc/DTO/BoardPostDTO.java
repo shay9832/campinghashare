@@ -1,11 +1,15 @@
 package com.team.mvc.DTO;
 
+import java.util.List;
+
 public class BoardPostDTO {
     private int postId, userCode, boardId, postLabelId;
     private String  postTitle, postContent, createdDate;
 
     private int viewCount, recommendCount, replyCount, isHot, isBlinded, rowNum;
     private String nickName, boardName, postLabelName, boardCategory;
+    private List<AttachmentDTO> attachments;
+    private boolean hotOnly;
 
     // 검색 및 페이징 관련
     private String searchType, searchKeyword;
@@ -171,5 +175,21 @@ public class BoardPostDTO {
 
     public void setRowNum(int rowNum) {
         this.rowNum = rowNum;
+    }
+
+    public List<AttachmentDTO> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentDTO> attachments) {
+        this.attachments = attachments;
+    }
+
+    public boolean isHotOnly() {
+        return hotOnly;
+    }
+
+    public void setHotOnly(boolean hotOnly) {
+        this.hotOnly = hotOnly;
     }
 }

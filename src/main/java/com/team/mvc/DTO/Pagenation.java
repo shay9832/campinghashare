@@ -61,8 +61,6 @@ public class Pagenation {
     }
 
     // getter / setter
-
-
     public int getPageNum() {
         return pageNum;
     }
