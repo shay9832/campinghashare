@@ -1,22 +1,13 @@
 package com.team.mvc.Controller;
 
-import com.team.mvc.DTO.AdminInspectListDTO;
 import com.team.mvc.Interface.IAdminInspectListDAO;
-import jakarta.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 public class AdminInspectListController {
@@ -25,66 +16,10 @@ public class AdminInspectListController {
     private SqlSession sqlSession;
 
     /**
-     * 세션 검증 헬퍼 메소드
-     */
-    private boolean validateAdminSession(HttpSession session, RedirectAttributes redirectAttributes) {
-        if (session == null || session.getAttribute("adminId") == null) {
-            redirectAttributes.addFlashAttribute("error", "관리자 로그인이 필요합니다.");
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 관리자 로그인 페이지
-     */
-    @RequestMapping("/admin-login.action")
-    public String adminLogin() {
-        return "admin-login"; // 로그인 페이지 JSP
-    }
-
-    /**
-     * 관리자 로그인 처리
-     */
-    @PostMapping("/admin-login.action")
-    public String processLogin(@RequestParam("adminId") String adminId,
-                               @RequestParam("password") String password,
-                               HttpSession session,
-                               RedirectAttributes redirectAttributes) {
-
-        // 실제 환경에서는 데이터베이스에서 관리자 정보 확인
-        // 여기서는 간단한 예시로 구현
-        if (adminId != null && !adminId.isEmpty() && password != null && !password.isEmpty()) {
-            // 로그인 성공 처리
-            session.setAttribute("adminId", adminId);
-            return "redirect:/admin-inspectList.action";
-        } else {
-            // 로그인 실패 처리
-            redirectAttributes.addFlashAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");
-            return "redirect:/admin-login.action";
-        }
-    }
-
-    /**
-     * 로그아웃 처리
-     */
-    @GetMapping("/admin-logout.action")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/admin-login.action";
-    }
-
-    /**
      * 검수 목록 페이지 (GET 요청 처리)
      */
     @RequestMapping(value="/admin-inspectList.action", method = RequestMethod.GET)
-    public String adminInspectList(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
-        // 세션 검증
-        if (session.getAttribute("adminId") == null) {
-            redirectAttributes.addFlashAttribute("error", "관리자 로그인이 필요합니다.");
-            return "redirect:/admin-login.action";
-        }
-
+    public String adminInspectList(Model model, RedirectAttributes redirectAttributes) {
         try {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
@@ -95,13 +30,13 @@ public class AdminInspectListController {
             model.addAttribute("getItemList", dao.getItemList());
             model.addAttribute("getGradeList", dao.getGradeList());
             model.addAttribute("getEquipList", dao.getEquipList());
-            model.addAttribute("equipGrades", dao.getGradeLists()); // 추가: 등급 정보를 모델에 직접 포함
+            model.addAttribute("equipGrades", dao.getGradeList()); // 추가: 등급 정보를 모델에 직접 포함
 
             return "admin-inspectList";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "데이터를 가져오는 중 오류가 발생했습니다: " + e.getMessage());
-            return "redirect:/admin-login.action";
+            return "redirect:/admin-inspectList.action";
         }
     }
 
@@ -114,37 +49,20 @@ public class AdminInspectListController {
             @RequestParam(value = "platformDeliveryReturnId", required = false) String platformDeliveryReturnIdStr,
             @RequestParam(value = "inspecGradeId", required = false, defaultValue = "1") Integer inspecGradeId,
             @RequestParam(value = "equipGradeId", required = false, defaultValue = "0") Integer equipGradeId,
-            @RequestParam(value = "adminId", required = false) String adminId,
             @RequestParam(value = "inspecComment", required = false, defaultValue = "") String inspecComment,
             @RequestParam(value = "finalGrade", required = false) String finalGrade,
-            HttpSession session,
             RedirectAttributes redirectAttributes) {
-
-        // 세션 검증
-        if (session.getAttribute("adminId") == null) {
-            redirectAttributes.addFlashAttribute("error", "관리자 로그인이 필요합니다.");
-            return "redirect:/admin-login.action";
-        }
 
         try {
             // 문자열에서 숫자 추출 및 변환
             Integer platformDeliveryId = null;
             Integer platformDeliveryReturnId = null;
 
+            // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
+            String adminId = "admin"; // 기본 관리자 ID 설정
+
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {
-                    // 세션에서 관리자 ID 가져오기
-                    String validAdminId = (String) session.getAttribute("adminId");
-
-                    // 매개변수로 전달된 ID가 있으면 사용
-                    if (adminId != null && !adminId.trim().isEmpty()) {
-                        // 실제 환경에서는 권한 검증 로직 추가
-                        validAdminId = adminId;
-                    } else {
-                        // adminId가 제공되지 않은 경우 세션의 ID 사용
-                        adminId = validAdminId;
-                    }
-
                     // "DELV-123" 형식에서 숫자만 추출
                     String numericPart = platformDeliveryIdStr.replaceAll("[^0-9]", "");
                     if (!numericPart.isEmpty()) {

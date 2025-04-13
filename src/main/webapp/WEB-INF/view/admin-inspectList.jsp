@@ -3,15 +3,15 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
-<html lang="ko"> <!-- 한국어 페이지 설정 -->
+<html lang="ko">
 <head>
-  <meta charset="UTF-8"> <!-- 문자 인코딩 UTF-8 설정 -->
-  <title>관리자 시스템 - 검수 목록</title> <!-- 브라우저 탭에 표시될 제목 -->
+  <meta charset="UTF-8">
+  <title>관리자 시스템 - 검수 목록</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-inspectList.css">
 </head>
 
 <body>
-<!-- 헤더 영역 - 페이지 상단 타이틀 -->
+<!-- 헤더 영역 -->
 <div id="header">
   <h1>관리자 시스템</h1>
 </div>
@@ -31,9 +31,9 @@
       </form>
     </div>
 
-    <!-- 검수 관리 메뉴 -->
-    <button class="menu-button">검수 관리</button>
-    <div class="submenu">
+    <!-- 검수 관리 메뉴 - 초기에 활성화 -->
+    <button class="menu-button active">검수 관리</button>
+    <div class="submenu active">
       <form action="${pageContext.request.contextPath}/admin-inspectList.action" method="get">
         <button type="submit" class="submenu-btn">검수 관리</button>
       </form>
@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <!-- 콘텐츠 영역 - 실제 데이터와 컨트롤이 표시되는 부분 -->
+  <!-- 콘텐츠 영역 -->
   <div id="content">
     <!-- 콘텐츠 헤더 - 페이지 제목 -->
     <div class="content-header">
@@ -216,11 +216,10 @@
 
     <!-- 전체 검수 영역 -->
     <div id="all-inspections" class="content-area active">
-      <!-- 검수 목록 테이블 - 가로 스크롤 가능 -->
+      <!-- 검수 목록 테이블 -->
       <div class="inspection-index">
         <table>
           <tr>
-            <!-- 테이블 헤더 - 각 열의 제목 -->
             <th class="col-select">선택</th>
             <th class="col-code">장비코드</th>
             <th class="col-type">검수유형</th>
@@ -234,7 +233,7 @@
             <th class="col-status">검수상태</th>
           </tr>
 
-          <!-- 전체 검수 데이터 행 - 1차 및 2차 검수 데이터 모두 표시 -->
+          <!-- 전체 검수 데이터 행 -->
           <c:forEach var="inspect" items="${list}">
             <tr>
               <td class="checkbox-column"><input type="checkbox"></td>
@@ -247,7 +246,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -290,7 +289,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -327,11 +326,10 @@
 
     <!-- 1차 검수 영역 -->
     <div id="primary-inspections" class="content-area">
-      <!-- 검수 목록 테이블 - 가로 스크롤 가능 -->
+      <!-- 검수 목록 테이블 -->
       <div class="inspection-index">
         <table>
           <tr>
-            <!-- 테이블 헤더 - 각 열의 제목 -->
             <th class="col-select">선택</th>
             <th class="col-code">장비코드</th>
             <th class="col-type">검수유형</th>
@@ -346,7 +344,6 @@
           </tr>
 
           <!-- 1차 검수 데이터 행 -->
-
           <c:forEach var="inspect" items="${list}">
             <tr>
               <td class="checkbox-column"><input type="checkbox"></td>
@@ -359,14 +356,13 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
                   </c:otherwise>
                 </c:choose>
               </td>
-                <%--검수결과에 따른 결과처리--%>
               <td>
                 <c:if test="${inspect.inspectResult eq '상'}">
                   <span class="status-badge status-pass">${inspect.inspectResult}</span>
@@ -391,19 +387,16 @@
               </td>
             </tr>
           </c:forEach>
-
-
         </table>
       </div>
     </div>
 
     <!-- 2차 검수 영역 -->
     <div id="secondary-inspections" class="content-area">
-      <!-- 검수 목록 테이블 - 가로 스크롤 가능 -->
+      <!-- 검수 목록 테이블 -->
       <div class="inspection-index">
         <table>
           <tr>
-            <!-- 테이블 헤더 - 각 열의 제목 -->
             <th class="col-select">선택</th>
             <th class="col-code">장비코드</th>
             <th class="col-type">검수유형</th>
@@ -417,7 +410,7 @@
             <th class="col-status">검수상태</th>
           </tr>
 
-          <!--2차 검수 데이터 행-->
+          <!-- 2차 검수 데이터 행 -->
           <c:forEach var="inspect" items="${listr}">
             <tr>
               <td class="checkbox-column"><input type="checkbox"></td>
@@ -430,14 +423,13 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openInspectionModal(this)">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
                   </c:otherwise>
                 </c:choose>
               </td>
-                <%--검수결과에 따른 결과처리--%>
               <td>
                 <c:if test="${inspect.inspectResult eq '상'}">
                   <span class="status-badge status-pass">${inspect.inspectResult}</span>
@@ -465,21 +457,21 @@
         </table>
       </div>
     </div>
+
     <!-- 검수처리 모달 -->
     <div id="inspectionModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
           <h3>검수 처리</h3>
-          <span class="close-modal" onclick="closeInspectionModal()">&times;</span>
+          <span class="close-modal" onclick="closeModal()">&times;</span>
         </div>
         <div class="modal-body">
           <form action="${pageContext.request.contextPath}/admin-inspectList.action" method="POST" id="inspectionForm">
             <!-- 프로시저에 필요한 필드 -->
             <input type="hidden" name="platformDeliveryId" id="platformDeliveryId">
             <input type="hidden" name="platformDeliveryReturnId" id="platformDeliveryReturnId">
-            <input type="hidden" name="equipGradeId" id="equipGradeId">
-            <input type="hidden" name="inspecGradeId" id="inspecGradeId">
-            <input type="hidden" name="adminId" id="adminId" value="${sessionScope.adminId}">
+            <input type="hidden" name="equipGradeId" id="equipGradeId" value="1">
+            <input type="hidden" name="inspecGradeId" id="inspecGradeId" value="1">
 
             <div class="form-group">
               <label for="equipCode">장비코드</label>
@@ -494,16 +486,15 @@
               <select id="inspectionType" class="form-control">
                 <option value="입고검수">입고검수</option>
                 <option value="스토렌반환검수">스토렌반환검수</option>
-                <option value="최종검수">최종검수</option>
               </select>
             </div>
             <div class="form-group">
               <label for="equipName">장비명</label>
-              <input type="text" id="equipName" class="form-control" disabled="disabled">
+              <input type="text" id="equipName" class="form-control" disabled>
             </div>
             <div class="form-group">
               <label for="equipCategory">카테고리</label>
-              <input type="text" id="equipCategory" class="form-control" disabled="disabled">
+              <input type="text" id="equipCategory" class="form-control" disabled>
             </div>
             <div class="form-group checklist-form-group">
               <label for="checklistTable">체크리스트</label>
@@ -524,71 +515,17 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <!-- DB에서 가져온 항목을 동적으로 표시 -->
+                  <!-- DB에서 가져온 검수 항목으로 체크리스트 동적 생성 -->
                   <c:forEach var="item" items="${getItemList}">
                     <tr>
                       <td>${item.inspecItemName}</td>
-                      <td>
-                        <input type="radio" name="item_${item.inspecItemId}" value="상" class="grade-checkbox">
-                          ${item.inspecItemDescHigh}
-                      </td>
-                      <td>
-                        <input type="radio" name="item_${item.inspecItemId}" value="중" class="grade-checkbox">
-                          ${item.inspecItemDescMid}
-                      </td>
-                      <td>
-                        <input type="radio" name="item_${item.inspecItemId}" value="하" class="grade-checkbox">
-                          ${item.inspecItemDescLow}
-                      </td>
-                      <td><input type="text" name="comment_${item.inspecItemId}" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td><input type="radio" name="${item.inspecItemName}" value="상" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescHigh}</td>
+                      <td><input type="radio" name="${item.inspecItemName}" value="중" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescMid}</td>
+                      <td><input type="radio" name="${item.inspecItemName}" value="하" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescLow}</td>
+                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
                       <td class="score-cell">20</td>
                     </tr>
                   </c:forEach>
-
-                  <!-- 데이터가 없는 경우 기본 항목 표시 -->
-                  <c:if test="${empty getItemList}">
-                    <tr>
-                      <td>외관 보존 상태</td>
-                      <td><input type="radio" name="외관보존상태" value="상" class="grade-checkbox"> 사용감 거의 없음, 신품 수준 외관</td>
-                      <td><input type="radio" name="외관보존상태" value="중" class="grade-checkbox"> 마모 등 경미한 사용감 있음</td>
-                      <td><input type="radio" name="외관보존상태" value="하" class="grade-checkbox"> 뚜렷한 사용 흔적, 외관 낡고 변색</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                      <td class="score-cell">20</td>
-                    </tr>
-                    <tr>
-                      <td>물리적 무손상 상태</td>
-                      <td><input type="radio" name="물리적무손상상태" value="상" class="grade-checkbox"> 파손 없음</td>
-                      <td><input type="radio" name="물리적무손상상태" value="중" class="grade-checkbox"> 작은 손상 있음</td>
-                      <td><input type="radio" name="물리적무손상상태" value="하" class="grade-checkbox"> 심한 손상 있음</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                      <td class="score-cell">20</td>
-                    </tr>
-                    <tr>
-                      <td>청결/세정 상태</td>
-                      <td><input type="radio" name="청결세정상태" value="상" class="grade-checkbox"> 오염 없음</td>
-                      <td><input type="radio" name="청결세정상태" value="중" class="grade-checkbox"> 약간의 오염 있음</td>
-                      <td><input type="radio" name="청결세정상태" value="하" class="grade-checkbox"> 심한 오염 있음</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                      <td class="score-cell">20</td>
-                    </tr>
-                    <tr>
-                      <td>부속품 완비</td>
-                      <td><input type="radio" name="부속품완비" value="상" class="grade-checkbox"> 부속품(매뉴얼 등) 모두 보유</td>
-                      <td><input type="radio" name="부속품완비" value="중" class="grade-checkbox"> 일부 부속품 누락</td>
-                      <td><input type="radio" name="부속품완비" value="하" class="grade-checkbox"> 필수 부속품 누락</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                      <td class="score-cell">20</td>
-                    </tr>
-                    <tr>
-                      <td>기능 작동성</td>
-                      <td><input type="radio" name="기능작동성" value="상" class="grade-checkbox"> 기능 모두 정상 작동</td>
-                      <td><input type="radio" name="기능작동성" value="중" class="grade-checkbox"> 일부 기능 약간 미흡</td>
-                      <td><input type="radio" name="기능작동성" value="하" class="grade-checkbox"> 기능 중 하나 이상 심각한 문제 있음</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
-                      <td class="score-cell">20</td>
-                    </tr>
-                  </c:if>
-
                   <tr class="total-row">
                     <td colspan="4" style="text-align: right;"><strong>합계</strong></td>
                     <td id="totalScore" class="total-score">100</td>
@@ -600,42 +537,23 @@
               <div class="grade-info">
                 <p><strong>[등급 판정 기준]</strong></p>
                 <div class="grade-badges">
-                  <!-- 등급 정보를 DB에서 가져오거나 기본값 표시 -->
-                  <c:choose>
-                    <c:when test="${not empty equipGrades}">
-                      <c:forEach var="grade" items="${equipGrades}">
-                        <span class="grade-info-badge grade-${fn:toLowerCase(grade.equipGradeName)}">${grade.equipGradeName}</span>
-                        <c:choose>
-                          <c:when test="${grade.equipGradeName == 'A'}">100-90점</c:when>
-                          <c:when test="${grade.equipGradeName == 'B'}">89-80점</c:when>
-                          <c:when test="${grade.equipGradeName == 'C'}">79-70점</c:when>
-                          <c:when test="${grade.equipGradeName == 'D'}">69-60점</c:when>
-                          <c:when test="${grade.equipGradeName == 'E'}">59-50점</c:when>
-                          <c:when test="${grade.equipGradeName == 'F'}">49점 이하 (스토렌/렌탈 이용 불가)</c:when>
-                        </c:choose>
-                      </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                      <!-- 기본 등급 정보 -->
-                      <span class="grade-info-badge grade-a">A</span> 100-90점
-                      <span class="grade-info-badge grade-b">B</span> 89-80점
-                      <span class="grade-info-badge grade-c">C</span> 79-70점
-                      <span class="grade-info-badge grade-d">D</span> 69-60점
-                      <span class="grade-info-badge grade-e">E</span> 59-50점
-                      <span class="grade-info-badge grade-f">F</span> 49점 이하 (스토렌/렌탈 이용 불가)
-                    </c:otherwise>
-                  </c:choose>
+                  <span class="grade-info-badge grade-a">A</span> 100-90점
+                  <span class="grade-info-badge grade-b">B</span> 89-80점
+                  <span class="grade-info-badge grade-c">C</span> 79-70점
+                  <span class="grade-info-badge grade-d">D</span> 69-60점
+                  <span class="grade-info-badge grade-e">E</span> 59-50점
+                  <span class="grade-info-badge grade-f">F</span> 49점 이하
                 </div>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="processDate">처리일</label>
-              <input type="text" id="processDate" class="form-control" disabled>
+              <label for="inspecComment">검수 코멘트</label>
+              <textarea id="inspecComment" name="inspecComment" class="form-control" rows="3"></textarea>
             </div>
 
             <div class="modal-actions">
-              <button type="button" class="modal-btn btn-cancel" onclick="closeInspectionModal()">취소</button>
+              <button type="button" class="modal-btn btn-cancel" onclick="closeModal()">취소</button>
               <button type="submit" class="modal-btn btn-save">저장</button>
             </div>
           </form>
@@ -643,690 +561,238 @@
       </div>
     </div>
 
-
     <script>
-      // 전역 변수 선언
-      let currentRow = null;
-      const modal = document.getElementById('inspectionModal');
+      // 페이지 로드 시 실행
+      window.onload = function() {
+        console.log("페이지 로드 완료");
 
-      // DOM이 완전히 로드된 후 실행되는 초기화 함수
-      document.addEventListener('DOMContentLoaded', function() {
-        // 브라우저 호환성을 위한 closest 메소드 폴리필
-        if (!Element.prototype.closest) {
-          Element.prototype.closest = function(s) {
-            let el = this;
-            do {
-              if (el.matches(s)) return el;
-              el = el.parentElement || el.parentNode;
-            } while (el !== null && el.nodeType === 1);
-            return null;
-          };
-        }
+        // 메뉴 버튼 클릭 이벤트 초기화
+        initMenuButtons();
 
-        // 세션 상태 확인
-        checkSessionStatus();
+        // 토글 버튼 클릭 이벤트 초기화
+        initToggleButtons();
 
-        // 메뉴 초기화 - 장비 관리 메뉴 초기 상태 설정 (페이지에 맞게 열어두기)
-        initMenu();
+        // 전체 선택 체크박스 초기화
+        initSelectAllCheckbox();
+      };
 
-        // 이벤트 리스너 등록
-        registerEventListeners();
-      });
+      // 메뉴 버튼 클릭 이벤트 초기화
+      function initMenuButtons() {
+        var menuButtons = document.querySelectorAll('.menu-button');
 
-      // 세션 상태 확인 함수
-      function checkSessionStatus() {
-        // 페이지 로드 시 또는 주기적으로 세션 상태 확인
-        fetch(window.location.href, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-                .then(response => {
-                  if (response.status === 401) {
-                    // 세션이 만료된 경우 로그인 페이지로 리다이렉트
-                    window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-                  }
-                })
-                .catch(error => {
-                  console.error('세션 체크 오류:', error);
-                });
-      }
-
-      // 로그아웃 함수
-      function logout() {
-        window.location.href = `${pageContext.request.contextPath}/admin-logout.action`;
-      }
-
-      // 메뉴 초기화 함수
-      function initMenu() {
-        const menuButtons = document.querySelectorAll('.menu-button');
-
-        // 장비 관리 메뉴 초기 상태 설정 (페이지에 맞게 열어두기)
-        const equipmentMenu = menuButtons[1]; // 장비 관리 메뉴 (인덱스 1)
-        equipmentMenu.classList.add('active');
-        const submenu = equipmentMenu.nextElementSibling;
-        submenu.style.maxHeight = submenu.scrollHeight + "px";
-
-        // 다른 메뉴는 닫힌 상태로 설정
-        menuButtons.forEach((button, index) => {
-          if (index !== 1) { // 장비 관리 메뉴가 아닌 경우
-            const submenu = button.nextElementSibling;
-            submenu.style.maxHeight = null;
-          }
-        });
-      }
-
-      // 이벤트 리스너 등록 함수
-      function registerEventListeners() {
-        // 메뉴 드롭다운 토글 기능
-        const menuButtons = document.querySelectorAll('.menu-button');
-        menuButtons.forEach(button => {
+        menuButtons.forEach(function(button) {
           button.addEventListener('click', function() {
+            // 현재 클릭된 버튼의 active 상태 토글
             this.classList.toggle('active');
-            const submenu = this.nextElementSibling;
 
-            if (submenu.style.maxHeight) {
+            // 다음 요소(서브메뉴)의 active 상태 토글
+            var submenu = this.nextElementSibling;
+            if (submenu.classList.contains('active')) {
+              submenu.classList.remove('active');
               submenu.style.maxHeight = null;
             } else {
+              submenu.classList.add('active');
               submenu.style.maxHeight = submenu.scrollHeight + "px";
             }
           });
         });
+      }
 
-        // 토글 버튼 이벤트 처리
-        const toggleButtons = document.querySelectorAll('.toggle-button');
-        toggleButtons.forEach(button => {
+      // 토글 버튼 클릭 이벤트 초기화
+      function initToggleButtons() {
+        var toggleButtons = document.querySelectorAll('.toggle-button');
+
+        toggleButtons.forEach(function(button) {
           button.addEventListener('click', function() {
             // 모든 토글 버튼에서 active 클래스 제거
-            toggleButtons.forEach(btn => btn.classList.remove('active'));
+            toggleButtons.forEach(function(btn) {
+              btn.classList.remove('active');
+            });
 
             // 클릭된 버튼에 active 클래스 추가
             this.classList.add('active');
 
-            // 선택된 검수 단계 가져오기
-            const stage = this.getAttribute('data-stage');
+            // 선택된 단계 가져오기
+            var stage = this.getAttribute('data-stage');
 
             // 모든 콘텐츠 영역 숨기기
-            const contentAreas = document.querySelectorAll('.content-area');
-            contentAreas.forEach(area => area.classList.remove('active'));
+            var contentAreas = document.querySelectorAll('.content-area');
+            contentAreas.forEach(function(area) {
+              area.classList.remove('active');
+            });
 
             // 선택된 단계에 해당하는 콘텐츠 영역 표시
-            if (stage === 'all') {
-              document.getElementById('all-inspections').classList.add('active');
-            } else if (stage === 'primary') {
-              document.getElementById('primary-inspections').classList.add('active');
-            } else if (stage === 'secondary') {
-              document.getElementById('secondary-inspections').classList.add('active');
-            }
+            document.getElementById(stage + '-inspections').classList.add('active');
           });
         });
+      }
 
-        // 전체 선택 체크박스 이벤트 처리
-        const selectAllCheckbox = document.getElementById('selectAll');
+      // 전체 선택 체크박스 초기화
+      function initSelectAllCheckbox() {
+        var selectAllCheckbox = document.getElementById('selectAll');
+
         if (selectAllCheckbox) {
           selectAllCheckbox.addEventListener('change', function() {
-            const activeContentArea = document.querySelector('.content-area.active');
+            var activeContentArea = document.querySelector('.content-area.active');
+
             if (activeContentArea) {
-              const checkboxes = activeContentArea.querySelectorAll('input[type="checkbox"]');
-              checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
+              var checkboxes = activeContentArea.querySelectorAll('input[type="checkbox"]');
+
+              checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
               });
             }
           });
         }
-
-        // 검수 처리 버튼에 이벤트 리스너 할당
-        const processButtons = document.querySelectorAll('.process-btn');
-        processButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            openInspectionModal(this);
-          });
-        });
-
-        // 모달 닫기 버튼 이벤트 리스너
-        const closeButtons = document.querySelectorAll('.close-modal, .btn-cancel');
-        closeButtons.forEach(button => {
-          button.addEventListener('click', closeInspectionModal);
-        });
-
-        // 검수 폼 제출 이벤트 리스너
-        const inspectionForm = document.getElementById('inspectionForm');
-        if (inspectionForm) {
-          inspectionForm.addEventListener('submit', handleFormSubmit);
-        }
       }
 
-      // 검수 모달 열기 함수
-      function openInspectionModal(button) {
-        try {
-          // 세션 상태 확인
-          checkSessionStatus();
+      // 모달 열기 함수 (직접 onclick 속성에서 호출됨)
+      function openModal(code, type, name, category) {
+        // 모달 요소 가져오기
+        var modal = document.getElementById('inspectionModal');
 
-          // 현재 행의 데이터 가져오기
-          currentRow = button.closest('tr');
-          if (!currentRow) {
-            throw new Error('테이블 행을 찾을 수 없습니다.');
-          }
+        // 폼 데이터 설정
+        document.getElementById('equipCode').value = code;
+        document.getElementById('inspectionType').value = type;
+        document.getElementById('equipName').value = name;
+        document.getElementById('equipCategory').value = category;
 
-          // 필요한 데이터 추출
-          const equipCode = currentRow.cells[1]?.textContent || '';
-          const inspectionType = currentRow.cells[2]?.textContent || '';
-          const equipName = currentRow.cells[3]?.textContent || '';
-          const categoryName = currentRow.cells[4]?.textContent || '';
-          const inspectResult = currentRow.cells[8]?.textContent || '';
-
-          // 이미 검수 완료된 항목인지 확인
-          if (inspectResult && inspectResult.trim() !== '') {
-            alert('이미 검수 처리가 완료된 항목입니다.');
-            return;
-          }
-
-          // 모달 폼에 기본 데이터 설정
-          document.getElementById('equipCode').value = equipCode;
-          document.getElementById('inspectionType').value = inspectionType;
-          document.getElementById('equipName').value = equipName;
-          document.getElementById('equipCategory').value = categoryName;
-
-          // platformDeliveryId와 platformDeliveryReturnId 초기화
-          document.getElementById('platformDeliveryId').value = '';
+        // 검수 유형에 따라 배송 ID 또는 반환 ID 설정
+        if (type === '입고검수') {
+          document.getElementById('platformDeliveryId').value = code;
           document.getElementById('platformDeliveryReturnId').value = '';
-
-          // 검수 유형에 따라 배송 ID 또는 반환 ID 설정
-          if (inspectionType === '입고검수') {
-            document.getElementById('platformDeliveryId').value = equipCode;
-            document.getElementById('platformDeliveryReturnId').value = '';
-            document.getElementById('deliveryId').value = 'DELV-' + equipCode;
-          } else if (inspectionType === '스토렌반환검수') {
-            document.getElementById('platformDeliveryId').value = '';
-            document.getElementById('platformDeliveryReturnId').value = equipCode;
-            document.getElementById('deliveryId').value = 'DELV-RTN-' + equipCode;
-          }
-
-          // 현재 날짜와 시간 설정
-          const now = new Date();
-          const formattedDate = now.getFullYear() + '-' +
-                  String(now.getMonth() + 1).padStart(2, '0') + '-' +
-                  String(now.getDate()).padStart(2, '0') + ' ' +
-                  String(now.getHours()).padStart(2, '0') + ':' +
-                  String(now.getMinutes()).padStart(2, '0') + ':' +
-                  String(now.getSeconds()).padStart(2, '0');
-          document.getElementById('processDate').value = formattedDate;
-
-          // adminId 설정 - 세션에서 가져오기
-          const adminIdElement = document.getElementById('adminId');
-          if (adminIdElement) {
-            // 세션에서 관리자 ID 가져오기 (여기서는 그대로 사용)
-            const adminId = '${sessionScope.adminId}';
-            if (!adminId) {
-              alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-              window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-              return;
-            }
-            adminIdElement.value = adminId;
-          }
-
-          // 체크리스트 초기화
-          initChecklistFunctionality();
-
-          // 등급 정보 로드 (AJAX 호출)
-          //loadEquipGradeInfo();
-
-          // 모달 표시
-          modal.style.display = 'block';
-
-        } catch (error) {
-          console.error('검수 모달 열기 오류:', error);
-          alert('검수 처리 준비 중 오류가 발생했습니다.');
+          document.getElementById('deliveryId').value = 'DELV-' + code;
+        } else if (type === '스토렌반환검수') {
+          document.getElementById('platformDeliveryId').value = '';
+          document.getElementById('platformDeliveryReturnId').value = code;
+          document.getElementById('deliveryId').value = 'DELV-RTN-' + code;
         }
+
+        // 모달 표시
+        modal.style.display = 'block';
+
+        console.log('모달 열기: ' + code + ', ' + type + ', ' + name + ', ' + category);
       }
 
-      // 폼 제출 처리 함수
-      function handleFormSubmit(event) {
-        // 폼 제출 기본 동작 방지
-        event.preventDefault();
+      // 모달 닫기 함수
+      function closeModal() {
+        var modal = document.getElementById('inspectionModal');
+        modal.style.display = 'none';
 
-        // 세션 상태 확인
-        checkSessionStatus();
+        // 폼 초기화
+        document.getElementById('inspectionForm').reset();
 
-        // 이벤트 핸들러가 두 번 호출되는 것을 방지하기 위한 플래그
-        if (event.submitting) return;
-        event.submitting = true;
+        // 점수 초기화
+        updateScores();
 
-        try {
-          // 실제 체크리스트 테이블의 각 행에서 라디오 버튼 검증
-          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-          let isValid = true;
-          let commentText = '';
-
-          // 유효성 검사 로직
-          for (let i = 0; i < rows.length; i++) {
-            const row = rows[i];
-            const itemName = row.cells[0].textContent.trim();
-            const radios = row.querySelectorAll('input[type="radio"]');
-            const isChecked = Array.from(radios).some(radio => radio.checked);
-
-            if (!isChecked) {
-              isValid = false;
-              alert(`'${itemName}' 항목을 평가해주세요.`);
-              event.submitting = false;
-              return;
-            }
-
-            // 코멘트 수집
-            const commentInput = row.querySelector('.comment-input');
-            if (commentInput && commentInput.value.trim() !== '') {
-              commentText += `${itemName}: ${commentInput.value.trim()}\n`;
-            }
-          }
-
-          // 유효성 검사 통과 시 AJAX 요청 준비
-          if (isValid && currentRow) {
-            // 폼 데이터 생성
-            const form = document.getElementById('inspectionForm');
-            const formData = new FormData(form);
-
-            // platformDeliveryId 또는 platformDeliveryReturnId 중 하나는 값이 있는지 확인
-            const platformDeliveryId = document.getElementById('platformDeliveryId').value;
-            const platformDeliveryReturnId = document.getElementById('platformDeliveryReturnId').value;
-
-            if (!platformDeliveryId && !platformDeliveryReturnId) {
-              alert('배송 ID 또는 반환 ID가 설정되지 않았습니다.');
-              event.submitting = false;
-              return;
-            }
-
-            // adminId 확인 - 세션에서 가져오기
-            const adminId = document.getElementById('adminId').value;
-            if (!adminId) {
-              alert('관리자 ID가 설정되지 않았습니다. 다시 로그인해주세요.');
-              window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-              event.submitting = false;
-              return;
-            }
-
-            // 코멘트 추가
-            formData.append('inspecComment', commentText || '자동 검수 처리');
-
-            // 최종 등급 정보 추가
-            const finalGrade = document.getElementById('finalGrade').textContent;
-            formData.append('finalGrade', finalGrade);
-
-            // AJAX 요청 설정
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.action, true);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-            // 응답 처리
-            xhr.onload = function() {
-              // 플래그 초기화
-              event.submitting = false;
-
-              if (xhr.status === 401) {
-                // 세션이 만료된 경우
-                alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-                window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-                return;
-              }
-
-              if (xhr.status === 200) {
-                try {
-                  const response = JSON.parse(xhr.responseText);
-                  if (response.success) {
-                    alert('검수 처리가 완료되었습니다.');
-                    // UI 업데이트
-                    updateUIAfterSubmission(commentText, finalGrade);
-                    closeInspectionModal();
-                  } else {
-                    if (response.message && response.message.includes('이미 검수 처리가 완료된 항목')) {
-                      alert('이미 검수 처리가 완료된 항목입니다.');
-                      closeInspectionModal();
-                    } else {
-                      alert('검수 처리 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
-                    }
-                  }
-                } catch (e) {
-                  // JSON 파싱 실패 시 응답 텍스트 확인
-                  if (xhr.responseText.includes('success') || xhr.responseText.includes('완료')) {
-                    alert('검수 처리가 완료되었습니다.');
-                    // UI 업데이트
-                    updateUIAfterSubmission(commentText, finalGrade);
-                    closeInspectionModal();
-                  } else if (xhr.responseText.includes('이미 검수 처리가 완료된 항목')) {
-                    alert('이미 검수 처리가 완료된 항목입니다.');
-                    closeInspectionModal();
-                  } else {
-                    console.error('응답 처리 오류', e);
-                    alert('서버 응답을 처리할 수 없습니다.');
-                  }
-                }
-              } else {
-                alert('서버 오류: ' + xhr.status);
-              }
-            };
-
-            // 오류 처리
-            xhr.onerror = function() {
-              event.submitting = false;
-              alert('네트워크 오류가 발생했습니다.');
-            };
-
-            // 요청 전송
-            xhr.send(formData);
-          } else {
-            // 플래그 초기화
-            event.submitting = false;
-          }
-        } catch (error) {
-          event.submitting = false;
-          console.error('폼 제출 오류:', error);
-          alert('검수 처리 중 오류가 발생했습니다: ' + error.message);
-        }
+        console.log('모달 닫기');
       }
 
-      // 체크리스트 초기화 함수
-      function initChecklistFunctionality() {
-        try {
-          const tableBody = document.querySelector('#checklistTable tbody');
-          if (!tableBody) {
-            console.warn('체크리스트 테이블 본문을 찾을 수 없습니다.');
-            return;
-          }
-
-          const rows = tableBody.querySelectorAll('tr:not(.total-row)');
-          if (!rows || rows.length === 0) {
-            console.warn('체크리스트 행이 없습니다.');
-            return;
-          }
-
-          rows.forEach(row => {
-            // 각 행에 있는 라디오 버튼에 이벤트 리스너 추가
-            const radios = row.querySelectorAll('input[type="radio"]');
-            if (radios && radios.length > 0) {
-              radios.forEach(radio => {
-                radio.addEventListener('change', updateScores);
-              });
-            }
-          });
-
-          // 초기 점수 계산
-          updateScores();
-        } catch (error) {
-          console.error('체크리스트 초기화 오류:', error);
-        }
-      }
-
-      // 점수 업데이트 함수
+      // 체크리스트 점수 계산 함수
       function updateScores() {
-        try {
-          const rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-          let totalScore = 0;
-          const totalRows = rows.length;
-          const scorePerRow = 100 / totalRows;
+        var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+        var totalScore = 0;
+        var totalRows = rows.length;
+        var scorePerRow = 100 / totalRows; // 각 항목당 최대 점수를 동적으로 계산
 
-          rows.forEach(row => {
-            const scoreCell = row.querySelector('.score-cell');
-            if (!scoreCell) return;
+        rows.forEach(function(row) {
+          var scoreCell = row.querySelector('.score-cell');
+          if (!scoreCell) return;
 
-            const radios = row.querySelectorAll('input[type="radio"]');
-            let score = 0;
+          var radios = row.querySelectorAll('input[type="radio"]');
+          var score = 0;
 
-            const selectedRadio = Array.from(radios).find(radio => radio.checked);
-
-            if (selectedRadio) {
-              const selectedGrade = selectedRadio.value;
-
-              switch(selectedGrade) {
-                case '상':
-                  score = scorePerRow;
-                  break;
-                case '중':
-                  score = scorePerRow * 0.65;
-                  break;
-                case '하':
-                  score = scorePerRow * 0.3;
-                  break;
-                default:
-                  score = 0;
-              }
-            }
-
-            scoreCell.textContent = score.toFixed(1);
-            totalScore += score;
-          });
-
-          const totalScoreElement = document.getElementById('totalScore');
-          if (totalScoreElement) {
-            totalScoreElement.textContent = totalScore.toFixed(1);
-          }
-
-          updateFinalGrade(totalScore);
-        } catch (error) {
-          console.error('점수 계산 오류:', error);
-        }
-      }
-
-      // 등급 정보 로드 함수 (AJAX 사용)
-      function loadEquipGradeInfo() {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `${pageContext.request.contextPath}/admin-inspectList.action`, true);
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-
-        xhr.onload = function() {
-          if (xhr.status === 401) {
-            // 세션이 만료된 경우
-            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-            window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-            return;
-          }
-
-          if (xhr.status === 200) {
-            try {
-              const gradeInfo = JSON.parse(xhr.responseText);
-              updateGradeInfoDisplay(gradeInfo);
-            } catch (e) {
-              console.error('등급 정보 파싱 오류:', e);
+          // 체크된 라디오 버튼 찾기
+          var selectedRadio = null;
+          for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+              selectedRadio = radios[i];
+              break;
             }
           }
-        };
 
-        xhr.onerror = function() {
-          console.error('등급 정보 요청 실패');
-        };
+          if (selectedRadio) {
+            var selectedGrade = selectedRadio.value;
 
-        xhr.send();
-      }
-
-      // 등급 정보 표시 업데이트
-      function updateGradeInfoDisplay(gradeInfo) {
-        const gradeInfoContainer = document.querySelector('.grade-badges');
-        if (!gradeInfoContainer || !gradeInfo || !gradeInfo.length) return;
-
-        let gradeHtml = '';
-
-        gradeInfo.forEach(grade => {
-          const className = `grade-${grade.equipGradeName.toLowerCase()}`;
-          let rangeText = '';
-
-          // 등급별 점수 범위 설정
-          if (grade.equipGradeName === 'A') {
-            rangeText = '100-90점';
-          } else if (grade.equipGradeName === 'B') {
-            rangeText = '89-80점';
-          } else if (grade.equipGradeName === 'C') {
-            rangeText = '79-70점';
-          } else if (grade.equipGradeName === 'D') {
-            rangeText = '69-60점';
-          } else if (grade.equipGradeName === 'E') {
-            rangeText = '59-50점';
-          } else if (grade.equipGradeName === 'F') {
-            rangeText = '49점 이하 (스토렌/렌탈 이용 불가)';
+            switch(selectedGrade) {
+              case '상':
+                score = scorePerRow;
+                break;
+              case '중':
+                score = scorePerRow * 0.65;
+                break;
+              case '하':
+                score = scorePerRow * 0.3;
+                break;
+              default:
+                score = 0;
+            }
           }
 
-          gradeHtml += `<span class="grade-info-badge ${className}">${grade.equipGradeName}</span> ${rangeText} `;
+          scoreCell.textContent = score.toFixed(1);
+          totalScore += score;
         });
 
-        gradeInfoContainer.innerHTML = gradeHtml;
+        // 총점 업데이트
+        var totalScoreElement = document.getElementById('totalScore');
+        if (totalScoreElement) {
+          totalScoreElement.textContent = totalScore.toFixed(1);
+        }
+
+        // 최종 등급 업데이트
+        updateFinalGrade(totalScore);
       }
 
       // 최종 등급 업데이트 함수
       function updateFinalGrade(totalScore) {
-        const finalGradeElement = document.getElementById('finalGrade');
+        var finalGradeElement = document.getElementById('finalGrade');
         if (!finalGradeElement) return;
 
-        let gradeClass = '';
-        let grade = '';
-        let equipGradeId = 1; // 기본값
+        var grade = '';
+        var gradeClass = '';
+        var equipGradeId = 1;
+        var inspecGradeId = 1;
 
         // 등급 결정
         if (totalScore >= 90) {
           grade = 'A';
           gradeClass = 'grade-a';
           equipGradeId = 1;
+          inspecGradeId = 1; // 상
         } else if (totalScore >= 80) {
           grade = 'B';
           gradeClass = 'grade-b';
           equipGradeId = 2;
+          inspecGradeId = 1; // 상
         } else if (totalScore >= 70) {
           grade = 'C';
           gradeClass = 'grade-c';
           equipGradeId = 3;
+          inspecGradeId = 2; // 중
         } else if (totalScore >= 60) {
           grade = 'D';
           gradeClass = 'grade-d';
           equipGradeId = 4;
+          inspecGradeId = 2; // 중
         } else if (totalScore >= 50) {
           grade = 'E';
           gradeClass = 'grade-e';
           equipGradeId = 5;
+          inspecGradeId = 3; // 하
         } else {
           grade = 'F';
           gradeClass = 'grade-f';
           equipGradeId = 6;
+          inspecGradeId = 3; // 하
         }
 
+        // 등급 표시 업데이트
         finalGradeElement.textContent = grade;
         finalGradeElement.className = 'final-grade ' + gradeClass;
 
         // 등급 ID 설정
-        const equipGradeIdElement = document.getElementById('equipGradeId');
-        if (equipGradeIdElement) {
-          equipGradeIdElement.value = equipGradeId;
-        }
-
-        // inspecGradeId 설정 - 등급에 따라 다른 검수 등급 할당
-        const inspecGradeIdElement = document.getElementById('inspecGradeId');
-        if (inspecGradeIdElement) {
-          // A, B 등급은 1(상), C, D 등급은 2(중), E, F 등급은 3(하)
-          if (grade === 'A' || grade === 'B') {
-            inspecGradeIdElement.value = 1; // 상
-          } else if (grade === 'C' || grade === 'D') {
-            inspecGradeIdElement.value = 2; // 중
-          } else {
-            inspecGradeIdElement.value = 3; // 하
-          }
-        }
-
-        // 관리자 ID 설정
-        const adminIdElement = document.getElementById('adminId');
-        if (adminIdElement && !adminIdElement.value) {
-          // 세션에서 관리자 ID 가져오기
-          const adminId = '${sessionScope.adminId}';
-          if (adminId) {
-            adminIdElement.value = adminId;
-          } else {
-            // 관리자 ID가 없으면 세션 만료로 판단하고 로그인 페이지로 이동
-            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-            window.location.href = `${pageContext.request.contextPath}/admin-login.action`;
-          }
-        }
-      }
-
-      // UI 업데이트 함수
-      function updateUIAfterSubmission(commentText, finalGrade) {
-        if (!currentRow) return;
-
-        // 등급에 따른 결과 설정
-        let resultType, resultClass;
-        if (finalGrade === 'A' || finalGrade === 'B') {
-          resultType = '상';
-          resultClass = 'status-pass';
-        } else if (finalGrade === 'C' || finalGrade === 'D') {
-          resultType = '중';
-          resultClass = 'status-pending';
-        } else {
-          resultType = '하';
-          resultClass = 'status-fail';
-        }
-
-        // 검수 결과 셀 업데이트
-        updateCellWithBadge(currentRow.cells[8], resultType, resultClass);
-
-        // 검수 코멘트 업데이트
-        currentRow.cells[9].textContent = commentText || '검수 완료';
-
-        // 검수상태 업데이트
-        updateCellWithBadge(currentRow.cells[10], '검수 완료', 'status-pass');
-
-        // 버튼 비활성화 (이미 처리됨)
-        const processBtn = currentRow.querySelector('.process-btn');
-        if (processBtn) {
-          processBtn.disabled = true;
-          processBtn.classList.add('disabled');
-          processBtn.textContent = '처리완료';
-        }
-      }
-
-      // 셀 배지 업데이트 헬퍼 함수
-      function updateCellWithBadge(cell, text, className) {
-        if (!cell) return;
-
-        let badge = cell.querySelector('.status-badge');
-        if (!badge) {
-          badge = document.createElement('span');
-          badge.className = 'status-badge';
-          cell.innerHTML = '';
-          cell.appendChild(badge);
-        }
-
-        badge.textContent = text;
-        badge.className = 'status-badge ' + className;
-      }
-
-      // 모달 닫기 함수
-      function closeInspectionModal() {
-        try {
-          const modal = document.getElementById('inspectionModal');
-          if (modal) {
-            modal.style.display = 'none';
-          }
-
-          // 폼 초기화
-          const form = document.getElementById('inspectionForm');
-          if (form) {
-            form.reset();
-          }
-
-          // 라디오 버튼 초기화
-          const radioButtons = document.querySelectorAll('input[type="radio"]');
-          if (radioButtons) {
-            radioButtons.forEach(radio => {
-              radio.checked = false;
-            });
-          }
-
-          // 코멘트 입력 필드 초기화
-          const commentInputs = document.querySelectorAll('.comment-input');
-          if (commentInputs) {
-            commentInputs.forEach(input => {
-              input.value = '';
-            });
-          }
-
-          // 현재 선택된 행 참조 초기화
-          currentRow = null;
-        } catch (error) {
-          console.error('모달 닫기 오류:', error);
-        }
+        document.getElementById('equipGradeId').value = equipGradeId;
+        document.getElementById('inspecGradeId').value = inspecGradeId;
       }
     </script>
   </div>

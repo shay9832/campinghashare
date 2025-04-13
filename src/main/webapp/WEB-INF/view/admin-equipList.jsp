@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:27
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
@@ -332,11 +325,17 @@
                     <tr>
                         <!-- 간소화된 테이블 헤더 -->
                         <th class="col-select">선택</th>
+                        <th class="col-storen-id">선택</th>
                         <th class="col-code">장비코드 / 소유자</th>
-                        <th class="col-name">장비명</th>
-                        <th class="col-main-category">대분류</th>
-                        <th class="col-sub-category">중분류</th>
-                        <th class="col-avg-price">평균가격</th>
+                        <th class="col-user-code">유저코드</th>
+                        <th class="col-size-id">사이즈ID</th>
+                        <th class="col-size-name">사이즈이름</th>
+                        <th class="col-required">창고공간</th>
+                        <th class="col-storage-price">하루보관가격</th>
+                        <th class="col-storen-month">보관개월수</th>
+                        <th class="col-title">게시물제목</th>
+                        <th class="col-content">게시물내용</th>
+                        <th class="col-rental-price">하루렌탈가격</th>
                         <th class="col-reg-date">장비등록일</th>
                         <th class="col-actions">관리</th>
                     </tr>
@@ -352,6 +351,12 @@
                             <td>${equip.SIZE_ID}</td>
                             <td>${equip.EQUIP_SIZE_NAME}</td>
                             <td>${equip.REQUIRED_SPACE}</td>
+                            <td>${equip.DAILY_STORAGE_FEE}</td>
+                            <td>${equip.STORE_MONTH}</td>
+                            <td>${equip.STOREN_TITLE}</td>
+                            <td>${equip.STOREN_CONTENT}</td>
+                            <td>${equip.DAILY_RENT_PRICE}</td>
+                            <td>${equip.CREATED_DATE}</td>
                             <td><button class="action-btn">수정하기</button></td>
                         </tr>
                     </c:forEach>
