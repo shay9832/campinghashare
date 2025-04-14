@@ -166,6 +166,7 @@ public class EquipRegisterController {
 //            if (user_code == null) {
 //                return "redirect:/userlogin.action";
 //            }
+
             int user_code = 1;
             System.out.println("테스트용 User Code: " + user_code);
 

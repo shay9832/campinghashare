@@ -1,24 +1,44 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    // 배송지 정보 저장할 변수
+    // POST 요청으로 전달된 파라미터 받기
+    String majorCategory = request.getParameter("majorCategory");
+    String middleCategory = request.getParameter("middleCategory");
+    String brand = request.getParameter("brand");
+    String equipName = request.getParameter("equipName");
+    String equipSize = request.getParameter("equipSize");
+
+    int originalPrice = 0;
+    try {
+        originalPrice = Integer.parseInt(request.getParameter("originalPrice"));
+    } catch (NumberFormatException e) {
+        // 예외 처리
+    }
+
+    int storageDays = 1;
+    try {
+        storageDays = Integer.parseInt(request.getParameter("storageDays"));
+    } catch (NumberFormatException e) {
+        // 예외 처리
+    }
+
+    int storageCost = 0;
+    try {
+        storageCost = Integer.parseInt(request.getParameter("storageCost"));
+    } catch (NumberFormatException e) {
+        // 예외 처리
+    }
+
+    // 그 외 기존 코드
+    String storagePeriod = storageDays + "개월";
+    int discountAmount = 20000;
+    int finalPayment = storageCost - discountAmount;
+
+    // 배송지 정보는 유지
     String recipient = "고길동";
     String tel = "010-0000-0000";
     String zipCode = "04001";
     String address1 = "서울 마포구 월드컵북로 21";
     String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
-
-    // 장비 정보를 저장할 변수
-    String categoryMain = "텐트/쉘터";
-    String categorySub = "텐트";
-    String brand = "스노우피크";
-    String equipName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
-    String equipSize = "M";
-
-    // 보관 정보 저장
-    String storagePeriod = "3개월";
-    int storageCost = 90000;
-    int discountAmount = 20000;
-    int finalPayment = storageCost - discountAmount;
 
     // 천 단위 콤마 형식 지정
     java.text.NumberFormat formatter = java.text.NumberFormat.getInstance();
@@ -34,6 +54,11 @@
 <body>
 
 <jsp:include page="header.jsp"/>
+
+<form action="storenRegister-storage-pay-info.action">
+    <!--hidden으로 보내줄 값 숨기기-->
+    <input type="hidden" name="equipName" value="<%= equipName %>">
+    <input type="hidden" name="finalPayment" value="<%= finalPayment %>">
 
 <main class="main-content container">
     <div class="storen-container">
@@ -91,13 +116,13 @@
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(대)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= categoryMain %></span>
+                        <span class="info-text"><%= majorCategory %></span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(중)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= categorySub %></span>
+                        <span class="info-text"><%= middleCategory %></span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
@@ -209,14 +234,16 @@
                     <label class="form-check-label" for="confirm_order">주문 내용을 확인하였습니다.</label>
                 </div>
                 <!-- 버튼 컨테이너 -->
-                <div class="button-container">
-                    <a href="#" class="btn">이전</a>
-                    <a href="#" class="btn btn-primary">다음</a>
-                </div>
+                    <div class="button-container">
+                        <button type="submit" class="btn">이전</button>
+                        <button type="submit" class="btn btn-primary">다음</button>
+                    </div>
+
             </div>
         </div>
     </div>
 </main>
+</form>
 
 <jsp:include page="footer.jsp"/>
 

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,7 +15,7 @@
 </head>
 <body>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="${pageContext.request.contextPath}//WEB-INF/view/header.jsp"/>
 
 <div class="main-container">
     <!-- 왼쪽 카테고리 메뉴 -->
@@ -117,20 +118,31 @@
                     <!-- 전체/스토렌/렌탈 버튼 -->
                     <div class="filter-type-section">
                         <div class="btn-group">
-                            <button type="button" class="filter-btn active">전체</button><button type="button" class="filter-btn">스토렌</button><button type="button" class="filter-btn">렌탈</button>
+                            <a href="?tab=all"
+                               class="filter-btn ${param.tab == 'all' || empty param.tab ? 'active' : ''}"
+                               style="text-decoration: none">전체</a>
+                            <a href="?tab=storen" class="filter-btn ${param.tab == 'storen' ? 'active' : ''}"
+                               style="text-decoration: none">스토렌</a>
+                            <a href="?tab=rental" class="filter-btn ${param.tab == 'rental' ? 'active' : ''}"
+                               style="text-decoration: none">렌탈</a>
                         </div>
                     </div>
 
                     <!-- 키워드 검색 영역 -->
                     <div class="keyword-section">
-                        <div class="input-label">키워드</div>
-                        <div class="search-container">
-                            <label for="search-input" style="display:none">검색</label>
-                            <input type="text" id="search-input" placeholder="키워드 검색(브랜드명, 장비명 등)">
-                            <button type="submit" id="search-btn" class="search-icon-button">
-                                <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
-                            </button>
-                        </div>
+                        <form id="searchForm" action="rentalsearch-main.action" method="GET">
+                            <!-- 현재 탭 유지를 위한 히든 필드 -->
+                            <input type="hidden" name="tab" value="${activeTab}">
+                            <div class="input-label">키워드</div>
+                            <div class="search-container">
+                                <label for="search-input" style="display:none">검색</label>
+                                <input type="text" name="searchKeyword" value="${searchKeyword}" id="search-input"
+                                       placeholder="키워드 검색(브랜드명, 장비명 등)">
+                                <button type="submit" id="search-btn" class="search-icon-button">
+                                    <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- 일일 렌탈가격 영역 -->
@@ -177,127 +189,82 @@
                 </div>
             </div>
 
+
             <!-- 상품 리스트 -->
             <div class="product-container">
                 <ul>
-                    <li>
-                        <a href="storen_matching_request.jsp">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <div class="product-placeholder"></div>
-                                    <button class="like-button">
-                                        <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                    </button>
-                                </div>
-                                <div class="product-info">
-                                    <p class="product-title">크라이어스 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
-                                    <p class="product-brand">코베아몰</p>
-                                    <p class="product-category">텐트/쉘터</p>
-                                    <p class="product-price">10,000원/일</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="storen_matching_request.jsp">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <div class="product-placeholder"></div>
-                                    <button class="like-button">
-                                        <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                    </button>
-                                </div>
-                                <div class="product-info">
-                                    <p class="product-title">빅애그론 대형 프리미엄 텐트 6-8인용</p>
-                                    <p class="product-brand">캠핑몰</p>
-                                    <p class="product-category">텐트/쉘터</p>
-                                    <p class="product-price">15,000원/일</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="storen_matching_request.jsp">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <div class="product-placeholder"></div>
-                                    <button class="like-button">
-                                        <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                    </button>
-                                </div>
-                                <div class="product-info">
-                                    <p class="product-title">Coleman 리빙 쉘터 타프</p>
-                                    <p class="product-brand">컬럼버스</p>
-                                    <p class="product-category">쉘터/타프</p>
-                                    <p class="product-price">8,000원/일</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="storen_matching_request.jsp">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <div class="product-placeholder"></div>
-                                    <button class="like-button">
-                                        <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                    </button>
-                                </div>
-                                <div class="product-info">
-                                    <p class="product-title">Swiss 리빙 쉘 핀란드 돔텐트</p>
-                                    <p class="product-brand">아웃도어</p>
-                                    <p class="product-category">텐트/쉘터</p>
-                                    <p class="product-price">12,000원/일</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="storen_matching_request.jsp">
-                            <div class="product-card">
-                                <div class="product-image">
-                                    <div class="product-placeholder"></div>
-                                    <button class="like-button">
-                                        <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                    </button>
-                                </div>
-                                <div class="product-info">
-                                    <p class="product-title">노스페이스 캠핑 쉘터 대형</p>
-                                    <p class="product-brand">노스페이스</p>
-                                    <p class="product-category">쉘터/타프</p>
-                                    <p class="product-price">9,500원/일</p>
-                                </div>
-                            </div>
-                        </a>
-                    </li>
+                    <c:if test="${param.tab == 'storen'}">
+                        <c:forEach var="storenList" items="${storenList}">
+                            <li>
+                                <a href="storenmatching-request.action?storenId=${storenList.storen_id}">
+                                    <div class="product-card">
+                                        <div class="product-image">
+                                            <div class="product-placeholder"></div>
+                                            <button class="like-button">
+                                                <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
+                                            </button>
+                                        </div>
+                                        <div class="product-info">
+                                            <p class="product-title">${storenList.storen_title}</p>
+                                            <p class="product-brand">${storenList.equipmentDTO.brand}</p>
+                                            <p class="product-category">${storenList.equipmentDTO.majorCategory}</p>
+                                            <p class="product-price">${storenList.daily_rent_price}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </c:forEach>
+                    </c:if>
                 </ul>
             </div>
 
             <!-- 페이지네이션 -->
-            <div class="pagination">
-                <button>◀</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>10</button>
-                <button>▶</button>
-                <button>≫</button>
+            <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
+                <div class="d-flex gap-1">
+                    <!-- 첫 페이지로 -->
+                    <c:if test="${pagenation.pageNum > 1}">
+                        <a href="rentalsearch-main.action?page=1"
+                           class="btn btn-sm">
+                            <i class="fa-solid fa-angles-left"></i>
+                        </a>
+                    </c:if>
+
+                    <!-- 이전 블록으로 -->
+                    <c:if test="${pagenation.startPage > pagenation.blockSize}">
+                        <a href="rentalsearch-main.action?page=${pagenation.prevPage}}"
+                           class="btn btn-sm">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    </c:if>
+
+                    <!-- 페이지 번호 -->
+                    <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
+                        <a href="rentalsearch-main.action?page=${i}}"
+                           class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
+                    </c:forEach>
+
+                    <!-- 다음 블록으로 -->
+                    <c:if test="${pagenation.endPage < pagenation.totalPage}">
+                        <a href="rentalsearch-main.action?page=${pagenation.nextPage}}"
+                           class="btn btn-sm">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </c:if>
+
+                    <!-- 마지막 페이지로 -->
+                    <c:if test="${pagenation.pageNum < pagenation.totalPage}">
+                        <a href="rentalsearch-main.action?page=${pagenation.totalPage}}"
+                           class="btn btn-sm">
+                            <i class="fa-solid fa-angles-right"></i>
+                        </a>
+                    </c:if>
+                </div>
             </div>
         </div><!-- .right-contents-->
     </div><!-- .content -->
 </div><!-- .main-container-->
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/view/footer.jsp"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
@@ -321,7 +288,7 @@
                     fromLabel: '시작일',
                     toLabel: '종료일',
                     daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
-                    monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월']
+                    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
                 }
             });
 
@@ -329,7 +296,7 @@
             picker.setStartDate(moment());
             picker.setEndDate(moment().add(3, 'days'));
 
-            $('#date-range').on('apply.daterangepicker', function(ev, picker) {
+            $('#date-range').on('apply.daterangepicker', function (ev, picker) {
                 var startDate = picker.startDate.format('YYYY/MM/DD');
                 var endDate = picker.endDate.format('YYYY/MM/DD');
                 $(this).val(startDate + ' - ' + endDate);
@@ -375,6 +342,20 @@
             $(this).addClass('active');
         });
 
+
+        // 검색 버튼 클릭 이벤트 처리
+        $('#search-btn').on('click', function (e) {
+            // 폼이 있으므로 별도 처리 필요 없음, 자동으로 submit 됨
+        });
+
+        // 엔터 키 처리
+        $('#search-input').on('keypress', function (e) {
+            if (e.which === 13) { // 엔터 키 코드
+                $('#searchForm').submit();
+            }
+        });
+
+
         window.applyFilter = function () {
             Swal.fire({
                 icon: 'success',
@@ -383,6 +364,8 @@
                 confirmButtonColor: '#2C5F2D'
             });
         };
+
+
     });
 </script>
 </body>

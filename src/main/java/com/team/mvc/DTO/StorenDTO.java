@@ -3,16 +3,27 @@ package com.team.mvc.DTO;
 import java.util.List;
 
 public class StorenDTO {
+    private EquipmentDTO equipmentDTO;                      //일반 장비 DTO
+    private int storen_id, equip_code, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
+    private String storen_title, storen_content;            //스토렌 제목, 상품내용
+    private Integer daily_rent_price;                       //일일 렌탈가격
+    private String created_date;                            //생성일
 
-    private EquipmentDTO equipmentDTO;                      // 일반 장비 DTO
-    private int storen_id, equip_code, size_id, store_month;// 스토렌id, 장비코드, 사이즈id, 보관개월수
-    private String storen_title, storen_content;            // 스토렌 제목, 상품내용
-    private Integer daily_rent_price;                       // 일일 렌탈가격
-    private String created_date;                            // 생성일
     private int user_code;
 
-    private String equip_size_name;                         // 사이즈 이름
-    private int required_space, daily_storage_fee;          // 필요 공간, 1일 보관가격
+    private String equip_size_name;                         //사이즈 이름
+    private int required_space, daily_storage_fee;          //필요 공간, 1일 보관가격
+    private String type;
+
+    // 검색 및 페이징 관련
+    private String searchKeyword;
+    private Pagenation pagenation;
+
+    // 마이페이지 매칭내역 때문에 추가한 속성
+    private String rental_start_date;                       //렌탈시작일(=검수 후 입고일)
+    private String rental_end_date;                         //렌탈종료일(=입고일 + 보관개월수를 일자로 변환)
+    private Integer matching_request_count;                 //매칭수
+    private String matching_status;                         //매칭상태
 
     // 추가된 필드: 이미지 리스트 및 평균가 비교 관련
     private List<AttachmentDTO> photoList;                  // 장비 사진 리스트
@@ -130,6 +141,64 @@ public class StorenDTO {
     public void setDaily_storage_fee(int daily_storage_fee) {
         this.daily_storage_fee = daily_storage_fee;
     }
+
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public Pagenation getPagenation() {
+        return pagenation;
+    }
+
+    public void setPagenation(Pagenation pagenation) {
+        this.pagenation = pagenation;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getRental_start_date() {
+        return rental_start_date;
+    }
+
+    public void setRental_start_date(String rental_start_date) {
+        this.rental_start_date = rental_start_date;
+    }
+
+    public String getRental_end_date() {
+        return rental_end_date;
+    }
+
+    public void setRental_end_date(String rental_end_date) {
+        this.rental_end_date = rental_end_date;
+    }
+
+    public Integer getMatching_request_count() {
+        return matching_request_count;
+    }
+
+    public void setMatching_request_count(Integer matching_request_count) {
+        this.matching_request_count = matching_request_count;
+    }
+
+    public String getMatching_status() {
+        return matching_status;
+    }
+
+    public void setMatching_status(String matching_status) {
+        this.matching_status = matching_status;
+    }
+}
 
     public List<AttachmentDTO> getPhotoList() {
         return photoList;

@@ -1,31 +1,33 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
+<%@ page import="com.team.mvc.DTO.StorenDTO" %>
 <%
     // 임시 변수 설정
-    String matching_done = request.getParameter("matching_done");
-    String selectedDateRange = request.getParameter("dateRange");
-    String selectedDays = request.getParameter("days");
-    String selectedPrice = request.getParameter("price");
+    String selectedDateRange = "";
+    String selectedDays = "0";
+    String selectedPrice = "0원";
+    String matching_done = "false";
+
+    StorenDTO storen = (StorenDTO)request.getAttribute("storen");
+
+    // JSP 파일 상단에 추가
+    if (storen != null && selectedDateRange == null) {
+        // DB에서 가져온 날짜를 초기 값으로 설정
+        selectedDateRange = storen.getRental_start_date() + " ~ " + storen.getRental_end_date();
+        // 날짜 차이 계산 로직 (moment.js와 같은 라이브러리로 일수 계산)
+    }
 
     // 장비 관련 임시 데이터
-    String equipmentCategory = "텐트/쉘터";
-    String equipmentSubCategory = "텐트";
-    String brand = "스노우 피크(SNOW PEAK)";
-    String equipmentName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
-    String equipmentSize = "M";
-    String storagePeriod = "3 개월";
     String equipmentGrade = "C";
-    int newPrice = 3050000;
     int avgNewPrice = 2500000;
     int avgRentalPrice = 20000;
-    int dailyRentalPrice = 25000;
 
     // 이미지 관련 임시 데이터
     int totalImages = 5;
 
     // 기타 브랜드 여부 확인
-    boolean isOtherBrand = "기타".equals(brand);
+    boolean isOtherBrand = "기타".equals(storen.getEquipmentDTO().getBrand());
 
     // 신품 가격 비교
     int priceDiff = 0;
@@ -33,7 +35,7 @@
     String priceDiffClass = "text-secondary";
 
     if (!isOtherBrand) {
-        priceDiff = (int)(((double)(newPrice - avgNewPrice) / avgNewPrice) * 100);
+        priceDiff = (int)(((double)(storen.getEquipmentDTO().getOriginal_price() - avgNewPrice) / avgNewPrice) * 100);
         priceDiffSymbol = priceDiff > 0 ? "▲" : priceDiff < 0 ? "▼" : "-";
         priceDiffClass = priceDiff > 0 ? "text-coral" : priceDiff < 0 ? "text-success" : "text-secondary";
         priceDiff = Math.abs(priceDiff);
@@ -45,7 +47,7 @@
     String rentalPriceDiffClass = "text-secondary";
 
     if (!isOtherBrand) {
-        rentalPriceDiff = (int)(((double)(dailyRentalPrice - avgRentalPrice) / avgRentalPrice) * 100);
+        rentalPriceDiff = (int)(((double)(storen.getDaily_rent_price() - avgRentalPrice) / avgRentalPrice) * 100);
         rentalPriceDiffSymbol = rentalPriceDiff > 0 ? "▲" : rentalPriceDiff < 0 ? "▼" : "-";
         rentalPriceDiffClass = rentalPriceDiff > 0 ? "text-coral" : rentalPriceDiff < 0 ? "text-success" : "text-secondary";
         rentalPriceDiff = Math.abs(rentalPriceDiff);
@@ -53,10 +55,10 @@
 
     // 숫자 포맷
     NumberFormat nf = NumberFormat.getInstance(Locale.KOREA);
-    String priceFormatted = nf.format(newPrice);
+    String priceFormatted = nf.format(storen.getEquipmentDTO().getOriginal_price());
     String avgPriceFormatted = nf.format(avgNewPrice);
     String avgRentalPriceFormatted = nf.format(avgRentalPrice);
-    String dailyRentalPriceFormatted = nf.format(dailyRentalPrice);
+    String dailyRentalPriceFormatted = nf.format(storen.getDaily_rent_price());
 %>
 <html>
 <head>
@@ -72,6 +74,17 @@
     <!-- 내부 리소스 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/matching.css">
+
+    <!-- 매칭신청 버튼 비활성화 시, hover 액션 안 되도록 처리 -->
+    <style>
+        .btn-primary.disabled:hover {
+            background-color: #aaa;
+            border-color: var(--btn-primary-hover-border);
+            color: var(--btn-primary-text);
+            pointer-events: none !important; /* hover 자체를 감지하지 않음 */
+        }
+
+    </style>
 </head>
 
 <body>
@@ -119,12 +132,12 @@
                     <% } %>
                 </div>
                 <div class="user-info d-flex align-items-center mb-2">
-                    <span class="font-medium">가나초콜릿</span>
+                    <span class="font-medium">${owner.nickname}</span>
                     <img src="/resources/images/rank-icon5.png" class="rank-icon ml-2">
-                    <span class="text-secondary text-xs">(신뢰도 00% / 신고 0회 접수)</span>
+                    <span class="text-secondary text-xs">(신뢰도 ${owner.totalTrust}% / 신고 0회 접수)</span>
                     <button class="report-btn btn-sm btn-text ml-auto">신고</button>
                 </div>
-                <div class="text-tertiary text-xs">2025.06.01 등록</div>
+                <div class="text-tertiary text-xs">${storen.created_date} 등록</div>
             </div>
 
             <!-- 오른쪽: 장비 정보 & 렌탈 신청 -->
@@ -132,20 +145,20 @@
                 <table class="info-table w-100">
                     <tr>
                         <th class="text-secondary">장비명</th>
-                        <td><%= equipmentName %></td>
+                        <td>${storen.equipmentDTO.equip_name}</td>
                     </tr>
                     <tr>
                         <th class="text-secondary">카테고리</th>
-                        <td><%= equipmentCategory %></td>
+                        <td>${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</td>
                     </tr>
                     <tr>
                         <th class="text-secondary">브랜드</th>
-                        <td><%= brand %></td>
+                        <td>${storen.equipmentDTO.brand}</td>
                     </tr>
                     <tr>
                         <th class="text-secondary">신품 가격</th>
                         <td>
-                            <span class="price font-bold text-lg"><%= priceFormatted %>원</span>
+                            <span class="price font-bold text-lg"><%=priceFormatted%>원</span>
                             <% if (!isOtherBrand) { %>
                             <span class="<%= priceDiffClass %> ml-2">(평균 대비 <%= priceDiff %>%<%= priceDiffSymbol %>)</span>
                             <span class="avg-price">
@@ -176,12 +189,12 @@
                 <table class="info-table w-100">
                     <tr>
                         <th class="text-secondary">렌탈 가능 기간</th>
-                        <td>2025.06.01 - 2025.09.30</td>
+                        <td>${storen.rental_start_date} ~ ${storen.rental_end_date}</td>
                     </tr>
                     <tr>
                         <th class="text-secondary">렌탈 가격</th>
                         <td>
-                            <span class="price rental-price-value font-bold"><%= dailyRentalPriceFormatted %>원/일</span>
+                            <span class="price rental-price-value font-bold"><%=dailyRentalPriceFormatted%>원/일</span>
                             <% if (!isOtherBrand) { %>
                             <span id="priceCompare" class="<%= rentalPriceDiffClass %> ml-3">(평균 대비 <%= rentalPriceDiff %>%<%= rentalPriceDiffSymbol %>)</span>
                             <span class="avg-price">
@@ -239,9 +252,7 @@
         <div class="card content-section">
             <h3 class="font-bold">장비 관련 내용</h3>
             <p>
-                OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-                OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-                OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+                ${storen.storen_content}
             </p>
         </div>
         <div class="card content-section">
@@ -267,7 +278,7 @@
 
 <script type="text/javascript">
     // [H] JSP 값 가져오기 - 렌탈 가격 정보
-    var dailyRentalPrice = <%= dailyRentalPrice %>;
+    var dailyRentalPrice = ${storen.daily_rent_price};
     var selectedDateRange = "<%= selectedDateRange != null ? selectedDateRange : "" %>";
     var selectedDays = "<%= selectedDays != null ? selectedDays : "0" %>";
     var selectedPrice = "<%= selectedPrice != null ? selectedPrice : "0원" %>";
@@ -284,6 +295,9 @@
         initializeDateRangePicker(); // 날짜 선택기 초기화
         initializeImageNavigation(); // 이미지 내비게이션 초기화
         initializeTooltips();     // 툴팁 초기화
+
+        // 현재 사용자의 매칭 상태 확인
+        checkMatchingStatus();
     });
 
     // [1] 모달 관련 초기화 함수
@@ -311,24 +325,81 @@
         });
 
         // 두 번째 모달의 확인 버튼 클릭 이벤트 - 매칭 완료 처리
+        // 두 번째 모달의 확인 버튼 클릭 이벤트 - 매칭 완료 처리 (AJAX 방식)
         $("#confirm2").on("click", function () {
             // 수정: 선택된 날짜 범위와 일수 파라미터도 함께 전달
-            const dateRange = $('#date-range').val();
-            const days = lastValidDays;
-            const price = lastValidPrice;
+            //const dateRange = $('#date-range').val();
+            //const days = lastValidDays;
+            //const price = lastValidPrice;
 
             // 매칭 완료 후에도 기존에 선택한 정보를 유지하기 위해 파라미터로 전달
-            location.href = "storenMatching-request.jsp?matching_done=true&dateRange=" +
-                encodeURIComponent(dateRange) + "&days=" + days + "&price=" +
-                encodeURIComponent(price);
+            // location.href = "storenMatching-request.jsp?matching_done=true&dateRange=" +
+            //     encodeURIComponent(dateRange) + "&days=" + days + "&price=" +
+            //     encodeURIComponent(price);
+
+            // DateRangePicker에서 선택된 날짜 객체 가져오기
+            const dateRangePicker = $('#date-range').data('daterangepicker');
+
+            // 시작일과 종료일 추출 (YYYY-MM-DD 형식으로 변환)
+            const rentalStartDate = dateRangePicker.startDate.format('YYYY-MM-DD');
+            const rentalEndDate = dateRangePicker.endDate.format('YYYY-MM-DD');
+
+            // AJAX 요청으로 매칭 신청 데이터 전송
+            $.ajax({
+                type: "POST",
+                url: "${pageContext.request.contextPath}/api/storen/matching-request",
+                data: {
+                    storenId: ${storen.storen_id}, // 장비 ID
+                    rentalStartDate: rentalStartDate,
+                    rentalEndDate: rentalEndDate,
+                },
+                success: function(response) {
+                    // 성공 시 모달 닫기
+                    $("#matching-confirm-modal2").hide();
+                    $("body").css("overflow", "auto");
+
+                    if (response.success) {
+                        // 매칭 버튼을 비활성화하고 '매칭 중'으로 변경
+                        $(".match-btn").addClass("disabled").attr("disabled", "disabled").text("매칭 중");
+
+                        // 성공 메시지 표시
+                        Swal.fire({
+                            icon: 'success',
+                            title: '매칭 신청 완료',
+                            text: '매칭 신청이 완료되었습니다. 장비 소유자의 승인을 기다려주세요.'
+                        });
+                    } else {
+                        // 오류 메시지 표시
+                        Swal.fire({
+                            icon: 'error',
+                            title: '매칭 신청 실패',
+                            text: response.message || '매칭 신청에 실패했습니다. 다시 시도해주세요.'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // 오류 처리
+                    $("#matching-confirm-modal2").hide();
+                    $("body").css("overflow", "auto");
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: '매칭 신청 실패',
+                        text: '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+                    });
+
+                    console.error("매칭 신청 오류:", error);
+                }
+            });
         });
     }
 
     // [2] 날짜 선택기 초기화 함수
     function initializeDateRangePicker() {
         // 날짜 범위 설정 - 렌탈 가능 기간 기준
-        const minDate = moment('2025-06-01');   // 렌탈 시작 가능일
-        const maxDate = moment('2025-09-30');   // 렌탈 종료 가능일
+        // 날짜 체크 예시
+        const minDate = '${storen.rental_start_date != null ? storen.rental_start_date : ""}';  //렌탈가능시작일
+        const maxDate = '${storen.rental_end_date != null ? storen.rental_end_date : ""}';      //렌탈가능종료일
 
         // 이미 선택된 날짜 범위가 있으면 파싱
         let initialStartDate = minDate;
@@ -352,8 +423,8 @@
             startDate: initialStartDate,  // 초기 시작 날짜
             endDate: initialEndDate,      // 초기 종료 날짜
             locale: {
-                format: 'YYYY.MM.DD',  // 날짜 형식
-                separator: ' - ',      // 구분자
+                format: 'YYYY-MM-DD',  // 날짜 형식
+                separator: ' ~ ',      // 구분자
                 applyLabel: '적용',
                 cancelLabel: '취소',
                 daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
@@ -369,7 +440,7 @@
         // 날짜 선택 이벤트 등록 - 날짜 선택 시 렌탈 일수 및 금액 계산
         $('#date-range').on('apply.daterangepicker', function(ev, picker) {
             // 선택된 날짜 범위 표시 (YYYY.MM.DD - YYYY.MM.DD 형식)
-            $(this).val(picker.startDate.format('YYYY.MM.DD') + ' - ' + picker.endDate.format('YYYY.MM.DD'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' ~ ' + picker.endDate.format('YYYY-MM-DD'));
 
             // 날짜 차이 계산 (종료일 - 시작일 + 1일) - 대여 일수
             const days = picker.endDate.diff(picker.startDate, 'days') + 1;
@@ -522,6 +593,35 @@
         // 위치 설정
         tooltip.style.top = `${top}px`;
         tooltip.style.left = `${left}px`;
+    }
+
+
+    // 매칭 상태 확인 함수
+    function checkMatchingStatus() {
+        console.log("storenId 값 확인:", ${storen.storen_id});
+        $.ajax({
+            type: "GET",
+            url: "${pageContext.request.contextPath}/api/storen/check-matching-status",
+            data: {
+                storenId: "${storen.storen_id}"
+            },
+            success: function(response) {
+                //alert("매칭상태정보를 잘 가져왔습니다!" + response.hasMatching);
+                if (response.hasMatching) {
+                    // 이미 매칭 신청한 경우 UI 업데이트
+                    $(".match-btn").addClass("disabled").attr("disabled", "disabled").text("매칭승인대기");
+
+                    // 선택했던 날짜 범위 복원
+                    if (response.dateRange) {
+                        $('#date-range').val(response.dateRange);
+                    }
+
+                    // 일수와 가격 표시 복원
+                    $('#rental-days').text('(' + response.days + '일)');
+                    $('#total-price-value').text(response.price);
+                }
+            }
+        });
     }
 </script>
 
