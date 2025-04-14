@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IStorenDAO">
+
+    <!-- resultMap: StorenDTO + 내부 EquipmentDTO 매핑 -->
+    <resultMap id="storenRentalInfoMap" type="com.team.mvc.DTO.StorenDTO">
+        <result property="equip_size_name" column="EQUIP_SIZE_NAME"/>
+        <result property="required_space" column="REQUIRED_SPACE"/>
+        <result property="daily_storage_fee" column="DAILY_STORAGE_FEE"/>
+        <result property="store_month" column="STORE_MONTH"/>
+        <result property="daily_rent_price" column="DAILY_RENT_PRICE"/>
+        <result property="storen_title" column="STOREN_TITLE"/>
+        <result property="storen_content" column="STOREN_CONTENT"/>
+
+        <association property="equipmentDTO" javaType="com.team.mvc.DTO.EquipmentDTO">
+            <id property="equip_id" column="EQUIP_ID"/>
+            <result property="equip_code" column="EQUIP_CODE"/>
+            <result property="equip_name" column="EQUIP_NAME"/>
+            <result property="brand" column="BRAND_NAME"/>
+            <result property="original_price" column="ORIGINAL_PRICE"/>
+            <result property="majorCategory" column="MAJOR_CATEGORY"/>
+            <result property="middleCategory" column="MIDDLE_CATEGORY"/>
+        </association>
+    </resultMap>
+
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
     <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
@@ -37,6 +59,74 @@
                  ORDER BY CREATED_DATE ASC
              )
         WHERE ROWNUM = 1
+    </select>
+
+    <!-- storen_id로 렌탈 정보 조회 -->
+    <select id="getRentalInfoByStorenId" parameterType="int" resultMap="storenRentalInfoMap">
+        SELECT
+            ER.EQUIP_CODE,
+            ER.EQUIP_ID,
+            EN.EQUIP_NAME,
+            B.BRAND_NAME,
+            ER.ORIGINAL_PRICE,
+            CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
+            CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
+            ES.EQUIP_SIZE_NAME,
+            ES.REQUIRED_SPACE,
+            ES.DAILY_STORAGE_FEE,
+            S.STORE_MONTH,
+            S.DAILY_RENT_PRICE,
+            S.STOREN_TITLE,
+            S.STOREN_CONTENT,
+            S.STOREN_ID
+        FROM EQUIPMENT_REGISTRATION ER
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+                 JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
+                 JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
+                 JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
+                 JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
+                 JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
+        WHERE S.STOREN_ID = #{storen_id}
+    </select>
+
+    <!-- 렌탈 희망 정보 업데이트 -->
+    <update id="updateStorenRegisterRentalRegister" parameterType="com.team.mvc.DTO.StorenDTO">
+        UPDATE STOREN
+        SET STOREN_TITLE = #{storen_title},
+            STOREN_CONTENT = #{storen_content},
+            DAILY_RENT_PRICE = #{daily_rent_price}
+        WHERE STOREN_ID = #{storen_id}
+    </update>
+
+    <!-- 평균 신품 가격 조회 -->
+    <select id="getAvgNewPrice" resultType="int">
+        SELECT NVL(ROUND(AVG(ORIGINAL_PRICE)), 0)
+        FROM EQUIPMENT_REGISTRATION
+        WHERE EQUIP_CODE = #{equip_code}
+    </select>
+
+    <!-- 평균 렌탈 가격 조회 -->
+    <select id="getAvgRentalPrice" resultType="int">
+        SELECT NVL(ROUND(AVG(DAILY_RENT_PRICE)), 0)
+        FROM RENTAL
+        WHERE EQUIP_CODE = #{equip_code}
+    </select>
+
+    <!-- 장비명으로 평균 신품 가격 조회 (추가) -->
+    <select id="getAvgNewPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(ER.ORIGINAL_PRICE)), 0)
+        FROM EQUIPMENT_REGISTRATION ER
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
+    </select>
+
+    <!-- 장비명으로 평균 렌탈 가격 조회 (추가) -->
+    <select id="getAvgRentalPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(R.DAILY_RENT_PRICE)), 0)
+        FROM RENTAL R
+                 JOIN EQUIPMENT_REGISTRATION ER ON R.EQUIP_CODE = ER.EQUIP_CODE
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
     </select>
 
 </mapper>
