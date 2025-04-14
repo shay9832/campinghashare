@@ -435,7 +435,24 @@
         // 초기화: 활성화된 메뉴의 하위 메뉴 펼치기
         document.querySelectorAll('.menu-button.active').forEach(button => {
             const submenu = button.nextElementSibling;
-            submenu.style.maxHeight = submenu.scrollHeight + 'px';
+            if (submenu) {
+                submenu.style.maxHeight = submenu.scrollHeight + 'px';
+            }
+        });
+
+        // 서브메뉴 버튼 클릭 처리
+        document.querySelectorAll('.submenu-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault(); // 기본 동작 중지
+                const form = this.closest('form');
+                if (form) {
+                    try {
+                        form.submit();
+                    } catch (error) {
+                        console.error('폼 제출 중 오류 발생:', error);
+                    }
+                }
+            });
         });
     }
 
@@ -892,8 +909,14 @@
      * 페이지 이동 함수
      */
     function goToPage(page) {
-        const currentUrl = new URL(window.location);
-        currentUrl.searchParams.set('page', page);
-        window.location.href = currentUrl.toString();
+        try {
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.set('page', page);
+            window.location.href = currentUrl.toString();
+        } catch (error) {
+            console.error('페이지 이동 중 오류 발생:', error);
+            // 폴백 방식 사용
+            window.location.href = `${contextPath}/admin-payment.action?page=${page}`;
+        }
     }
 </script>
