@@ -7,7 +7,7 @@
 <a href="header.jsp" target="_blank">header.jsp</a><br>
 <a href="footer.jsp" target="_blank">footer.jsp</a><br>
 <br>
-<a href="../../main.jsp" target="_blank">main.jsp</a><br>
+<a href="main.jsp" target="_blank">main.jsp</a><br>
 <a href="login-user.jsp" target="_blank">login-user.jsp</a><br>
 <a href="registerUser-tel.jsp" target="_blank">registerUser-tel.jsp</a><br>
 <a href="registerUser-id.jsp" target="_blank">registerUser-id.jsp</a><br>
@@ -30,10 +30,10 @@
 <a href="storenRegister-storage-pay-complete.jsp" target="_blank">storenRegister-storage-pay-complete.jsp</a><br>
 <a href="storenRegister-inspecResult.jsp" target="_blank">storenRegister-inspecResult.jsp</a><br>
 <a href="storenRegister-inspecResult-return.jsp" target="_blank">storenRegister-inspecResult-return.jsp</a><br>
-<a href="../../storenRegister-rentalRegister.jsp" target="_blank">storenRegister-rentalRegister.jsp</a><br>
+<a href="storenRegister-rentalRegister.jsp" target="_blank">storenRegister-rentalRegister.jsp</a><br>
 <a href="storenRegister-rentalRegister-complete.jsp" target="_blank">storenRegister-rentalRegister-complete.jsp</a><br>
-<a href="../../rentalSearch-main.jsp" target="_blank">rentalSearch-main.jsp</a><br>
-<a href="../../storenMatching-request.jsp" target="_blank">storenMatching-request.jsp</a><br>
+<a href="rentalSearch-main.jsp" target="_blank">rentalSearch-main.jsp</a><br>
+<a href="storenMatching-request.jsp" target="_blank">storenMatching-request.jsp</a><br>
 <a href="storenMatching-rental-pay.jsp" target="_blank">storenMatching-rental-pay.jsp</a><br>
 <a href="storenMatching-rental-pay-complete.jsp" target="_blank">storenMatching-rental-pay-complete.jsp</a><br>
 <br><br>

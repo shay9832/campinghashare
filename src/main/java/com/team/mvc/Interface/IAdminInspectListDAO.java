@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IAdminInspectListDAO {
@@ -23,6 +24,7 @@ public interface IAdminInspectListDAO {
 
     //장비 등급 테이블 조회
     List<AdminInspectListDTO> getEquipList();
+
 
 
 
