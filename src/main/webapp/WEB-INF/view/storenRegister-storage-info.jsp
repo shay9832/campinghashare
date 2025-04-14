@@ -1,4 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="com.team.mvc.DTO.RegisterStorenDTO" %>
+<%
+    DecimalFormat formatter = new DecimalFormat("#,###");
+
+    // 컨트롤러에서 전달받은 장비 정보 객체
+    RegisterStorenDTO equipInfo = (RegisterStorenDTO) request.getAttribute("equipInfo");
+
+    // null 체크 후 값 꺼내기
+    String majorCategory = equipInfo != null ? equipInfo.getMajorCategory() : "N/A";
+    String middleCategory = equipInfo != null ? equipInfo.getMiddleCategory() : "N/A";
+    String brand = equipInfo != null ? equipInfo.getBrand() : "N/A";
+    String equipName = equipInfo != null ? equipInfo.getEquip_name() : "N/A";
+    int originalPrice = equipInfo != null ? equipInfo.getOriginal_price() : 0;
+
+    // 평균 가격 예시는 고정값 (향후 DB에서 계산되면 바꾸면 됨)
+    int averagePrice = 2500000;
+
+    // 가격 차이 퍼센트 계산
+    int priceDiffPercentage = 0;
+    String priceDiffArrow = "";
+    if (averagePrice > 0) {
+        priceDiffPercentage = (int)(((originalPrice - averagePrice) / (double)averagePrice) * 100);
+        priceDiffArrow = priceDiffPercentage >= 0 ? "▲" : "▼";
+        priceDiffPercentage = Math.abs(priceDiffPercentage);
+    }
+%>
 <html>
 <head>
     <title>스토렌 신청</title>
@@ -17,6 +44,7 @@
                 $('#storageCost').text(dailyPrice.toLocaleString());
                 $('#dailyPrice').text(dailyPrice.toLocaleString());
                 updateRentalPrice();
+                $('#selectedSize').val($(this).text());
             });
 
             $('.decrease').click(function() {
@@ -34,6 +62,8 @@
             });
 
             $('#rentalDays').on('input change', function() {
+                const days = parseInt($(this).val()) || 1;
+                $('#selectedDays').val(days);
                 updateRentalPrice();
             });
 
@@ -41,9 +71,8 @@
                 const days = parseInt($('#rentalDays').val()) || 1;
                 const total = dailyPrice * days * 30;
                 $('#totalPrice').text(total.toLocaleString());
+                $('#selectedTotalPrice').val(total);
             }
-
-            updateRentalPrice();
         });
     </script>
 </head>
@@ -69,17 +98,17 @@
                     </div>
                 </div>
 
-                <div class="form-row"><label class="form-label">카테고리(대)</label><div class="form-input"><span class="info-text">텐트/쉘터</span></div></div>
-                <div class="form-row"><label class="form-label">카테고리(중)</label><div class="form-input"><span class="info-text">텐트</span></div></div>
-                <div class="form-row"><label class="form-label">브랜드</label><div class="form-input"><span class="info-text">스노우피크</span></div></div>
-                <div class="form-row"><label class="form-label">장비명</label><div class="form-input"><span class="info-text">스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653</span></div></div>
+                <div class="form-row"><label class="form-label">카테고리(대)</label><div class="form-input"><span class="info-text"><%= majorCategory %></span></div></div>
+                <div class="form-row"><label class="form-label">카테고리(중)</label><div class="form-input"><span class="info-text"><%= middleCategory %></span></div></div>
+                <div class="form-row"><label class="form-label">브랜드</label><div class="form-input"><span class="info-text"><%= brand %></span></div></div>
+                <div class="form-row"><label class="form-label">장비명</label><div class="form-input"><span class="info-text"><%= equipName %></span></div></div>
                 <div class="form-row">
                     <label class="form-label">신품가격</label>
                     <div class="form-input d-flex align-items-center">
-                        <span class="info-text">3,050,000 원</span>
+                        <span class="info-text"><%= equipInfo.getOriginal_price() %> 원</span>
                         <div class="d-flex align-items-center ml-4">
-                            <span class="price-diff">평균 대비 22%▲</span>
-                            <span class="text-secondary ml-2">평균 신품 가격 2,500,000원</span>
+                            <span class="price-diff">평균 대비 <%= priceDiffPercentage %>%<%= priceDiffArrow %></span>
+                            <span class="text-secondary ml-2">평균 신품 가격 <%= formatter.format(averagePrice) %>원</span>
                             <div class="info-icon tooltip-trigger ml-2">
                                 <i class="fa-solid fa-circle-question"></i>
                                 <div class="tooltip-content">이 가격은 최근 등록된 동일 상품의 평균 가격입니다.</div>
@@ -154,10 +183,22 @@
     </div>
 
     <!-- 버튼 컨테이너 -->
-    <div class="button-container">
-        <a href="#" class="btn">이전</a>
-        <a href="storenRegister-storage-pay.jsp" class="btn btn-primary">다음</a>
-    </div>
+    <form action="storenRegister-storage-pay.action" method="GET" id="storenForm">
+        <!-- 파라미터 이름 맞추기 -->
+        <input type="hidden" name="equip_id" value="<%= equipInfo.getEquip_id() %>">
+        <input type="hidden" name="equipName" value="<%= equipName %>">
+        <input type="hidden" name="majorCategory" value="<%= majorCategory %>">
+        <input type="hidden" name="middleCategory" value="<%= middleCategory %>">
+        <input type="hidden" name="brand" value="<%= brand %>">
+        <input type="hidden" id="selectedSize" name="equipSize" value="M">
+        <input type="hidden" id="selectedDays" name="storageDays" value="1">
+        <input type="hidden" id="selectedTotalPrice" name="storageCost" value="90000">
+
+        <div class="button-container">
+            <a href="#" class="btn">이전</a>
+            <button type="submit" class="btn btn-primary">다음</button>
+        </div>
+    </form>
 </main>
 
 <jsp:include page="footer.jsp"></jsp:include>

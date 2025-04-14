@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +28,18 @@ public class AdminPaymentController {
 
     /**
      * 결제 관리 메인 페이지 (GET 요청 처리)
+     * - 모든 검색 파라미터 포함
      */
     @RequestMapping(value = "/admin-payment.action", method = RequestMethod.GET)
     public String adminPayment(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "type", required = false) String type,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "paymentMethod", required = false) String paymentMethod,
+            @RequestParam(value = "paymentStatus", required = false) String paymentStatus,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+            @RequestParam(value = "keyword", required = false) String keyword,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
@@ -46,29 +52,61 @@ public class AdminPaymentController {
 
             List<AdminPaymentDTO> payments;
             int totalItems;
+            Map<String, Object> stats;
 
-            // 결제 유형 필터 적용
-            if (type != null && !type.isEmpty() && !type.equals("all")) {
-                payments = dao.getPaymentsByType(type, start, ITEMS_PER_PAGE);
-                // 결제 유형별 통계 정보
-                Map<String, Object> statistics = dao.getPaymentStatisticsByType(type);
-                model.addAttribute("statistics", statistics);
-            } else {
-                payments = dao.getAllPayments(start, ITEMS_PER_PAGE);
+            // 검색 조건이 있는 경우 검색 실행
+            if ((searchType != null && !searchType.isEmpty()) ||
+                    (paymentMethod != null && !paymentMethod.equals("all")) ||
+                    (paymentStatus != null && !paymentStatus.equals("all")) ||
+                    startDate != null || endDate != null ||
+                    (keyword != null && !keyword.isEmpty())) {
+
+                // 결제 방법 매핑
+                String methodCode = null;
+                if (paymentMethod != null && !paymentMethod.equals("all")) {
+                    methodCode = mapPaymentMethod(paymentMethod);
+                }
+
+                // 검색 실행
+                payments = dao.searchPayments(
+                        searchType, methodCode, startDate, endDate, keyword, start, ITEMS_PER_PAGE);
+                totalItems = dao.getTotalSearchResults(searchType, methodCode, startDate, endDate, keyword);
+
+                // 모델에 검색 조건 추가
+                model.addAttribute("searchType", searchType);
+                model.addAttribute("paymentMethod", paymentMethod);
+                model.addAttribute("paymentStatus", paymentStatus);
+                model.addAttribute("startDate", startDate);
+                model.addAttribute("endDate", endDate);
+                model.addAttribute("keyword", keyword);
+
                 // 전체 통계 정보
-                Map<String, Object> statistics = dao.getPaymentStatistics();
-                model.addAttribute("statistics", statistics);
-            }
+                stats = dao.getPaymentStatistics();
 
-            totalItems = dao.getTotalPayments();
+            }
+            // 결제 유형별 필터링
+            else if (type != null && !type.isEmpty() && !type.equals("all")) {
+                // 한글 유형으로 변환
+                String dbType = mapPaymentType(type);
+                payments = dao.getPaymentsByType(dbType, start, ITEMS_PER_PAGE);
+                totalItems = dao.getTotalPaymentsByType(dbType);
+
+                // 결제 유형별 통계 정보
+                stats = dao.getPaymentStatisticsByType(dbType);
+            }
+            // 기본 전체 결제 목록
+            else {
+                payments = dao.getAllPayments(start, ITEMS_PER_PAGE);
+                totalItems = dao.getTotalPayments();
+
+                // 전체 통계 정보
+                stats = dao.getPaymentStatistics();
+            }
 
             // 페이징 정보
             int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
             int startPage = Math.max(1, page - 4);
             int endPage = Math.min(totalPages, page + 4);
-
-            // 결제 통계 정보 추가
-            Map<String, Object> stats = dao.getPaymentStatistics();
 
             // 모든 필요한 데이터를 한 번에 모델에 추가
             model.addAttribute("paymentList", payments);
@@ -98,109 +136,14 @@ public class AdminPaymentController {
     }
 
     /**
-     * 결제 정보 검색 (AJAX)
-     */
-    @RequestMapping(value = "/admin-searchPayments.action", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> searchPayments(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "searchType", required = false) String searchType,
-            @RequestParam(value = "paymentMethod", required = false) String paymentMethod,
-            @RequestParam(value = "paymentStatus", required = false) String paymentStatus,
-            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
-            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
-            @RequestParam(value = "keyword", required = false) String keyword
-    ) {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            // MyBatis Mapper 인터페이스 가져오기
-            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
-
-            int start = (page - 1) * ITEMS_PER_PAGE;
-
-            // 결제 방법 매핑 (클라이언트 코드에 맞춤)
-            if (paymentMethod != null && !paymentMethod.equals("all")) {
-                paymentMethod = mapPaymentMethod(paymentMethod);
-            }
-
-            // 검색 로직
-            List<AdminPaymentDTO> payments = dao.searchPayments(
-                    searchType, paymentMethod, startDate, endDate, keyword, start, ITEMS_PER_PAGE);
-
-            // 관련 통계 정보 가져오기
-            Map<String, Object> stats = dao.getPaymentStatistics();
-
-            response.put("payments", payments);
-            response.put("stats", stats);
-            response.put("success", true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "결제 정보 검색 중 오류가 발생했습니다: " + e.getMessage());
-        }
-
-        return response;
-    }
-
-    /**
-     * 결제 유형별 결제 목록 조회 (AJAX)
-     */
-    @RequestMapping(value = "/admin-getPaymentsByType.action", method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String, Object> getPaymentsByType(
-            @RequestParam("type") String type,
-            @RequestParam(value = "page", defaultValue = "1") int page
-    ) {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            // MyBatis Mapper 인터페이스 가져오기
-            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
-
-            int start = (page - 1) * ITEMS_PER_PAGE;
-
-            // "all" 처리
-            if ("all".equals(type)) {
-                List<AdminPaymentDTO> payments = dao.getAllPayments(start, ITEMS_PER_PAGE);
-                Map<String, Object> stats = dao.getPaymentStatistics();
-
-                response.put("payments", payments);
-                response.put("stats", stats);
-            } else {
-                // 유형 매핑
-                String dbType = mapPaymentType(type);
-
-                List<AdminPaymentDTO> payments = dao.getPaymentsByType(dbType, start, ITEMS_PER_PAGE);
-                Map<String, Object> stats = dao.getPaymentStatisticsByType(dbType);
-
-                response.put("payments", payments);
-                response.put("stats", stats);
-            }
-
-            response.put("success", true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "결제 정보를 불러오는 중 오류가 발생했습니다: " + e.getMessage());
-        }
-
-        return response;
-    }
-
-    /**
-     * 결제 취소 처리 (AJAX)
+     * 결제 취소 처리 (POST 요청 처리)
      */
     @RequestMapping(value = "/admin-cancelPayUpdate.action", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> cancelPayment(
+    public String cancelPayment(
             @RequestParam("paymentId") int paymentId,
-            @RequestParam("cancelReason") String cancelReason
+            @RequestParam("cancelReason") String cancelReason,
+            RedirectAttributes redirectAttributes
     ) {
-        Map<String, Object> response = new HashMap<>();
-
         try {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
@@ -208,37 +151,33 @@ public class AdminPaymentController {
             // 현재 날짜를 취소일로 사용
             Date cancelDate = new Date();
 
+            // 결제 취소 처리
             int result = dao.updatePaymentStatus(paymentId, "결제취소", cancelDate, cancelReason);
 
             if (result > 0) {
-                response.put("success", true);
-                response.put("message", "결제가 성공적으로 취소되었습니다.");
+                redirectAttributes.addFlashAttribute("success", "결제가 성공적으로 취소되었습니다.");
             } else {
-                response.put("success", false);
-                response.put("message", "결제 취소에 실패했습니다.");
+                redirectAttributes.addFlashAttribute("error", "결제 취소에 실패했습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "오류가 발생했습니다: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "오류가 발생했습니다: " + e.getMessage());
         }
 
-        return response;
+        return "redirect:/admin-payment.action";
     }
 
     /**
-     * 결제 상태 업데이트 (AJAX)
+     * 결제 상태 업데이트 (POST 요청 처리)
      */
     @RequestMapping(value = "/admin-updatePayment.action", method = RequestMethod.POST)
-    @ResponseBody
-    public Map<String, Object> updatePaymentStatus(
+    public String updatePaymentStatus(
             @RequestParam("paymentId") int paymentId,
             @RequestParam("status") String status,
             @RequestParam(value = "cancelDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date cancelDate,
-            @RequestParam(value = "cancelReason", required = false) String cancelReason
+            @RequestParam(value = "cancelReason", required = false) String cancelReason,
+            RedirectAttributes redirectAttributes
     ) {
-        Map<String, Object> response = new HashMap<>();
-
         try {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
@@ -248,22 +187,20 @@ public class AdminPaymentController {
                 cancelDate = new Date();
             }
 
+            // 결제 상태 업데이트
             int result = dao.updatePaymentStatus(paymentId, status, cancelDate, cancelReason);
 
             if (result > 0) {
-                response.put("success", true);
-                response.put("message", "결제 상태가 업데이트되었습니다.");
+                redirectAttributes.addFlashAttribute("success", "결제 상태가 업데이트되었습니다.");
             } else {
-                response.put("success", false);
-                response.put("message", "결제 상태 업데이트에 실패했습니다.");
+                redirectAttributes.addFlashAttribute("error", "결제 상태 업데이트에 실패했습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.put("success", false);
-            response.put("message", "오류가 발생했습니다: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "오류가 발생했습니다: " + e.getMessage());
         }
 
-        return response;
+        return "redirect:/admin-payment.action";
     }
 
     /**

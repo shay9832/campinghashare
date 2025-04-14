@@ -20,4 +20,6 @@ public interface IEquipmentDAO {
     Integer insertEquip(@Param("brandId") int brandId, @Param("equipName") String equipName);
 
     Integer searchCategoryId(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
+
+
 }

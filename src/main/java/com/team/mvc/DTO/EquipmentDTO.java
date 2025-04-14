@@ -6,6 +6,7 @@ public class EquipmentDTO {
 
     private String equip_name, majorCategory, middleCategory, brand;
 
+
     public int getEquip_id() {
         return equip_id;
     }
