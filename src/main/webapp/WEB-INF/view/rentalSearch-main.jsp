@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="${pageContext.request.contextPath}//WEB-INF/view/header.jsp"/>
 
 <div class="main-container">
     <!-- 왼쪽 카테고리 메뉴 -->
@@ -297,7 +297,7 @@
     </div><!-- .content -->
 </div><!-- .main-container-->
 
-<jsp:include page="footer.jsp"/>
+<jsp:include page="${pageContext.request.contextPath}/WEB-INF/view/footer.jsp"/>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>

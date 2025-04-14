@@ -85,4 +85,18 @@
         ORDER BY s.CREATED_DATE DESC
     </select>
 
+    <!-- 스토렌id로 특정 스토렌 정보 가져오기 -->
+    <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+        FROM VW_STOREN
+        WHERE STOREN_ID = #{storen_id}
+    </select>
+
 </mapper>

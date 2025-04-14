@@ -26,4 +26,7 @@ public interface IEquipmentDAO {
 
     // 장비명id로 장비명 검색
     String getEquipNameById(int equip_name_id);
+
+    // 장비코드로 장비정보 가져오기
+    EquipmentDTO getEquipmentByEquipCode(int equip_code);
 }
