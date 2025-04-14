@@ -30,11 +30,6 @@ public class BoardPostService implements IBoardPostService {
         return dao.listNotice();
     }
 
-    @Override
-    public List<BoardPostDTO> listHotPost(int boardId) {
-        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
-        return dao.listHotPost(boardId);
-    }
 
     @Override
     public List<BoardPostDTO> listTotalHotPost(BoardPostDTO dto) {

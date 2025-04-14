@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IStorenDAO">
+    <!-- 전체 스토렌 장비 리스트 조회   -->
+    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+        FROM VW_STOREN
+    </select>
+
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
     <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
@@ -38,5 +48,16 @@
              )
         WHERE ROWNUM = 1
     </select>
+
+    <!-- 스토렌 장비 검색 -->
+    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT EQUIP_NAME, BRAND_NAME, CATEGORY_NAME
+        FROM VW_SEARCH_EQUIP
+        WHERE TYPE = 'STOREN'
+          AND (EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%')
+    </select>
+
 
 </mapper>
