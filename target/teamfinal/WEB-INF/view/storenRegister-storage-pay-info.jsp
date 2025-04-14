@@ -1,4 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+
+String equipName = request.getParameter("equipName");
+String finalPayment = request.getParameter("finalPayment");
+
+
+
+
+%>
 <html>
 <head>
     <title>결제 정보 확인</title>
@@ -18,11 +27,11 @@
             <table class="w-100 mb-4">
                 <tr class="border-bottom">
                     <td class="p-3 font-medium">상품명</td>
-                    <td class="p-3">스토렌(보관비)</td>
+                    <td class="p-3">${equipName}</td>
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-3 font-medium">최종 결제 금액</td>
-                    <td class="p-3 font-bold text-primary">270,000원</td>
+                    <td class="p-3 font-bold text-primary">${finalPayment}원</td>
                 </tr>
             </table>
 
@@ -31,6 +40,10 @@
                 <button class="btn" onclick="cancelPayment()">취소</button>
                 <button class="btn btn-primary" onclick="confirmPayment()">확인</button>
             </div>
+
+
+            <input type="hidden" name="finalPayment" value="<%= finalPayment %>">
+            <input type="hidden" name="equipName" value="<%= equipName %>">
         </div>
     </div>
 </div>

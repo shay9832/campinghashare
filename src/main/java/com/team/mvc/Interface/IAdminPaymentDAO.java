@@ -50,6 +50,11 @@ public interface IAdminPaymentDAO {
     AdminPaymentDTO getPaymentById(@Param("paymentId") int paymentId);
 
     /**
+     * 결제 유형별 총 결제 건수 조회
+     */
+    int getTotalPaymentsByType(@Param("type") String type);
+
+    /**
      * 결제 통계 정보 조회
      */
     Map<String, Object> getPaymentStatistics();

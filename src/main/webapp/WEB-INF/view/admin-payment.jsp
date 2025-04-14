@@ -285,90 +285,106 @@
         </div>
 
         <!-- 결제 상세 정보 모달 -->
-        <div class="modal-body">
-            <form id="payment-form" action="${pageContext.request.contextPath}/admin-updatePayment.action" method="POST">
-                <div class="form-group">
-                    <label for="payment-id">결제 ID</label>
-                    <input type="text" id="payment-id" name="paymentId" class="form-control" readonly>
+        <div id="payment-detail-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>결제 상세 정보</h3>
+                    <span class="close-modal">&times;</span>
                 </div>
-                <div class="form-group">
-                    <label for="member-nickname">회원 닉네임</label>
-                    <input type="text" id="member-nickname" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="payment-method">결제 방법</label>
-                    <input type="text" id="payment-method-detail" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="payment-amount">결제 금액</label>
-                    <input type="text" id="payment-amount" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="payment-date">결제 일자</label>
-                    <input type="text" id="payment-date" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="payment-type">결제 유형</label>
-                    <input type="text" id="payment-type" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="payment-status-detail">결제 상태</label>
-                    <select id="payment-status-detail" name="status" class="form-control">
-                        <option value="결제완료">결제완료</option>
-                        <option value="결제취소">결제취소</option>
-                        <option value="결제대기">결제대기</option>
-                    </select>
-                </div>
-                <div class="form-group" id="cancel-date-group" style="display: none;">
-                    <label for="cancel-date">취소 일자</label>
-                    <input type="datetime-local" id="cancel-date" name="cancelDate" class="form-control">
-                </div>
-                <div class="form-group" id="cancel-reason-group" style="display: none;">
-                    <label for="cancel-reason">취소 사유</label>
-                    <textarea id="cancel-reason" name="cancelReason" class="form-control" rows="3"></textarea>
-                </div>
+                <div class="modal-body">
+                    <form id="payment-form" action="${pageContext.request.contextPath}/admin-updatePayment.action" method="POST">
+                        <div class="form-group">
+                            <label for="payment-id">결제 ID</label>
+                            <input type="text" id="payment-id" name="paymentId" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="member-nickname">회원 닉네임</label>
+                            <input type="text" id="member-nickname" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-method-detail">결제 방법</label>
+                            <input type="text" id="payment-method-detail" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-amount">결제 금액</label>
+                            <input type="text" id="payment-amount" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-date">결제 일자</label>
+                            <input type="text" id="payment-date" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-type">결제 유형</label>
+                            <input type="text" id="payment-type" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="payment-status-detail">결제 상태</label>
+                            <select id="payment-status-detail" name="status" class="form-control">
+                                <option value="결제완료">결제완료</option>
+                                <option value="결제취소">결제취소</option>
+                                <option value="결제대기">결제대기</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="cancel-date-group" style="display: none;">
+                            <label for="cancel-date">취소 일자</label>
+                            <input type="datetime-local" id="cancel-date" name="cancelDate" class="form-control">
+                        </div>
+                        <div class="form-group" id="cancel-reason-group" style="display: none;">
+                            <label for="cancel-reason">취소 사유</label>
+                            <textarea id="cancel-reason" name="cancelReason" class="form-control" rows="3"></textarea>
+                        </div>
 
-                <div class="form-group">
-                    <label for="related-id">관련 ID</label>
-                    <div id="related-id" style="padding: 10px; background-color: #f9f9f9; border-radius: 4px;">
-                        <div id="storage-id-group" style="display: none; margin-bottom: 10px;">
-                            <strong>보관 ID:</strong> <span id="storage-id-value">-</span>
+                        <div class="form-group">
+                            <label for="related-id">관련 ID</label>
+                            <div id="related-id" style="padding: 10px; background-color: #f9f9f9; border-radius: 4px;">
+                                <div id="storage-id-group" style="display: none; margin-bottom: 10px;">
+                                    <strong>보관 ID:</strong> <span id="storage-id-value">-</span>
+                                </div>
+                                <div id="storen-id-group" style="display: none; margin-bottom: 10px;">
+                                    <strong>스토렌 ID:</strong> <span id="storen-id-value">-</span>
+                                </div>
+                                <div id="rental-id-group" style="display: none; margin-bottom: 10px;">
+                                    <strong>렌탈 ID:</strong> <span id="rental-id-value">-</span>
+                                </div>
+                                <div id="storen-rental-id-group" style="display: none;">
+                                    <strong>스토렌렌탈 ID:</strong> <span id="storen-rental-id-value">-</span>
+                                </div>
+                            </div>
                         </div>
-                        <div id="storen-id-group" style="display: none; margin-bottom: 10px;">
-                            <strong>스토렌 ID:</strong> <span id="storen-id-value">-</span>
-                        </div>
-                        <div id="rental-id-group" style="display: none; margin-bottom: 10px;">
-                            <strong>렌탈 ID:</strong> <span id="rental-id-value">-</span>
-                        </div>
-                        <div id="storen-rental-id-group" style="display: none;">
-                            <strong>스토렌렌탈 ID:</strong> <span id="storen-rental-id-value">-</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-actions">
-                    <button type="button" class="btn btn-danger" id="cancel-payment-btn">결제취소</button>
-                    <button type="button" class="btn btn-danger" id="close-modal-btn">닫기</button>
-                    <button type="submit" class="btn btn-primary" id="save-payment-btn">저장</button>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="cancel-payment-btn">결제취소</button>
+                            <button type="button" class="btn btn-danger" id="close-modal-btn">닫기</button>
+                            <button type="submit" class="btn btn-primary" id="save-payment-btn">저장</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
 
 
         <!-- 결제취소 확인 모달 -->
-        <div class="modal-body">
-            <p id="cancel-message" style="margin-bottom: 25px; line-height: 1.5; color: #555;">선택한 결제를 정말로 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
-            <form id="cancel-payment-form" action="${pageContext.request.contextPath}/admin-cancelPayUpdate.action" method="POST">
-                <input type="hidden" id="cancel-payment-id" name="paymentId">
-                <div class="form-group">
-                    <label for="confirm-cancel-reason">취소 사유</label>
-                    <textarea id="confirm-cancel-reason" name="cancelReason" class="form-control" rows="3" placeholder="취소 사유를 입력해주세요"></textarea>
+        <div id="cancel-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>결제 취소 확인</h3>
+                    <span class="close-modal">&times;</span>
                 </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-primary" id="cancel-confirm-btn">취소</button>
-                    <button type="submit" class="btn btn-danger" id="confirm-cancel-btn">결제취소 확정</button>
+                <div class="modal-body">
+                    <p id="cancel-message" style="margin-bottom: 25px; line-height: 1.5; color: #555;">선택한 결제를 정말로 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.</p>
+                    <form id="cancel-payment-form" action="${pageContext.request.contextPath}/admin-cancelPayUpdate.action" method="POST">
+                        <input type="hidden" id="cancel-payment-id" name="paymentId">
+                        <div class="form-group">
+                            <label for="confirm-cancel-reason">취소 사유</label>
+                            <textarea id="confirm-cancel-reason" name="cancelReason" class="form-control" rows="3" placeholder="취소 사유를 입력해주세요"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" id="cancel-confirm-btn">취소</button>
+                            <button type="submit" class="btn btn-danger" id="confirm-cancel-btn">결제취소 확정</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
