@@ -16,6 +16,8 @@ String finalPayment = request.getParameter("finalPayment");
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-light">
+<form action="storenRegister-storage-pay-complete.action">
+    <input type="hidden" name="equipName" value="<%= equipName %>">
 <div class="container py-4">
     <div class="info-section card mx-auto" style="max-width: 500px;">
         <div class="card-header">
@@ -47,7 +49,7 @@ String finalPayment = request.getParameter("finalPayment");
         </div>
     </div>
 </div>
-
+</form>
 <script>
     // 취소 버튼 클릭 시 호출되는 함수
     function cancelPayment() {
