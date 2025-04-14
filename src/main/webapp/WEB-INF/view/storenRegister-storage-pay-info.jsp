@@ -1,13 +1,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+
+String equipName = request.getParameter("equipName");
+String finalPayment = request.getParameter("finalPayment");
+
+
+
+
+%>
 <html>
 <head>
-    <title>storenRegister-storage-pay-info.jsp</title>
-
+    <title>결제 정보 확인</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-light">
+<form action="storenRegister-storage-pay-complete.action">
+    <input type="hidden" name="equipName" value="<%= equipName %>">
 <div class="container py-4">
     <div class="info-section card mx-auto" style="max-width: 500px;">
         <div class="card-header">
@@ -19,11 +29,11 @@
             <table class="w-100 mb-4">
                 <tr class="border-bottom">
                     <td class="p-3 font-medium">상품명</td>
-                    <td class="p-3">스토렌(보관비)</td>
+                    <td class="p-3">${equipName}</td>
                 </tr>
                 <tr class="border-bottom">
                     <td class="p-3 font-medium">최종 결제 금액</td>
-                    <td class="p-3 font-bold text-primary">270,000원</td>
+                    <td class="p-3 font-bold text-primary">${finalPayment}원</td>
                 </tr>
             </table>
 
@@ -32,11 +42,14 @@
                 <button class="btn" onclick="cancelPayment()">취소</button>
                 <button class="btn btn-primary" onclick="confirmPayment()">확인</button>
             </div>
+
+
+            <input type="hidden" name="finalPayment" value="<%= finalPayment %>">
+            <input type="hidden" name="equipName" value="<%= equipName %>">
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</form>
 <script>
     // 취소 버튼 클릭 시 호출되는 함수
     function cancelPayment() {
@@ -65,6 +78,5 @@
         }
     }
 </script>
-
 </body>
 </html>
