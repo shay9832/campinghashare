@@ -492,6 +492,9 @@
             const amount = document.getElementById('payment-amount').value;
             const nickname = document.getElementById('member-nickname').value;
 
+            // 취소 폼에 결제 ID 설정 추가
+            document.getElementById('cancel-payment-id').value = paymentId;
+
             document.getElementById('cancel-message').textContent =
                 `${nickname} 회원님의 ${amount} 결제(ID: ${paymentId})를 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.`;
 
