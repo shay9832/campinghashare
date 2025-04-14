@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     // 완료된 프로세스 정보를 저장할 변수
-    String processName = "스토렌 보관비 결제";
+    String processName = request.getParameter("equipName");
 
     // 관련 메뉴명을 저장할 변수들
     String prevMenu = "내 장비 목록";
