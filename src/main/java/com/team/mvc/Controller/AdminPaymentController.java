@@ -2,11 +2,13 @@ package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.AdminPaymentDTO;
 import com.team.mvc.Interface.IAdminPaymentDAO;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,21 +22,25 @@ import java.util.Map;
 public class AdminPaymentController {
 
     @Autowired
-    private IAdminPaymentDAO adminPaymentDAO;
+    private SqlSession sqlSession;
 
     // 페이지당 표시할 항목 수
     private static final int ITEMS_PER_PAGE = 10;
 
     /**
-     * 결제 관리 메인 페이지
+     * 결제 관리 메인 페이지 (GET 요청 처리)
      */
-    @RequestMapping("/admin-payment.action")
-    public String paymentManagement(
+    @RequestMapping(value = "/admin-payment.action", method = RequestMethod.GET)
+    public String adminPayment(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "type", required = false) String type,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         try {
+            // MyBatis Mapper 인터페이스 가져오기
+            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
+
             // 페이징 계산
             int start = (page - 1) * ITEMS_PER_PAGE;
 
@@ -43,18 +49,18 @@ public class AdminPaymentController {
 
             // 결제 유형 필터 적용
             if (type != null && !type.isEmpty() && !type.equals("all")) {
-                payments = adminPaymentDAO.getPaymentsByType(type, start, ITEMS_PER_PAGE);
+                payments = dao.getPaymentsByType(type, start, ITEMS_PER_PAGE);
                 // 결제 유형별 통계 정보
-                Map<String, Object> statistics = adminPaymentDAO.getPaymentStatisticsByType(type);
+                Map<String, Object> statistics = dao.getPaymentStatisticsByType(type);
                 model.addAttribute("statistics", statistics);
             } else {
-                payments = adminPaymentDAO.getAllPayments(start, ITEMS_PER_PAGE);
+                payments = dao.getAllPayments(start, ITEMS_PER_PAGE);
                 // 전체 통계 정보
-                Map<String, Object> statistics = adminPaymentDAO.getPaymentStatistics();
+                Map<String, Object> statistics = dao.getPaymentStatistics();
                 model.addAttribute("statistics", statistics);
             }
 
-            totalItems = adminPaymentDAO.getTotalPayments();
+            totalItems = dao.getTotalPayments();
 
             // 페이징 정보
             int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
@@ -62,8 +68,9 @@ public class AdminPaymentController {
             int endPage = Math.min(totalPages, page + 4);
 
             // 결제 통계 정보 추가
-            Map<String, Object> stats = adminPaymentDAO.getPaymentStatistics();
+            Map<String, Object> stats = dao.getPaymentStatistics();
 
+            // 모든 필요한 데이터를 한 번에 모델에 추가
             model.addAttribute("paymentList", payments);
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", totalPages);
@@ -85,15 +92,15 @@ public class AdminPaymentController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("errorMessage", "결제 정보를 로드하는 중 오류가 발생했습니다: " + e.getMessage());
-            return "admin-payment";
+            redirectAttributes.addFlashAttribute("error", "결제 정보를 로드하는 중 오류가 발생했습니다: " + e.getMessage());
+            return "redirect:/admin-payment.action";
         }
     }
 
     /**
-     * 결제 정보 검색
+     * 결제 정보 검색 (AJAX)
      */
-    @RequestMapping("/admin-searchPayments.action")
+    @RequestMapping(value = "/admin-searchPayments.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> searchPayments(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -107,35 +114,22 @@ public class AdminPaymentController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // MyBatis Mapper 인터페이스 가져오기
+            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
+
             int start = (page - 1) * ITEMS_PER_PAGE;
 
             // 결제 방법 매핑 (클라이언트 코드에 맞춤)
             if (paymentMethod != null && !paymentMethod.equals("all")) {
-                switch (paymentMethod) {
-                    case "bank":
-                        paymentMethod = "무통장입금";
-                        break;
-                    case "card":
-                        paymentMethod = "신용카드";
-                        break;
-                    case "mobile":
-                        paymentMethod = "휴대폰결제";
-                        break;
-                    case "kakao":
-                        paymentMethod = "카카오페이";
-                        break;
-                    case "naver":
-                        paymentMethod = "네이버페이";
-                        break;
-                }
+                paymentMethod = mapPaymentMethod(paymentMethod);
             }
 
             // 검색 로직
-            List<AdminPaymentDTO> payments = adminPaymentDAO.searchPayments(
+            List<AdminPaymentDTO> payments = dao.searchPayments(
                     searchType, paymentMethod, startDate, endDate, keyword, start, ITEMS_PER_PAGE);
 
             // 관련 통계 정보 가져오기
-            Map<String, Object> stats = adminPaymentDAO.getPaymentStatistics();
+            Map<String, Object> stats = dao.getPaymentStatistics();
 
             response.put("payments", payments);
             response.put("stats", stats);
@@ -151,9 +145,9 @@ public class AdminPaymentController {
     }
 
     /**
-     * 결제 유형별 결제 목록 (AJAX)
+     * 결제 유형별 결제 목록 조회 (AJAX)
      */
-    @RequestMapping("/admin-getPaymentsByType.action")
+    @RequestMapping(value = "/admin-getPaymentsByType.action", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> getPaymentsByType(
             @RequestParam("type") String type,
@@ -162,32 +156,24 @@ public class AdminPaymentController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // MyBatis Mapper 인터페이스 가져오기
+            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
+
             int start = (page - 1) * ITEMS_PER_PAGE;
 
             // "all" 처리
             if ("all".equals(type)) {
-                List<AdminPaymentDTO> payments = adminPaymentDAO.getAllPayments(start, ITEMS_PER_PAGE);
-                Map<String, Object> stats = adminPaymentDAO.getPaymentStatistics();
+                List<AdminPaymentDTO> payments = dao.getAllPayments(start, ITEMS_PER_PAGE);
+                Map<String, Object> stats = dao.getPaymentStatistics();
 
                 response.put("payments", payments);
                 response.put("stats", stats);
             } else {
                 // 유형 매핑
-                String dbType = type;
-                switch (type.toLowerCase()) {
-                    case "rental":
-                        dbType = "렌탈";
-                        break;
-                    case "storage":
-                        dbType = "보관";
-                        break;
-                    case "storen":
-                        dbType = "스토렌";
-                        break;
-                }
+                String dbType = mapPaymentType(type);
 
-                List<AdminPaymentDTO> payments = adminPaymentDAO.getPaymentsByType(dbType, start, ITEMS_PER_PAGE);
-                Map<String, Object> stats = adminPaymentDAO.getPaymentStatisticsByType(dbType);
+                List<AdminPaymentDTO> payments = dao.getPaymentsByType(dbType, start, ITEMS_PER_PAGE);
+                Map<String, Object> stats = dao.getPaymentStatisticsByType(dbType);
 
                 response.put("payments", payments);
                 response.put("stats", stats);
@@ -216,10 +202,13 @@ public class AdminPaymentController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // MyBatis Mapper 인터페이스 가져오기
+            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
+
             // 현재 날짜를 취소일로 사용
             Date cancelDate = new Date();
 
-            int result = adminPaymentDAO.updatePaymentStatus(paymentId, "결제취소", cancelDate, cancelReason);
+            int result = dao.updatePaymentStatus(paymentId, "결제취소", cancelDate, cancelReason);
 
             if (result > 0) {
                 response.put("success", true);
@@ -251,12 +240,15 @@ public class AdminPaymentController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // MyBatis Mapper 인터페이스 가져오기
+            IAdminPaymentDAO dao = sqlSession.getMapper(IAdminPaymentDAO.class);
+
             // 결제취소인 경우 취소일자가 없으면 현재 날짜로 설정
             if ("결제취소".equals(status) && cancelDate == null) {
                 cancelDate = new Date();
             }
 
-            int result = adminPaymentDAO.updatePaymentStatus(paymentId, status, cancelDate, cancelReason);
+            int result = dao.updatePaymentStatus(paymentId, status, cancelDate, cancelReason);
 
             if (result > 0) {
                 response.put("success", true);
@@ -272,5 +264,41 @@ public class AdminPaymentController {
         }
 
         return response;
+    }
+
+    /**
+     * 결제 방법 코드를 한글 명칭으로 매핑
+     */
+    private String mapPaymentMethod(String paymentMethod) {
+        switch (paymentMethod) {
+            case "bank":
+                return "무통장입금";
+            case "card":
+                return "신용카드";
+            case "mobile":
+                return "휴대폰결제";
+            case "kakao":
+                return "카카오페이";
+            case "naver":
+                return "네이버페이";
+            default:
+                return paymentMethod;
+        }
+    }
+
+    /**
+     * 결제 유형 코드를 한글 명칭으로 매핑
+     */
+    private String mapPaymentType(String type) {
+        switch (type.toLowerCase()) {
+            case "rental":
+                return "렌탈";
+            case "storage":
+                return "보관";
+            case "storen":
+                return "스토렌";
+            default:
+                return type;
+        }
     }
 }

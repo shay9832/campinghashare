@@ -1,6 +1,6 @@
 package com.team.mvc.DTO;
 
-public class IRegisterStorenDTO {
+public class RegisterStorenDTO {
     private String brandName,equipName;
 
     public String getBrandName() {
