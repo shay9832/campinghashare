@@ -11,6 +11,11 @@ public class StorenDTO {
 
     private String equip_size_name;                         //사이즈 이름
     private int required_space, daily_storage_fee;          //필요 공간, 1일 보관가격
+    private String type;
+
+    // 검색 및 페이징 관련
+    private String searchKeyword;
+    private Pagenation pagenation;
 
     public EquipmentDTO getEquipmentDTO() {
         return equipmentDTO;
@@ -114,5 +119,30 @@ public class StorenDTO {
 
     public void setDaily_storage_fee(int daily_storage_fee) {
         this.daily_storage_fee = daily_storage_fee;
+    }
+
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public Pagenation getPagenation() {
+        return pagenation;
+    }
+
+    public void setPagenation(Pagenation pagenation) {
+        this.pagenation = pagenation;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -26,32 +26,16 @@ public interface IBoardPostDAO {
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
 
-    // 인기글 조회 (최대 3개)
-    List<BoardPostDTO> listHotPost(int boardId);
-
-    /**
-     * 인기글 목록을 원본 글번호와 함께 조회
-     * 인기글 모드에서도 전체 모드와 같은 글번호를 유지하기 위함
-     * @param dto 검색 조건과 페이징 정보가 담긴 DTO
-     * @return 원본 글번호가 포함된 인기글 목록
-     */
+    //인기글 목록을 원본 글번호와 함께 조회
     List<BoardPostDTO> listHotPostsWithRownum(BoardPostDTO dto);
 
     // 게시물 총 개수 조회
     int getTotalPostCount(BoardPostDTO dto);
 
-    /**
-     * 인기글 총 개수 조회
-     * @param dto 검색 조건이 담긴 DTO
-     * @return 인기글 총 개수
-     */
+    //인기글 총 개수 조회
     int getTotalHotPostCount(BoardPostDTO dto);
 
-    /**
-     * 게시판 ID로 게시판 정보 조회
-     * @param boardId 게시판 ID
-     * @return 게시판 정보
-     */
+    //게시판 ID로 게시판 정보 조회
     BoardDTO getBoardById(int boardId);
 
     // 게시글 조회수 증가 로그 추가

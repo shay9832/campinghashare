@@ -10,7 +10,6 @@ import java.util.List;
 public interface IBoardPostService {
     List<BoardPostDTO> listPostList(BoardPostDTO dto);
     List<BoardPostDTO> listNotice();
-    List<BoardPostDTO> listHotPost(int boardId);
     List<BoardPostDTO> listTotalHotPost(BoardPostDTO dto);
     int getTotalPostCount(BoardPostDTO dto);
     int insertPost(BoardPostDTO dto);

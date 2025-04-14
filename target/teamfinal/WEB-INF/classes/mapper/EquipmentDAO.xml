@@ -79,4 +79,12 @@
         WHERE EQUIP_NAME_ID = #{equip_name_id}
     </select>
 
+
+    <!-- 전체 장비 정보 조회 -->
+    <select id="listEquip" resultType="com.team.mvc.DTO.EquipmentDTO" resultMap="equipmentResultMap">
+        SELECT EQUIP_ID, EQUIP_CODE, USER_CODE, CATEGORY_ID
+             , MAJOR_CATEGORY_NAME, MIDDLE_CATEGORY_NAME
+             , EQUIP_NAME_ID, EQUIP_NAME, BRAND_NAME, ORIGINAL_PRICE, CREATED_DATE
+        FROM VW_EQUIPMENT
+    </select>
 </mapper>

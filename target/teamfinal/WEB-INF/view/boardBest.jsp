@@ -241,7 +241,7 @@
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
-                                <a href="boardfree.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-left"></i>
                                 </a>
@@ -249,7 +249,7 @@
 
                             <!-- 이전 블록으로 -->
                             <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                                <a href="boardfree.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </a>
@@ -257,13 +257,13 @@
 
                             <!-- 페이지 번호 -->
                             <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
-                                <a href="boardfree.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
                                    class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
                             </c:forEach>
 
                             <!-- 다음 블록으로 -->
                             <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                                <a href="boardfree.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </a>
@@ -271,7 +271,7 @@
 
                             <!-- 마지막 페이지로 -->
                             <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                                <a href="boardfree.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-right"></i>
                                 </a>

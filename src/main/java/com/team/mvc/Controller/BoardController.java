@@ -7,10 +7,7 @@ import com.team.mvc.Interface.IBoardPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,8 +125,8 @@ public class BoardController {
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
 
-        List<BoardPostDTO> hotPost = boardPostService.listHotPost(boardId);
-        model.addAttribute("hotPost", hotPost);
+        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(boardId,3);
+        model.addAttribute("boardHotPosts", boardHotPosts);
 
         // 검색 및 페이징 로직
         BoardPostDTO dto = new BoardPostDTO();
@@ -208,8 +205,8 @@ public class BoardController {
         result.put("notice", notice);
 
         // 인기글 조회 (최대 3개)
-        List<BoardPostDTO> hotPost = boardPostService.listHotPost(board.getBoardId());
-        result.put("hotPost", hotPost);
+        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(board.getBoardId(),3);
+        result.put("boardHotPosts", boardHotPosts);
 
         List<BoardPostDTO> postList;
         Pagenation pagenation;
@@ -489,9 +486,15 @@ public class BoardController {
         return "boardFree-post";
     }
 
-    @RequestMapping("/boardfree-write.action")
+    @RequestMapping(value = "/boardfree-write.action", method = RequestMethod.GET)
     public String boardFreeWrite(){
         return "boardFree-write";
+    }
+
+    @RequestMapping(value = "/boardfree-write.action", method = RequestMethod.POST)
+    public String insertPost(BoardPostDTO dto) {
+        boardPostService.insertPost(dto);
+        return "redirect:/boardfree-post.action";
     }
 
     @RequestMapping("/boardimage.action")
@@ -540,10 +543,6 @@ public class BoardController {
         // 공지사항 조회(최대 3개)
         List<BoardPostDTO> notice = boardPostService.listNotice();
         result.put("notice", notice);
-
-        // 인기글 조회 (최대 3개)
-        List<BoardPostDTO> hotPost = boardPostService.listHotPost(boardId);
-        result.put("hotPost", hotPost);
 
         List<BoardPostDTO> postList;
         Pagenation pagenation;
