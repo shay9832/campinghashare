@@ -3,6 +3,7 @@ package com.team.mvc.Controller;
 import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ public class MypageController {
     //@Autowired
     //private SqlSession sqlSession;
     @Autowired
+    @Qualifier("mypageMyEquipService")
     private IMypageMyEquipService myEquipService;
     @Autowired
     private IMypageDeliveryService deliveryService;
