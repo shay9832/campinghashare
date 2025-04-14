@@ -185,6 +185,22 @@
         SELECT COUNT(*) FROM PAY
     </select>
 
+    <!-- 결제 유형별 총 결제 건수 조회 -->
+    <select id="getTotalPaymentsByType" resultType="int" parameterType="string">
+        SELECT COUNT(*) FROM PAY
+        <where>
+            <if test="_parameter == '렌탈'">
+                RENTAL_MATCHING_DONE_ID IS NOT NULL
+            </if>
+            <if test="_parameter == '보관'">
+                STORAGE_ID IS NOT NULL
+            </if>
+            <if test="_parameter == '스토렌'">
+                STOREN_ID IS NOT NULL OR STOREN_MATCHING_DONE_ID IS NOT NULL
+            </if>
+        </where>
+    </select>
+
     <!-- 검색 조건에 따른 총 결제 건수 조회 -->
     <select id="getTotalSearchResults" resultType="int">
         SELECT COUNT(*)
