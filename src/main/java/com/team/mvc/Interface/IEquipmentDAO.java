@@ -24,6 +24,9 @@ public interface IEquipmentDAO {
     // 회원코드로 장비 리스트 조회 (해당 회원이 가진 일반 장비 리스트)
     ArrayList<EquipmentDTO> listByUserCode(int user_code);
 
+    Integer searchCategoryId(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
+
+
     // 전체 장비 리스트 조회
     List<EquipmentDTO> listEquip();
 

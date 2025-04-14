@@ -61,7 +61,7 @@
     <!-- 결제 관리 메뉴 -->
     <button class="menu-button">결제 관리</button>
     <div class="submenu">
-      <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+      <form action="${pageContext.request.contextPath}/admin-payment.action" method="get">
         <button type="submit" class="submenu-btn">결제 관리</button>
       </form>
     </div>
