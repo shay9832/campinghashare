@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* 게시판 특화 스타일 */
         .board-category-tag {
@@ -136,7 +137,241 @@
             font-weight: var(--font-semibold);
         }
     </style>
+
     <script>
+        $(document).ready(function() {
+            // 전역 변수로 현재 모드와 페이지 설정
+            var isHotMode = ${not empty hotOnly ? 'true' : 'false'};
+            var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
+
+            // 원본 게시글 번호를 저장할 객체
+            var originalPostNumbers = {};
+
+            // 초기 페이지 로드 시 원본 게시글 번호 저장
+            $('.board-row').each(function() {
+                var postId = $(this).find('a[href^="boardfree-post.action"]').attr('href');
+                if (postId) {
+                    postId = postId.split('postId=')[1];
+                    var rowNum = $(this).find('td:first').text().trim();
+                    if (rowNum !== '공지' && rowNum !== '인기') {
+                        // 숫자인 경우에만 저장
+                        if (!isNaN(rowNum) && rowNum !== '') {
+                            originalPostNumbers[postId] = rowNum;
+                        }
+                    }
+                }
+            });
+
+            // 인기글 버튼 클릭 이벤트
+            $('#hotPostsBtn').click(function(e) {
+                e.preventDefault();
+                if (!isHotMode) {
+                    $(this).addClass('active');
+                    $('#allPostsBtn').removeClass('active');
+                    isHotMode = true;
+                    loadPosts(1, true); // 항상 1페이지부터 시작하도록 설정
+                }
+            });
+
+            // 전체 버튼 클릭 이벤트
+            $('#allPostsBtn').click(function(e) {
+                e.preventDefault();
+                if (isHotMode) {
+                    $(this).addClass('active');
+                    $('#hotPostsBtn').removeClass('active');
+                    isHotMode = false;
+                    loadPosts(1, false); // 항상 1페이지부터 시작하도록 설정
+                }
+            });
+
+            // 페이지 로드 함수 업데이트
+            function loadPosts(page, hotOnly) {
+                var searchType = $('select[name="searchType"]').val();
+                var searchKeyword = $('input[name="searchKeyword"]').val();
+
+                $.ajax({
+                    url: '/api/boardfree.action',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        size: 10,
+                        searchType: searchType,
+                        searchKeyword: searchKeyword,
+                        hotOnly: hotOnly,
+                        originalPostNumbers: JSON.stringify(originalPostNumbers) // 원본 번호 전달
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        updateTable(response);
+                        updatePagination(response.pagenation, hotOnly);
+                        currentPage = page;
+
+                        // URL 파라미터 업데이트 (브라우저 히스토리에 상태 저장)
+                        var newUrl = 'boardfree.action?page=' + page;
+                        if (hotOnly) {
+                            newUrl += '&hotOnly=true';
+                        }
+                        if (searchKeyword) {
+                            newUrl += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
+                        }
+                        history.pushState({page: page, hotOnly: hotOnly}, '', newUrl);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading posts:', error);
+                        alert('게시글을 불러오는 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+
+            // 뒤로가기 버튼 처리
+            window.addEventListener('popstate', function(e) {
+                if (e.state) {
+                    var hotOnly = e.state.hotOnly;
+                    var page = e.state.page || 1;
+
+                    // 버튼 상태 업데이트
+                    if (hotOnly) {
+                        $('#hotPostsBtn').addClass('active');
+                        $('#allPostsBtn').removeClass('active');
+                        isHotMode = true;
+                    } else {
+                        $('#allPostsBtn').addClass('active');
+                        $('#hotPostsBtn').removeClass('active');
+                        isHotMode = false;
+                    }
+
+                    // 데이터 로드
+                    loadPosts(page, hotOnly);
+                }
+            });
+
+            // 테이블 업데이트 함수
+            function updateTable(data) {
+                var html = '';
+
+                // 공지사항 표시
+                $.each(data.notice, function(index, notice) {
+                    html += '<tr class="board-row notice border-bottom">' +
+                        '<td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>' +
+                        '<td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>' +
+                        '<td class="p-3 title-cell"><a href="notice.action">' + notice.postTitle + '</a></td>' +
+                        '<td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>' +
+                        '<td class="p-3 text-center">' + notice.createdDate.substring(0, 10) + '</td>' +
+                        '<td class="p-3 text-center">' + notice.viewCount + '</td>' +
+                        '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + notice.recommendCount + '</td>' +
+                        '</tr>';
+                });
+
+                // 상단 인기글 표시 (항상 최신 3개) - 배경색 적용
+                $.each(data.topHotPosts, function(index, post) {
+                    html += '<tr class="board-row hot-post border-bottom">' +
+                        '<td class="p-3 text-center"><span class="hot-number">인기</span></td>' +
+                        '<td class="p-3 text-center"><span class="board-category-tag ' +
+                        getCategoryClass(post.postLabelName) + '">' + post.postLabelName + '</span></td>' +
+                        '<td class="p-3 title-cell"><a href="boardfree-post.action?postId=' + post.postId + '">' + post.postTitle + '</a></td>' +
+                        '<td class="p-3 text-center">' + post.nickName + '</td>' +
+                        '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
+                        '<td class="p-3 text-center">' + post.viewCount + '</td>' +
+                        '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + post.recommendCount + '</td>' +
+                        '</tr>';
+                });
+
+                // 게시글 목록 표시 (인기글 모드면 인기글만, 일반 모드면 일반 게시글)
+                if (data.postList && data.postList.length > 0) {
+                    $.each(data.postList, function(index, post) {
+                        // 원본 번호가 있으면 사용, 없으면 서버에서 받은 rowNum 사용
+                        var displayNumber = '';
+                        if (originalPostNumbers[post.postId]) {
+                            displayNumber = originalPostNumbers[post.postId];
+                        } else {
+                            displayNumber = post.rowNum || '';
+                            // 새로운 게시글이라면 원본 번호로 저장
+                            if (displayNumber !== '') {
+                                originalPostNumbers[post.postId] = displayNumber;
+                            }
+                        }
+
+                        html += '<tr class="board-row border-bottom">' +
+                            '<td class="p-3 text-center">' + displayNumber + '</td>' +
+                            '<td class="p-3 text-center"><span class="board-category-tag ' +
+                            getCategoryClass(post.postLabelName) + '">' + post.postLabelName + '</span></td>' +
+                            '<td class="p-3 title-cell"><a href="boardfree-post.action?postId=' + post.postId + '">' + post.postTitle + '</a></td>' +
+                            '<td class="p-3 text-center">' + post.nickName + '</td>' +
+                            '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
+                            '<td class="p-3 text-center">' + post.viewCount + '</td>' +
+                            '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + post.recommendCount + '</td>' +
+                            '</tr>';
+                    });
+                }
+
+                // 게시글이 없을 경우
+                if (data.notice.length === 0 && data.topHotPosts.length === 0 && (!data.postList || data.postList.length === 0)) {
+                    html += '<tr class="board-row border-bottom"><td colspan="7" class="p-3 text-center">게시글이 없습니다.</td></tr>';
+                }
+
+                $('tbody').html(html);
+            }
+
+            // 카테고리 클래스 반환 함수
+            function getCategoryClass(labelName) {
+                if (labelName === '묻고답하기') return 'question';
+                if (labelName === '후기') return 'review';
+                if (labelName === '잡담') return 'chat';
+                if (labelName === '아무말대잔치') return 'freeboard';
+                return '';
+            }
+
+            // 페이지네이션 업데이트 함수
+            function updatePagination(pagenation, hotOnly) {
+                var html = '';
+
+                // 첫 페이지로
+                if (pagenation.pageNum > 1) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="1">' +
+                        '<i class="fa-solid fa-angles-left"></i></a>';
+                }
+
+                // 이전 블록으로
+                if (pagenation.startPage > pagenation.blockSize) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.prevPage + '">' +
+                        '<i class="fa-solid fa-chevron-left"></i></a>';
+                }
+
+                // 페이지 번호
+                for (var i = pagenation.startPage; i <= pagenation.endPage; i++) {
+                    html += '<a href="#" class="btn ' + (pagenation.pageNum == i ? 'btn-primary' : '') +
+                        ' btn-sm page-link" data-page="' + i + '">' + i + '</a>';
+                }
+
+                // 다음 블록으로
+                if (pagenation.endPage < pagenation.totalPage) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.nextPage + '">' +
+                        '<i class="fa-solid fa-chevron-right"></i></a>';
+                }
+
+                // 마지막 페이지로
+                if (pagenation.pageNum < pagenation.totalPage) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.totalPage + '">' +
+                        '<i class="fa-solid fa-angles-right"></i></a>';
+                }
+
+                $('.pagination').html(html);
+
+                // 페이지 링크에 이벤트 연결
+                $('.page-link').click(function(e) {
+                    e.preventDefault();
+                    var page = $(this).data('page');
+                    loadPosts(page, hotOnly);
+                });
+            }
+
+            // 검색 폼 제출 처리
+            $('form').submit(function(e) {
+                e.preventDefault();
+                loadPosts(1, isHotMode);
+            });
+        });
+
         function goToWrite() {
             window.location.href = "boardfree-write.action";
         }
@@ -192,9 +427,9 @@
                         </select>
 
                         <div style="display: flex; margin-left: 20px;">
-                            <a href="#" class="filter-btn active"
-                               style="border-radius: 4px; margin-right: 10px;  min-width: 80px; text-align: center;">전체</a>
-                            <a href="#" class="filter-btn"
+                            <a href="#" id="allPostsBtn" class="filter-btn ${empty hotOnly ? 'active' : ''}"
+                               style="border-radius: 4px; margin-right: 10px; min-width: 80px; text-align: center;">전체</a>
+                            <a href="#" id="hotPostsBtn" class="filter-btn ${not empty hotOnly ? 'active' : ''}"
                                style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
                         </div>
                     </div>
@@ -226,27 +461,31 @@
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
-                                <td class="p-3 text-center">${notice.recommendCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${notice.recommendCount}
+                                </td>
                             </tr>
                         </c:forEach>
 
                         <!-- 인기글 -->
-                        <c:forEach var="hotPost" items="${hotPost}">
+                        <c:forEach var="boardHotPosts" items="${boardHotPosts}">
                             <tr class="board-row hot-post border-bottom">
                                 <td class="p-3 text-center"><span class="hot-number">인기</span></td>
                                 <td class="p-3 text-center"><span class="board-category-tag
-                                                            ${hotPost.postLabelName == '묻고답하기' ? 'question' :
-                                                            hotPost.postLabelName == '후기' ? 'review' :
-                                                            hotPost.postLabelName == '잡담' ? 'chat' :
-                                                            hotPost.postLabelName == '아무말대잔치' ? 'freeboard' : ''}">${hotPost.postLabelName}</span>
+                                                            ${boardHotPosts.postLabelName == '묻고답하기' ? 'question' :
+                                                            boardHotPosts.postLabelName == '후기' ? 'review' :
+                                                            boardHotPosts.postLabelName == '잡담' ? 'chat' :
+                                                            boardHotPosts.postLabelName == '아무말대잔치' ? 'freeboard' : ''}">${boardHotPosts.postLabelName}</span>
                                 </td>
                                 <td class="p-3 title-cell"><a
-                                        href="boardfree-post.action?postId=${hotPost.postId}">${hotPost.postTitle}</a>
+                                        href="boardfree-post.action?postId=${boardHotPosts.postId}">${boardHotPosts.postTitle}</a>
                                 </td>
-                                <td class="p-3 text-center">${hotPost.nickName}</td>
-                                <td class="p-3 text-center">${hotPost.createdDate.substring(0, 10)}</td>
-                                <td class="p-3 text-center">${hotPost.viewCount}</td>
-                                <td class="p-3 text-center">${hotPost.recommendCount}</td>
+                                <td class="p-3 text-center">${boardHotPosts.nickName}</td>
+                                <td class="p-3 text-center">${boardHotPosts.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${boardHotPosts.viewCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${boardHotPosts.recommendCount}
+                                </td>
                             </tr>
                         </c:forEach>
 
@@ -266,11 +505,13 @@
                                 <td class="p-3 text-center">${postList.nickName}</td>
                                 <td class="p-3 text-center">${postList.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${postList.viewCount}</td>
-                                <td class="p-3 text-center">${postList.recommendCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${postList.recommendCount}
+                                </td>
                             </tr>
                         </c:forEach>
 
-                        <c:if test="${empty postList && empty hotPost && empty notice}">
+                        <c:if test="${empty postList && empty boardHotPosts && empty notice}">
                             <tr class="board-row border-bottom">
                                 <td colspan="7" class="p-3 text-center">게시글이 없습니다.</td>
                             </tr>
@@ -307,17 +548,19 @@
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
                     <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
-                        <div class="d-flex gap-1">
+                        <div class="d-flex gap-1 pagination">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
-                                <a href="boardfree.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardfree.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-angles-left"></i>
                                 </a>
                             </c:if>
 
                             <!-- 이전 블록으로 -->
                             <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                                <a href="boardfree.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardfree.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </a>
                             </c:if>
@@ -330,14 +573,16 @@
 
                             <!-- 다음 블록으로 -->
                             <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                                <a href="boardfree.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardfree.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </a>
                             </c:if>
 
                             <!-- 마지막 페이지로 -->
                             <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                                <a href="boardfree.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardfree.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-angles-right"></i>
                                 </a>
                             </c:if>

@@ -1,11 +1,17 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.StorenDTO;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
+import java.util.List;
 
+@Mapper
 public interface IStorenDAO {
+    // 전체 스토렌 장비 리스트 조회
+    List<StorenDTO> listStoren();
+
     // 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트)
     ArrayList<StorenDTO> listByUserCode(@Param("user_code") int user_code);
 
@@ -24,4 +30,7 @@ public interface IStorenDAO {
 
     //스토렌id로 해당 스토렌 장비 정보 가져오기
     StorenDTO getStorenByStorenId(@Param("storen_id") int storen_id);
+
+    // 스토렌 장비 검색
+    List<StorenDTO> searchStorenKeyword(@Param("searchKeyword") String searchKeyword);
 }
