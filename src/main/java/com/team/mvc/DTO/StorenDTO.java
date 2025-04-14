@@ -1,16 +1,31 @@
 package com.team.mvc.DTO;
 
-public class StorenDTO {
-    private EquipmentDTO equipmentDTO;                      //일반 장비 DTO
-    private int storen_id, equip_code, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
-    private String storen_title, storen_content;            //스토렌 제목, 상품내용
-    private Integer daily_rent_price;                       //일일 렌탈가격
-    private String created_date;                            //생성일
+import java.util.List;
 
+public class StorenDTO {
+
+    private EquipmentDTO equipmentDTO;                      // 일반 장비 DTO
+    private int storen_id, equip_code, size_id, store_month;// 스토렌id, 장비코드, 사이즈id, 보관개월수
+    private String storen_title, storen_content;            // 스토렌 제목, 상품내용
+    private Integer daily_rent_price;                       // 일일 렌탈가격
+    private String created_date;                            // 생성일
     private int user_code;
 
-    private String equip_size_name;                         //사이즈 이름
-    private int required_space, daily_storage_fee;          //필요 공간, 1일 보관가격
+    private String equip_size_name;                         // 사이즈 이름
+    private int required_space, daily_storage_fee;          // 필요 공간, 1일 보관가격
+
+    // 추가된 필드: 이미지 리스트 및 평균가 비교 관련
+    private List<AttachmentDTO> photoList;                  // 장비 사진 리스트
+    private boolean otherBrand;                             // 기타 브랜드 여부
+    private String priceFormatted;                          // 신품 가격 포맷 문자열
+    private String avgPriceFormatted;                       // 평균 신품 가격 포맷 문자열
+    private String avgRentalPriceFormatted;                 // 평균 렌탈 가격 포맷 문자열
+    private int priceDiff;                                  // 가격 차이율
+    private String priceDiffSymbol;                         // 상승/하락/중립 기호
+    private String priceDiffClass;                          // 색상 클래스명
+    private int avgRentalPrice;                             // 추가: 평균 렌탈 가격
+
+    // Getter/Setter -----------------------------------------
 
     public EquipmentDTO getEquipmentDTO() {
         return equipmentDTO;
@@ -114,5 +129,78 @@ public class StorenDTO {
 
     public void setDaily_storage_fee(int daily_storage_fee) {
         this.daily_storage_fee = daily_storage_fee;
+    }
+
+    public List<AttachmentDTO> getPhotoList() {
+        return photoList;
+    }
+
+    public void setPhotoList(List<AttachmentDTO> photoList) {
+        this.photoList = photoList;
+    }
+
+    public boolean isOtherBrand() {
+        return otherBrand;
+    }
+
+    public void setOtherBrand(boolean otherBrand) {
+        this.otherBrand = otherBrand;
+    }
+
+    public String getPriceFormatted() {
+        return priceFormatted;
+    }
+
+    public void setPriceFormatted(String priceFormatted) {
+        this.priceFormatted = priceFormatted;
+    }
+
+    public String getAvgPriceFormatted() {
+        return avgPriceFormatted;
+    }
+
+    public void setAvgPriceFormatted(String avgPriceFormatted) {
+        this.avgPriceFormatted = avgPriceFormatted;
+    }
+
+    public String getAvgRentalPriceFormatted() {
+        return avgRentalPriceFormatted;
+    }
+
+    public void setAvgRentalPriceFormatted(String avgRentalPriceFormatted) {
+        this.avgRentalPriceFormatted = avgRentalPriceFormatted;
+    }
+
+    public int getPriceDiff() {
+        return priceDiff;
+    }
+
+    public void setPriceDiff(int priceDiff) {
+        this.priceDiff = priceDiff;
+    }
+
+    public String getPriceDiffSymbol() {
+        return priceDiffSymbol;
+    }
+
+    public void setPriceDiffSymbol(String priceDiffSymbol) {
+        this.priceDiffSymbol = priceDiffSymbol;
+    }
+
+    public String getPriceDiffClass() {
+        return priceDiffClass;
+    }
+
+    public void setPriceDiffClass(String priceDiffClass) {
+        this.priceDiffClass = priceDiffClass;
+    }
+
+    // 추가: 평균 렌탈 가격 getter/setter
+    public int getAvgRentalPrice() {
+        return avgRentalPrice;
+    }
+
+    public void setAvgRentalPrice(int avgRentalPrice) {
+        this.avgRentalPrice = avgRentalPrice;
     }
 }

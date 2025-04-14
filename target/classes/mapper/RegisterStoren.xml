@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IRegisterStorenDAO">
 
-    <resultMap id="brand" type="com.team.mvc.DTO.IRegisterStorenDTO">
+    <resultMap id="brand" type="com.team.mvc.DTO.RegisterStorenDTO">
         <result column="브랜드명" property="brandName"/>
         <result column="장비명" property="equipName"/>
     </resultMap>
@@ -15,8 +15,3 @@
     </select>
 
 </mapper>
-
-
-
-
-<!--categoryName,boardName,postLabel;-->
