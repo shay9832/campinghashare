@@ -24,4 +24,7 @@ public interface IMypageMatchingService {
     // 스토렌-사용자 탭에서 매칭승인 여부 조회
     MatchingRequestDTO getStorenUserApproved(int user_code, int transaction_id);
 
+    //스토렌 매칭 승인
+    Boolean approveMatchingRequest(int transaction_id, int request_id);
+
 }

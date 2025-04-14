@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage.css">
   <!-- 마이페이지 사이드바 CSS -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
+  <!-- 매칭 css 로드 (모달 스타일 위해) -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/matching.css">
   <!-- 제이쿼리 사용 CDN 방식 -->
   <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 
@@ -25,12 +27,14 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: left;
     }
     /* 테이블 스타일 */
     .matching-table-container {
+      width: 100%;
       margin-top: 20px;
       border-radius: 8px;
-      overflow: hidden;
+      overflow: auto;
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
@@ -42,6 +46,16 @@
     .matching-table .table {
       margin-bottom: 0;
     }
+
+    /* 테이블 열 너비 조정 */
+    .matching-table thead th:nth-child(1) { width: 7%; }  /* 스토렌/렌탈 ID */
+    .matching-table thead th:nth-child(2) { width: 23%; } /* 제목 */
+    .matching-table thead th:nth-child(3) { width: 8%; }  /* 장비코드 */
+    .matching-table thead th:nth-child(4) { width: 18%; } /* 장비명 */
+    .matching-table thead th:nth-child(5) { width: 12%; } /* 시작일 */
+    .matching-table thead th:nth-child(6) { width: 12%; } /* 종료일 */
+    .matching-table thead th:nth-child(7) { width: 8%; }  /* 매칭수 */
+    .matching-table thead th:nth-child(8) { width: 12%; } /* 상태 */
 
     .matching-table thead th {
       background-color: #f5f8f5;
@@ -146,6 +160,9 @@
     }
 
     /* 확장 행을 위한 스타일 */
+    .content-box-sm {
+      margin-bottom: 0;
+    }
     .matching-row.rental-header {
       cursor: pointer;
       transition: background-color 0.2s ease;
@@ -227,6 +244,18 @@
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
+
+<!-- [A] 매칭 신청 확인 모달 1 - 매칭 신청 여부 확인 -->
+<div id="matching-confirm-modal" class="matching-confirm-modal">
+  <div class="matching-confirm-content">
+    <p>선택한 사용자의 매칭 신청을 승인하시겠습니까?</p>
+    <p>다른 신청자들은 자동으로 거부 처리됩니다.</p>
+    <div class="modal-buttons">
+      <button id="confirm" class="confirm-btn">확인</button>
+      <button id="cancel" class="cancel-btn">취소</button>
+    </div>
+  </div>
+</div>
 
 <div class="container container-wide mypage-container section">
 
@@ -397,7 +426,7 @@
                   </td>
                   <td>
                     <c:set var="statusClass" value="${storen.matching_status == '매칭완료' ? 'status-completed' : 'status-pending'}"/>
-                    <span class="status-badge">${storen.matching_status}</span>
+                    <span class="status-badge ${statusClass}">${storen.matching_status}</span>
                   </td>
                 </tr>
               </c:forEach>
@@ -492,9 +521,33 @@
 <script type="text/javascript">
   // 페이지 로딩 시 실행
   $(document).ready(function() {
+    // URL에서 탭 정보 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    let tabFromUrl = urlParams.get('tab');
+    let subTabFromUrl = urlParams.get('subTab');
+
     // 메인 탭 초기화 (스토렌/렌탈)
-    let activeMainTab = "storen"; // 기본값: 스토렌 탭
-    let activeSubTab = "owner";   // 기본값: 소유자 탭
+    let activeMainTab = tabFromUrl || "storen"; // URL 파라미터 또는 기본값
+    let activeSubTab = subTabFromUrl || "owner"; // URL 파라미터 또는 기본값
+
+    // 탭 전환 시 이전 데이터 정리 함수
+    function clearPreviousData() {
+      // 모든 확장된 행 닫기
+      $('.rental-header').removeClass('active').attr('data-expanded', 'false');
+      // 모든 상세 행 제거
+      $('.matching-details').remove();
+
+      // 테이블 초기화 (로딩 인디케이터 표시)
+      if (activeMainTab === 'storen') {
+        $('#storen-content .matching-table tbody').html(
+                '<tr><td colspan="8" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 매칭 데이터를 불러오는 중...</td></tr>'
+        );
+      } else {
+        $('#rental-content .matching-table tbody').html(
+                '<tr><td colspan="8" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 매칭 데이터를 불러오는 중...</td></tr>'
+        );
+      }
+    }
 
     // 매칭 탭 전환 기능
     $('.tab').on('click', function() {
@@ -502,6 +555,9 @@
 
       // 현재 활성화된 탭이면 아무것도 하지 않음
       if(activeMainTab === tabId) return;
+
+      // 이전 데이터 정리
+      clearPreviousData();
 
       // 탭 활성화
       $('.tab').removeClass('active');
@@ -517,28 +573,25 @@
       // 서브 탭 초기화 (소유자/사용자)
       if (tabId === 'storen') {
         // 스토렌 탭 내에서 소유자/사용자 서브탭 처리
-        if ($('#storen-owner').hasClass('active')) {
-          activeSubTab = 'owner';
-        } else {
-          activeSubTab = 'user';
-        }
+        activeSubTab = $('#storen-owner').hasClass('active') ? 'owner' : 'user';
       } else { // 렌탈 탭
         // 렌탈 탭 내에서 소유자/사용자 서브탭 처리
-        if ($('#rental-owner').hasClass('active')) {
-          activeSubTab = 'owner';
-        } else {
-          activeSubTab = 'user';
-        }
+        activeSubTab = $('#rental-owner').hasClass('active') ? 'owner' : 'user';
       }
-
-        // 탭 전환 시 데이터 다시 로드
-        loadMatchingData(activeMainTab, activeSubTab);
+      // 탭 전환 시 데이터 다시 로드
+      loadMatchingData(activeMainTab, activeSubTab);
 
     });
 
     // 서브 탭 전환 이벤트 (소유자/사용자)
     $('.tab-link').on('click', function() {
       const subTabId = $(this).data('storen-tab') || $(this).data('rental-tab');
+
+      // 현재 서브탭과 동일하면 아무것도 하지 않음
+      if(activeSubTab === subTabId) return;
+
+      // 이전 데이터 정리
+      clearPreviousData();
 
       // 현재 메인 탭 내에서만 서브탭 활성화
       $(this).closest('.tab-content').find('.tab-link').removeClass('active');
@@ -598,15 +651,48 @@
       }
     });
 
-    // 신청자 선택 버튼 클릭 이벤트
-    $(document).on('click', '.btn-approve', function() {
-      const rentalId = $(this).data('rental');
-      const userId = $(this).data('user');
-      approveMatching(rentalId, userId);
+    // 매칭 승인에 대한 처리
+    // 전역 변수로 선택된 데이터 저장
+    let selectedRentalId = null;
+    let selectedRequestId = null;
+
+    // 신청자 선택 버튼 클릭 이벤트 수정
+    $(document).on('click', '.btn-approve', function(e) {
+      e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
+
+      // 선택한 버튼의 데이터 저장
+      selectedRentalId = $(this).data('rental');
+      selectedRequestId = $(this).data('request');
+
+      // 모달 표시
+      $("#matching-confirm-modal").css("display", "flex");
+      $("body").css("overflow", "hidden");
+    });
+
+    // 모달 취소 버튼 이벤트
+    $("#cancel").on("click", function() {
+      $("#matching-confirm-modal").hide();
+      $("body").css("overflow", "auto");
+
+      // 선택 데이터 초기화
+      selectedRentalId = null;
+      selectedRequestId = null;
+    });
+
+    // 모달 확인 버튼 이벤트
+    $("#confirm").on("click", function() {
+      if(selectedRentalId && selectedRequestId) {
+        // 모달 닫기
+        $("#matching-confirm-modal").hide();
+        $("body").css("overflow", "auto");
+
+        // 기존 함수 호출하되 새로고침 기능 추가
+        approveMatchingWithRefresh(selectedRentalId, selectedRequestId);
+      }
     });
   });
 
-<%-- 검토해야함 --%>
+
   // 매칭 데이터 로드 함수
   function loadMatchingData(mainTab, subTab) {
     // 로딩 표시 활성화
@@ -629,6 +715,8 @@
       }
     }
 
+    console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab, "서브탭:", subTab);
+
     // 빈 테이블 초기화
     let targetTable;
     if (mainTab === 'storen') {
@@ -645,7 +733,9 @@
       url: apiUrl,
       type: 'GET',
       dataType: 'json',
+      cache: false, // 캐시 사용 안 함
       success: function(data) {
+        console.log("데이터 로드 성공:", data.length, "건");
         // 로딩 표시 비활성화
         hideLoading();
 
@@ -721,7 +811,7 @@
               '<td>' + item.rental_end_date + '</td>' +
               '<td><span class="match-count">' + item.matching_request_count + '</span> <i class="' + matchingCountClass + '"></i></td>' +
               '<td>' +
-              '<span class="status-badge' + statusClass + '">' + item.matching_status + '</span>' +
+              '<span class="status-badge ' + statusClass + '">' + item.matching_status + '</span>' +
               '</td>' +
               '</tr>';
     });
@@ -735,7 +825,7 @@
     // 로딩 인디케이터 표시
     const row = $('.rental-header[data-id="' + rentalId + '"]');
     const newDetailRow = $(`
-  <tr class="matching-details" data-parent="${rentalId}">
+  <tr class="matching-details" data-parent="` + rentalId + `">
     <td colspan="8">
       <div class="content-box-sm matching-details-container">
         <h6 class="content-box-title details-title">매칭 신청자 목록</h6>
@@ -755,9 +845,12 @@
       url: '/api/matching/storen/details/' + rentalId,
       type: 'GET',
       dataType: 'json',
+      cache: false, // 캐시 사용 안 함
       success: function(data) {
+        console.log("상세 정보 로드 성공:", data);
+
         // 매칭 상태에 따라 다른 UI 표시
-        const matchingStatus = row.find('.status-badge').text();
+        const matchingStatus = row.find('.status-badge').text().trim();
 
         if (matchingStatus === '매칭완료') {
           // 매칭 완료인 경우
@@ -855,12 +948,12 @@
         <td>
           <a href="user-profile.action?id=` + applicant.user_code + '" class="user-link">' + applicant.user_nickname + '</a>' +
         `</td>
-        <td class="text-left">신청 메시지가 여기에 표시됩니다.</td>
+<!--        <td class="text-left">신청 메시지가 여기에 표시됩니다.</td>-->
         <td>` + applicant.requested_date + '</td>' +
         '<td><span class="trust-score ' + trustClass + '">' + applicant.trust + '%</span></td>' +
         '<td>' + applicant.rental_history + '회</td>' +
         `<td>
-          <button type="button" class="btn-sm btn-approve" data-rental="` + rentalId + '" data-user="' + applicant.user_code + `">선택</button>
+          <button type="button" class="btn-sm btn-approve" data-rental="` + rentalId + '" data-request="' + applicant.matching_req_id + `">선택</button>
         </td>
       </tr>
     `;
@@ -877,76 +970,44 @@
     detailContainer.html(detailHtml);
   }
 
+  // 매칭 승인 함수 + 새로고침
+  function approveMatchingWithRefresh(rentalId, requestId) {
+    // 로딩 표시
+    showLoading();
 
+    // AJAX 요청으로 매칭 승인 처리
+    $.ajax({
+      url: '/api/matching/approve',
+      type: 'POST',
+      data: {
+        transactionId: rentalId,
+        requestId: requestId
+      },
+      dataType: 'json',
+      success: function(response) {
+        hideLoading();
 
+        if (response.success) {
+          // 성공 메시지 표시
+          alert(response.message || '매칭이 성공적으로 승인되었습니다.');
 
+          // 현재 활성 탭 정보를 URL 파라미터로 포함하여 새로고침
+          const url = new URL(window.location.href);
+          url.searchParams.set('tab', activeMainTab);
+          url.searchParams.set('subTab', activeSubTab);
 
-
-
-  // 매칭 승인 함수
-  function approveMatching(rentalId, userId) {
-    if(confirm(`선택한 사용자의 매칭 신청을 승인하시겠습니까?\n다른 신청자들은 자동으로 거부 처리됩니다.`)) {
-      // 로딩 표시
-      showLoading();
-
-      // AJAX 요청으로 매칭 승인 처리
-      $.ajax({
-        url: '/api/matching/approve',
-        type: 'POST',
-        data: {
-          transactionId: rentalId,
-          userCode: userId
-        },
-        dataType: 'json',
-        success: function(response) {
-          hideLoading();
-
-          if (response.success) {
-            // 성공 메시지 표시
-            alert(response.message);
-
-            // 성공 시 UI 업데이트
-            updateMatchingUI(rentalId, userId);
-
-            // 필요 시 데이터 리로드
-            // loadMatchingData(activeMainTab, activeSubTab);
-          } else {
-            alert('매칭 승인 처리 중 오류가 발생했습니다: ' + response.message);
-          }
-        },
-        error: function(xhr, status, error) {
-          hideLoading();
-          console.error("매칭 승인 실패:", error);
-          alert('매칭 승인 처리 중 오류가 발생했습니다.');
+          // 페이지 새로고침
+          window.location.href = url.toString();
+        } else {
+          alert('매칭 승인 처리 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
         }
-      });
-    }
-  }
-
-  // 매칭 승인 후 UI 업데이트 함수
-  function updateMatchingUI(rentalId, userId) {
-    // 렌탈 행의 상태 업데이트
-    const row = $(`.rental-header[data-id="${rentalId}"]`);
-    row.find('.status-badge')
-            .removeClass('status-pending')
-            .addClass('status-completed')
-            .text('매칭완료');
-
-    // 세부 정보 컨테이너 업데이트
-    const detailsContainer = $(`.matching-details[data-parent="${rentalId}"] .content-box-sm`);
-    const userName = $(`.matching-details[data-parent="${rentalId}"] .user-link[href*="${userId}"]`).text();
-
-    const today = new Date();
-    const formattedDate = today.getFullYear() + '-' +
-            String(today.getMonth() + 1).padStart(2, '0') + '-' +
-            String(today.getDate()).padStart(2, '0');
-
-    detailsContainer.html(`
-    <h6 class="content-box-title details-title">매칭 완료 정보</h6>
-    <div class="details-info matched">
-      <p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=${userId}" class="user-link">${userName}</a> 님과 매칭되었습니다. (승인일: ${formattedDate})</p>
-    </div>
-  `);
+      },
+      error: function(xhr, status, error) {
+        hideLoading();
+        console.error("매칭 승인 실패:", error);
+        alert('매칭 승인 처리 중 오류가 발생했습니다.');
+      }
+    });
   }
 
   // 로딩 표시 함수

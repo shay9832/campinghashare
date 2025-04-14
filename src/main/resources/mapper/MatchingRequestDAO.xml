@@ -42,4 +42,20 @@
         WHERE TRANSACTION_ID = #{storenId} AND USER_CODE = #{user_code} AND TRANSACTION_TYPE = '스토렌_매칭신청'
     </select>
 
+    <!-- 스토렌 매칭 승인(1. 매칭 완료 테이블에 insert) -->
+    <insert id="insertStorenMatchingDone">
+        INSERT INTO STOREN_MATCHING_DONE(STOREN_MATCHING_DONE_ID, STOREN_MATCHING_REQ_ID, APPROVED_DATE)
+        VALUES(STOREN_MATCHING_DONE_SEQ.NEXTVAL, #{requestId}, SYSDATE);
+    </insert>
+
+    <!-- 해당 스토렌ID의 다른 매칭 요청 삭제(2. 매칭 신청 테이블에서 delete) -->
+    <delete id="deleteOtherStorenRequests">
+        DELETE
+        FROM STOREN_MATCHING_REQ
+        WHERE storen_ira_id = (select storen_ira_id
+                               from storen_ira
+                               where storen_id = #{storenId})
+          AND STOREN_MATCHING_REQ_ID != #{requestId}
+    </delete>
+
 </mapper>

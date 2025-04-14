@@ -10,6 +10,7 @@ import com.team.mvc.Interface.IStorenDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -121,5 +122,30 @@ public class MypageMatchingService implements IMypageMatchingService {
 
         System.out.println("== MypageMatching Service : getStorenUserApproved : END ==");
         return null;
+    }
+
+    @Transactional // 트랜잭션 처리
+    @Override
+    public Boolean approveMatchingRequest(int transaction_id, int request_id) {
+        System.out.println("== MypageMatching Service : approveMatchingRequest : START ==");
+
+        IMatchingRequestDAO matchingDao = sqlSession.getMapper(IMatchingRequestDAO.class);
+        try {
+            // 1. 선택된 매칭 정보를 완료 테이블에 삽입
+            int insertResult = matchingDao.insertStorenMatchingDone(request_id);
+
+            if (insertResult <= 0) {
+                return false; // 매칭 정보 삽입 실패
+            }
+
+            // 2. 다른 매칭 요청 삭제 (결과 값은 삭제된 행의 수이므로 0일 수도 있음)
+            matchingDao.deleteOtherStorenRequests(transaction_id, request_id);
+
+            return true; // 모든 작업 성공
+        } catch (Exception e) {
+            System.out.println("매칭 승인 처리 중 오류 발생: " + e.getMessage());
+            // 예외 발생 시 롤백 (Spring의 @Transactional에 의해 자동 처리)
+            throw e;
+        }
     }
 }
