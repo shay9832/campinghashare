@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IStorenDAO">
-    <!-- 전체 스토렌 장비 리스트 조회   -->
+    <!-- 전체 스토렌 장비 리스트 조회 (TYPE 필드 추가)  -->
     <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO">
-        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
-             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
-             , DAILY_STORAGE_FEE, STORE_MONTH
-             , STOREN_TITLE, STOREN_CONTENT
-             , DAILY_RENT_PRICE, CREATED_DATE
-        FROM VW_STOREN
+        SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
+             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+             , s.STOREN_TITLE, s.STOREN_CONTENT
+             , s.DAILY_RENT_PRICE, s.CREATED_DATE
+             , e.TYPE
+        FROM VW_STOREN s
+                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
     </select>
 
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
@@ -51,13 +53,17 @@
 
     <!-- 스토렌 장비 검색 -->
     <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO">
-        SELECT EQUIP_NAME, BRAND_NAME, CATEGORY_NAME
-        FROM VW_SEARCH_EQUIP
-        WHERE TYPE = 'STOREN'
-          AND (EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
-            OR BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
-            OR CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%')
+        SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
+             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+             , s.STOREN_TITLE, s.STOREN_CONTENT
+             , s.DAILY_RENT_PRICE, s.CREATED_DATE
+             , e.TYPE
+        FROM VW_STOREN s
+                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
+        WHERE (e.EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR s.STOREN_TITLE LIKE '%' || #{searchKeyword} || '%')
     </select>
-
-
 </mapper>
