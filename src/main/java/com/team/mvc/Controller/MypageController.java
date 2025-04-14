@@ -3,12 +3,9 @@ package com.team.mvc.Controller;
 import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +15,7 @@ import java.util.Map;
 public class MypageController {
 
     // 자동 의존성 주입
-    //@Autowired
-    //private SqlSession sqlSession;
     @Autowired
-    @Qualifier("mypageMyEquipService")
     private IMypageMyEquipService myEquipService;
     @Autowired
     private IMypageDeliveryService deliveryService;
@@ -268,17 +262,29 @@ public class MypageController {
     }
 
     // 매칭 승인 처리를 위한 AJAX 요청 처리
-    @RequestMapping(value="/api/matching/approve", produces="application/json")
+    @PostMapping(value="/api/matching/approve", produces="application/json")
     @ResponseBody
-    public Map<String, Object> approveMatching(int transactionId, int userCode) {
+    public Map<String, Object> approveMatching(@RequestParam("rentalId") int rentalId
+                                             , @RequestParam("requestId") int requestId) {
         System.out.println("=== MypageController : approveMatching() - AJAX - Approve : START ===");
         Map<String, Object> result = new HashMap<>();
 
-        // 서비스에서 매칭 승인 처리 로직 필요
-        // 예: matchingService.approveMatching(transactionId, userCode);
+        try {
+            // 매칭 승인 요청 저장
+            boolean success = matchingService.approveMatchingRequest(rentalId, requestId);
 
-        result.put("success", true);
-        result.put("message", "매칭이 승인되었습니다.");
+            if (success) {
+                result.put("success", true);
+                result.put("message", "매칭 승인이 처리되었습니다.");
+            } else {
+                result.put("success", false);
+                result.put("message", "매칭 승인이 처리되지 않았습니다.");
+            }
+
+        } catch(Exception e){
+            result.put("success", false);
+            result.put("message", "오류가 발생했습니다: " + e.getMessage());
+        }
 
         System.out.println("=== MypageController : approveMatching() - AJAX - Approve : END ===");
         return result;

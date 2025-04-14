@@ -13,7 +13,7 @@ public class MatchingRequestDTO {
     private int rental_history;         //대여이력
     private String requested_date;      //신청일
     private String payment_date;        //결제일
-    private int MATCHING_REQ_ID;         //매칭신청id
+    private int matching_req_id;        //매칭신청id
 
     public int getTransaction_id() {
         return transaction_id;
@@ -111,11 +111,11 @@ public class MatchingRequestDTO {
         this.payment_date = payment_date;
     }
 
-    public int getMATCHING_REQ_ID() {
-        return MATCHING_REQ_ID;
+    public int getMatching_req_id() {
+        return matching_req_id;
     }
 
-    public void setMATCHING_REQ_ID(int MATCHING_REQ_ID) {
-        this.MATCHING_REQ_ID = MATCHING_REQ_ID;
+    public void setMatching_req_id(int matching_req_id) {
+        this.matching_req_id = matching_req_id;
     }
 }

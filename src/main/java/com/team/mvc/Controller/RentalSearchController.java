@@ -24,6 +24,7 @@ public class RentalSearchController {
 
     @Autowired
     private IRentalSearchService rentalSearchService;
+    @Autowired
     private ISearchMatchingRequestService searchMatchingRequestService;
 
     // 스토렌 장비검색 페이지
