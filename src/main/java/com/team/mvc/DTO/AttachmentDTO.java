@@ -1,7 +1,7 @@
 package com.team.mvc.DTO;
 
 public class AttachmentDTO {
-    private int attachmentEquipRegId, equipCode, attachmentOrder;
+    private int attachmentEquipRegId, equipCode, attachmentOrder, attachmentPostId, postId;
     private String attachmentName, attachmentPath, createdDate;
     private long attachmentSize;
 
@@ -59,5 +59,21 @@ public class AttachmentDTO {
 
     public void setAttachmentSize(long attachmentSize) {
         this.attachmentSize = attachmentSize;
+    }
+
+    public int getAttachmentPostId() {
+        return attachmentPostId;
+    }
+
+    public void setAttachmentPostId(int attachmentPostId) {
+        this.attachmentPostId = attachmentPostId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 }
