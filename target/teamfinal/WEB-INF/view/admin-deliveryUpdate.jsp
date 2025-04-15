@@ -268,6 +268,14 @@
                         </c:forEach>
                     </table>
                 </div>
+
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
+                </div>
+
             </div>
 
             <!-- 플랫폼 배송 반환 탭 -->
@@ -315,6 +323,12 @@
                         </c:forEach>
                     </table>
                 </div>
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
+                </div>
             </div>
 
             <!-- 거래자 택배 탭 -->
@@ -355,6 +369,12 @@
                             </tr>
                         </c:forEach>
                     </table>
+                </div>
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
                 </div>
             </div>
 
@@ -397,6 +417,12 @@
                         </c:forEach>
                     </table>
                 </div>
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
+                </div>
             </div>
 
             <!-- 보관 최종 반환 탭 -->
@@ -438,6 +464,12 @@
                         </c:forEach>
                     </table>
                 </div>
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
+                </div>
             </div>
 
             <!-- 스토렌 최종 반환 탭 -->
@@ -478,6 +510,12 @@
                             </tr>
                         </c:forEach>
                     </table>
+                </div>
+                <!-- 페이지네이션 -->
+                <div class="pagination">
+                    <button class="pagination-btn">«</button>
+                    <button class="pagination-btn active">1</button>
+                    <button class="pagination-btn">»</button>
                 </div>
             </div>
         </div>
@@ -992,6 +1030,31 @@
 
         // 기본 날짜 설정
         setDefaultDates();
+    });
+
+    //페이지네이션 버튼 클릭 이벤트
+    const paginationButtons = document.querySelectorAll('.pagination-btn');
+    paginationButtons.forEach(button => {
+        button.addEventListener('click',function () {
+            //페이지 버튼이 아닌 경우 (이전/다음 페이지)
+            if (this.textContent === '«' || this.textContent === '»') {
+                // 이전/다음 페이지 로직 처리
+                return;
+            }
+
+            // 현재 활성화된 페이지 버튼 비활성화
+            document.querySelector('.pagination-btn.active').classList.remove('active');
+
+            // 클릭한 페이지 버튼 활성화
+            this.classList.add('active');
+
+            // 실제 구현에서는 서버에 해당 페이지 데이터 요청
+            const page = this.textContent;
+            console.log({
+                action:'페이지 이동',
+                page
+            });
+        });
     });
 </script>
 </body>

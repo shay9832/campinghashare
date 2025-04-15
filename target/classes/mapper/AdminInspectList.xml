@@ -101,7 +101,7 @@
     </select>
 
     <!-- 확장된 검수 결과 등록 프로시저 호출 -->
-    <update id="callINSPECT_RESULT_EXTENDED">
+    <update id="callINSPECT_RESULT">
         {CALL INSPECT_RESULT(
                 #{platformDeliveryId, jdbcType=INTEGER, mode=IN},
                 #{platformDeliveryReturnId, jdbcType=INTEGER, mode=IN},
