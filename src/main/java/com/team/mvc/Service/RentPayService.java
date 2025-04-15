@@ -15,7 +15,11 @@ public class RentPayService implements IRentPayService {
     private SqlSession sqlSession;
 
     @Override
-    public MyPayDTO getMyPayInfo(int transactionId, int user_code, String transactionType) {
+    public MyPayDTO getMyPayInfo(int storenId, int user_code, String transactionType) {
+
+        // 로그 추가
+        System.out.println("storenId: " + storenId);
+        System.out.println("user_code: " + user_code);
 
         // dao 생성
         IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
@@ -28,17 +32,23 @@ public class RentPayService implements IRentPayService {
         UserDTO userDTO = userDAO.getUserByUserCode(user_code);
 
         //장비 정보(렌탈거래 렌탈비 결제까지 한다면 transactionType에 따라 분기하기)
-        StorenDTO storenDTO = storenDAO.getStorenByStorenId(transactionId);
+        StorenDTO storenDTO = storenDAO.getStorenByStorenId(storenId);
         // 해당 스토렌에 장비정보 넣어주기
         storenDTO.setEquipmentDTO(equipmentDAO.getEquipmentByEquipCode(storenDTO.getEquip_code()));
 
         //매칭 정보
-        MatchingRequestDTO MatchingRequestDTO = matchingRequestDAO.getMatchingByStorenAndUser(transactionId, user_code);
+        MatchingRequestDTO matchingRequestDTO = matchingRequestDAO.getMatchingByStorenAndUser(storenId, user_code);
+        // matchingRequestDTO가 null인지 확인
+        if (matchingRequestDTO == null) {
+            System.out.println("매칭 정보가 없습니다.");
+        } else {
+            System.out.println("매칭 정보 있음: " + matchingRequestDTO.getMatching_req_id());
+        }
         //쿠폰 정보
         List<CouponDTO> couponList = couponDAO.listValidCouponByUserCode(user_code);
 
         //최종 반환할 dto
-        MyPayDTO myPayDTO = new MyPayDTO(userDTO, couponList, storenDTO, MatchingRequestDTO);
+        MyPayDTO myPayDTO = new MyPayDTO(userDTO, couponList, storenDTO, matchingRequestDTO);
 
         return myPayDTO;
     }
