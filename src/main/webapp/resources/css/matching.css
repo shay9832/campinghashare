@@ -1,4 +1,20 @@
-/* 메인 레이아웃 */
+/*
+ * matching.css
+ * 렌탈 매칭 페이지 스타일
+ */
+
+/* 카드 호버 액션 강제 제거 */
+.card {
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 .main-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -8,7 +24,7 @@
 .top-section {
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
     margin-bottom: 40px;
 }
 
@@ -92,6 +108,7 @@
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 14px;
+    z-index: 5;
 }
 
 .thumbnail-container {
@@ -122,7 +139,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 12px;
-    padding-top: 15px;
+    padding-top: 30px;
     border-top: 1px solid #f0f0f0;
 }
 
@@ -142,11 +159,11 @@
     padding: 5px 10px;
 }
 
-/* 정보 테이블 */
+/* 정보 테이블 관련 스타일 */
 .info-table {
     width: 100%;
     border-spacing: 0;
-    margin-bottom: 25px;
+    overflow: visible;
 }
 
 .info-table tr {
@@ -166,6 +183,8 @@
     flex-grow: 1;
     color: #333;
     line-height: 1.5;
+    overflow: visible !important;
+    position: relative;
 }
 
 /* 구분선 */
@@ -196,6 +215,7 @@ hr {
     font-size: 0.85rem;
     display: block;
     margin-top: 5px;
+    position: relative;
 }
 
 /* 등급 배지 */
@@ -276,6 +296,29 @@ hr {
 .match-btn.disabled {
     background-color: #aaa;
     cursor: not-allowed;
+}
+
+.match-btn:focus,
+.match-btn:active {
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    color: inherit;
+}
+
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: var(--color-maple);
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.match-btn.btn-primary:active,
+.match-btn.btn-primary:focus {
+    background-color: var(--color-maple) !important;
+    color: white !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* 컨텐츠 섹션 */
@@ -496,34 +539,41 @@ hr {
 .tooltip-trigger {
     position: relative;
     cursor: help;
+    display: inline-block;
 }
 
 .tooltip-content {
     display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 10px;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 10px 12px;
     border-radius: 5px;
     font-size: 12px;
     line-height: 1.5;
-    z-index: 100;
+    z-index: 9999;
+    width: max-content;
+    max-width: 300px;
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 화살표 제거 */
+.tooltip-content::after {
+    display: none;
+}
+
+/* 툴팁 방향 클래스 - 여백만 유지 */
+.tooltip-content.tooltip-top {
     margin-bottom: 10px;
 }
 
-.tooltip-content::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+.tooltip-content.tooltip-bottom {
+    margin-top: 10px;
 }
 
 /* 날짜 선택기 추가 스타일 */

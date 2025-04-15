@@ -102,13 +102,6 @@
       <version>3.0.1</version>
     </dependency>
 
-    <!-- JSON -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.15.2</version>
-    </dependency>
-
     <!-- 파일 업로드 처리를 위한 의존성 -->
     <dependency>
       <groupId>commons-fileupload</groupId>
@@ -134,6 +127,13 @@
       <groupId>com.fasterxml.jackson.datatype</groupId>
       <artifactId>jackson-datatype-jsr310</artifactId>
       <version>2.17.0</version>
+    </dependency>
+
+    <!-- 라이브러리 없음 오류 예상 (추가) -->
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+      <version>1.14.9</version>
     </dependency>
 
   </dependencies>

@@ -4,6 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.team.mvc.Interface.IUserDAO">
+    <resultMap id="UserInfoMap" type="com.team.mvc.DTO.UserDTO">
+        <result property="userCode" column="USER_CODE"></result>
+        <result property="userId" column="USER_ID"></result>
+        <result property="password" column="USER_PW"></result>
+        <result property="userName" column="USER_NAME"></result>
+        <result property="nickname" column="CURRENT_NICKNAME"></result>
+        <result property="userTel" column="USER_TEL"></result>
+        <result property="userEmail" column="USER_EMAIL"></result>
+        <result property="emailConsent" column="EMAIL_CONSENT"></result>
+        <result property="totalPoint" column="TOTAL_POINTS"></result>
+        <result property="totalTrust" column="TRUST_SCORE"></result>
+        <result property="zipCode" column="ZIPCODE"></result>
+        <result property="address1" column="ADDRESS1"></result>
+        <result property="address2" column="ADDRESS2"></result>
+    </resultMap>
 
     <!-- 로그인 쿼리 -->
     <select id="getUserByIdAndPw" parameterType="com.team.mvc.DTO.UserDTO" resultType="com.team.mvc.DTO.UserDTO">
@@ -79,5 +94,14 @@
         UPDATE USERS SET USER_PW = #{newPassword}
         WHERE USER_ID = #{userId}
     </update>
+
+
+
+    <!-- 유저코드로 유저 찾아오기 -->
+    <select id="getUserByUserCode" resultType="com.team.mvc.DTO.UserDTO" resultMap="UserInfoMap">
+        SELECT *
+        FROM VW_USER_WITH_POINT_TRUST
+        WHERE USER_CODE = #{userCode}
+    </select>
 
 </mapper>

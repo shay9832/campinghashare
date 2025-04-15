@@ -416,7 +416,7 @@
         <!-- 스토렌 MD Pick 섹션 -->
         <div class="section-title">
             <h2>스토렌 MD Pick!</h2>
-            <a href="#" class="view-all">전체보기</a>
+            <a href="${pageContext.request.contextPath}/rentalsearch-main.action?tab=storen" class="view-all">전체보기</a>
         </div>
         <div class="item-slider" id="md-picks">
             <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>
@@ -556,7 +556,7 @@
         <!-- 최근 등록된 렌탈 상품 섹션 -->
         <div class="section-title">
             <h2>최근 등록된 렌탈 상품</h2>
-            <a href="#" class="view-all">전체보기</a>
+            <a href="${pageContext.request.contextPath}/rentalsearch-main.action?tab=rental" class="view-all">전체보기</a>
         </div>
         <div class="item-slider" id="recent-products">
             <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>

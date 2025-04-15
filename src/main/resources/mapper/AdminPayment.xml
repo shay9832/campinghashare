@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IAdminPaymentDAO">
+
+    <!-- 결제 정보 매핑 -->
+    <resultMap id="AdminPaymentResult" type="com.team.mvc.DTO.AdminPaymentDTO">
+        <result property="paymentId" column="결제ID" />
+        <result property="userCode" column="회원코드" />
+        <result property="memberNickname" column="회원닉네임" />
+        <result property="paymentMethod" column="결제방법" />
+        <result property="payAmount" column="결제금액" />
+        <result property="formattedAmount" column="결제금액_포맷" />
+        <result property="paymentDate" column="결제일자" />
+        <result property="cancelDate" column="결제취소일" />
+        <result property="cancelReason" column="결제취소사유" />
+        <result property="storageId" column="보관ID" />
+        <result property="storenId" column="스토렌ID" />
+        <result property="rentalId" column="렌탈매칭완료ID" />
+        <result property="storenRentalId" column="스토렌매칭완료ID" />
+        <result property="paymentType" column="결제유형" />
+        <result property="status" column="상태" />
+    </resultMap>
+
+    <!-- 기본 결제 정보 쿼리 -->
+    <sql id="basePaymentQuery">
+        SELECT
+            P.PAY_ID AS "결제ID",
+            USER_INFO.USER_CODE AS "회원코드",
+            USER_INFO.NICKNAME AS "회원닉네임",
+            PM.PAY_METHOD_NAME AS "결제방법",
+            P.PAY_AMOUNT AS "결제금액",
+            TO_CHAR(P.PAY_AMOUNT, '999,999,999') AS "결제금액_포맷",
+            P.PAY_DATE AS "결제일자",
+            PC.CANCEL_DATE AS "결제취소일",
+            PCR.PAY_CANCEL_REASON_NAME AS "결제취소사유",
+            P.STORAGE_ID AS "보관ID",
+            P.STOREN_ID AS "스토렌ID",
+            P.RENTAL_MATCHING_DONE_ID AS "렌탈매칭완료ID",
+            P.STOREN_MATCHING_DONE_ID AS "스토렌매칭완료ID",
+            CASE
+                WHEN P.STORAGE_ID IS NOT NULL THEN '보관'
+                WHEN P.RENTAL_MATCHING_DONE_ID IS NOT NULL THEN '렌탈'
+                WHEN P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL THEN '스토렌'
+                ELSE '기타'
+                END AS "결제유형",
+            CASE
+                WHEN PC.CANCEL_DATE IS NOT NULL THEN '결제취소'
+                ELSE '결제완료'
+                END AS "상태"
+        FROM PAY P
+                 JOIN PAY_METHOD PM ON P.PAY_METHOD_ID = PM.PAY_METHOD_ID
+                 LEFT JOIN PAY_CANCEL PC ON P.PAY_ID = PC.PAY_ID
+                 LEFT JOIN PAY_CANCEL_REASON PCR ON PC.PAY_CANCEL_REASON_ID = PCR.PAY_CANCEL_REASON_ID
+                 LEFT JOIN (
+            SELECT
+                UC.USER_CODE,
+                NL.NICKNAME,
+                RMD.RENTAL_MATCHING_DONE_ID,
+                SMD.STOREN_MATCHING_DONE_ID
+            FROM USER_CODE UC
+                     JOIN NICKNAME_LOG NL ON UC.USER_CODE = NL.USER_CODE
+                AND NL.LAST_UPDATED_DATE = (
+                    SELECT MAX(LAST_UPDATED_DATE)
+                    FROM NICKNAME_LOG
+                    WHERE USER_CODE = UC.USER_CODE
+                )
+                     LEFT JOIN (
+                SELECT RMR.RENTAL_MATCHING_REQUESTER_ID AS USER_CODE, RMD.RENTAL_MATCHING_DONE_ID
+                FROM RENTAL_MATCHING_DONE RMD
+                         JOIN RENTAL_MATCHING_REQ RMR ON RMD.RENTAL_MATCHING_REQ_ID = RMR.RENTAL_MATCHING_REQ_ID
+            ) RMD ON RMD.USER_CODE = UC.USER_CODE
+                     LEFT JOIN (
+                SELECT SMR.STOREN_MATCHING_REQ_USER_ID AS USER_CODE, SMD.STOREN_MATCHING_DONE_ID
+                FROM STOREN_MATCHING_DONE SMD
+                         JOIN STOREN_MATCHING_REQ SMR ON SMD.STOREN_MATCHING_REQ_ID = SMR.STOREN_MATCHING_REQ_ID
+            ) SMD ON SMD.USER_CODE = UC.USER_CODE
+        ) USER_INFO ON (
+            USER_INFO.RENTAL_MATCHING_DONE_ID = P.RENTAL_MATCHING_DONE_ID OR
+            USER_INFO.STOREN_MATCHING_DONE_ID = P.STOREN_MATCHING_DONE_ID
+            )
+    </sql>
+
+    <!-- 모든 결제 정보 조회 (Oracle 페이징) -->
+    <select id="getAllPayments" resultMap="AdminPaymentResult">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN FROM (
+        <include refid="basePaymentQuery" />
+        ORDER BY P.PAY_DATE DESC
+        ) A
+        WHERE ROWNUM &lt;= #{start} + #{limit}
+        )
+        WHERE RN > #{start}
+    </select>
+
+    <!-- 결제 유형별 조회 (Oracle 페이징) -->
+    <select id="getPaymentsByType" resultMap="AdminPaymentResult">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN FROM (
+        <include refid="basePaymentQuery" />
+        <where>
+            <if test="type == '렌탈'">
+                P.RENTAL_MATCHING_DONE_ID IS NOT NULL
+            </if>
+            <if test="type == '보관'">
+                P.STORAGE_ID IS NOT NULL
+            </if>
+            <if test="type == '스토렌'">
+                (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL)
+            </if>
+        </where>
+        ORDER BY P.PAY_DATE DESC
+        ) A
+        WHERE ROWNUM &lt;= #{start} + #{limit}
+        )
+        WHERE RN > #{start}
+    </select>
+
+    <!-- 검색 조건에 따른 결제 정보 조회 (Oracle 페이징) -->
+    <select id="searchPayments" resultMap="AdminPaymentResult">
+        SELECT * FROM (
+        SELECT A.*, ROWNUM RN FROM (
+        <include refid="basePaymentQuery" />
+        <where>
+            <if test="paymentMethod != null and paymentMethod != 'all'">
+                PM.PAY_METHOD_NAME = #{paymentMethod}
+            </if>
+            <if test="startDate != null">
+                AND P.PAY_DATE >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND P.PAY_DATE &lt;= #{endDate}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'nickname'">
+                        AND USER_INFO.NICKNAME LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'method'">
+                        AND PM.PAY_METHOD_NAME LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'amount'">
+                        AND TO_CHAR(P.PAY_AMOUNT) LIKE '%' || #{keyword} || '%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY P.PAY_DATE DESC
+        ) A
+        WHERE ROWNUM &lt;= #{start} + #{limit}
+        )
+        WHERE RN > #{start}
+    </select>
+
+    <!-- 결제 ID로 상세 정보 조회 -->
+    <select id="getPaymentById" resultMap="AdminPaymentResult">
+        <include refid="basePaymentQuery" />
+        WHERE P.PAY_ID = #{paymentId}
+    </select>
+
+    <!-- 결제 상태 업데이트 -->
+    <update id="updatePaymentStatus">
+        <if test="status == '결제취소'">
+            MERGE INTO PAY_CANCEL PC
+            USING DUAL
+            ON (PC.PAY_ID = #{paymentId})
+            WHEN MATCHED THEN
+            UPDATE SET
+            PC.CANCEL_DATE = #{cancelDate},
+            PC.PAY_CANCEL_REASON_ID = (SELECT PAY_CANCEL_REASON_ID FROM PAY_CANCEL_REASON WHERE PAY_CANCEL_REASON_NAME = #{cancelReason})
+            WHEN NOT MATCHED THEN
+            INSERT (PAY_ID, CANCEL_DATE, PAY_CANCEL_REASON_ID)
+            VALUES (
+            #{paymentId},
+            #{cancelDate},
+            (SELECT PAY_CANCEL_REASON_ID FROM PAY_CANCEL_REASON WHERE PAY_CANCEL_REASON_NAME = #{cancelReason})
+            )
+        </if>
+        <if test="status == '결제완료'">
+            DELETE FROM PAY_CANCEL WHERE PAY_ID = #{paymentId}
+        </if>
+    </update>
+
+    <!-- 총 결제 건수 조회 -->
+    <select id="getTotalPayments" resultType="int">
+        SELECT COUNT(*) FROM PAY
+    </select>
+
+    <!-- 결제 유형별 총 결제 건수 조회 -->
+    <select id="getTotalPaymentsByType" resultType="int" parameterType="string">
+        SELECT COUNT(*) FROM PAY
+        <where>
+            <if test="_parameter == '렌탈'">
+                RENTAL_MATCHING_DONE_ID IS NOT NULL
+            </if>
+            <if test="_parameter == '보관'">
+                STORAGE_ID IS NOT NULL
+            </if>
+            <if test="_parameter == '스토렌'">
+                STOREN_ID IS NOT NULL OR STOREN_MATCHING_DONE_ID IS NOT NULL
+            </if>
+        </where>
+    </select>
+
+    <!-- 검색 조건에 따른 총 결제 건수 조회 -->
+    <select id="getTotalSearchResults" resultType="int">
+        SELECT COUNT(*)
+        FROM PAY P
+        JOIN PAY_METHOD PM ON P.PAY_METHOD_ID = PM.PAY_METHOD_ID
+        LEFT JOIN PAY_CANCEL PC ON P.PAY_ID = PC.PAY_ID
+        LEFT JOIN PAY_CANCEL_REASON PCR ON PC.PAY_CANCEL_REASON_ID = PCR.PAY_CANCEL_REASON_ID
+        LEFT JOIN (
+        SELECT
+        UC.USER_CODE,
+        NL.NICKNAME,
+        RMD.RENTAL_MATCHING_DONE_ID,
+        SMD.STOREN_MATCHING_DONE_ID
+        FROM USER_CODE UC
+        JOIN NICKNAME_LOG NL ON UC.USER_CODE = NL.USER_CODE
+        AND NL.LAST_UPDATED_DATE = (
+        SELECT MAX(LAST_UPDATED_DATE)
+        FROM NICKNAME_LOG
+        WHERE USER_CODE = UC.USER_CODE
+        )
+        LEFT JOIN (
+        SELECT RMR.RENTAL_MATCHING_REQUESTER_ID AS USER_CODE, RMD.RENTAL_MATCHING_DONE_ID
+        FROM RENTAL_MATCHING_DONE RMD
+        JOIN RENTAL_MATCHING_REQ RMR ON RMD.RENTAL_MATCHING_REQ_ID = RMR.RENTAL_MATCHING_REQ_ID
+        ) RMD ON RMD.USER_CODE = UC.USER_CODE
+        LEFT JOIN (
+        SELECT SMR.STOREN_MATCHING_REQ_USER_ID AS USER_CODE, SMD.STOREN_MATCHING_DONE_ID
+        FROM STOREN_MATCHING_DONE SMD
+        JOIN STOREN_MATCHING_REQ SMR ON SMD.STOREN_MATCHING_REQ_ID = SMR.STOREN_MATCHING_REQ_ID
+        ) SMD ON SMD.USER_CODE = UC.USER_CODE
+        ) USER_INFO ON (
+        USER_INFO.RENTAL_MATCHING_DONE_ID = P.RENTAL_MATCHING_DONE_ID OR
+        USER_INFO.STOREN_MATCHING_DONE_ID = P.STOREN_MATCHING_DONE_ID
+        )
+        <where>
+            <if test="paymentMethod != null and paymentMethod != 'all'">
+                PM.PAY_METHOD_NAME = #{paymentMethod}
+            </if>
+            <if test="startDate != null">
+                AND P.PAY_DATE >= #{startDate}
+            </if>
+            <if test="endDate != null">
+                AND P.PAY_DATE &lt;= #{endDate}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                <choose>
+                    <when test="searchType == 'nickname'">
+                        AND USER_INFO.NICKNAME LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'method'">
+                        AND PM.PAY_METHOD_NAME LIKE '%' || #{keyword} || '%'
+                    </when>
+                    <when test="searchType == 'amount'">
+                        AND TO_CHAR(P.PAY_AMOUNT) LIKE '%' || #{keyword} || '%'
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- 결제 통계 정보 조회 -->
+    <select id="getPaymentStatistics" resultType="map">
+        SELECT
+            COUNT(*) AS "totalCount",
+            TO_CHAR(NVL(SUM(P.PAY_AMOUNT), 0), '999,999,999') AS "totalAmount",
+            COUNT(CASE WHEN P.RENTAL_MATCHING_DONE_ID IS NOT NULL THEN 1 END) AS "rentalCount",
+            TO_CHAR(NVL(SUM(CASE WHEN P.RENTAL_MATCHING_DONE_ID IS NOT NULL THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "rentalAmount",
+            COUNT(CASE WHEN P.STORAGE_ID IS NOT NULL THEN 1 END) AS "storageCount",
+            TO_CHAR(NVL(SUM(CASE WHEN P.STORAGE_ID IS NOT NULL THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "storageAmount",
+            COUNT(CASE WHEN (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL) THEN 1 END) AS "storenCount",
+            TO_CHAR(NVL(SUM(CASE WHEN (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL) THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "storenAmount"
+        FROM PAY P
+        WHERE NOT EXISTS (
+            SELECT 1 FROM PAY_CANCEL PC WHERE PC.PAY_ID = P.PAY_ID
+        )
+    </select>
+
+    <!-- 결제 유형별 통계 정보 조회 -->
+    <select id="getPaymentStatisticsByType" resultType="map">
+        SELECT
+        COUNT(*) AS "totalCount",
+        TO_CHAR(NVL(SUM(P.PAY_AMOUNT), 0), '999,999,999') AS "totalAmount",
+        COUNT(CASE WHEN P.RENTAL_MATCHING_DONE_ID IS NOT NULL THEN 1 END) AS "rentalCount",
+        TO_CHAR(NVL(SUM(CASE WHEN P.RENTAL_MATCHING_DONE_ID IS NOT NULL THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "rentalAmount",
+        COUNT(CASE WHEN P.STORAGE_ID IS NOT NULL THEN 1 END) AS "storageCount",
+        TO_CHAR(NVL(SUM(CASE WHEN P.STORAGE_ID IS NOT NULL THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "storageAmount",
+        COUNT(CASE WHEN (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL) THEN 1 END) AS "storenCount",
+        TO_CHAR(NVL(SUM(CASE WHEN (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL) THEN P.PAY_AMOUNT ELSE 0 END), 0), '999,999,999') AS "storenAmount"
+        FROM PAY P
+        WHERE NOT EXISTS (
+        SELECT 1 FROM PAY_CANCEL PC WHERE PC.PAY_ID = P.PAY_ID
+        )
+        <if test="type == '렌탈'">
+            AND P.RENTAL_MATCHING_DONE_ID IS NOT NULL
+        </if>
+        <if test="type == '보관'">
+            AND P.STORAGE_ID IS NOT NULL
+        </if>
+        <if test="type == '스토렌'">
+            AND (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL)
+        </if>
+    </select>
+
+
+
+
+    <!-- 결제 -->
+    <insert id="insertPayment">
+        INSERT INTO PAY(PAY_ID, PAY_METHOD_ID, RENTAL_MATCHING_DONE_ID, PAY_AMOUNT, PAY_DATE)
+        VALUES(
+            PAY_SEQ.NEXTVAL, #{pay_method_id}, ${transaction_id},
+            ${pay_amount}, SYSDATE)
+    </insert>
+</mapper>

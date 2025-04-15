@@ -1,34 +1,15 @@
+<%@ page import="com.team.mvc.DTO.MatchingRequestDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    // 장비 정보를 저장할 변수
-    String equipmentCategory = "텐트/쉘터";
-    String equipmentSubCategory = "텐트";
-    String brand = "스노우피크";
-    String equipmentName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
-    String equipmentGrade = "C";
-
-    // 배송지 정보 저장할 변수
-    String recipient = "고길동";
-    String tel = "010-0000-0000";
-    String zipCode = "04001";
-    String address1 = "서울 마포구 월드컵북로 21";
-    String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
-
-    // 렌탈 정보 저장
-    String rentalPeriod = "2025.06.04 ~ 2025.06.10 (7일)";
-    int rentalCost = 175000;
-    int discountAmount = 20000;
-    int finalPayment = rentalCost - discountAmount;
-
-    // 배송지 정보
-    String renter = "고둘리";
-    String renterTel = "010-0000-0000";
-    String renterZipCode = "00000";
-    String renterAddress1 = "경기도 부천시 원미구 상1동";
-    String renterAddress2 = "412-3번지 둘리의 거리";
-
     // 천 단위 콤마 형식 지정
     java.text.NumberFormat formatter = java.text.NumberFormat.getInstance();
+
+    // 렌탈 금액 천 단위 콤마 형식 위해 먼저 꺼내오기
+    MatchingRequestDTO matchingRequestDTO = (MatchingRequestDTO) request.getAttribute("matching");
+    String rentalCostStr = "";
+    if (matchingRequestDTO != null) {
+        rentalCostStr = formatter.format(matchingRequestDTO.getRental_pay());
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -60,24 +41,24 @@
                 <div class="form-row">
                     <label class="form-label">받는사람</label>
                     <div class="form-input">
-                        <span class="info-text"><%= renter %></span>
+                        <span class="info-text">${user.userName}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">휴대전화</label>
                     <div class="form-input">
-                        <span class="info-text"><%= renterTel %></span>
+                        <span class="info-text">${user.userTel}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">주소</label>
                     <div class="form-input">
                         <div class="zipcode-row">
-                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="<%= renterZipCode %>">
+                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="${user.zipCode}">
                             <button onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
                         </div>
-                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="<%= renterAddress1 %>" readonly>
-                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="<%= renterAddress2 %>">
+                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="${user.address1}" readonly>
+                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="${user.address2}">
 
                         <!-- 우편번호 검색 API 컨테이너 (기본 숨김) -->
                         <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
@@ -106,44 +87,44 @@
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(대)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentCategory %></span>
+                        <span class="info-text">${storen.equipmentDTO.majorCategory}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(중)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentSubCategory %></span>
+                        <span class="info-text">${storen.equipmentDTO.middleCategory}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">브랜드</label>
                     <div class="form-input">
-                        <span class="info-text"><%= brand %></span>
+                        <span class="info-text">${storen.equipmentDTO.brand}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">장비명</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentName %></span>
+                        <span class="info-text">${storen.equipmentDTO.equip_name}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">장비 등급</label>
                     <div class="form-input">
-                        <span class="grade-badge grade-<%= equipmentGrade %>"><%= equipmentGrade %></span>
-                        <a href="storenRegister-inspecResult.jsp" class="text-link">(상세 내용 보기)</a>
+                        <span class="grade-badge grade-" + ${storen.equip_grade}>${storen.equip_grade}</span>
+                        <a href="storenregister-inspecresult.action" class="text-link">(상세 내용 보기)</a>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">렌탈 기간</label>
                     <div class="form-input">
-                        <span class="info-text"><%= rentalPeriod %></span>
+                        <span class="info-text">${matching.rental_duration}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">총 렌탈 비용</label>
                     <div class="form-input">
-                        <span class="info-text"><%= formatter.format(rentalCost) %>원</span>
+                        <span class="info-text"><%= rentalCostStr %>원</span>
                     </div>
                 </div>
             </div>
@@ -158,13 +139,13 @@
                 <div class="form-row">
                     <label class="form-label">보유 쿠폰</label>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-                        <div>3장</div>
+                        <div>${couponList.size()}장</div>
                         <button class="btn btn-secondary">쿠폰 적용</button>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">쿠폰 할인 금액</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
+                    <div class="col-6 text-right text-coral">- 원</div>
                 </div>
             </div>
         </div>
@@ -177,7 +158,7 @@
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-6">주문상품</div>
-                    <div class="col-6 text-right"><%= formatter.format(rentalCost) %>원</div>
+                    <div class="col-6 text-right"><%= rentalCostStr %>원</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">배송비</div>
@@ -185,12 +166,12 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">할인</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
+                    <div class="col-6 text-right text-coral">- 원</div>
                 </div>
                 <hr class="my-3">
                 <div class="row">
                     <div class="col-6 font-weight-bold">최종 결제 금액</div>
-                    <div class="col-6 text-right font-weight-bold text-primary"><%= formatter.format(finalPayment) %>원</div>
+                    <div class="col-6 text-right font-weight-bold text-primary">원</div>
                 </div>
             </div>
         </div>
@@ -234,8 +215,8 @@
 
         <!-- 이전/다음 버튼 -->
         <div class="button-container">
-            <a href="storenMatching-request.jsp" class="btn">이전</a>
-            <a href="storenMatching-rental-pay-complete.jsp" class="btn btn-primary" disabled>결제하기</a>
+            <a href="mypage-matchinglist.action" class="btn">이전</a>
+            <buttton class="btn btn-primary pay-now-btn">결제하기</buttton>
         </div>
     </div>
 </main>
@@ -271,6 +252,40 @@
 
         // 초기 상태에서 결제 버튼 비활성화
         $(".btn-primary").prop("disabled", true);
+
+        // 결제 버튼 누를 때 액션(ajax 처리)
+        $(".pay-now-btn").click(function () {
+            e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
+
+            const methodId = "";
+            const requestId = matching.matching_req_id;
+            const amount = 0;
+
+            // 결제 AJAX 요청
+            $.ajax({
+                url: '/api/payment',
+                type: 'POST',
+                data: {
+                    methodId: methodId,
+                    requestId: requestId,
+                    amount: amount
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('매칭 신청이 취소되었습니다.');
+                        // 현재 페이지 새로고침
+                        window.location.reload();
+                    } else {
+                        alert('매칭 신청 취소 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("매칭 신청 취소 실패:", error);
+                    alert('매칭 신청 취소 중 오류가 발생했습니다.');
+                }
+            });
+        });
     });
 </script>
 
