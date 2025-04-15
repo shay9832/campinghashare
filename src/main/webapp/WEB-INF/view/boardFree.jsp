@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%--<%@ include file="checkLogin.jsp"%>--%>
+<%@ include file="checkLogin.jsp"%>
 <html>
 <head>
     <title>자유게시판</title>

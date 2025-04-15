@@ -4,6 +4,7 @@
     <resultMap id="boardPostResultMap" type="com.team.mvc.DTO.BoardPostDTO">
         <result column="게시물ID" property="postId"/>
         <result property="rowNum" column="RNUM"/>
+        <result column="USER_CODE" property="userCode"/>
         <result column="회원닉네임" property="nickName"/>
         <result column="게시판카테고리" property="boardCategory"/>
         <result column="말머리이름" property="postLabelName"/>
@@ -283,8 +284,9 @@
 
     <!-- 특정 게시물 조회 -->
     <select id="getPostById" parameterType="com.team.mvc.DTO.BoardPostDTO" resultMap="boardPostResultMap">
-        SELECT *
-        FROM VW_POST_MANAGEMENT
+        SELECT V.*, P.USER_CODE AS USER_CODE
+        FROM VW_POST_MANAGEMENT V
+        JOIN POST P ON V."게시물ID" = P.POST_ID
         WHERE "게시물ID" = #{postId}
     </select>
 
