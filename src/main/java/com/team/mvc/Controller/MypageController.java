@@ -2,6 +2,7 @@ package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -211,9 +212,11 @@ public class MypageController {
 
     // 마이페이지-매칭 조회/내역
     @RequestMapping(value="/mypage-matchinglist.action")
-    public String mypageMatchingList(Model model) {
+    public String mypageMatchingList(Model model, HttpSession session) {
         System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : START ===");
-        int userCode = 2; // 로그인 이후 세션에서 받아오는 걸로 교체 예정
+        // 테스트용 임의로 로그인한 user_code 넣기
+        session.setAttribute("user_code", 5);
+        Integer userCode = (Integer) session.getAttribute("user_code");
 
         // 초기에는 스토렌 소유자의 매칭 신청이 들어온 내역만 로드
         List<StorenDTO> storenOwnerList = matchingService.listStroenOwnerTab(userCode);
@@ -232,7 +235,7 @@ public class MypageController {
     @ResponseBody
     public List<StorenDTO> getStorenOwnerMatching() {
         System.out.println("=== MypageController : getStorenOwnerMatching() - AJAX - STOREN Owner : START ===");
-        int userCode = 2; // 세션에서 가져와야 함
+        int userCode = 5; // 세션에서 가져와야 함
         System.out.println("=== MypageController : getStorenOwnerMatching() - AJAX - STOREN Owner : END ===");
         return matchingService.listStroenOwnerTab(userCode);
     }
@@ -242,12 +245,12 @@ public class MypageController {
     @ResponseBody
     public List<StorenDTO> getStorenUserMatching() {
         System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN User : START ===");
-        int user_code = 2; // 세션에서 가져와야 함
+        int user_code = 5; // 세션에서 가져와야 함
         System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN User : END ===");
         return matchingService.listStorenUserTab(user_code);
     }
 
-    // AJAX 요청 처리 - 스토렌 매칭 상세 정보
+    // AJAX 요청 처리 - 스토렌 - 매칭 상세 정보
     @RequestMapping(value="/api/matching/storen/details/{transaction_id}", produces="application/json")
     @ResponseBody
     public List<MatchingRequestDTO> getStorenMatchingDetails(@PathVariable("transaction_id") int transactionId) {
@@ -255,7 +258,7 @@ public class MypageController {
         System.out.println("Transaction ID: " + transactionId);
 
         // 거래 ID에 대한 모든 매칭 요청 정보 가져오기
-        List<MatchingRequestDTO> matchingRequests = matchingService.listStorenRequestTab(transactionId, "스토렌_매칭완료");
+        List<MatchingRequestDTO> matchingRequests = matchingService.listStorenRequestTab(transactionId, "스토렌_매칭");
 
         System.out.println("=== MypageController : getStorenMatchingDetails() - AJAX - STOREN Details : END ===");
         return matchingRequests;
@@ -264,7 +267,7 @@ public class MypageController {
     // 매칭 승인 처리를 위한 AJAX 요청 처리
     @PostMapping(value="/api/matching/approve", produces="application/json")
     @ResponseBody
-    public Map<String, Object> approveMatching(@RequestParam("rentalId") int rentalId
+    public Map<String, Object> approveMatching(@RequestParam("transactionId") int rentalId
                                              , @RequestParam("requestId") int requestId) {
         System.out.println("=== MypageController : approveMatching() - AJAX - Approve : START ===");
         Map<String, Object> result = new HashMap<>();
@@ -290,7 +293,33 @@ public class MypageController {
         return result;
     }
 
+    @PostMapping(value="/api/matching/cancel", produces="application/json")
+    @ResponseBody
+    public Map<String, Object> cancelMatching(@RequestParam("transactionId") int rentalId
+                                            , @RequestParam("requestId") int requestId) {
+        System.out.println("=== MypageController : cancelMatching() - AJAX - Approve : START ===");
+        Map<String, Object> result = new HashMap<>();
 
+        try {
+            // 매칭 승인 요청 저장
+            boolean success = matchingService.cancleMatchingRequest(rentalId, requestId);
+
+            if (success) {
+                result.put("success", true);
+                result.put("message", "매칭 신청이 삭제되었습니다.");
+            } else {
+                result.put("success", false);
+                result.put("message", "매칭 신청이 삭제되지 않았습니다.");
+            }
+
+        } catch(Exception e){
+            result.put("success", false);
+            result.put("message", "오류가 발생했습니다: " + e.getMessage());
+        }
+
+        System.out.println("=== MypageController : cancelMatching() - AJAX - Approve : END ===");
+        return result;
+    }
 
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")

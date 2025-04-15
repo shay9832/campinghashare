@@ -15,6 +15,9 @@
         <result property="emailConsent" column="EMAIL_CONSENT"></result>
         <result property="totalPoint" column="TOTAL_POINTS"></result>
         <result property="totalTrust" column="TRUST_SCORE"></result>
+        <result property="zipCode" column="ZIPCODE"></result>
+        <result property="address1" column="ADDRESS1"></result>
+        <result property="address2" column="ADDRESS2"></result>
     </resultMap>
 
     <!-- 로그인 쿼리 -->

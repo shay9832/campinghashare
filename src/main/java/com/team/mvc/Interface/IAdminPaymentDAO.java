@@ -3,6 +3,7 @@ package com.team.mvc.Interface;
 import com.team.mvc.DTO.AdminPaymentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -89,4 +90,10 @@ public interface IAdminPaymentDAO {
             @Param("endDate") Date endDate,
             @Param("keyword") String keyword
     );
+
+    //결제하기
+    int insertPayment(
+            @RequestParam("pay_method_id") int pay_method_id
+            , @RequestParam("transaction_id") int transaction_id
+            , @RequestParam("pay_amount") int pay_amount);
 }

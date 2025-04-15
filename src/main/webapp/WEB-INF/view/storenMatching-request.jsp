@@ -19,7 +19,6 @@
     }
 
     // 장비 관련 임시 데이터
-    String equipmentGrade = "C";
     int avgNewPrice = 2500000;
     int avgRentalPrice = 20000;
 
@@ -178,7 +177,7 @@
                     <tr>
                         <th class="text-secondary">장비 등급</th>
                         <td>
-                            <span class="grade-badge grade-<%= equipmentGrade %>"><%= equipmentGrade %></span>
+                            <span class="grade-badge grade-" + ${storen.equip_grade}>${storen.equip_grade}</span>
                             <span class="grade-link text-maple" onclick="location.href=''">(상세 내용 보기)</span>
                         </td>
                     </tr>

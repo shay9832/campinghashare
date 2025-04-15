@@ -25,6 +25,9 @@ public class StorenDTO {
     private Integer matching_request_count;                 //매칭수
     private String matching_status;                         //매칭상태
 
+    //장비 등급 추가
+    private String equip_grade;                             //장비등급이름
+
     // 추가된 필드: 이미지 리스트 및 평균가 비교 관련
     private List<AttachmentDTO> photoList;                  // 장비 사진 리스트
     private boolean otherBrand;                             // 기타 브랜드 여부
@@ -268,5 +271,13 @@ public class StorenDTO {
 
     public void setAvgRentalPrice(int avgRentalPrice) {
         this.avgRentalPrice = avgRentalPrice;
+    }
+
+    public String getEquip_grade() {
+        return equip_grade;
+    }
+
+    public void setEquip_grade(String equip_grade) {
+        this.equip_grade = equip_grade;
     }
 }
