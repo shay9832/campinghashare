@@ -2,39 +2,33 @@ package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
 import com.team.mvc.Interface.IAdminDeliveryUpdateDAO;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
- * 배송 정보 조회를 위한 컨트롤러
+ * 배송 정보 조회를 위한 컨트롤러 (SqlSession 방식)
  */
 @Controller
 public class AdminDeliveryUpdateController {
 
-    private final IAdminDeliveryUpdateDAO adminDeliveryUpdateDAO;
+    private final SqlSession sqlSession;
 
     @Autowired
-    public AdminDeliveryUpdateController(IAdminDeliveryUpdateDAO adminDeliveryUpdateDAO) {
-        this.adminDeliveryUpdateDAO = adminDeliveryUpdateDAO;
+    public AdminDeliveryUpdateController(SqlSession sqlSession) {
+        this.sqlSession = sqlSession;
     }
 
-    /**
-     * 배송 정보 조회 - 배송 관리 페이지
-     *
-     * @param model 뷰에 전달할 모델
-     * @return 배송 관리 페이지
-     */
-    @GetMapping("/admin-deliveryUpdate.action")
+    @RequestMapping(value = "/admin-deliveryUpdate.action", method = RequestMethod.GET)
     public String getAllDeliveries(Model model) {
-        List<AdminDeliveryUpdateDTO> allDeliveries = adminDeliveryUpdateDAO.getAllDeliveries();
+        // SqlSession을 통해 매퍼 인터페이스 직접 호출
+        IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+        List<AdminDeliveryUpdateDTO> allDeliveries = dao.getAllDeliveries();
 
         // 배송 유형별로 리스트 분류
         Map<String, List<AdminDeliveryUpdateDTO>> deliveryMap = categorizeDeliveries(allDeliveries);
@@ -49,10 +43,9 @@ public class AdminDeliveryUpdateController {
 
         // 배송 요약 정보 계산
         int totalCount = allDeliveries.size();
-        int completedCount = totalCount; // 여기서는 모든 배송을 완료 상태로 가정
+        int completedCount = totalCount;
         int ongoingCount = 0;
 
-        // 배송 요약 정보 모델에 추가
         Map<String, Integer> summary = new HashMap<>();
         summary.put("totalCount", totalCount);
         summary.put("ongoingCount", ongoingCount);
@@ -62,16 +55,8 @@ public class AdminDeliveryUpdateController {
         return "/admin-deliveryUpdate";
     }
 
-    /**
-     * 배송 유형별로 배송 정보 분류
-     *
-     * @param allDeliveries 모든 배송 정보 목록
-     * @return 유형별로 분류된 배송 정보 맵
-     */
     private Map<String, List<AdminDeliveryUpdateDTO>> categorizeDeliveries(List<AdminDeliveryUpdateDTO> allDeliveries) {
         Map<String, List<AdminDeliveryUpdateDTO>> result = new HashMap<>();
-
-        // 각 카테고리별 리스트 초기화
         result.put("platform", new ArrayList<>());
         result.put("platformReturn", new ArrayList<>());
         result.put("user", new ArrayList<>());
@@ -79,7 +64,6 @@ public class AdminDeliveryUpdateController {
         result.put("storageReturn", new ArrayList<>());
         result.put("storenReturn", new ArrayList<>());
 
-        // 배송 유형에 따라 분류
         for (AdminDeliveryUpdateDTO delivery : allDeliveries) {
             String type = delivery.getDeliveryType();
 

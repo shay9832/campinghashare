@@ -1,6 +1,8 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
+import org.apache.ibatis.annotations.Mapper;
+
 import java.util.List;
 
 /**

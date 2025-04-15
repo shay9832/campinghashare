@@ -27,7 +27,6 @@ public interface IAdminInspectListDAO {
 
 
 
-
     // 검수 결과 추가 - DTO 사용
     void add(AdminInspectListDTO dto);
 
