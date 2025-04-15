@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public interface IRegisterStorenDAO {
 
     /*select*/
-    public ArrayList<RegisterStorenDTO> getList(int equip_id);
+    public ArrayList<RegisterStorenDTO> getList(int equip_code);
 
-    RegisterStorenDTO getEquipInfo(int equip_id);
+    RegisterStorenDTO getEquipInfo(int equip_code);
 
     public ArrayList<RegisterStorenDTO> list();
 

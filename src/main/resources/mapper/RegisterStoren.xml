@@ -9,7 +9,6 @@
 
     <select id="getList" parameterType="int" resultType="com.team.mvc.DTO.RegisterStorenDTO">
         SELECT
-            er.EQUIP_ID as equip_id,
             er.EQUIP_CODE as equip_code,
             er.ORIGINAL_PRICE as original_price,
             parent.CATEGORY_NAME as majorCategory,
@@ -28,7 +27,7 @@
                 JOIN
             BRAND b ON en.BRAND_ID = b.BRAND_ID
         WHERE
-            er.EQUIP_ID = #{equip_id, jdbcType=INTEGER}
+            er.EQUIP_code = #{equip_code, jdbcType=INTEGER}
     </select>
 
     <select id="list" resultMap="brand">
@@ -36,10 +35,9 @@
         FROM VW_BRAND_EQUIP_NAME
     </select>
 
-    <!-- 특정 장비 조회 (equip_id 기준) -->
+    <!-- 특정 장비 조회 (equip_code 기준) -->
     <select id="getEquipInfo" parameterType="int" resultType="com.team.mvc.DTO.RegisterStorenDTO">
         SELECT
-            er.EQUIP_ID as equip_id,
             er.EQUIP_CODE as equip_code,
             er.ORIGINAL_PRICE as original_price,
             parent.CATEGORY_NAME as majorCategory,
@@ -54,6 +52,6 @@
                 JOIN EQUIP_NAME en ON er.EQUIP_NAME_ID = en.EQUIP_NAME_ID
                 JOIN BRAND b ON en.BRAND_ID = b.BRAND_ID
         WHERE
-            er.EQUIP_ID = #{equip_id}
+            er.EQUIP_CODE = #{equip_code}
     </select>
 </mapper>
