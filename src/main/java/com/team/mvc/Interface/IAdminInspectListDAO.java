@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IAdminInspectListDAO {
@@ -30,7 +31,7 @@ public interface IAdminInspectListDAO {
     void add(AdminInspectListDTO dto);
 
     // 확장된 프로시저 호출 메소드
-    void callINSPECT_RESULT_EXTENDED(
+    void callINSPECT_RESULT(
             @Param("platformDeliveryId") Integer platformDeliveryId,
             @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
             @Param("inspecGradeId") Integer inspecGradeId,

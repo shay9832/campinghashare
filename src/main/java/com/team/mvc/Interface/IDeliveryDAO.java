@@ -14,10 +14,14 @@ public interface IDeliveryDAO {
 
     // 회원코드로 스토렌 소유자 배송만 조회
     ArrayList<DeliveryDTO> listStorenOwnerByUserCode(@Param("user_code") int user_code);
+
     // 회원코드로 스토렌 사용자 배송만 조회
     ArrayList<DeliveryDTO> listStorenUserByUserCode(@Param("user_code") int user_code);
 
     // 회원코드로 렌탈 소유자 배송만 조회
     ArrayList<DeliveryDTO> listRentalByUserCode(@Param("user_code") int user_code);
+
+    // 배송 ID로 단건 조회
+    DeliveryDTO getDeliveryById(@Param("delivery_id") int delivery_id);
 
 }

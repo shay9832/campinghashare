@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+            <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -392,7 +392,7 @@
                                     </td>
                                     <td>
                                         <div class="button-group-vertical">
-                                            <button class="btn-sm btn-storen">스토렌 신청</button>
+                                            <button class="btn-sm btn-storen" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equip.equip_code}'">스토렌 신청</button>
                                             <button class="btn-sm btn-rental">렌탈 신청</button>
                                             <button class="btn-sm btn-storage">보관 신청</button>
                                         </div>
@@ -458,8 +458,8 @@
                                         <a href="storenmatching-request.action?storen_id=${storen.storen_id}" class="equipment-name">${storen.storen_title}</a>
                                         <div class="equipment-category">${storen.store_month} 개월 보관</div>
                                         <div class="equipment-date">스토렌등록 : ${storen.created_date}</div>
-                                        <div class="equipment-date">보관시작일 : 2023-04-15 (수정필요)</div>
-                                        <div class="equipment-date">보관종료일 : 2023-07-15 (수정필요)</div>
+                                        <div class="equipment-date">보관시작일 : ${storen.rental_start_date}</div>
+                                        <div class="equipment-date">보관종료일 : ${storen.rental_end_date}</div>
                                     </div>
                                 </td>
                                 <td>
@@ -496,7 +496,7 @@
                                                     <a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_id}</a>
                                                 </td>
                                                 <td class="text-left"><a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_title}</a></td>
-                                                <td>2023-04-20 ~ 2023-05-20</td>
+                                                <td>${sub.rental_start_date} ~ ${sub.rental_end_date}</td>
                                                 <td><span class="trust-score high">${sub.daily_rent_price} 원</span></td>
                                                 <td>${sub.created_date}</td>
                                                 <td>
@@ -864,7 +864,7 @@
             e.preventDefault(); // 기본 동작 방지
             var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
             // 스토렌 신청 페이지로 이동
-            window.location.href = "storenregister-storage-info.action?equip_code=" + equip_code;
+            window.location.href = "storenRegister-storage-info.action?equip_code=" + equip_code;
         });
 
         // 렌탈 신청 버튼 클릭 이벤트

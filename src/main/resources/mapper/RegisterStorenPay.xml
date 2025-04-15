@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mvc.Interface.IRegisterStorenPayDAO">
+
+    <select id="getUserAddressInfo" parameterType="int" resultType="com.team.mvc.DTO.RegisterStorenPayDTO">
+        SELECT
+            U.USER_NAME AS userName,
+            U.USER_TEL AS userTel,
+            A.ZIPCODE AS zipcode,
+            A.ADDRESS1 AS address1,
+            A.ADDRESS2 AS address2
+        FROM USERS U
+                 JOIN ADDRESS_LOG A ON U.USER_CODE = A.USER_CODE
+        WHERE U.USER_CODE = #{userCode}
+          AND A.LAST_UPDATED_DATE = (
+            SELECT MAX(LAST_UPDATED_DATE)
+            FROM ADDRESS_LOG
+            WHERE USER_CODE = #{userCode}
+        )
+    </select>
+
+</mapper>
