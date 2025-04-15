@@ -60,7 +60,7 @@ public class AdminInspectListController {
             Integer platformDeliveryReturnId = null;
 
             // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
-            String adminId = "admin"; // 기본 관리자 ID 설정
+            String adminId = "ADMIN1"; // 기본 관리자 ID 설정
 
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {
