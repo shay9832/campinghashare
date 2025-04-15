@@ -30,15 +30,8 @@
 
     // 그 외 기존 코드
     String storagePeriod = storageDays + "개월";
-    int discountAmount = 20000;
+    int discountAmount = 0;
     int finalPayment = storageCost - discountAmount;
-
-    // 배송지 정보는 유지
-    String recipient = "고길동";
-    String tel = "010-0000-0000";
-    String zipCode = "04001";
-    String address1 = "서울 마포구 월드컵북로 21";
-    String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
 
     // 천 단위 콤마 형식 지정
     java.text.NumberFormat formatter = java.text.NumberFormat.getInstance();
@@ -55,10 +48,14 @@
 
 <jsp:include page="header.jsp"/>
 
-<form action="storenRegister-storage-pay-info.action">
+<form action="storenRegister-storage-pay-info.action" method="GET">
     <!--hidden으로 보내줄 값 숨기기-->
-    <input type="hidden" name="equipName" value="<%= equipName %>">
-    <input type="hidden" name="finalPayment" value="<%= finalPayment %>">
+    <input type="hidden" name="equip_code" value="${equip_code}">
+    <input type="hidden" name="equipSize" value="${equipSize}">
+    <input type="hidden" name="storageDays" value="${storageDays}">
+    <input type="hidden" name="storageCost" value="${storageCost}">
+    <input type="hidden" name="discountAmount" value="${discountAmount}">
+    <input type="hidden" name="finalPayment" value="${finalPayment}">
 
 <main class="main-content container">
     <div class="storen-container">
@@ -72,27 +69,27 @@
             <div class="card-body">
                 <div class="form-row">
                     <label class="form-label">받는 사람</label>
-                    <div class="form-input"><%=recipient%></div>
+                    <div class="form-input">${addressInfo.userName}</div>
                 </div>
                 <div class="form-row">
                     <label class="form-label">휴대 전화</label>
-                    <div class="form-input"><%=tel%></div>
+                    <div class="form-input">${addressInfo.userTel}</div>
                 </div>
                 <div class="form-row">
                     <label class="form-label">주소</label>
                     <div class="form-input">
                         <div class="zipcode-row">
-                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="<%= zipCode %>">
-                            <button onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
+                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="${addressInfo.zipcode}">
+                            <button type="button" onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
                         </div>
-                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="<%= address1 %>" readonly>
-                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="<%= address2 %>">
+                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="${addressInfo.address1}" readonly>
+                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="${addressInfo.address2}">
+                        <input type="text" id="extraAddress" class="form-control mt-2" placeholder="참고항목" readonly>
 
-                        <!-- 우편번호 검색 API 컨테이너 (기본 숨김) -->
+                        <%-- 우편번호 검색 API 컨테이너 (기본 숨김) --%>
                         <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -108,8 +105,15 @@
                     <label class="form-label">장비 사진</label>
                     <div class="form-input">
                         <div class="image-upload d-flex gap-3">
-                            <div class="image-placeholder"></div>
-                            <div class="image-placeholder"></div>
+                            <c:if test="${info.photoList != null && not empty info.photoList}">
+                                <c:forEach var="photo" items="${info.photoList}" varStatus="status">
+                                    <c:if test="${photo != null && not empty photo.attachmentPath}">
+                                        <div class="photo-preview">
+                                            <img src="${photo.attachmentPath}" alt="장비 사진 ${status.index + 1}" />
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -168,7 +172,7 @@
                     <label class="form-label">보유 쿠폰</label>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
                         <div>3장</div>
-                        <button class="btn btn-secondary">쿠폰 적용</button>
+                        <button type="button" class="btn btn-secondary">쿠폰 적용</button>
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -234,11 +238,10 @@
                     <label class="form-check-label" for="confirm_order">주문 내용을 확인하였습니다.</label>
                 </div>
                 <!-- 버튼 컨테이너 -->
-                    <div class="button-container">
-                        <button type="submit" class="btn">이전</button>
-                        <button type="submit" class="btn btn-primary">다음</button>
-                    </div>
-
+                <div class="button-container">
+                    <a href="${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equipCode}" class="btn">이전</a>
+                    <button type="submit" class="btn btn-primary">다음</button>
+                </div>
             </div>
         </div>
     </div>
@@ -330,6 +333,17 @@
         // iframe을 넣은 element를 보이게 한다. (검색창 활성화)
         element_wrap.style.display = 'block';
     }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 이미지 컨테이너 찾기
+        const imageContainer = document.querySelector('.image-upload');
+        if(imageContainer) {
+            // 이미지 순서 역순으로 정렬 (마지막 올린 것이 처음으로 오게 정렬)
+            [...imageContainer.children].reverse().forEach(child => imageContainer.appendChild(child));
+        }
+    });
 </script>
 
 </body>

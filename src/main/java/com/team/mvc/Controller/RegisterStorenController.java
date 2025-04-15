@@ -19,11 +19,12 @@ public class RegisterStorenController {
     private SqlSession sqlSession;
 
     @RequestMapping(value ="/storenRegister-storage-info.action", method = RequestMethod.GET)
-    public String getList(@RequestParam("equip_id") int equip_id, Model model) {
+    public String getEquipInfo(@RequestParam("equip_code") int equipCode,
+                               Model model) {
         IRegisterStorenDAO dao = sqlSession.getMapper(IRegisterStorenDAO.class);
-        RegisterStorenDTO dto = dao.getEquipInfo(equip_id);
+        RegisterStorenDTO dto = dao.getEquipInfo(equipCode);
 
-        model.addAttribute("equipInfo",dto);
+        model.addAttribute("equipInfo", dto);
 
         return "storenRegister-storage-info";
     }

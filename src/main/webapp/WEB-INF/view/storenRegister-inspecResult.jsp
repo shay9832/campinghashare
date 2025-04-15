@@ -11,13 +11,40 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <style>
+        /* 테이블 전체 너비를 화면에 맞게 조정 */
+        /* 테이블 전체 너비를 화면에 맞게 조정 */
+        table {
+            width: 100%;
+            table-layout: auto; /* 테이블 자동 너비 설정 */
+            border-collapse: collapse;
+        }
+
+        /* 각 열에 대한 너비 설정 */
         th, td {
-            font-size: 12px;
-            padding: 4px;
+            padding: 8px;
+            text-align: left;
+            word-wrap: break-word; /* 긴 텍스트가 잘리지 않도록 처리 */
         }
-        .info-text {
-            font-size: 14px;
+
+        /* 등급 및 점수 열의 너비를 줄이기 */
+        th.grade, td.grade, th.score, td.score {
+            width: 10%; /* 현재의 1/3로 줄이기 */
         }
+
+        /* 나머지 열들의 너비를 줄이기 */
+        th, td {
+            width: 80%; /* 나머지 열들은 현재의 80%로 설정 */
+        }
+
+        /* 반응형 처리: 작은 화면에서 테이블을 스크롤 가능하도록 처리 */
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto; /* 가로 스크롤 추가 */
+                white-space: nowrap;
+            }
+        }
+
     </style>
 </head>
 <body>
