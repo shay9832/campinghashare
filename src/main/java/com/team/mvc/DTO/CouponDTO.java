@@ -10,7 +10,7 @@ public class CouponDTO {
     int coupon_month;       //쿠폰유효개월수
     String coupon_created_date; //쿠폰발행일
     String coupon_end_date;     //쿠폰사용가능일(쿠폰만료일)
-    String coupon_used_date;    //쿸폰사용일
+    String coupon_used_date;    //쿠폰사용일
 
     public int getCoupon_id() {
         return coupon_id;

@@ -1101,7 +1101,7 @@
         <div class="alert alert-warning mt-3" role="alert">
           <i class="fas fa-exclamation-triangle me-2"></i> 아직 결제가 완료되지 않았습니다.
         </div>
-        <button type="button" class="btn btn-success mt-2 pay-now-btn" data-rental="` + rentalId + `" data-request="` + matchedUser.matching_req_id + `" data-type="storen">
+        <button type="button" class="btn btn-success mt-2 pay-now-btn" data-rental="` + rentalId + `" data-user="` + matchedUser.user_code + `" data-type="storen">
           <i class="fas fa-credit-card me-1"></i> 지금 결제하기
         </button>
       `;
@@ -1196,10 +1196,10 @@
     e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
 
     const rentalId = $(this).data('rental');
-    const requestId = $(this).data('request');
+    const userCode = $(this).data('user');
     const rentalType = $(this).data('type');
     // 결제 페이지로 이동
-    window.location.href = `storenmatching-rental-pay.action?rentalId=` + rentalId + `&requestId=` + requestId + `&type=` + rentalType;
+    window.location.href = `storenmatching-rental-pay.action?rentalId=` + rentalId + `&userCode=` + userCode + `&type=` + rentalType;
   });
 
   // 매칭 신청 취소 버튼 클릭 이벤트

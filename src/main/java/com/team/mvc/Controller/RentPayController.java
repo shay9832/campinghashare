@@ -16,10 +16,13 @@ public class RentPayController {
 
     @RequestMapping(value="storenmatching-rental-pay.action")
     public String rentStorenPay(@RequestParam("rentalId") int transactionId
-                                , @RequestParam("requestId") int requestId
+                                , @RequestParam("userCode") int userCode
                                 , @RequestParam("type") String type
                                 , Model model) {
-        MyPayDTO myPayDTO = rentPayService.getMyPayInfo(transactionId, requestId, type);
+        MyPayDTO myPayDTO = rentPayService.getMyPayInfo(transactionId, userCode, type);
+        System.out.println("myUser Adderss1 : " + myPayDTO.getUser().getAddress1());
+        System.out.println("myUser Adderss2 : " + myPayDTO.getUser().getAddress2());
+
         model.addAttribute("user", myPayDTO.getUser());
         model.addAttribute("couponList", myPayDTO.getCoupons());
         model.addAttribute("storen", myPayDTO.getStoren());

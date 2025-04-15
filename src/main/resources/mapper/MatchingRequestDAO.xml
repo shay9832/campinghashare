@@ -36,11 +36,12 @@
     <!-- 해당 스토렌id에 해당 유저가 매칭신청을 했다면 매칭 정보 반환 -->
     <select id="getMatchingByStorenAndUser" resultType="com.team.mvc.DTO.MatchingRequestDTO">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
-             , RENTAL_START_DATE, RENTAL_END_DATE, RENTAL_DURATION
-             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, NVL(PAYMENT_DATE, '결제대기') AS PAYMENT_DATE
+             , TO_CHAR(RENTAL_START_DATE, 'YYY-MM-DD') AS RENTAL_START_DATE
+             , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
+             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, PAYMENT_DATE AS PAYMENT_DATE
              , MATCHING_REQ_ID
         FROM VW_RENTAL_APPLICANT
-        WHERE TRANSACTION_ID = #{storenId} AND USER_CODE = #{user_code} AND TRANSACTION_TYPE LIKE '스토렌_매칭%'
+        WHERE TRANSACTION_ID = #{storenId} AND USER_CODE = #{user_code} AND TRANSACTION_TYPE LIKE '스토렌%'
     </select>
 
     <!-- 스토렌 매칭 승인(1. 매칭 완료 테이블에 insert) -->
