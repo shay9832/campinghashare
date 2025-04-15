@@ -18,12 +18,14 @@
 
     <mvc:resources mapping="/resources/**" location="/resources/" />
 
+    <!-- 임시-->
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
+    <!-- 임시-->
     <!-- Spring이 아닌 Tomcat이 정적 리소스를 처리하도록 설정 -->
     <mvc:default-servlet-handler />
 
@@ -46,6 +48,7 @@
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
 
+    <!-- 임시-->
     <!-- 파일 업로드를 위한 MultipartResolver 설정 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
     </bean>

@@ -4,6 +4,7 @@ import com.team.mvc.Interface.IAdminInspectListDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -59,7 +60,7 @@ public class AdminInspectListController {
             Integer platformDeliveryReturnId = null;
 
             // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
-            String adminId = "admin"; // 기본 관리자 ID 설정
+            String adminId = "ADMIN1"; // 기본 관리자 ID 설정
 
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {
@@ -136,7 +137,7 @@ public class AdminInspectListController {
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
 
             // 확장된 프로시저 호출 메소드 사용
-            dao.callINSPECT_RESULT_EXTENDED(platformDeliveryId, platformDeliveryReturnId,
+            dao.callINSPECT_RESULT(platformDeliveryId, platformDeliveryReturnId,
                     inspecGradeId, equipGradeId, adminId, inspecComment);
 
             // 성공 메시지 설정
@@ -149,4 +150,5 @@ public class AdminInspectListController {
 
         return "redirect:/admin-inspectList.action";
     }
+
 }
