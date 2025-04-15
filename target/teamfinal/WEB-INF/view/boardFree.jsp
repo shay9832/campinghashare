@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--<%@ include file="checkLogin.jsp"%>--%>
 <html>
 <head>
     <title>자유게시판</title>
@@ -441,7 +442,7 @@
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>
-                            <th width="10%" class="p-3 text-center">분류</th>
+                            <th width="8%" class="p-3 text-center">분류</th>
                             <th width="47%" class="p-3 text-center">제목</th>
                             <th width="10%" class="p-3 text-center">작성자</th>
                             <th width="10%" class="p-3 text-center">작성일</th>
@@ -495,9 +496,7 @@
                                 <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                                 <td class="p-3 text-center"><span class="board-category-tag
                                                             ${postList.postLabelName == '묻고답하기' ? 'question' :
-                                                              postList.postLabelName == '후기' ? 'review' :
-                                                              postList.postLabelName == '잡담' ? 'chat' :
-                                                              postList.postLabelName == '아무말대잔치' ? 'freeboard' : ''}">${postList.postLabelName}</span>
+                                                              postList.postLabelName == '아무말대잔치' ? 'chat' : 'freeboard'}">${postList.postLabelName}</span>
                                 </td>
                                 <td class="p-3 title-cell"><a
                                         href="boardfree-post.action?postId=${postList.postId}">${postList.postTitle}</a>
@@ -591,6 +590,7 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
+
                         <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>

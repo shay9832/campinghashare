@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--<%@ include file="checkLogin.jsp"%>--%>
 <html>
 <head>
     <title>BEST 게시판</title>
@@ -237,7 +238,7 @@
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
-                    <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
+                    <div style="margin: 0; flex: 3; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
@@ -277,13 +278,6 @@
                                 </a>
                             </c:if>
                         </div>
-                    </div>
-
-                    <!-- 글쓰기 버튼 - 오른쪽 -->
-                    <div style="flex: 1; display: flex; justify-content: flex-end;">
-                        <button class="btn btn-primary" onclick="goToWrite()">
-                            <i class="fa-solid fa-pen"></i> 글쓰기
-                        </button>
                     </div>
                 </div>
             </div>
