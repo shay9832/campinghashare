@@ -142,7 +142,6 @@ public class StorenDTO {
         this.daily_storage_fee = daily_storage_fee;
     }
 
-
     public String getSearchKeyword() {
         return searchKeyword;
     }
@@ -198,7 +197,6 @@ public class StorenDTO {
     public void setMatching_status(String matching_status) {
         this.matching_status = matching_status;
     }
-}
 
     public List<AttachmentDTO> getPhotoList() {
         return photoList;
@@ -264,7 +262,6 @@ public class StorenDTO {
         this.priceDiffClass = priceDiffClass;
     }
 
-    // 추가: 평균 렌탈 가격 getter/setter
     public int getAvgRentalPrice() {
         return avgRentalPrice;
     }

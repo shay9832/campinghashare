@@ -109,11 +109,19 @@
                 </div>
             </div>
         </div>
-        <div class="user-menu">
-            <a href="#"><i class="fa-solid fa-bell"></i> <span>알림</span></a>
-            <a href="#"><i class="fa-solid fa-user"></i> <span>마이페이지</span></a>
-            <a href="#"><i class="fa-solid fa-book"></i> <span>캠핑일지</span></a>
-        </div>
+        <c:if test="${not empty sessionScope.loginUser}">
+            <div class="user-menu">
+                <a href="${pageContext.request.contextPath}/notifications.action">
+                    <i class="fa-solid fa-bell"></i> <span>알림</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/mypage-main.action">
+                    <i class="fa-solid fa-user"></i> <span>마이페이지</span>
+                </a>
+                <a href="${pageContext.request.contextPath}/mypage-diary.action">
+                    <i class="fa-solid fa-book"></i> <span>캠핑일지</span>
+                </a>
+            </div>
+        </c:if>
     </div>
 </header>
 
