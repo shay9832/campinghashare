@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%--<%@ include file="checkLogin.jsp"%>--%>
+<%@ include file="checkLogin.jsp"%>
 <html>
 <head>
     <title>글쓰기 - 자유게시판</title>
@@ -172,26 +172,26 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fa-solid fa-pen"></i> ${isEdit ? '글 수정' : '글쓰기'}</h1>
+                    <h1 class="page-title"><i class="fa-solid fa-pen"></i> ${isUpdate ? '글 수정' : '글쓰기'}</h1>
                 </div>
 
                 <div class="content-box p-5">
                     <form id="postForm" method="POST"
-                          action="${isEdit ? 'api/post/update.action' : 'boardfree-write.action'}">
+                          action="${isUpdate ? 'api/post/update.action' : 'boardfree-write.action'}">
                         <!-- 수정 모드일 경우 postId 필드 추가 -->
-                        <c:if test="${isEdit}">
+                        <c:if test="${isUpdate}">
                             <input type="hidden" name="postId" value="${post.postId}"/>
                         </c:if>
 
                         <div class="form-group mb-3">
                             <label class="form-label">게시판</label>
-                            <select class="form-select" id="boardId" name="boardId" ${isEdit ? 'disabled' : ''}>
+                            <select class="form-select" id="boardId" name="boardId" ${isUpdate ? 'disabled' : ''}>
                                 <c:forEach var="board" items="${communityBoards}">
-                                    <option value="${board.boardId}" ${(isEdit && post.boardId == board.boardId) || (!isEdit && board.boardId == 7) ? 'selected' : ''}>${board.boardName}</option>
+                                    <option value="${board.boardId}" ${(isUpdate && post.boardId == board.boardId) || (!isUpdate && board.boardId == 7) ? 'selected' : ''}>${board.boardName}</option>
                                 </c:forEach>
                             </select>
                             <!-- 수정 모드에서 disabled된 필드의 값을 전송하기 위한 hidden 필드 -->
-                            <c:if test="${isEdit}">
+                            <c:if test="${isUpdate}">
                                 <input type="hidden" name="boardId" value="${post.boardId}"/>
                             </c:if>
                         </div>
@@ -200,7 +200,7 @@
                             <label class="form-label">말머리</label>
                             <select class="form-select" id="postLabelId" name="postLabelId">
                                 <c:forEach var="label" items="${postLabels}">
-                                    <option value="${label.postLabelId}" ${isEdit && post.postLabelId == label.postLabelId ? 'selected' : ''}>${label.postLabelName}</option>
+                                    <option value="${label.postLabelId}" ${isUpdate && post.postLabelId == label.postLabelId ? 'selected' : ''}>${label.postLabelName}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -208,7 +208,7 @@
                         <div class="form-group mb-3">
                             <label class="form-label">제목</label>
                             <input type="text" class="form-control" name="postTitle"
-                                   value="${isEdit ? post.postTitle : ''}" placeholder="제목을 작성하세요." required/>
+                                   value="${isUpdate ? post.postTitle : ''}" placeholder="제목을 작성하세요." required/>
                         </div>
 
                         <div class="mb-4">
@@ -284,7 +284,7 @@
                                 </div>
 
                                 <textarea class="form-control" name="postContent" rows="10" placeholder="내용을 작성하세요."
-                                          required>${isEdit ? post.postContent : ''}</textarea>
+                                          required>${isUpdate ? post.postContent : ''}</textarea>
 
                             </div>
                         </div>
@@ -297,7 +297,7 @@
                             </div>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                                <button type="submit" class="btn btn-primary">${isEdit ? '수정하기' : '등록하기'}</button>
+                                <button type="submit" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
                             </div>
                         </div>
                     </form>
@@ -313,7 +313,7 @@
 <!-- 확인 모달 수정 -->
 <div class="modal" id="confirmModal">
     <div class="modal-header">
-        <h5 class="modal-title">${isEdit ? '게시글을 수정 하시겠습니까?' : '게시글을 등록 하시겠습니까?'}</h5>
+        <h5 class="modal-title">${isUpdate ? '게시글을 수정 하시겠습니까?' : '게시글을 등록 하시겠습니까?'}</h5>
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" id="cancelBtn">취소</button>
@@ -324,7 +324,7 @@
 <!-- 성공 모달 수정 -->
 <div class="modal" id="successModal">
     <div class="modal-header">
-        <h5 class="modal-title">${isEdit ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
+        <h5 class="modal-title">${isUpdate ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" id="okBtn">확인</button>
@@ -334,7 +334,7 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <!-- 수정 모드일 경우 폼 제출 처리 스크립트 -->
-<c:if test="${isEdit}">
+<c:if test="${isUpdate}">
     <script>
         document.getElementById('postForm').addEventListener('submit', function (e) {
             e.preventDefault();

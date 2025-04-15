@@ -93,10 +93,24 @@
             transform: scale(1.05);
         }
 
+
         .post-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* 양쪽 끝으로 정렬 */
             align-items: center;
+            width: 100%;
+        }
+
+        .like-area {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px; /* 버튼 사이 간격 */
+            margin-top: 0 !important;
         }
 
         .post-buttons {
@@ -138,10 +152,6 @@
             color: var(--text-secondary);
         }
 
-        .post-actions {
-            display: flex;
-            gap: var(--spacing-sm);
-        }
 
         /* 댓글 영역 */
         .comments-container {
@@ -223,17 +233,30 @@
             padding: 0;
         }
 
-        .edit-btn, .delete-btn {
+        .post-header {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* 위에 정렬 */
+        }
+
+        .post-actions-right {
+            display: flex;
+            gap: 10px;
+        }
+
+
+        .update-btn, .delete-btn {
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 0;
-            margin-left: 10px;
+            padding: 5px 10px;
             font-size: var(--font-xs);
         }
 
-        .edit-btn:hover, .delete-btn:hover {
+        .update-btn:hover, .delete-btn:hover {
             color: var(--color-maple);
             text-decoration: underline;
         }
@@ -577,6 +600,14 @@
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
+<!-- 디버깅용 정보 (테스트 후 제거) -->
+<%--<c:if test="${not empty sessionScope.user_code}">--%>
+<%--    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+<%--        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.user_code},--%>
+<%--        일치 여부: ${post.userCode == sessionScope.user_code}--%>
+<%--    </div>--%>
+<%--</c:if>--%>
+
 
 <div class="page-wrapper">
     <div class="container" style="max-width: 1500px; padding: 0 15px;">
@@ -626,12 +657,13 @@
                                 <div class="post-views">조회수 ${post.viewCount}</div>
                                 <div class="post-likes">추천 ${post.recommendCount}</div>
                                 <button class="report-btn" data-id="${post.postId}">신고</button>
-
-                                <c:if test="${post.userCode eq sessionScope.userCode}">
-                                    <button class="edit-btn" onclick="location.href='boardfree-edit.action?postId=${post.postId}'">수정</button>
-                                    <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
-                                </c:if>
                             </div>
+                        </div>
+                        <div class="post-actions-right">
+                            <c:if test="${post.userCode eq sessionScope.user_code}">
+                                <button class="update-btn" onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정</button>
+                                <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
+                            </c:if>
                         </div>
                     </div>
                     <div class="post-body">
@@ -653,20 +685,19 @@
 
                     <div class="p-4 border-top">
                         <div class="post-actions">
+                            <!-- 추천 버튼을 왼쪽으로 배치 -->
                             <div class="like-area">
                                 <button class="btn btn-icon" id="likeButton" data-post-id="${post.postId}">
                                     <i class="fas fa-heart icon-heart"></i>
                                 </button>
                                 <span class="font-bold" id="likeCount">추천 ${post.recommendCount}</span>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-sm"
-                                        onclick="location.href='boardfree-post.action?postId=${prevPostId}'">이전글
-                                </button>
+
+                            <!-- 이전글, 목록, 다음글 버튼을 오른쪽으로 배치 -->
+                            <div class="nav-buttons" style="display: flex; gap: 8px;">
+                                <button class="btn btn-sm" onclick="location.href='boardfree-post.action?postId=${prevPostId}'">이전글</button>
                                 <button class="btn btn-sm" onclick="location.href='boardfree.action'">목록</button>
-                                <button class="btn btn-sm"
-                                        onclick="location.href='boardfree-post.action?postId=${nextPostId}'">다음글
-                                </button>
+                                <button class="btn btn-sm" onclick="location.href='boardfree-post.action?postId=${nextPostId}'">다음글</button>
                             </div>
                         </div>
                     </div>

@@ -597,32 +597,47 @@ public class BoardController {
 
     // 게시글 수정 페이지
     @RequestMapping("/boardfree-update.action")
-    public String boardFreeUpdate(@RequestParam("postId") int postId, Model model) {
+    public String boardFreeUpdate(@RequestParam("postId") int postId, HttpSession session, Model model) {
+        // 세션에서 로그인한 사용자 코드 가져오기
+        Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+        System.out.println("boardFreeUpdate 메서드 호출됨 - postId: " + postId);
+
+        // 로그인 안 된 경우 로그인 페이지로 리다이렉트 (이미 checkLogin.jsp에서 처리됨)
+        if (userCode == null) {
+            return "redirect:/login-user.action";
+        }
+
         // 게시글 정보 조회
         BoardPostDTO dto = new BoardPostDTO();
         dto.setPostId(postId);
         BoardPostDTO post = boardPostService.getPostById(dto);
 
+
         if (post == null) {
+            System.out.println("게시글을 찾을 수 없음");
             return "redirect:/boardfree.action";
         }
 
         // 현재 로그인한 사용자가 작성자이지 확인
-        // 실제 구현시 세션에서 userCode를 가져와야함
-        int userCode = 2;
         if (post.getUserCode() != userCode) {
+            System.out.println("권한 없음");
             return "redirect:/boardfree.action";
         }
 
         // 말머리 목록 조회
         List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(7); // 자유게시판 ID
 
+        // 커뮤니티 게시판 목록 조회
+        List<BoardDTO> communityBoards = boardPostService.getBoardsByCategoryId(4);
 
+        System.out.println("모델 속성 추가 - post, postLabels, isUpdate(true)");
         model.addAttribute("post", post);
         model.addAttribute("postLabels", postLabels);
+        model.addAttribute("communityBoards", communityBoards);
         model.addAttribute("isUpdate", true);
 
-        return "boardfree-write";
+        System.out.println("boardfree-write 뷰로 리턴");
+        return "boardFree-write";
     }
 
 
@@ -634,16 +649,26 @@ public class BoardController {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            session.setAttribute("userCode", 2);
-            // 세션에서 로그인 정보 확인
-            Integer userCode = (Integer) session.getAttribute("userCode");
+            // 세션에서 로그인한 사용자 코드 가져오기
+            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+            System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
+            dto.setUserCode(userCode);
+
+            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
+            if (userCode == null) {
+                result.put("success", false);
+                result.put("message", "로그인이 필요합니다.");
+                return result;
+            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
+            System.out.println("게시글 작성자 코드: " + (post != null ? post.getUserCode() : "게시글 없음"));
 
             // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자가 맞는지 확인
-            if (post != null && post.getUserCode() != userCode) {
+            if (post != null) {
                 int affectedRows = boardPostService.updatePost(dto);
+                System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
 
                 if (affectedRows > 0) {
                     result.put("success", true);
@@ -675,9 +700,15 @@ public class BoardController {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            session.setAttribute("userCode", 2);
-            // 세션에서 로그인 정보 확인
-            Integer userCode = (Integer) session.getAttribute("userCode");
+            // 세션에서 로그인한 사용자 코드 가져오기
+            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+
+            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
+            if (userCode == null) {
+                result.put("success", false);
+                result.put("message", "로그인이 필요합니다.");
+                return result;
+            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
