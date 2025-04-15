@@ -23,6 +23,9 @@ public class StorenDTO {
     private Integer matching_request_count;                 //매칭수
     private String matching_status;                         //매칭상태
 
+    //장비 등급 추가
+    private String equip_grade;                             //장비등급이름
+
     public EquipmentDTO getEquipmentDTO() {
         return equipmentDTO;
     }
@@ -182,5 +185,13 @@ public class StorenDTO {
 
     public void setMatching_status(String matching_status) {
         this.matching_status = matching_status;
+    }
+
+    public String getEquip_grade() {
+        return equip_grade;
+    }
+
+    public void setEquip_grade(String equip_grade) {
+        this.equip_grade = equip_grade;
     }
 }

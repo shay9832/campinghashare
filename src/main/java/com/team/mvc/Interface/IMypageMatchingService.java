@@ -27,4 +27,7 @@ public interface IMypageMatchingService {
     //스토렌 매칭 승인
     Boolean approveMatchingRequest(int transaction_id, int request_id);
 
+    //스토렌 매칭신청 취소
+    Boolean cancleMatchingRequest(int transaction_id, int request_id);
+
 }
