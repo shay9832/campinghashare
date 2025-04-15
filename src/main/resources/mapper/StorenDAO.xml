@@ -168,22 +168,20 @@
     <!-- 내가 매칭 신청한 스토렌 리스트 가져오기 -->
     <select id="listMyStorenApplicationsByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
         SELECT
-        s.*
-        FROM
-        VW_STOREN s
-        WHERE
-        s.STOREN_ID IN (
-        SELECT
-        TRANSACTION_ID
-        FROM
-        VW_RENTAL_APPLICANT
-        WHERE
-        USER_CODE = #{userCode}
-        AND TRANSACTION_TYPE LIKE '스토렌%'
-        )
-        <if test="matchingStatus != null">
-            AND s.MATCHING_STATUS = #{matchingStatus}
-        </if>
+            STOREN_ID, EQUIP_CODE, USER_CODE
+                       , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+                       , DAILY_STORAGE_FEE, STORE_MONTH
+                       , STOREN_TITLE, STOREN_CONTENT
+                       , DAILY_RENT_PRICE, CREATED_DATE
+                       , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+                       , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+                       , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+                       , EQUIP_GRADE
+        FROM VW_STOREN s
+        WHERE s.STOREN_ID IN (SELECT TRANSACTION_ID
+                              FROM VW_RENTAL_APPLICANT
+                              WHERE USER_CODE = #{user_code}
+                                    AND TRANSACTION_TYPE LIKE '스토렌%')
         ORDER BY s.CREATED_DATE DESC
     </select>
 
@@ -197,6 +195,7 @@
              , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
              , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE
         FROM VW_STOREN
         WHERE STOREN_ID = #{storen_id}
     </select>
