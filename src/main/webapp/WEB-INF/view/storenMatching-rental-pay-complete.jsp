@@ -4,7 +4,7 @@
     String processName = "렌탈비 결제";
 
     // 관련 메뉴명을 저장할 변수들
-    String prevMenu = "계속 쇼핑하기";
+    String prevMenu = "메인으로";
     String nextMenu = "내가 대여한 장비 목록";
 
     // 주문 번호 생성
@@ -49,7 +49,7 @@
         <div class="text-center mb-3">
             <i class="fas fa-check-circle fa-3x mb-2" style="color: var(--color-maple);"></i>
             <h2 class="mb-2">렌탈 신청이 완료되었습니다.</h2>
-            <p>주문번호: <span class="info-highlight"><%= orderNumber %></span></p>
+            <p>결제번호: <span class="info-highlight"><%= orderNumber %></span></p>
             <p>주문일시: <%= orderDate %></p>
         </div>
     </div>
@@ -70,14 +70,14 @@
             <div class="info-value">
                 * 대여하신 장비는 렌탈 시작일 이전 3~4일 내 배송 시작될 예정입니다.<br>
                 * 배송 시작 시, 알림 메시지를 드릴 예정입니다.<br>
-                * 배송 상태는 마이페이지 > 주문내역에서 확인 가능합니다.
+                * 배송 상태는 마이페이지 > 배송조회/내역에서 확인 가능합니다.
             </div>
         </div>
     </div>
 
     <div class="button-container">
-        <button class="btn" onclick="location.href='myequipment.action'"><%= prevMenu %></button>
-        <button class="btn btn-primary" onclick="location.href='myrental.action'"><%= nextMenu %></button>
+        <button class="btn" onclick="location.href='main.action'"><%= prevMenu %></button>
+        <button class="btn btn-primary" onclick="location.href='mypage-rentequip.action'"><%= nextMenu %></button>
     </div>
 </main>
 

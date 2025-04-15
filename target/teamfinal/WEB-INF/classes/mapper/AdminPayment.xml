@@ -303,4 +303,15 @@
             AND (P.STOREN_ID IS NOT NULL OR P.STOREN_MATCHING_DONE_ID IS NOT NULL)
         </if>
     </select>
+
+
+
+
+    <!-- 결제 -->
+    <insert id="insertPayment">
+        INSERT INTO PAY(PAY_ID, PAY_METHOD_ID, RENTAL_MATCHING_DONE_ID, PAY_AMOUNT, PAY_DATE)
+        VALUES(
+            PAY_SEQ.NEXTVAL, #{pay_method_id}, ${transaction_id},
+            ${pay_amount}, SYSDATE)
+    </insert>
 </mapper>
