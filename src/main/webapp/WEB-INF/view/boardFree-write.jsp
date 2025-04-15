@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%--<%@ include file="checkLogin.jsp"%>--%>
 <html>
 <head>
     <title>글쓰기 - 자유게시판</title>
@@ -133,126 +135,6 @@
             margin-top: var(--spacing-lg, 20px);
         }
     </style>
-    <script>
-        // 문서가 완전히 로드된 후 실행
-        document.addEventListener('DOMContentLoaded', function () {
-            // 모든 요소를 찾되, 존재 여부를 확인하는 안전장치 추가
-            const submitBtn = document.getElementById('submitBtn');
-            const confirmModal = document.getElementById('confirmModal');
-            const successModal = document.getElementById('successModal');
-            const boardSelect = document.getElementById('board');
-            const headerTagSelect = document.getElementById('headerTag');
-
-            // 게시판 선택에 따라 말머리 옵션 변경
-            const headerTagOptions = {
-                free: [
-                    {value: 'question', text: '묻고답하기'},
-                    {value: 'review', text: '후기'},
-                    {value: 'chat', text: '잡담'}
-                ],
-                camping: [
-                    {value: 'location', text: '장소추천'},
-                    {value: 'together', text: '같이가요'},
-                    {value: 'story', text: '캠핑이야기'}
-                ],
-                gear: [
-                    {value: 'tent', text: '텐트/타프'},
-                    {value: 'sleep', text: '침낭/매트'},
-                    {value: 'cook', text: '취사용품'}
-                ],
-                market: [
-                    {value: 'sell', text: '팝니다'},
-                    {value: 'buy', text: '삽니다'},
-                    {value: 'exchange', text: '교환합니다'}
-                ]
-            };
-
-            // 게시판 변경 시 말머리 옵션 업데이트 (존재 여부 확인)
-            if (boardSelect && headerTagSelect) {
-                boardSelect.addEventListener('change', function () {
-                    const selectedBoard = this.value;
-                    const options = headerTagOptions[selectedBoard] || headerTagOptions.free;
-
-                    // 말머리 옵션 초기화
-                    headerTagSelect.innerHTML = '';
-
-                    // 새 옵션 추가
-                    options.forEach(option => {
-                        const optionElement = document.createElement('option');
-                        optionElement.value = option.value;
-                        optionElement.textContent = option.text;
-                        headerTagSelect.appendChild(optionElement);
-                    });
-                });
-            }
-
-            // 에디터 내용 클릭 시 기본 텍스트 제거
-            const editorContent = document.querySelector('.editor-content');
-            if (editorContent) {
-                editorContent.addEventListener('focus', function () {
-                    if (this.textContent === '내용을 입력하세요.') {
-                        this.textContent = '';
-                    }
-                });
-            }
-
-            // 등록 버튼 클릭 시 확인 모달 표시
-            if (submitBtn && confirmModal) {
-                submitBtn.addEventListener('click', function () {
-                    console.log('등록 버튼 클릭됨');
-                    confirmModal.classList.add('show');
-                    document.querySelector('.modal-backdrop').classList.add('show');
-                });
-            }
-
-            // 취소 버튼 클릭 시 모달 닫기 수정
-            const cancelBtn = document.getElementById('cancelBtn');
-            if (cancelBtn && confirmModal) {
-                cancelBtn.addEventListener('click', function () {
-                    console.log('취소 버튼 클릭됨');
-                    confirmModal.classList.remove('show');
-                    document.querySelector('.modal-backdrop').classList.remove('show');
-                });
-            }
-
-            // 확인 버튼 클릭 시 성공 모달로 전환 수정
-            const confirmBtn = document.getElementById('confirmBtn');
-            if (confirmBtn && confirmModal && successModal) {
-                confirmBtn.addEventListener('click', function () {
-                    console.log('확인 버튼 클릭됨');
-                    confirmModal.classList.remove('show');
-                    successModal.classList.add('show');
-                });
-            }
-
-            // 성공 모달의 확인 버튼 클릭 시 선택된 게시판으로 이동
-            const okBtn = document.getElementById('okBtn');
-            if (okBtn && boardSelect) {
-                okBtn.addEventListener('click', function () {
-                    const selectedBoard = boardSelect.value;
-                    if (selectedBoard === 'free') {
-                        window.location.href = 'boardfree.action';
-                    } else if (selectedBoard === 'camping') {
-                        window.location.href = 'boardimage.action';
-                    } else if (selectedBoard === 'gear') {
-                        window.location.href = 'boardgear.action';
-                    } else if (selectedBoard === 'market') {
-                        window.location.href = 'boardmarket.action';
-                    }
-                });
-            }
-
-            // 취소 버튼 클릭 시 자유게시판으로 이동
-            const cancelBoardBtn = document.querySelector('.btn-secondary');
-            if (cancelBoardBtn) {
-                cancelBoardBtn.addEventListener('click', function () {
-                    window.location.href = 'boardfree.action';
-                });
-            }
-        });
-
-    </script>
-
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -290,37 +172,47 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fa-solid fa-pen"></i> 글쓰기</h1>
+                    <h1 class="page-title"><i class="fa-solid fa-pen"></i> ${isEdit ? '글 수정' : '글쓰기'}</h1>
                 </div>
 
                 <div class="content-box p-5">
-                    <form id="boardWriteForm">
-                        <div class="d-flex gap-3 mb-4">
-                            <div class="flex-1">
-                                <label class="input-label" for="board">게시판 선택</label>
-                                <select class="input-field" id="board" name="board">
-                                    <option value="free" selected>자유게시판</option>
-                                    <option value="camping">고독한캠핑방</option>
-                                    <option value="gear">장비 리뷰</option>
-                                    <option value="market">중고장터</option>
-                                </select>
-                            </div>
-                            <div class="flex-1">
-                                <label class="input-label" for="headerTag">말머리 선택</label>
-                                <select class="input-field" id="headerTag" name="headerTag">
-                                    <option value="question">묻고답하기</option>
-                                    <option value="review">후기</option>
-                                    <option value="chat">잡담</option>
-                                </select>
-                            </div>
+                    <form id="postForm" method="POST"
+                          action="${isEdit ? 'api/post/update.action' : 'boardfree-write.action'}">
+                        <!-- 수정 모드일 경우 postId 필드 추가 -->
+                        <c:if test="${isEdit}">
+                            <input type="hidden" name="postId" value="${post.postId}"/>
+                        </c:if>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">게시판</label>
+                            <select class="form-select" id="boardId" name="boardId" ${isEdit ? 'disabled' : ''}>
+                                <c:forEach var="board" items="${communityBoards}">
+                                    <option value="${board.boardId}" ${(isEdit && post.boardId == board.boardId) || (!isEdit && board.boardId == 7) ? 'selected' : ''}>${board.boardName}</option>
+                                </c:forEach>
+                            </select>
+                            <!-- 수정 모드에서 disabled된 필드의 값을 전송하기 위한 hidden 필드 -->
+                            <c:if test="${isEdit}">
+                                <input type="hidden" name="boardId" value="${post.boardId}"/>
+                            </c:if>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">말머리</label>
+                            <select class="form-select" id="postLabelId" name="postLabelId">
+                                <c:forEach var="label" items="${postLabels}">
+                                    <option value="${label.postLabelId}" ${isEdit && post.postLabelId == label.postLabelId ? 'selected' : ''}>${label.postLabelName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label">제목</label>
+                            <input type="text" class="form-control" name="postTitle"
+                                   value="${isEdit ? post.postTitle : ''}" placeholder="제목을 작성하세요." required/>
                         </div>
 
                         <div class="mb-4">
-                            <label class="input-label" for="title">제목</label>
-                            <input type="text" class="input-field" id="title" name="title" placeholder="제목을 입력하세요">
-                        </div>
-
-                        <div class="mb-4">
+                            <label class="form-label">내용</label>
                             <div class="editor-container">
                                 <div class="editor-toolbar">
                                     <div class="toolbar-group">
@@ -390,13 +282,23 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="editor-content" contenteditable="true">내용을 입력하세요.</div>
+
+                                <textarea class="form-control" name="postContent" rows="10" placeholder="내용을 작성하세요."
+                                          required>${isEdit ? post.postContent : ''}</textarea>
+
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-end gap-2 mt-5">
-                            <button type="button" class="btn btn-secondary">취소</button>
-                            <button type="button" class="btn btn-primary" id="submitBtn">등록</button>
+                        <div class="d-flex justify-content-between gap-2 mt-4">
+                            <div>
+                                <button type="button" class="btn btn-outline-primary"><i
+                                        class="fa-solid fa-paperclip"></i> 첨부파일
+                                </button>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
+                                <button type="submit" class="btn btn-primary">${isEdit ? '수정하기' : '등록하기'}</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -405,14 +307,13 @@
     </div>
 </div>
 
-
 <!-- 모달 배경 -->
 <div class="modal-backdrop"></div>
 
 <!-- 확인 모달 수정 -->
 <div class="modal" id="confirmModal">
     <div class="modal-header">
-        <h5 class="modal-title">게시글을 등록 하시겠습니까?</h5>
+        <h5 class="modal-title">${isEdit ? '게시글을 수정 하시겠습니까?' : '게시글을 등록 하시겠습니까?'}</h5>
     </div>
     <div class="modal-footer">
         <button class="btn btn-secondary" id="cancelBtn">취소</button>
@@ -423,7 +324,7 @@
 <!-- 성공 모달 수정 -->
 <div class="modal" id="successModal">
     <div class="modal-header">
-        <h5 class="modal-title">게시글이 등록 되었습니다.</h5>
+        <h5 class="modal-title">${isEdit ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" id="okBtn">확인</button>
@@ -432,5 +333,242 @@
 
 <jsp:include page="footer.jsp"></jsp:include>
 
+<!-- 수정 모드일 경우 폼 제출 처리 스크립트 -->
+<c:if test="${isEdit}">
+    <script>
+        document.getElementById('postForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // 폼 데이터 수집
+            const formData = new FormData(this);
+            const jsonData = {};
+
+            // FormData를 JSON으로 변환
+            for (const [key, value] of formData.entries()) {
+                jsonData[key] = value;
+            }
+
+            // AJAX 요청 보내기
+            fetch('api/post/update.action', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('게시글이 수정되었습니다.');
+                        // 수정된 게시글 상세 페이지로 이동
+                        location.href = 'boardfree-post.action?postId=' + data.postId;
+                    } else {
+                        alert('게시글 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('게시글 수정 중 오류가 발생했습니다.');
+                });
+        });
+    </script>
+</c:if>
+
+<script>
+    // 문서가 완전히 로드된 후 실행
+    document.addEventListener('DOMContentLoaded', function () {
+        // 요소 참조
+        const boardSelect = document.getElementById('boardId');
+        const headerTagSelect = document.getElementById('postLabelId');
+        const boardWriteForm = document.getElementById('boardWriteForm');
+        const editorContent = document.querySelector('.editor-content');
+        const postContentInput = document.getElementById('postContent');
+        const submitBtn = document.getElementById('submitBtn');
+        const confirmModal = document.getElementById('confirmModal');
+        const successModal = document.getElementById('successModal');
+
+        // 게시판 목록 가져오기
+        loadBoardList();
+
+        // 게시판 변경 시 말머리 목록 가져오기
+        if (boardSelect) {
+            boardSelect.addEventListener('change', function () {
+                const selectedBoardId = this.value;
+                if (selectedBoardId) {
+                    loadHeaderTags(selectedBoardId);
+                }
+            });
+        }
+
+        // 게시판 목록 로드 함수
+        function loadBoardList() {
+            // 커뮤니티 카테고리(4)의 게시판 목록 가져오기
+            fetch('/api/boards/category/4')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('게시판 목록을 가져오는데 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(boards => {
+                    // 게시판 목록 초기화
+                    if (boardSelect) {
+                        boardSelect.innerHTML = '';
+
+                        // 각 게시판에 대한 옵션 추가
+                        boards.forEach(board => {
+                            const option = document.createElement('option');
+                            option.value = board.boardId;
+                            option.textContent = board.boardName;
+                            boardSelect.appendChild(option);
+                        });
+
+                        // 기본적으로 첫 번째 게시판 선택 및 해당 말머리 로드
+                        if (boards.length > 0) {
+                            const defaultBoardId = boards[0].boardId;
+                            loadHeaderTags(defaultBoardId);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('게시판 목록 로드 오류:', error);
+                    alert('게시판 목록을 가져오는데 실패했습니다. 다시 시도해주세요.');
+                })
+        }
+
+        // 말머리 목록 로드 함수
+        function loadHeaderTags(boardId) {
+            fetch("/api/post-labels/board/" + boardId)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('말머리 목록을 가져오는데 실패했습니다.');
+                    }
+                    return response.json();
+                })
+                .then(labels => {
+                    // 말머리 옵션 초기화
+                    if (headerTagSelect) {
+                        headerTagSelect.innerHTML = '';
+
+                        // 말머리 옵션 추가
+                        labels.forEach(label => {
+                            const option = document.createElement('option');
+                            option.value = label.postLabelId;
+                            option.textContent = label.postLabelName;
+                            headerTagSelect.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('말머리 목록 로드 오류:', error);
+                    // 오류 시 기본 옵션 추가
+                    if (headerTagSelect) {
+                        headerTagSelect.innerHTML = '<option value="">말머리를 선택하세요</option>';
+                    }
+                })
+        }
+
+        // 에디터 내용 클릭 시 기본 텍스트 제거
+        if (editorContent) {
+            editorContent.addEventListener('focus', function () {
+                if (this.textContent === '내용을 입력하세요.') {
+                    this.textContent = '';
+                }
+            });
+        }
+
+        // 등록 버튼 클릭 시 확인 모달 표시
+        if (submitBtn && confirmModal) {
+            submitBtn.addEventListener('click', function () {
+                confirmModal.classList.add('show');
+                document.querySelector('.modal-backdrop').classList.add('show');
+            });
+        }
+
+        // 취소 버튼 클릭 시 모달 닫기
+        const cancelBtn = document.getElementById('cancelBtn');
+        if (cancelBtn && confirmModal) {
+            cancelBtn.addEventListener('click', function () {
+                confirmModal.classList.remove('show');
+                document.querySelector('.modal-backdrop').classList.remove('show');
+            });
+        }
+
+        // 확인 버튼 클릭 시 폼 제출 처리
+        const confirmBtn = document.getElementById('confirmBtn');
+        if (confirmBtn && confirmModal && boardWriteForm) {
+            confirmBtn.addEventListener('click', function () {
+                // 에디터 내용을 hidden input에 설정
+                if (editorContent && postContentInput) {
+                    let content = editorContent.innerHTML;
+                    if (content === '내용을 입력하세요.') {
+                        content = '';
+                    }
+                    postContentInput.value = content;
+                }
+
+                // 제목과 내용 검증
+                const title = document.getElementById('title').value;
+                if (!title || title.trim() === '') {
+                    alert('제목을 입력해주세요.');
+                    confirmModal.classList.remove('show');
+                    document.querySelector('.modal-backdrop').classList.remove('show');
+                    return;
+                }
+
+                if (!postContentInput.value || postContentInput.value.trim() === '') {
+                    alert('내용을 입력해주세요.');
+                    confirmModal.classList.remove('show');
+                    document.querySelector('.modal-backdrop').classList.remove('show');
+                    return;
+                }
+
+                // 폼 제출
+                boardWriteForm.submit();
+
+                // 모달 닫기
+                confirmModal.classList.remove('show');
+                document.querySelector('.modal-backdrop').classList.remove('show');
+            });
+        }
+
+        // 성공 모달의 확인 버튼 클릭 시 선택된 게시판으로 이동
+        const okBtn = document.getElementById('okBtn');
+        if (okBtn && boardSelect) {
+            okBtn.addEventListener('click', function () {
+                const selectedBoard = boardSelect.value;
+                redirectToBoard(selectedBoard);
+            });
+        }
+
+        // 취소 버튼 클릭 시 자유게시판으로 이동
+        const cancelBoardBtn = document.querySelector('.btn-secondary');
+        if (cancelBoardBtn) {
+            cancelBoardBtn.addEventListener('click', function () {
+                window.location.href = 'boardfree.action';
+            });
+        }
+
+        // 게시판 ID에 따른 리다이렉트 함수
+        function redirectToBoard(boardId) {
+            switch (boardId) {
+                case '7': // 자유게시판
+                    window.location.href = 'boardfree.action';
+                    break;
+                case '8': // 장비 정보
+                    window.location.href = 'boardgear.action';
+                    break;
+                case '9': // 캠핑장 정보
+                    window.location.href = 'boardmarket.action';
+                    break;
+                case '10': // 고독한캠핑방
+                    window.location.href = 'boardimage.action';
+                    break;
+                default:
+                    window.location.href = 'boardmain.action';
+            }
+        }
+    });
+</script>
 </body>
 </html>

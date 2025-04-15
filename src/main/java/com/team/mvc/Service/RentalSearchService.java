@@ -19,51 +19,60 @@ public class RentalSearchService implements IRentalSearchService {
     @Autowired
     private SqlSession sqlSession;
 
-
     @Override
     public List<StorenDTO> listStoren() {
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
-        IEquipmentDAO  equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
-
-        List<EquipmentDTO> equipList = equipDAO.listEquip();
+        IEquipmentDAO equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
 
         List<StorenDTO> storenList = storenDAO.listStoren();
+        List<EquipmentDTO> equipList = equipDAO.listEquip();
 
+        // 장비 정보 매핑
         Map<Integer, EquipmentDTO> equipmentMap = equipList.stream()
-                .collect(Collectors.toMap(EquipmentDTO::getEquip_code, equip -> equip));
+                .collect(Collectors.toMap(EquipmentDTO::getEquip_code, equip -> equip, (existing, replacement) -> existing));
 
         for (StorenDTO dto : storenList) {
             EquipmentDTO equip = equipmentMap.get(dto.getEquip_code());
             dto.setEquipmentDTO(equip);
         }
 
-        return storenList;
+        // 중복 제거 (STOREN_ID 기준)
+        return storenList.stream()
+                .collect(Collectors.toMap(
+                        StorenDTO::getStoren_id,
+                        dto -> dto,
+                        (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
     }
-
 
     @Override
     public List<StorenDTO> searchStorenKeyword(String searchKeyword) {
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
         IEquipmentDAO equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
 
-        if (searchKeyword == null) {
-            searchKeyword = ""; // null 대신 빈 문자열 사용
-        }
-
-        // 스토렌 장비 검색
         List<StorenDTO> storenList = storenDAO.searchStorenKeyword(searchKeyword);
-
-        // 장비 정보 추가
         List<EquipmentDTO> equipList = equipDAO.listEquip();
+
+        // 장비 정보 매핑
         Map<Integer, EquipmentDTO> equipmentMap = equipList.stream()
-                .collect(Collectors.toMap(EquipmentDTO::getEquip_code, equip -> equip));
+                .collect(Collectors.toMap(EquipmentDTO::getEquip_code, equip -> equip, (existing, replacement) -> existing));
 
         for (StorenDTO dto : storenList) {
             EquipmentDTO equip = equipmentMap.get(dto.getEquip_code());
             dto.setEquipmentDTO(equip);
         }
 
-        return storenList;
+        // 중복 제거 (STOREN_ID 기준)
+        return storenList.stream()
+                .collect(Collectors.toMap(
+                        StorenDTO::getStoren_id,
+                        dto -> dto,
+                        (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
     }
 
 }
