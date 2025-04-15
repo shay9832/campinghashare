@@ -1,10 +1,33 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
-
 import java.util.List;
 
+/**
+ * 배송 정보 조회 인터페이스
+ */
 public interface IAdminDeliveryUpdateDAO {
-    /*select*/
-    List<AdminDeliveryUpdateDTO> getList();
+
+    /**
+     * 전체 배송 정보 조회
+     *
+     * @return 모든 배송 정보 목록
+     */
+    List<AdminDeliveryUpdateDTO> getAllDeliveries();
+
+    /**
+     * 배송 종류별 배송 정보 조회
+     *
+     * @param deliveryType 배송 종류 (스토렌_최초입고, 보관_최초입고 등)
+     * @return 지정된 배송 종류의 배송 정보 목록
+     */
+    List<AdminDeliveryUpdateDTO> getDeliveriesByType(String deliveryType);
+
+    /**
+     * 특정 ID의 배송 정보 조회
+     *
+     * @param deliveryId 배송 ID
+     * @return 해당 ID의 배송 정보
+     */
+    AdminDeliveryUpdateDTO getDeliveryById(Long deliveryId);
 }
