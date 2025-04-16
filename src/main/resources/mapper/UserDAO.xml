@@ -104,4 +104,10 @@
         WHERE USER_CODE = #{userCode}
     </select>
 
+    <!-- 해당 유저의 주소 신규 등록 -->
+    <insert id="insertAddress">
+        INSERT INTO ADDRESS_LOG(ADDRESS_ID, USER_CODE, ZIPCODE, ADDRESS1, ADDRESS2, LAST_UPDATED_DATE)
+        VALUES(ADDRESS_LOG_SEQ.NEXTVAL, #{userCode}, #{zipCode}, #{address1}, #{address2}, SYSDATE)
+    </insert>
+
 </mapper>

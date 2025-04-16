@@ -49,8 +49,8 @@
         <div class="text-center mb-3">
             <i class="fas fa-check-circle fa-3x mb-2" style="color: var(--color-maple);"></i>
             <h2 class="mb-2">렌탈 신청이 완료되었습니다.</h2>
-            <p>결제번호: <span class="info-highlight"><%= orderNumber %></span></p>
-            <p>주문일시: <%= orderDate %></p>
+            <p>결제번호: <span class="info-highlight">${pay.paymentId}</span></p>
+            <p>주문일시: ${matching.payment_date}</p>
         </div>
     </div>
 
@@ -59,11 +59,11 @@
         <h3 class="mb-3">주문 상세 정보</h3>
         <div class="info-row">
             <div class="info-label font-bold">렌탈 기간</div>
-            <div class="info-value"><%= rentalPeriod %></div><br>
+            <div class="info-value">${matching.rental_start_date} ~ ${matching.rental_end_date}</div><br>
         </div>
         <div class="info-row">
             <div class="info-label font-bold">결제 금액</div>
-            <div class="info-value"><%= formatter.format(totalAmount) %>원</div><br>
+            <div class="info-value">${matching.rental_pay}원</div><br>
         </div>
         <div class="info-row">
             <div class="info-label font-bold">배송 안내</div>

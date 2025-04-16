@@ -23,4 +23,7 @@ public interface IMatchingRequestDAO {
 
     // 매칭신청자가 매칭신청 삭제(매칭 승인 전에만 가능)
     void deleteStorenMatchingRequest(@Param("storenId") int storenId, @Param("requestId") int requestId);
+
+    //결제완료한 경우에만!! 매칭신청id로 매칭신청 정보 조회하는 메소드
+    MatchingRequestDTO getMatchingRequestById(@Param("requestId") int requestId);
 }
