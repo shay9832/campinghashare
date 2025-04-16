@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 
@@ -118,12 +118,14 @@
                     <!-- 전체/스토렌/렌탈 버튼 -->
                     <div class="filter-type-section">
                         <div class="btn-group">
-                            <a href="?tab=all"
+                            <a href="?tab=all${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                                class="filter-btn ${param.tab == 'all' || empty param.tab ? 'active' : ''}"
                                style="text-decoration: none">전체</a>
-                            <a href="?tab=storen" class="filter-btn ${param.tab == 'storen' ? 'active' : ''}"
+                            <a href="?tab=storen${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                               class="filter-btn ${param.tab == 'storen' ? 'active' : ''}"
                                style="text-decoration: none">스토렌</a>
-                            <a href="?tab=rental" class="filter-btn ${param.tab == 'rental' ? 'active' : ''}"
+                            <a href="?tab=rental${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                               class="filter-btn ${param.tab == 'rental' ? 'active' : ''}"
                                style="text-decoration: none">렌탈</a>
                         </div>
                     </div>
@@ -132,7 +134,7 @@
                     <div class="keyword-section">
                         <form id="searchForm" action="rentalsearch-main.action" method="GET">
                             <!-- 현재 탭 유지를 위한 히든 필드 -->
-                            <input type="hidden" name="tab" value="${activeTab}">
+                            <input type="hidden" name="tab" value="${param.tab}">
                             <div class="input-label">키워드</div>
                             <div class="search-container">
                                 <label for="search-input" style="display:none">검색</label>
@@ -178,7 +180,7 @@
 
             <!-- 상품 개수 및 정렬 -->
             <div class="count-sort">
-                <p class="count">총 100개</p>
+                <p class="count">총 ${totalStorenCount}개</p>
                 <div class="dropdown-sort">
                     <select>
                         <option>정렬</option>
@@ -193,28 +195,27 @@
             <!-- 상품 리스트 -->
             <div class="product-container">
                 <ul>
-                    <c:if test="${param.tab == 'storen'}">
-                        <c:forEach var="storenList" items="${storenList}">
-                            <li>
-                                <a href="storenmatching-request.action?storenId=${storenList.storen_id}">
-                                    <div class="product-card">
-                                        <div class="product-image">
-                                            <div class="product-placeholder"></div>
-                                            <button class="like-button">
-                                                <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                            </button>
-                                        </div>
-                                        <div class="product-info">
-                                            <p class="product-title">${storenList.storen_title}</p>
-                                            <p class="product-brand">${storenList.equipmentDTO.brand}</p>
-                                            <p class="product-category">${storenList.equipmentDTO.majorCategory}</p>
-                                            <p class="product-price">${storenList.daily_rent_price}</p>
-                                        </div>
+                    <c:forEach var="storen" items="${storenList}">
+                        <li>
+                            <a href="storenmatching-request.action?storenId=${storen.storen_id}">
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <div class="product-placeholder"></div>
+                                        <button class="like-button">
+                                            <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
+                                        </button>
                                     </div>
-                                </a>
-                            </li>
-                        </c:forEach>
-                    </c:if>
+                                    <div class="product-info">
+                                        <p class="product-title">${storen.storen_title}</p>
+                                        <!-- 수정된 부분: equipmentDTO 접근 방식 변경 -->
+                                        <p class="product-brand">${storen.equipmentDTO.brand}</p>
+                                        <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
+                                        <p class="product-price">${storen.daily_rent_price}원/일</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </c:forEach>
                 </ul>
             </div>
 
@@ -223,7 +224,7 @@
                 <div class="d-flex gap-1">
                     <!-- 첫 페이지로 -->
                     <c:if test="${pagenation.pageNum > 1}">
-                        <a href="rentalsearch-main.action?page=1"
+                        <a href="rentalsearch-main.action?page=1&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-angles-left"></i>
                         </a>
@@ -231,7 +232,7 @@
 
                     <!-- 이전 블록으로 -->
                     <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                        <a href="rentalsearch-main.action?page=${pagenation.prevPage}}"
+                        <a href="rentalsearch-main.action?page=${pagenation.prevPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-chevron-left"></i>
                         </a>
@@ -239,13 +240,13 @@
 
                     <!-- 페이지 번호 -->
                     <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
-                        <a href="rentalsearch-main.action?page=${i}}"
+                        <a href="rentalsearch-main.action?page=${i}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                            class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
                     </c:forEach>
 
                     <!-- 다음 블록으로 -->
                     <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                        <a href="rentalsearch-main.action?page=${pagenation.nextPage}}"
+                        <a href="rentalsearch-main.action?page=${pagenation.nextPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-chevron-right"></i>
                         </a>
@@ -253,7 +254,7 @@
 
                     <!-- 마지막 페이지로 -->
                     <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                        <a href="rentalsearch-main.action?page=${pagenation.totalPage}}"
+                        <a href="rentalsearch-main.action?page=${pagenation.totalPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-angles-right"></i>
                         </a>

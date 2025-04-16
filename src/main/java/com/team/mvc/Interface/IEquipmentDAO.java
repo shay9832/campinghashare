@@ -13,7 +13,6 @@ public interface IEquipmentDAO {
 
     int insertEquipCode(EquipmentDTO dto);
 
-
     List<Map<String, Object>> listEquipNamesByBrand(@Param("brandId") int brandId);
 
     // 장비명 ID 조회

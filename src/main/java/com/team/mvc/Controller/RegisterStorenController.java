@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.ArrayList;
 
@@ -19,11 +21,14 @@ public class RegisterStorenController {
     private SqlSession sqlSession;
 
     @RequestMapping(value ="/storenRegister-storage-info.action", method = RequestMethod.GET)
-    public String getList(@RequestParam("equip_id") int equip_id, Model model) {
+    public String getEquipInfo(@RequestParam("equip_code") int equipCode,
+                               @ModelAttribute("userCode") Integer userCode,
+                               Model model) {
         IRegisterStorenDAO dao = sqlSession.getMapper(IRegisterStorenDAO.class);
-        RegisterStorenDTO dto = dao.getEquipInfo(equip_id);
+        RegisterStorenDTO dto = dao.getEquipInfo(equipCode);
 
-        model.addAttribute("equipInfo",dto);
+        model.addAttribute("equipInfo", dto);
+        model.addAttribute("userCode", userCode);
 
         return "storenRegister-storage-info";
     }

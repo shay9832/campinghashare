@@ -92,8 +92,15 @@
                     <label class="form-label">장비 사진</label>
                     <div class="form-input">
                         <div class="image-upload d-flex gap-3">
-                            <div class="image-placeholder"></div>
-                            <div class="image-placeholder"></div>
+                            <c:if test="${info.photoList != null && not empty info.photoList}">
+                                <c:forEach var="photo" items="${info.photoList}" varStatus="status">
+                                    <c:if test="${photo != null && not empty photo.attachmentPath}">
+                                        <div class="photo-preview">
+                                            <img src="${photo.attachmentPath}" alt="장비 사진 ${status.index + 1}" />
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -105,7 +112,7 @@
                 <div class="form-row">
                     <label class="form-label">신품가격</label>
                     <div class="form-input d-flex align-items-center">
-                        <span class="info-text"><%= equipInfo.getOriginal_price() %> 원</span>
+                        <span class="info-text"><%= formatter.format(equipInfo.getOriginal_price()) %> 원</span>
                         <div class="d-flex align-items-center ml-4">
                             <span class="price-diff">평균 대비 <%= priceDiffPercentage %>%<%= priceDiffArrow %></span>
                             <span class="text-secondary ml-2">평균 신품 가격 <%= formatter.format(averagePrice) %>원</span>
@@ -117,7 +124,7 @@
                     </div>
                 </div>
                 <div class="form-row text-center text-tertiary font-italic">
-                    ※ 상단 정보는 '내 소유 장비 목록' 메뉴에서 수정 가능
+                    ※ 상단 정보는 '내가 소유한 장비' 메뉴에서 수정 가능
                 </div>
             </div>
         </div>
@@ -182,21 +189,16 @@
         </div>
     </div>
 
-    <!-- 버튼 컨테이너 -->
+    <!-- form 전송 시 hidden 파라미터 -->
     <form action="storenRegister-storage-pay.action" method="GET" id="storenForm">
-        <!-- 파라미터 이름 맞추기 -->
-        <input type="hidden" name="equip_id" value="<%= equipInfo.getEquip_id() %>">
-        <input type="hidden" name="equipName" value="<%= equipName %>">
-        <input type="hidden" name="majorCategory" value="<%= majorCategory %>">
-        <input type="hidden" name="middleCategory" value="<%= middleCategory %>">
-        <input type="hidden" name="brand" value="<%= brand %>">
-        <input type="hidden" id="selectedSize" name="equipSize" value="M">
-        <input type="hidden" id="selectedDays" name="storageDays" value="1">
-        <input type="hidden" id="selectedTotalPrice" name="storageCost" value="90000">
+            <input type="hidden" name="equip_code" value="<%= equipInfo.getEquip_code() %>">
+            <input type="hidden" id="selectedSize" name="equipSize" value="M">
+            <input type="hidden" id="selectedDays" name="storageDays" value="1">
+            <input type="hidden" id="selectedTotalPrice" name="storageCost" value="90000">
 
         <div class="button-container">
-            <a href="#" class="btn">이전</a>
-            <button type="submit" class="btn btn-primary">다음</button>
+            <a href="${pageContext.request.contextPath}/storenRegister-storage-pay.action?equip_code=${equipCode}" class="btn">이전</a>
+            <button type="submit" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-pay.action?equip_code=${equipCode}'">다음</button>
         </div>
     </form>
 </main>

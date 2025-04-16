@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+            <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -392,7 +392,7 @@
                                     </td>
                                     <td>
                                         <div class="button-group-vertical">
-                                            <button class="btn-sm btn-storen">스토렌 신청</button>
+                                            <button class="btn-sm btn-storen" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equip.equip_code}'">스토렌 신청</button>
                                             <button class="btn-sm btn-rental">렌탈 신청</button>
                                             <button class="btn-sm btn-storage">보관 신청</button>
                                         </div>
@@ -864,7 +864,7 @@
             e.preventDefault(); // 기본 동작 방지
             var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
             // 스토렌 신청 페이지로 이동
-            window.location.href = "storenregister-storage-info.action?equip_code=" + equip_code;
+            window.location.href = "storenRegister-storage-info.action?equip_code=" + equip_code;
         });
 
         // 렌탈 신청 버튼 클릭 이벤트

@@ -21,7 +21,7 @@
     </resultMap>
 
     <!-- 로그인 쿼리 -->
-    <select id="getUserByIdAndPw" parameterType="com.team.mvc.DTO.UserDTO" resultType="com.team.mvc.DTO.UserDTO">
+    <select id="getUserByIdAndPw" parameterType="com.team.mvc.DTO.UserDTO" resultMap="UserInfoMap">
         SELECT
             U.USER_ID,
             U.USER_PW AS password,
@@ -37,7 +37,7 @@
                     FROM NICKNAME_LOG NL2
                     WHERE NL2.USER_CODE = U.USER_CODE
                 )
-            ) AS nickname
+            ) AS CURRENT_NICKNAME
         FROM USERS U
         WHERE U.USER_ID = #{userId}
           AND U.USER_PW = #{password}
