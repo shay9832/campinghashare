@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
+        /* 테이블에만 적용되는 스타일 */
+        #boardimage-table th,
+        #boardimage-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+
         /* 게시판 특화 스타일 - 기존 코드 유지 */
         .board-category-tag {
             display: inline-block;
@@ -552,7 +559,7 @@
 
                 <!-- 공지사항 테이블 -->
                 <div class="content-box mb-5">
-                    <table class="w-100">
+                    <table class="w-100" id="boardimage-table">
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>

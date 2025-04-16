@@ -11,6 +11,13 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
+    /* 공지사항 테이블에만 적용되는 스타일 */
+    #notice-table th,
+    #notice-table td {
+      width: auto !important;
+      min-width: auto !important;
+    }
+
     /* 게시글 상세 페이지 관련 스타일 */
     .post-container {
       background-color: var(--bg-primary);
@@ -408,6 +415,12 @@
 
   </style>
 
+  <script>
+    function goToWrite() {
+      window.location.href = "notice-write.action";
+    }
+  </script>
+
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -493,7 +506,7 @@
 
 
         <!-- 게시글 목록 -->
-        <table class="board-table" width="100%">
+        <table class="board-table" width="100%" id="notice-table">
           <colgroup>
             <col width="10%">
             <col width="10%">

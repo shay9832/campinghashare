@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 
     <style>
+        /* 공지사항 테이블에만 적용되는 스타일 */
+        #notice-table th,
+        #notice-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+
         /* 게시판 특화 스타일 */
         .board-category-tag {
             display: inline-block;
@@ -79,6 +86,13 @@
             margin-right: 5px;
         }
     </style>
+
+    <script>
+        function goToWrite() {
+            window.location.href = "notice-write.action";
+        }
+    </script>
+
 </head>
 <body>
 <jsp:include page="header.jsp"/>
@@ -106,7 +120,7 @@
 
                 <!-- 게시글 테이블 -->
                 <div class="content-box mb-5">
-                    <table class="w-100">
+                    <table class="w-100" id="notice-table">
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>
