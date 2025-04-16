@@ -11,8 +11,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        th {
+        /* 테이블에만 적용되는 스타일 */
+        #boardfree-table th,
+        #boardfree-table td {
             width: auto !important;
+            min-width: auto !important;
         }
 
 
@@ -825,7 +828,7 @@
                 </div>
 
                 <!-- 게시글 목록 -->
-                <table class="board-table" width="100%">
+                <table class="board-table" width="100%" id="boardfree-table">
                     <colgroup>
                         <col width="10%">
                         <col width="10%">

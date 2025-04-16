@@ -981,13 +981,148 @@ public class BoardController {
 
 
 
+    // 공지사항 작성 페이지
     @RequestMapping(value = "/notice-write.action", method = RequestMethod.GET)
-    public String noticewrite(Model model) {
-        // 공지사항의 말머리 목록 조회
-        List<BoardPostDTO> defaultLabels = boardPostService.getPostLabelsByBoardId(1);
-        model.addAttribute("postLabels", defaultLabels)
-        ;
+    public String noticeWrite(Model model, HttpSession session) {
+        // 관리자 권한 확인 (관리자만 공지사항 작성 가능)
+//        Integer userCode = (Integer) session.getAttribute("user_code");
+//        Integer userGrade = (Integer) session.getAttribute("user_grade");
+
+        // 테스트를 위해 세션에 관리자 정보 직접 설정
+        session.setAttribute("user_code", 1);  // ADMIN1 계정의 user_code
+        session.setAttribute("user_grade", 1); // 관리자 등급
+
+        // 관리자가 아니면 공지사항 목록으로 리다이렉트
+        // userGrade 값이 1인 경우 관리자로 가정 (실제 구현에 맞게 수정 필요)
+//        if (userGrade == null || userGrade > 1) {
+//            return "redirect:/notice.action";
+//        }
+
+        // 공지사항 게시판의 말머리 목록 조회 (boardId = 1)
+        List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(1);
+        model.addAttribute("postLabels", postLabels);
+
         return "notice-write";
+    }
+
+    // 공지사항 등록 처리
+    @RequestMapping(value = "/notice-write.action", method = RequestMethod.POST)
+    public String insertNotice(BoardPostDTO dto, HttpSession session) {
+        // 관리자 권한 확인
+//        Integer userCode = (Integer) session.getAttribute("user_code");
+//        Integer userGrade = (Integer) session.getAttribute("user_grade");
+
+        // 관리자가 아니면 공지사항 목록으로 리다이렉트
+//        if (userGrade == null || userGrade > 1) {
+//            return "redirect:/notice.action";
+//        }
+
+        // 게시판 ID를 공지사항(1)으로 강제 설정
+//        dto.setBoardId(1);
+//        dto.setUserCode(userCode);
+
+        // 테스트를 위해 세션에 관리자 정보 직접 설정 (없는 경우에만)
+        if (session.getAttribute("user_code") == null) {
+            session.setAttribute("user_code", 1);
+            session.setAttribute("user_grade", 1);
+        }
+
+        // 게시판 ID를 공지사항(1)으로 강제 설정
+        dto.setBoardId(1);
+        dto.setUserCode(1); // 강제로 ADMIN1 계정의 user_code 설정
+
+        try {
+            // 공지사항 등록
+            int postId = boardPostService.insertPost(dto);
+
+            // 등록 성공 시 공지사항 목록으로 리다이렉트
+            return "redirect:/notice.action";
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 에러 발생 시 공지사항 목록으로 리다이렉트
+            return "redirect:/notice.action";
+        }
+    }
+
+
+    // 공지사항 수정 페이지
+    @RequestMapping("/notice-update.action")
+    public String noticeUpdate(@RequestParam("postId") int postId, HttpSession session, Model model) {
+        // 관리자 권한 확인
+        Integer userCode = (Integer) session.getAttribute("user_code");
+        Integer userGrade = (Integer) session.getAttribute("user_grade");
+
+        // 관리자가 아니면 공지사항 목록으로 리다이렉트
+        if (userGrade == null || userGrade > 1) {
+            return "redirect:/notice.action";
+        }
+
+        // 게시글 정보 조회
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setPostId(postId);
+        BoardPostDTO post = boardPostService.getPostById(dto);
+
+        if (post == null) {
+            return "redirect:/notice.action";
+        }
+
+        // 공지사항 게시판의 말머리 목록 조회
+        List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(1);
+
+        model.addAttribute("post", post);
+        model.addAttribute("postLabels", postLabels);
+        model.addAttribute("isUpdate", true);
+
+        return "notice-write";
+    }
+
+    // 공지사항 수정 처리를 위한 API
+    @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updateNotice(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 관리자 권한 확인
+            Integer userCode = (Integer) session.getAttribute("user_code");
+            Integer userGrade = (Integer) session.getAttribute("user_grade");
+
+            // 관리자가 아니면 권한 없음 응답
+            if (userGrade == null || userGrade > 1) {
+                result.put("success", false);
+                result.put("message", "공지사항 관리 권한이 없습니다.");
+                return result;
+            }
+
+            // 게시판 ID를 공지사항(1)으로 강제 설정
+            dto.setBoardId(1);
+            dto.setUserCode(userCode);
+
+            // 게시글 존재 여부 확인
+            BoardPostDTO post = boardPostService.getPostById(dto);
+
+            if (post != null) {
+                int affectedRows = boardPostService.updatePost(dto);
+
+                if (affectedRows > 0) {
+                    result.put("success", true);
+                    result.put("message", "공지사항이 수정되었습니다.");
+                    result.put("postId", dto.getPostId());
+                } else {
+                    result.put("success", false);
+                    result.put("message", "공지사항 수정에 실패했습니다.");
+                }
+            } else {
+                result.put("success", false);
+                result.put("message", "존재하지 않는 공지사항입니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return result;
     }
 
 }

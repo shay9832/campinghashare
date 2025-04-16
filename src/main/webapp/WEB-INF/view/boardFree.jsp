@@ -10,8 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        th {
+        /* 테이블에만 적용되는 스타일 */
+        #boardfree-table th,
+        #boardfree-table td {
             width: auto !important;
+            min-width: auto !important;
         }
 
 
@@ -443,7 +446,7 @@
 
                 <!-- 게시글 테이블 -->
                 <div class="content-box mb-5">
-                    <table class="w-100">
+                    <table class="w-100" id="boardfree-table">
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>
