@@ -15,6 +15,7 @@ public class MatchingRequestDTO {
     private String payment_date;        //결제일
     private int matching_req_id;        //매칭신청id
     private String payment_status;      //결제상태('미결제', '결제대기', '결제완료')
+    private int matching_done_id;       //매칭완료id
 
     public int getTransaction_id() {
         return transaction_id;
@@ -126,5 +127,13 @@ public class MatchingRequestDTO {
 
     public void setPayment_status(String payment_status) {
         this.payment_status = payment_status;
+    }
+
+    public int getMatching_done_id() {
+        return matching_done_id;
+    }
+
+    public void setMatching_done_id(int matching_done_id) {
+        this.matching_done_id = matching_done_id;
     }
 }

@@ -91,6 +91,16 @@ public interface IAdminPaymentDAO {
             @Param("keyword") String keyword
     );
 
-    //결제하기
+    /**
+     * 쿠폰 적용하여 결제하기(쿠폰없이 결제도 가능)
+     **/
     void insertPayment(Map<String, Object> paramMap);
+
+    /**
+     * 거래id로 특정 결제 정보만 조회
+     **/
+    AdminPaymentDTO getPaymentsByTransactionId(
+            @Param("type") String type,
+            @Param("transactionId") int transactionId
+    );
 }
