@@ -26,8 +26,14 @@ public interface IBoardPostDAO {
     // 게시판별 말머리 목록 조회
     List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
 
+    // 전체 공지사항 조회
+    List<BoardPostDTO> listTotalNotice();
+
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
+
+    // 공지사항 총 개수 조회
+    int getTotalNoticeCount(BoardPostDTO dto);
 
     //인기글 목록을 원본 글번호와 함께 조회
     List<BoardPostDTO> listHotPostsWithRownum(BoardPostDTO dto);

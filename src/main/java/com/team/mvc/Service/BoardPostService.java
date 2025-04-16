@@ -25,6 +25,18 @@ public class BoardPostService implements IBoardPostService {
     }
 
     @Override
+    public List<BoardPostDTO> listTotalNotice() {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.listTotalNotice();
+    }
+
+    @Override
+    public int getTotalNoticeCount(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.getTotalNoticeCount(dto);
+    }
+
+    @Override
     public List<BoardPostDTO> listNotice() {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.listNotice();
