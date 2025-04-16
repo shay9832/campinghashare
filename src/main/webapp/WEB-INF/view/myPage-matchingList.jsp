@@ -1088,7 +1088,7 @@
     if (isMyMatch) {
       // 내가 매칭된 경우 (결제 버튼 표시)
       let paymentStatus = '';
-      if (matchedUser.payment_date !== "결제대기") {
+      if (matchedUser.payment_status !== "결제대기") {
         // 이미 결제된 경우
         paymentStatus = `
         <div class="alert alert-success mt-3" role="alert">

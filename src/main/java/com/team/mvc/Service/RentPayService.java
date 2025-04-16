@@ -6,7 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RentPayService implements IRentPayService {
@@ -53,13 +55,70 @@ public class RentPayService implements IRentPayService {
         return myPayDTO;
     }
 
+    //결제하기 (결제 후 해당 PAY_ID 반환 -> 반환값이 -1이 아니고 0보다 커야만 결제가 제대로 이루어진 것)
     @Override
-    public boolean payResult(int pay_method_id, int transaction_id, int pay_amount) {
+    public Integer insertPay(String methodName, int requestId, int amount, Integer couponId, String payType) {
         IAdminPaymentDAO adminPaymentDAO = sqlSession.getMapper(IAdminPaymentDAO.class);
 
-        int result = adminPaymentDAO.insertPayment(pay_method_id, transaction_id, pay_amount);
+        //프로시저의 매개변수로 보낼 파라미터 맵 구성
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("methodName", methodName);
+        paramMap.put("requestId", requestId);
+        paramMap.put("amount", amount);
 
-        if (result == 1) {return true;}
-        else {return false;}
+        // couponId가 null이 아닐 때만 넣기
+        if (couponId != null) {
+            paramMap.put("couponId", couponId);
+        } else {
+            paramMap.put("couponId", null); // 명시적으로 null 넣어줌 (안 넣으면 MyBatis에서 IN 파라미터 바인딩 에러 날 수도 있음)
+        }
+
+        paramMap.put("payType", payType);
+        paramMap.put("result", -1);          //프로시저의 OUT 파라미터에 초기값 0 지정
+
+        //프로시저 호출
+        adminPaymentDAO.insertPayment(paramMap);
+
+        // OUT 파라미터 결과 확인
+        Integer result = (Integer) paramMap.get("result");
+        System.out.println("result of insertPayment() call : payId = " + result);
+
+        return result;
+    }
+
+
+    // 결제 결과 페이지를 위한 정보 획득 메소드
+    @Override
+    public MyPayDTO getMyPayResultInfo(int payId, int requestId) {
+        MyPayDTO myPayDTO = new MyPayDTO();
+
+        IAdminPaymentDAO adminPaymentDAO = sqlSession.getMapper(IAdminPaymentDAO.class);
+        IMatchingRequestDAO matchingRequestDAO = sqlSession.getMapper(IMatchingRequestDAO.class);
+
+        AdminPaymentDTO adminPaymentDTO = adminPaymentDAO.getPaymentById(payId);
+        MatchingRequestDTO MatchingRequestDTO = matchingRequestDAO.getMatchingRequestById(requestId);
+
+        if (adminPaymentDTO != null && MatchingRequestDTO != null) {
+            myPayDTO.setMatching_request(MatchingRequestDTO);
+            myPayDTO.setAdmin_payment(adminPaymentDTO);
+        }
+        return myPayDTO;
+    }
+
+    @Override
+    public boolean insertAddress(int requestId, String zipCode, String address1, String address2) {
+        // requestId로 userCode 얻어오기
+        IMatchingRequestDAO matchingRequestDAO = sqlSession.getMapper(IMatchingRequestDAO.class);
+        MatchingRequestDTO matchingRequestDTO =  matchingRequestDAO.getMatchingRequestById(requestId);
+
+        // 주소 수정을 위한 dao 객체
+        IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
+        if (matchingRequestDTO != null) {
+            int result = userDAO.insertAddress(matchingRequestDTO.getUser_code(), zipCode, address1, address2);
+            if (result == 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

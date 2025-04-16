@@ -228,6 +228,7 @@
     </div>
 </main>
 
+<%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 div@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
 <!-- 쿠폰 선택 패널 - 기본적으로 숨김 -->
 <div id="couponPanel" class="info-section card" style="display: none; position: absolute; width: 80%; max-width: 800px; z-index: 1000; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -246,37 +247,37 @@
         </div>
 
         <!-- 쿠폰 리스트 섹션 -->
-        <div style="max-height: 300px; overflow-y: auto;">
+        <div style="max-height: 300px;" class="overflow-auto">
             <table class="table">
                 <thead>
-                <tr>
-                    <th class="p-2 text-center" style="width: 33.33%;">할인율</th>
-                    <th class="p-2 text-center" style="width: 33.33%;">쿠폰명</th>
-                    <th class="p-2 text-center" style="width: 33.33%;">참고사항</th>
+                <tr class="bg-primary text-light" style="position: sticky; top: 0; z-index: 1;">
+                    <th class="p-2 text-center small" style="width: 33.33%;">할인율</th>
+                    <th class="p-2 text-center small" style="width: 33.33%;">쿠폰명</th>
+                    <th class="p-2 text-center small" style="width: 33.33%;">참고사항</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- 쿠폰 리스트 -->
                 <c:forEach var="coupon" items="${couponList}">
-                    <tr class="coupon-row" style="cursor: pointer;"
+                    <tr class="coupon-row border-bottom" style="cursor: pointer;"
                         data-coupon-id="${coupon.coupon_id}"
                         data-discount="${coupon.coupon_discount}"
                         data-name="${coupon.coupon_name}">
-                        <td class="p-3">
-                            <div>
+                        <td class="p-3" style="width: 33.33%;">
+                            <div class="form-check form-check-inline justify-content-center">
                                 <input type="radio" name="coupon_name" id="coupon_${coupon.coupon_id}"
-                                       class="coupon-radio"
+                                       class="coupon-radio form-check-input"
                                        data-discount="${coupon.coupon_discount}"
                                        data-name="${coupon.coupon_name}"
                                        data-coupon-id="${coupon.coupon_id}">
-                                <label for="coupon_${coupon.coupon_id}">${coupon.coupon_discount}% 할인</label>
+                                <label for="coupon_${coupon.coupon_id}" class="form-check-label">${coupon.coupon_discount}% 할인</label>
                             </div>
                         </td>
-                        <td class="p-3">${coupon.coupon_name}</td>
-                        <td class="p-3">
-                            <ul style="margin: 0; padding-left: 20px;">
+                        <td class="p-3" style="width: 33.33%;">${coupon.coupon_name}</td>
+                        <td class="p-3" style="width: 33.33%;">
+                            <ul class="mb-0">
                                 <li>최대 할인율: ${coupon.coupon_discount}%</li>
-                                <li>만료 예정: ${coupon.coupon_end_date}까지</li>
+                                <li>만료 예정 일자: ${coupon.coupon_end_date}까지</li>
                             </ul>
                         </td>
                     </tr>
@@ -286,16 +287,17 @@
         </div>
 
         <!-- 버튼 영역 -->
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <div class="button-container d-flex justify-content-end gap-3 mt-4">
             <button type="button" class="btn" id="cancelCouponBtn">취소</button>
-            <button type="button" class="btn" id="resetCouponBtn">초기화</button>
-            <button type="button" class="btn" id="applyCouponBtn">적용</button>
+            <button type="button" class="btn btn-secondary" id="resetCouponBtn">초기화</button>
+            <button type="button" class="btn btn-primary" id="applyCouponBtn">적용</button>
         </div>
     </div>
 </div>
 
 <!-- 배경 오버레이 -->
 <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
+<%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 div@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
 
 <!-- 푸터 포함 -->
 <jsp:include page="footer.jsp"/>
@@ -303,6 +305,12 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     $(document).ready(function() {
+        // 사용자의 원래 주소 정보 저장
+        const originalZipCode = "${user.zipCode}";
+        const originalAddress1 = "${user.address1}";
+        const originalAddress2 = "${user.address2}";
+
+
         // 초기 상태에서 결제 버튼 비활성화
         $(".btn-primary.pay-now-btn").prop("disabled", true);
 
@@ -314,6 +322,7 @@
             $(this).prop("checked", true);
         });
 
+        <%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 기능@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
         // 쿠폰 적용 버튼 클릭 이벤트
         $(".btn-secondary").click(function() {
             // 현재 버튼의 위치 가져오기
@@ -345,10 +354,8 @@
         $(document).on('click', '.coupon-row', function() {
             // 해당 행의 라디오 버튼 체크
             const radioBtn = $(this).find('input[type="radio"]');
-
             // 모든 라디오 버튼 초기화
             $('input[name="coupon_name"]').prop('checked', false);
-
             // 클릭한 행의 라디오 버튼 체크
             radioBtn.prop('checked', true);
         });
@@ -450,15 +457,13 @@
             const formattedPrice = new Intl.NumberFormat('ko-KR').format(productPrice);
             $("#finalPrice").text(formattedPrice + '원');
         });
+        <%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 기능@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
 
+        <%-- @@@@@@@@@@@@@@@@@@@@ 컨트롤러로 값 넘기기 - AJAX 처리 : RentPayController 참고 @@@@@@@@@@@@@@@@@@@@ --%>
         // 지불하기 버튼 클릭 이벤트
         $(".pay-now-btn").click(function(e) {  // e 파라미터 추가
             e.preventDefault(); // 기본 이벤트 방지
             e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
-
-            // 쿠폰 할인 금액 가져오기
-            const discountText = $("#couponPrice").text();
-            const discountAmount = parseInt(discountText.replace(/[^0-9]/g, '')) || 0;
 
             // 최종 결제 금액 가져오기
             const finalAmountText = $("#finalPrice").text();
@@ -468,22 +473,45 @@
             const selectedRadio = $('input[name="coupon_name"]:checked');
             const selectedCouponId = selectedRadio.length > 0 ? selectedRadio.data('coupon-id') : null;
 
+            //선택된 coupon이 없어서 couponId가 null일 때, 프론트에서는 null이 담겨도
+            //ajax로 넘어갈 때는 null을 문자열로 반환하므로 ""이 넘어가는 문제 발생
+            //때문에 선택된 coupon이 없을 때는 아예 컨트롤러에서 couponId를 받을 수 없도록, ajaxData를 따로 정리
+            const ajaxData = {
+                methodName: $('input[name="payment_method"]:checked').val(),
+                requestId: ${matching.matching_req_id},
+                amount: finalAmount,
+                addressChanged: faluse
+            };
+
+            //선택된 coupon이 있을 때는 ajaxData에 couponId를 추가
+            if (selectedCouponId !== null) {
+                ajaxData.couponId = selectedCouponId;
+            }
+
+            //주소값이 변경되었을 때는 ajaxData에 바뀐 주소 추가
+            currentZipCode = $("#postcode").val();
+            currentAddress1 = $("#address").val();
+            currentAddress2 = $("#detailAddress").val();
+
+            // 주소 정보가 변경되었다면 AJAX 데이터에 추가
+            if (currentZipCode !== originalZipCode || currentAddress2 !== originalAddress2) {
+                ajaxData.zipCode = currentZipCode;
+                ajaxData.address1 = currentAddress1;
+                ajaxData.address2 = currentAddress2;
+                ajaxData.addressChanged = true;
+            }
+
             // 결제 AJAX 요청
             $.ajax({
-                url: '/api/payment',
+                url: '/api/payment/storen-rent',        //각자 AJAX 주소에 맞춰서 수정 필요
                 type: 'POST',
-                data: {
-                    methodId: $('input[name="payment_method"]:checked').val(),
-                    requestId: ${matching.matching_req_id},
-                    amount: finalAmount,
-                    couponId: selectedCouponId
-                },
+                data: ajaxData,
                 dataType: 'json',
                 success: function(response) {
-                    if (response.success) {
+                    if (response.payId != null && response.payId > 0) {
                         alert('결제가 완료되었습니다.');
                         // 결제 완료 페이지로 이동
-                        window.location.href = "storenmatching-rental-pay-complete.action";
+                        window.location.href = "storenmatching-rental-pay-complete.action?payId=" + response.payId + "&requestId=" + ${matching.matching_req_id};
                     } else {
                         alert('결제 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
                     }
@@ -494,7 +522,7 @@
                 }
             });
         });
-
+        <%-- @@@@@@@@@@@@@@@@@@@@ 컨트롤러로 값 넘기기 - AJAX 처리 : RentPayController 참고 @@@@@@@@@@@@@@@@@@@@ --%>
 
         // 체크박스 토글 처리
         $("#confirm_order").change(function() {

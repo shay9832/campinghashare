@@ -7,14 +7,21 @@ public class MyPayDTO {
     private List<CouponDTO> coupons;
     private StorenDTO storen;
     private MatchingRequestDTO matching_request;
+    private AdminPaymentDTO admin_payment;
 
     public MyPayDTO() {}
 
+    // 결제하기 전, 결제 정보 출력 페이지에 보내줄 DTO 구성
     public MyPayDTO(UserDTO user, List<CouponDTO> coupons, StorenDTO storen, MatchingRequestDTO matching_request) {
         this.user = user;
         this.coupons = coupons;
         this.storen = storen;
         this.matching_request = matching_request;
+    }
+    //결제 후, 결제 확인 출력 페이지에 보내줄 DTO 구성
+    public MyPayDTO(MyPayDTO myPayDTO, MatchingRequestDTO matching_request) {
+        this.matching_request = matching_request;
+        this.admin_payment = myPayDTO.getAdmin_payment();
     }
 
     public UserDTO getUser() {
@@ -47,5 +54,13 @@ public class MyPayDTO {
 
     public void setMatching_request(MatchingRequestDTO matching_request) {
         this.matching_request = matching_request;
+    }
+
+    public AdminPaymentDTO getAdmin_payment() {
+        return admin_payment;
+    }
+
+    public void setAdmin_payment(AdminPaymentDTO admin_payment) {
+        this.admin_payment = admin_payment;
     }
 }
