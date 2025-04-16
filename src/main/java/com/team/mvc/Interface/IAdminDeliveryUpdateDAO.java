@@ -2,7 +2,9 @@ package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,4 +34,10 @@ public interface IAdminDeliveryUpdateDAO {
      * @return 해당 ID의 배송 정보
      */
     AdminDeliveryUpdateDTO getDeliveryById(Long deliveryId);
+
+
+    // 배송 정보 수정용 메소드
+    int updateShippingStartDate(@Param("deliveryId") int deliveryId,
+                                @Param("selecteDate") Date selecteDate);
+
 }

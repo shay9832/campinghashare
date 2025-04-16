@@ -11,16 +11,14 @@
   <component name="ChangeListManager">
     <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminInspectListController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/BrandDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/BrandDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/CategoryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/CategoryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminInspectListDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminDeliveryUpdateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminDeliveryUpdateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminDeliveryUpdateDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/AdminDeliveryUpdateDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminDeliveryUpdateDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminDeliveryUpdateDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminDeliveryUpdate.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminDeliveryUpdate.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-inspectList.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/BrandDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/BrandDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/BrandDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/BrandDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-deliveryUpdate.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-deliveryUpdate.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/AdminInspectList.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminInspectList.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,10 +28,10 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
         <option value="spring-beans.schema" />
         <option value="Jsp File" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -253,7 +251,7 @@
       <workItem from="1744544883977" duration="33198000" />
       <workItem from="1744620537299" duration="29910000" />
       <workItem from="1744722448835" duration="3944000" />
-      <workItem from="1744759476691" duration="15599000" />
+      <workItem from="1744759476691" duration="26381000" />
     </task>
     <servers />
   </component>

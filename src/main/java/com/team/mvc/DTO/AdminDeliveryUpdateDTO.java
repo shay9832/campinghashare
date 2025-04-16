@@ -45,6 +45,9 @@ public class AdminDeliveryUpdateDTO {
         // 배송 시작일
         private LocalDateTime deliveryStartDate;
 
+        // 새로운 배송 시작일
+        private LocalDateTime newDeliveryStartDate;
+
         // 배송 종료일
         private LocalDateTime deliveryEndDate;
 
@@ -176,5 +179,13 @@ public class AdminDeliveryUpdateDTO {
 
     public void setInspectionResultType(String inspectionResultType) {
         this.inspectionResultType = inspectionResultType;
+    }
+
+    public LocalDateTime getNewDeliveryStartDate() {
+        return newDeliveryStartDate;
+    }
+
+    public void setNewDeliveryStartDate(LocalDateTime newDeliveryStartDate) {
+        this.newDeliveryStartDate = newDeliveryStartDate;
     }
 }

@@ -324,4 +324,13 @@
         ) WHERE "배송ID" = #{deliveryId}
     </select>
 
+    <update id="updateShippingStartDATE" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
+        UPDATE PLATFORM_DELIVERY
+        SET
+            DELIVERY_START_DATE = #{deliveryStartDate}
+        WHERE PLATFORM_DELIVERY_ID = #{deliveryId}
+        AND #{selecteDate} BETWEEN DELIVERY_START_DATE AND DELIVERY_END_DATE
+    </update>
+
+
 </mapper>
