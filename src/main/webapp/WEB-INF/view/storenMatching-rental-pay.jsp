@@ -480,7 +480,7 @@
                 methodName: $('input[name="payment_method"]:checked').val(),
                 requestId: ${matching.matching_req_id},
                 amount: finalAmount,
-                addressChanged: faluse
+                addressChanged: false
             };
 
             //선택된 coupon이 있을 때는 ajaxData에 couponId를 추가
