@@ -48,7 +48,7 @@
             WHERE BOARD_ID = #{boardId})
             AND "게시판이름" != '공지사항'
             AND "블라인드여부" = 0
-            <if test="postLabelId = 0">
+            <if test="postLabelId != 0">
                 AND "말머리이름" = (SELECT POST_LABEL_NAME
                 FROM POST_LABEL
                 WHERE POST_LABEL_ID = #{postLabelId})
@@ -59,10 +59,10 @@
                         AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'content'">
-                        AND "게시물내용" LIKE '%' || ${searchKeyword} || '%'
+                        AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'writer'">
-                        AND "회원닉네임" LIKE '%' || ${searchKeyword} || '%'
+                        AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'titlecontent'">
                         AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
@@ -175,6 +175,7 @@
         ORDER BY BOARD_ID
     </select>
 
+    <!-- 게시판별 말머리 조회 -->
     <select id="getPostLabelsByBoardId" parameterType="int" resultType="com.team.mvc.DTO.BoardPostDTO">
         SELECT
             POST_LABEL_ID as postLabelId,
@@ -202,10 +203,10 @@
                         AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'content'">
-                        AND "게시물내용" LIKE '%' || ${searchKeyword} || '%'
+                        AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'writer'">
-                        AND "회원닉네임" LIKE '%' || ${searchKeyword} || '%'
+                        AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'titlecontent'">
                         AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
@@ -260,6 +261,16 @@
         WHERE ROWNUMBER >= #{pagenation.startRow}
     </select>
 
+    <!-- 전체 공지사항 조회   -->
+    <select id="listTotalNotice" resultMap="boardPostResultMap">
+        SELECT *
+        FROM VW_POST_MANAGEMENT
+        WHERE "게시판이름" = '공지사항'
+          AND "블라인드여부" = 0
+        ORDER BY "게시물생성일" DESC
+    </select>
+
+
     <!-- 공지사항 조회 (최대 3개) -->
     <select id="listNotice" resultMap="boardPostResultMap">
         SELECT *
@@ -270,6 +281,39 @@
               ORDER BY "게시물생성일" DESC)
         WHERE ROWNUM &lt;= 3
     </select>
+
+    <!-- 공지사항 전체 게시물 수 -->
+    <select id="getTotalNoticeCount" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="int">
+        SELECT COUNT(*)
+        FROM VW_POST_MANAGEMENT
+        WHERE "게시판이름" = '공지사항'
+        AND "블라인드여부" = 0
+        <if test="postLabelId != 0">
+            AND "말머리이름" = (SELECT POST_LABEL_NAME
+            FROM POST_LABEL
+            WHERE POST_LABEL_ID = #{postLabelId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'titlecontent'">
+                    AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                    OR "게시물내용" LIKE '%' || #{searchKeyword} || '%')
+                </when>
+            </choose>
+        </if>
+    </select>
+
+
+
 
     <!-- 게시판 ID로 게시판 정보 조회 -->
     <select id="getBoardById" parameterType="int" resultType="com.team.mvc.DTO.BoardDTO">

@@ -9,6 +9,11 @@
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        th {
+            width: auto !important;
+        }
+
+
         /* 게시판 특화 스타일 */
         .board-category-tag {
             display: inline-block;

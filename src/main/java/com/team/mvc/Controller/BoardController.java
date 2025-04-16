@@ -875,7 +875,119 @@ public class BoardController {
 
     // 공지사항 페이지
     @RequestMapping("/notice.action")
-    public String notice(){
+    public String notice(@RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "size", defaultValue = "10") int size,
+                         @RequestParam(value = "searchType", required = false) String searchType,
+                         @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                         Model model) {
+        // 게시판 ID 설정
+        int boardId = 1; // 공지사항
+
+        // 전체 공지사항 조회
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
+        model.addAttribute("noticeList", noticeList);
+
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setBoardId(boardId);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 공지사항 총 개수 조회
+        int getTotalNoticeCount = boardPostService.getTotalNoticeCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, getTotalNoticeCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        model.addAttribute("pagenation", pagenation);
         return "notice";
     }
+
+    @RequestMapping("/noticepost.action")
+    public String noticepost(@RequestParam(value = "page", defaultValue = "1") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
+                             @RequestParam(value = "searchType", required = false) String searchType,
+                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                             @RequestParam(value = "postId", required = false, defaultValue = "0") int postId,
+                             Model model) {
+        // 게시글이 존재하는 경우
+        if (postId > 0) {
+            // 게시글 정보 조회
+            BoardPostDTO dto = new BoardPostDTO();
+            dto.setPostId(postId);
+            BoardPostDTO post = boardPostService.getPostById(dto);
+
+            if (post != null) {
+                // 조회수 증가 처리 (중복 방지 로직 필요 - 세션 등 이용)
+                // 현재는 매번 증가하지만, 실제로는 동일 사용자가 짧은 시간 내 재조회시 증가하지 않도록 해야함
+                boardPostService.increaseViewCount(postId);
+
+                // 첨부파일 조회
+                List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+                post.setAttachments(attachments);
+
+                // 이전글, 다음글 ID 조회
+                int prevPostId = boardPostService.getPrevPostId(postId, 1);
+                int nextPostId = boardPostService.getNextPostId(postId, 1);
+                model.addAttribute("prevPostId", prevPostId);
+                model.addAttribute("nextPostId", nextPostId);
+
+                // 게시글 목록 (최근 게시글) 조회
+                BoardPostDTO listDto = new BoardPostDTO();
+                listDto.setBoardId(1); // 공지사항
+                listDto.setPagenation(new Pagenation(1, 10, 3, 10)); // 첫 페이지, 한 페이지에 3개만 조회
+                List<BoardPostDTO> recentPosts = boardPostService.listPostList(listDto);
+                model.addAttribute("recentPosts", recentPosts);
+
+                model.addAttribute("post", post);
+            } else {
+                // 존재하지 않는 게시글인 경우 목록으로 리다이렉트
+                return "redirect:/notice.action";
+            }
+        } else {
+                // postId가 없거나 0인 경우 목록으로 리다이렉트
+                return "redirect:/notice.action";
+        }
+
+        // 게시판 ID 설정
+        int boardId = 1;    // 공지사항
+
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setBoardId(boardId);
+
+        // 전체 공지사항 수 조회
+        int totalNoticeCount = boardPostService.getTotalNoticeCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalNoticeCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 공지사항 조회
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
+
+        // 모델 데이터 추가
+        model.addAttribute("noticeList", noticeList);
+        model.addAttribute("pagenation", pagenation);
+
+        return "noticePost";
+    }
+
+
+
+    @RequestMapping(value = "/notice-write.action", method = RequestMethod.GET)
+    public String noticewrite(Model model) {
+        // 공지사항의 말머리 목록 조회
+        List<BoardPostDTO> defaultLabels = boardPostService.getPostLabelsByBoardId(1);
+        model.addAttribute("postLabels", defaultLabels)
+        ;
+        return "notice-write";
+    }
+
 }

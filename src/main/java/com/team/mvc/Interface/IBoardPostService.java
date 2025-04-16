@@ -21,6 +21,12 @@ public interface IBoardPostService {
     List<BoardPostDTO> listHotPostsWithRownum(BoardPostDTO dto);
     BoardDTO getBoardById(int boardId);
 
+    // 전체 공지사항 조회
+    List<BoardPostDTO> listTotalNotice();
+
+    // 공지사항 총 개수 조회
+    int getTotalNoticeCount(BoardPostDTO dto);
+
     // 게시판별 말머리 목록 조회
     List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
 
