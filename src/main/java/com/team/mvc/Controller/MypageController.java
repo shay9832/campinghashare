@@ -23,6 +23,8 @@ public class MypageController {
     private IMypageInspecListService inspecListService;
     @Autowired
     private IMypageMatchingService matchingService;
+    @Autowired
+    private IMypageRentEquipService mypageRentEquipService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -316,6 +318,12 @@ public class MypageController {
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")
     public String mypageRentEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
+        // 사용자가 대여한 장비 정보 조회
+        MyRentEquipDTO rentEquipInfo = mypageRentEquipService.listRentStorenInfo(userCode);
+
+        // 모델에 데이터 추가
+        model.addAttribute("rentEquipInfo", rentEquipInfo);
+
         return "myPage-rentEquip";
     }
 

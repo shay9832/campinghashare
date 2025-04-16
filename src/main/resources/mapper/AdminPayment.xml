@@ -307,7 +307,7 @@
 
 
 
-    <!-- 결제 -->
+    <!-- 쿠폰 적용하여 결제하기(쿠폰없이 결제도 가능) -->
     <insert id="insertPayment" statementType="CALLABLE">
         {CALL PRC_INSERT_PAY_AND_USE_COUPON(
                 #{methodName, jdbcType=VARCHAR, mode=IN},
@@ -318,4 +318,24 @@
                 #{result, jdbcType=INTEGER, mode=OUT}
               )}
     </insert>
+
+    <!-- 거래id로 특정 결제 정보만 조회 -->
+    <select id="getPaymentsByTransactionId" resultMap="AdminPaymentResult">
+        <include refid="basePaymentQuery" />
+        <where>
+            <if test="type == '렌탈'">
+                P.RENTAL_MATCHING_DONE_ID = #{transactionId}
+            </if>
+            <if test="type == '보관'">
+                P.STORAGE_ID = #{transactionId}
+            </if>
+            <if test="type == '스토렌렌탈'">
+                P.STOREN_MATCHING_DONE_ID = #{transactionId}
+            </if>
+            <if test="type == '스토렌보관'">
+                P.STOREN_ID = #{transactionId}
+            </if>
+        </where>
+    </select>
+
 </mapper>

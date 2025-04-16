@@ -388,7 +388,7 @@
 }
 
 /* 장비 이름 */
-.equipment-name {
+.equipment-name, .equipment-price{
     font-weight: 700;
     font-size: 15px;
     color: #333;
@@ -421,7 +421,7 @@
 }
 
 /* 등록 날짜 */
-.equipment-date {
+.equipment-date, .storen-date {
     font-size: 12px;
     color: #666;
     margin-top: 3px;
