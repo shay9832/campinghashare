@@ -27,12 +27,11 @@ public interface IAdminInspectListDAO {
 
 
 
-
     // 검수 결과 추가 - DTO 사용
     void add(AdminInspectListDTO dto);
 
     // 확장된 프로시저 호출 메소드
-    void callINSPECT_RESULT_EXTENDED(
+    void callINSPECT_RESULT(
             @Param("platformDeliveryId") Integer platformDeliveryId,
             @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
             @Param("inspecGradeId") Integer inspecGradeId,

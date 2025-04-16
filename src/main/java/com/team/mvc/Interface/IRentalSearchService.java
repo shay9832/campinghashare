@@ -1,6 +1,7 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.StorenDTO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -10,6 +11,5 @@ public interface IRentalSearchService {
     List<StorenDTO> listStoren();
 
     // 스토렌 장비 검색
-    List<StorenDTO> searchStorenKeyword(String searchKeyword);
-
+    List<StorenDTO> searchStorenKeyword(@Param("searchKeyword") String searchKeyword);
 }

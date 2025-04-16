@@ -162,4 +162,12 @@ public class BoardPostService implements IBoardPostService {
         Integer nextPostId = dao.getNextPostId(params);
         return nextPostId != null ? nextPostId : 0;
     }
+
+
+    @Override
+    public List<BoardPostDTO> getPostLabelsByBoardId(int boardId) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.getPostLabelsByBoardId(boardId);
+    }
+
 }

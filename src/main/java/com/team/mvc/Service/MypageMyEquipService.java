@@ -50,7 +50,12 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
         // 사용자가 등록한 일반 장비 개수만큼 첫등록 스토렌 리스트 만들기
         for (EquipmentDTO equipment : equipmentList) {
-            firstStorenList.add(storenDAO.getStorenByEquipCode(user_code, equipment.getEquip_code()));
+            StorenDTO firstStoren = storenDAO.getStorenByEquipCode(user_code, equipment.getEquip_code());
+
+            // Null이 아닐 때만 리스트에 추가
+            if (firstStoren != null) {
+                firstStorenList.add(firstStoren);
+            }
         }
 
         //equipmentList를 장비 코드로 쉽게 검색할 수 있는 Map으로 변환
@@ -59,8 +64,10 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
         // 첫등록 스토렌 리스트의 각 storenDTO에 해당하는 equipmentDTO 설정
         for (StorenDTO firstStoren : firstStorenList) {
-            EquipmentDTO equipment = equipmentMap.get(firstStoren.getEquip_code());
-            firstStoren.setEquipmentDTO(equipment);
+            if (firstStoren != null) { // Null 체크 추가
+                EquipmentDTO equipment = equipmentMap.get(firstStoren.getEquip_code());
+                firstStoren.setEquipmentDTO(equipment);
+            }
         }
 
         // equip_code에 따라 여러개의 storenId를 넣어주는 map 만들기

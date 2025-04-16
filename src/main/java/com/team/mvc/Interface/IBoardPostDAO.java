@@ -23,6 +23,9 @@ public interface IBoardPostDAO {
     // 게시판 카테고리별 게시판 조회
     List<BoardDTO> getBoardsByCategoryId(int boardCateId);
 
+    // 게시판별 말머리 목록 조회
+    List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
+
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
 
