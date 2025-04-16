@@ -4,8 +4,8 @@
     String processName = "장비 등록";
 
     // 관련 메뉴명을 저장할 변수들 (메뉴 흐름에 따라 변경 가능)
-    String prevMenu = "내가 소유한 장비";
-    String nextMenu = "메인으로";
+    String prevMenu = "메인으로";
+    String nextMenu = "내가 소유한 장비";
 %>
 
 <!DOCTYPE html>
@@ -20,6 +20,16 @@
 
 </head>
 <body>
+
+<form action="equipregister-complete.action" method="post">
+    <input type="hidden" name="majorCategory" value="${majorCategory}">
+    <input type="hidden" name="middleCategory" value="${middleCategory}">
+    <input type="hidden" name="brand" value="${brand}">
+    <input type="hidden" name="equipName" value="${equipName}">
+    <input type="hidden" name="originalPrice" value="${originalPrice}">
+    <button type="submit" class="btn btn-primary">장비 등록 완료</button>
+</form>
+
 <!-- 헤더 포함 -->
 <jsp:include page="header.jsp"></jsp:include>
 
@@ -33,8 +43,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="mypage-myequip.action" class="btn"><%= prevMenu %></a>
-            <a href="main.action" class="btn btn-primary"><%= nextMenu %></a>
+            <a href="main.action" class="btn">메인으로</a>
+            <a href="mypage-myequip.action" class="btn btn-primary">내가 소유한 장비</a>
         </div>
     </main>
 </div>

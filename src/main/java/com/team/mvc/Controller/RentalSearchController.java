@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 @Controller
@@ -32,41 +34,56 @@ public class RentalSearchController {
     public String rentalSearchMain(@RequestParam(value = "page", defaultValue = "1") int page,
                                    @RequestParam(value = "size", defaultValue = "100") int size,
                                    @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                   @RequestParam(value = "tab", required = false, defaultValue = "all") String tab,
                                    Model model) {
-        // 전체 스토렌 장비 리스트
-        List<StorenDTO> storenList = rentalSearchService.listStoren();    //매개변수 유저코드 없이 전체 스토렌 조회하는 메소드
-        model.addAttribute("storenList", storenList);
+        // 키워드 유무에 따라 적절한 메서드 호출
+        List<StorenDTO> storenList;
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            // 검색어가 있는 경우 검색 메서드 사용
+            storenList = rentalSearchService.searchStorenKeyword(searchKeyword);
+        } else {
+            // 검색어가 없는 경우 전체 목록 조회
+            storenList = rentalSearchService.listStoren();
+        }
 
-        // 전체 스토렌 장비 수
-        int totalStorenCount = storenList.size();
+        // 탭에 따라 데이터 필터링
+        List<StorenDTO> filteredList;
+
+        if ("storen".equals(tab)) {
+            // 스토렌 탭 - 스토렌 유형만 필터링
+            filteredList = storenList.stream()
+                    .filter(dto -> "STOREN".equals(dto.getType()))
+                    .collect(Collectors.toList());
+        } else {
+            // 스토렌 탭이 아니면 빈 리스트 반환 (데이터 표시 안 함)
+            filteredList = new ArrayList<>();
+        }
+
+        model.addAttribute("storenList", filteredList);
+        model.addAttribute("activeTab", tab);
+
+        // 전체 스토렌 장비 수 (필터링된 목록 기준)
+        int totalStorenCount = filteredList.size();
 
         // 페이징 처리
         Pagenation pagenation = new Pagenation(page, totalStorenCount, size, 10);
 
         model.addAttribute("totalStorenCount", totalStorenCount);
         model.addAttribute("pagenation", pagenation);
-
-        // 검색 조건인 담길 dto 생성
-        StorenDTO dto = new StorenDTO();
-
-        // 검색 조건 설정
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            dto.setSearchKeyword(searchKeyword);
-            model.addAttribute("searchKeyword", dto.getSearchKeyword());
-        }
+        model.addAttribute("searchKeyword", searchKeyword);  // 검색어 유지
 
         return "rentalSearch-main";
     }
 
     // 특정 스토렌 장비글 페이지
     @RequestMapping(value = "/storenmatching-request.action")
-    public String rentalMatchingRequest(Model model, @RequestParam("storenId") int transactionId, HttpSession session) {
-
-        //임의의 유저코드 세션에 넣기
-        session.setAttribute("user_code", 5);
-
+    public String rentalMatchingRequest(Model model, @RequestParam("storenId") int transactionId,
+                                        @ModelAttribute("userCode") Integer userCode)
+    {
         System.out.println("=== RentalSearchController : rentalMatchingRequest() -  STOREN : START ===");
         System.out.println("Transaction ID: " + transactionId);
+        System.out.println("userCode: " + userCode);
+
 
         StorenRequestDTO storenRequest = searchMatchingRequestService.getStoren(transactionId);
         model.addAttribute("storen", storenRequest.getStorenDto());
@@ -81,22 +98,13 @@ public class RentalSearchController {
     public Map<String, Object> storenMatchingRequest(@RequestParam("storenId") int storenId
             , @RequestParam("rentalStartDate") String rentalStartDate
             , @RequestParam("rentalEndDate") String rentalEndDate
-            , HttpSession session) {
-
-        // 세션에서 현재 로그인한 유저코드 가져오기
-//        Integer user_code = (Integer) session.getAttribute("user_code");
-//        if (user_code == null) {
-//            response.put("success", false);
-//            response.put("message", "로그인이 필요합니다.");
-//            return response;
-//        }
+            , @ModelAttribute("userCode") Integer userCode) {
 
         // 결과 처리 담아둘 맵
         Map<String, Object> result = new HashMap<>();
 
-        // 테스트용 임의로 로그인한 user_code 넣기
-        session.setAttribute("user_code", 5);
-        Integer user_code = (Integer) session.getAttribute("user_code");
+        int user_code = userCode;
+
         try {
             // 매칭 요청 저장
             boolean success = searchMatchingRequestService.insertMatchingRequest(storenId, user_code, rentalStartDate, rentalEndDate);
@@ -121,13 +129,11 @@ public class RentalSearchController {
     @GetMapping("/api/storen/check-matching-status")
     @ResponseBody
     public Map<String, Object> checkStorenMatchingStatus(@RequestParam("storenId") int storenId,
-                                                         HttpSession session) {
+                                                         @ModelAttribute("userCode") Integer userCode) {
         // 결과 처리 담아둘 맵
         Map<String, Object> result = new HashMap<>();
 
-        // 테스트용 임의로 로그인한 user_code 넣기
-        session.setAttribute("user_code", 5);
-        Integer user_code = (Integer) session.getAttribute("user_code");
+        int user_code = userCode;
 
         try {
             MatchingRequestDTO matching = searchMatchingRequestService.getMatchingByStorenAndUser(storenId, user_code);
