@@ -490,12 +490,12 @@
             </tr>
             </thead>
             <tbody>
-              <!-- 데이터 로딩 전 표시할 메시지 -->
-              <tr>
-                <td colspan="8" class="text-center py-4">
-                  <i class="fas fa-spinner fa-spin me-2"></i> 매칭 데이터를 불러오는 중...
-                </td>
-              </tr>
+            <!-- 데이터 로딩 전 표시할 메시지 -->
+            <tr>
+              <td colspan="8" class="text-center py-4">
+                <i class="fas fa-spinner fa-spin me-2"></i> 매칭 데이터를 불러오는 중...
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -503,12 +503,12 @@
     </div>
   </div>
 
-<!-- 로딩 오버레이 -->
-<div class="loading-overlay" style="display: none;">
-<div class="spinner">
-  <i class="fas fa-circle-notch fa-spin"></i>
-</div>
-</div>
+  <!-- 로딩 오버레이 -->
+  <div class="loading-overlay" style="display: none;">
+    <div class="spinner">
+      <i class="fas fa-circle-notch fa-spin"></i>
+    </div>
+  </div>
 
 </div>
 
@@ -745,15 +745,15 @@
           // 데이터가 없는 경우
           let colSpan = '8';
           targetTable.html(
-          '<tr>' +
-            '<td colspan="' + colSpan + '" class="text-center py-5">' +
-              '<div class="empty-state">' +
-                '<i class="fas fa-search"></i>' +
-                '<p>매칭 내역이 없습니다</p>' +
-                '<div class="hint">다른 탭을 선택하거나 매칭을 신청을 기다려주세요.</div>' +
-              '</div>' +
-            '</td>' +
-          '</tr>');
+                  '<tr>' +
+                  '<td colspan="' + colSpan + '" class="text-center py-5">' +
+                  '<div class="empty-state">' +
+                  '<i class="fas fa-search"></i>' +
+                  '<p>매칭 내역이 없습니다</p>' +
+                  '<div class="hint">다른 탭을 선택하거나 매칭을 신청을 기다려주세요.</div>' +
+                  '</div>' +
+                  '</td>' +
+                  '</tr>');
           return;
         }
 
@@ -769,13 +769,13 @@
         // 에러 메시지 표시
         let colSpan = '8';
         targetTable.html(
-        '<tr>' +
-          '<td colspan="' + colSpan + '" class="text-center py-4">' +
-            '<div class="alert alert-danger" role="alert">' +
-              '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
-            '</div>' +
-          '</td>' +
-        '</tr>');
+                '<tr>' +
+                '<td colspan="' + colSpan + '" class="text-center py-4">' +
+                '<div class="alert alert-danger" role="alert">' +
+                '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
+                '</div>' +
+                '</td>' +
+                '</tr>');
       }
     });
   }
@@ -899,8 +899,8 @@
             <h6 class="content-box-title details-title">매칭 완료 정보</h6>
                 <div class="details-info matched">
                     <p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=` + matchedUser.user_code + '" class="user-link">' + matchedUser.user_nickname + '</a> 님과 매칭되었습니다. (결제일: ' + matchedUser.payment_date + ')</p>' +
-                '</div>');
-    }
+            '</div>');
+  }
 
   // 선택 대기 중인 상세 정보 렌더링 함수
   function renderPendingMatchingDetails(rentalId, data) {
@@ -947,26 +947,26 @@
         <tr>
             <td>
                 <a href="user-profile.action?id=` + applicant.user_code + '" class="user-link">' + applicant.user_nickname + '</a>' +
-            `</td>
+              `</td>
         <!--        <td class="text-left">신청 메시지가 여기에 표시됩니다.</td>-->
              <td>` + applicant.requested_date + '</td>' +
-            '<td><span class="trust-score ' + trustClass + '">' + applicant.trust + '%</span></td>' +
-            '<td>' + applicant.rental_history + '회</td>' +
-            `<td>
+              '<td><span class="trust-score ' + trustClass + '">' + applicant.trust + '%</span></td>' +
+              '<td>' + applicant.rental_history + '회</td>' +
+              `<td>
                     <button type="button" class="btn-sm btn-approve" data-rental="` + rentalId + '" data-request="' + applicant.matching_req_id + `">선택</button>
             </td>
         </tr>
         `;
-      });
+    });
 
-      // 테이블 종료
-      detailHtml += `
+    // 테이블 종료
+    detailHtml += `
                     </tbody>
                 </table>`;
 
-      // 컨테이너 업데이트
-      const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(detailHtml);
+    // 컨테이너 업데이트
+    const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
+    detailContainer.html(detailHtml);
   }
 
   // 매칭 승인 함수 + 새로고침(소유자용)
@@ -1079,7 +1079,7 @@
 
     // 매칭된 사용자 정보 찾기 (첫 번째 항목 사용)
     const matchedUser = data[0];
-    const myUserCode = ${sessionScope.user_code}; // JSP에서 세션의 user_code 가져오기
+    const myUserCode = ${userCode}; // JSP에서 세션의 user_code 가져오기
     const isMyMatch = matchedUser.user_code === myUserCode;
 
     // 컨테이너 업데이트
@@ -1116,7 +1116,7 @@
           <p><strong>렌탈 금액:</strong> ` + matchedUser.rental_pay.toLocaleString() + `원 (` + matchedUser.rental_duration + `일)</p>
         </div>
       </div>`
-      + paymentStatus);
+              + paymentStatus);
     } else {
       // 다른 사용자가 매칭된 경우
       detailContainer.html(`
@@ -1147,7 +1147,7 @@
     }
 
     // 현재 로그인한 사용자의 코드 (서버에서 가져온 값)
-    const myUserCode = ${sessionScope.user_code}; // JSP에서 세션의 user_code 가져오기
+    const myUserCode = ${userCode}; // JSP에서 세션의 user_code 가져오기
 
     // 내 신청 정보 찾기
     let myRequestInfo = null;

@@ -216,6 +216,7 @@ public class MypageController {
         model.addAttribute("MatchingList", storenOwnerList);
         model.addAttribute("activeTab", "storen"); // 초기 탭 지정
         model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+        model.addAttribute("userCode", userCode);
 
         System.out.println("deliveryList size : " + storenOwnerList.size());
         System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : END ===");
