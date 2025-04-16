@@ -308,10 +308,14 @@
 
 
     <!-- 결제 -->
-    <insert id="insertPayment">
-        INSERT INTO PAY(PAY_ID, PAY_METHOD_ID, RENTAL_MATCHING_DONE_ID, PAY_AMOUNT, PAY_DATE)
-        VALUES(
-            PAY_SEQ.NEXTVAL, #{pay_method_id}, ${transaction_id},
-            ${pay_amount}, SYSDATE)
+    <insert id="insertPayment" statementType="CALLABLE">
+        {CALL PRC_INSERT_PAY_AND_USE_COUPON(
+                #{methodName, jdbcType=VARCHAR, mode=IN},
+                #{requestId, jdbcType=INTEGER, mode=IN},
+                #{amount, jdbcType=INTEGER, mode=IN},
+                #{couponId, jdbcType=INTEGER, mode=IN},
+                #{payType, jdbcType=VARCHAR, mode=IN},
+                #{result, jdbcType=INTEGER, mode=OUT}
+              )}
     </insert>
 </mapper>

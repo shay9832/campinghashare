@@ -7,8 +7,8 @@
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
-             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, NVL(PAYMENT_DATE, '결제대기') AS PAYMENT_DATE
-             , MATCHING_REQ_ID
+             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, NVL(PAYMENT_DATE, '') AS PAYMENT_DATE
+             , MATCHING_REQ_ID, PAYMENT_STATUS
         FROM VW_RENTAL_APPLICANT
         WHERE TRANSACTION_ID = #{transaction_id} AND TRANSACTION_TYPE LIKE #{transaction_type} || '%'
     </select>
@@ -36,10 +36,10 @@
     <!-- 해당 스토렌id에 해당 유저가 매칭신청을 했다면 매칭 정보 반환 -->
     <select id="getMatchingByStorenAndUser" resultType="com.team.mvc.DTO.MatchingRequestDTO">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
-             , TO_CHAR(RENTAL_START_DATE, 'YYY-MM-DD') AS RENTAL_START_DATE
+             , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
              , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, PAYMENT_DATE AS PAYMENT_DATE
-             , MATCHING_REQ_ID
+             , MATCHING_REQ_ID, PAYMENT_STATUS
         FROM VW_RENTAL_APPLICANT
         WHERE TRANSACTION_ID = #{storenId} AND USER_CODE = #{user_code} AND TRANSACTION_TYPE LIKE '스토렌%'
     </select>
@@ -74,5 +74,16 @@
                             WHERE SMD.STOREN_MATCHING_REQ_ID = SMR.STOREN_MATCHING_REQ_ID
                          )
     </delete>
+
+    <!-- 결제완료한 경우에만!! 매칭신청id로 매칭신청 정보 조회하는 메소드 -->
+    <select id="getMatchingRequestById" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+        SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
+             , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
+             , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
+             , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, TO_CHAR(PAYMENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS PAYMENT_DATE
+             , MATCHING_REQ_ID, PAYMENT_STATUS
+        FROM VW_RENTAL_APPLICANT
+        WHERE MATCHING_REQ_ID = #{requestId} AND PAYMENT_STATUS = '결제완료'
+    </select>
 
 </mapper>

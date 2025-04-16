@@ -92,8 +92,5 @@ public interface IAdminPaymentDAO {
     );
 
     //결제하기
-    int insertPayment(
-            @RequestParam("pay_method_id") int pay_method_id
-            , @RequestParam("transaction_id") int transaction_id
-            , @RequestParam("pay_amount") int pay_amount);
+    void insertPayment(Map<String, Object> paramMap);
 }
