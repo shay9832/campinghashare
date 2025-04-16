@@ -111,4 +111,11 @@
                 #{inspecComment, jdbcType=VARCHAR, mode=IN}
               )}
     </update>
+
+    <!-- 반환 ID에 해당하는 원래 배송 ID 조회 -->
+    <select id="getDeliveryIdFromReturnId" resultType="int">
+        SELECT PLATFORM_DELIVERY_ID
+        FROM PLATFORM_DELIVERY_RETURN
+        WHERE PLATFORM_DELIVERY_RETURN_ID = #{returnId}
+    </select>
 </mapper>
