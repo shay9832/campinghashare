@@ -528,7 +528,7 @@
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form id="shipping-form" method="post" action="${pageContext.request.contextPath}/admin-updateShipping.action">
+                    <form id="shipping-form" method="post" action="${pageContext.request.contextPath}/admin-deliveryUpdate.action">
                         <input type="hidden" id="shipping-type-hidden" name="deliveryType">
 
                         <div class="form-group">
@@ -575,6 +575,12 @@
                         <div class="form-group">
                             <label for="start-date">배송 시작일</label>
                             <input type="text" id="start-date" name="deliveryStartDate" class="form-control" readonly>
+                        </div>
+
+                        <!-- 새 배송 시작일 필드 추가 -->
+                        <div class="form-group">
+                            <label for="new-start-date">새 배송 시작일</label>
+                            <input type="date" id="new-start-date" name="newDeliveryStartDate" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -886,6 +892,28 @@
                 shippingStatus.value = 'preparing'; // 배송 준비 중
             }
 
+
+            // 원래 배송 시작일 값 가져오기
+            const originalStartDate = cells[7] ? cells[7].textContent.trim() : '';
+
+            // 기존 필드에 값 설정 (이미 readonly로 설정됨)
+            document.getElementById('start-date').value = originalStartDate;
+
+            // 새 배송 시작일 필드 초기화
+            const newStartDateInput = document.getElementById('new-start-date');
+            newStartDateInput.value = originalStartDate; // 기본값으로 기존 날짜 설정
+
+            // 날짜 형식이 YYYY-MM-DD가 아닐 경우를 대비한 처리
+            try {
+                // 기존 날짜가 유효한 경우에만 최소 선택 가능 날짜 설정
+                if (originalStartDate && !isNaN(new Date(originalStartDate).getTime())) {
+                    newStartDateInput.min = originalStartDate; // 최소 선택 가능 날짜 설정
+                }
+            } catch (e) {
+                console.warn('날짜 형식 변환 오류:', e);
+            }
+
+
             // 모달 표시
             shippingModal.style.display = 'block';
         });
@@ -1055,6 +1083,63 @@
                 page
             });
         });
+    });
+
+    // 폼 제출 이벤트 리스너 추가
+    document.getElementById('shipping-form').addEventListener('submit', function(event) {
+
+        // 새 배송 시작일 유효성 검사
+        const originalStartDate = document.getElementById('start-date').value;
+        const newStartDate = document.getElementById('new-start-date').value;
+
+        if (!newStartDate) {
+            event.preventDefault();
+            alert('새 배송 시작일을 입력해주세요.');
+            return;
+        }
+
+        // 새 날짜가 기존 날짜보다 이전인지 확인
+        const originalDate = new Date(originalStartDate);
+        const newDate = new Date(newStartDate);
+
+        if (!isNaN(originalDate.getTime()) && !isNaN(newDate.getTime()) && newDate < originalDate) {
+            event.preventDefault();
+            alert('새 배송 시작일은 기존 배송 시작일(' + originalStartDate + ')보다 이전일 수 없습니다.');
+            return;
+        }
+
+        // 변경 확인
+        if (originalStartDate !== newStartDate) {
+            if (!confirm('배송 시작일을 ' + originalStartDate + '에서 ' + newStartDate + '로 변경하시겠습니까?')) {
+                event.preventDefault();
+                return;
+            }
+        } else {
+            if (!confirm('배송 정보를 업데이트하시겠습니까?')) {
+                event.preventDefault();
+                return;
+            }
+        }
+
+        // 정상 제출 시 사용자에게 알림
+        alert('배송 정보가 업데이트되었습니다. 페이지가 새로고침됩니다.');
+    });
+
+    // 새 배송 시작일 변경 이벤트 리스너
+    document.getElementById('new-start-date').addEventListener('change', function() {
+        const originalStartDate = document.getElementById('start-date').value;
+        const newStartDate = this.value;
+
+        if (originalStartDate && newStartDate) {
+            const originalDate = new Date(originalStartDate);
+            const newDate = new Date(newStartDate);
+
+            // 새 날짜가 기존 날짜보다 이전인 경우 경고
+            if (!isNaN(originalDate.getTime()) && !isNaN(newDate.getTime()) && newDate < originalDate) {
+                alert('새 배송 시작일은 기존 배송 시작일(' + originalStartDate + ')보다 이전일 수 없습니다.');
+                this.value = originalStartDate; // 값 원래대로 되돌리기
+            }
+        }
     });
 </script>
 </body>

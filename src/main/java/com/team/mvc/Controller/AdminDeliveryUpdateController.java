@@ -4,10 +4,12 @@ import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
 import com.team.mvc.Interface.IAdminDeliveryUpdateDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -83,5 +85,24 @@ public class AdminDeliveryUpdateController {
         }
 
         return result;
+    }
+
+
+    @RequestMapping(value="/admin-deliveryUpdate.action",method = RequestMethod.POST)
+    public String updateShippingStartDate(@RequestParam("deliveryId") int deliveryId,
+                                          @RequestParam("selecteDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date selecteDate,
+                                          Model model) {
+
+        IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+
+        int result = dao.updateShippingStartDate(deliveryId,selecteDate);
+
+        if (result > 0) {
+            model.addAttribute("message","배송 시작일이 성공적으로 업데이트되었습니다.");
+        } else {
+            model.addAttribute("error","선택한 날짜가 허용된 배송 기간이 아닙니다.");
+        }
+
+        return "redirect:/admin-deliveryUpdate.action";
     }
 }
