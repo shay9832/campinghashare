@@ -1,7 +1,7 @@
 package com.team.mvc.DTO;
 
 public class UserDTO {
-    private int userCode;
+    private Integer userCode;
     private String userId;
     private String password;
     private String userName;
@@ -57,13 +57,9 @@ public class UserDTO {
         this.userTel = userTel;
     }
 
-    public int getUserCode() {
-        return userCode;
-    }
+    public Integer getUserCode() { return userCode; }
 
-    public void setUserCode(int userCode) {
-        this.userCode = userCode;
-    }
+    public void setUserCode(Integer userCode) { this.userCode = userCode; }
 
     @Override
     public String toString() {

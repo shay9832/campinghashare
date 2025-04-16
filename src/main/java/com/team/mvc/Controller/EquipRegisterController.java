@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.Interface.IStorenDAO;
 import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.BrandDTO;
 import com.team.mvc.DTO.CategoryDTO;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.io.File;
 import java.util.*;
 
@@ -141,7 +144,9 @@ public class EquipRegisterController {
 
     // 장비 등록 완료 페이지로 이동 (장비 정보는 테이블에 저장)
     @RequestMapping(value = "/equipregister-complete.action", method = RequestMethod.POST)
-    public String equipComplete(@RequestParam("majorCategory") String majorCategory,
+    public String equipComplete(
+                                @ModelAttribute("userCode") Integer userCode,
+                                @RequestParam("majorCategory") String majorCategory,
                                 @RequestParam("middleCategory") String middleCategory,
                                 @RequestParam("brand") String brand,
                                 @RequestParam("equipName") String equipName,
@@ -159,14 +164,8 @@ public class EquipRegisterController {
         System.out.println("사진 있음: " + (photos != null ? "예" : "아니오"));
 
         try {
-            // 현재 로그인한 회원의 user_code 가져오기
-//            Integer user_code = (Integer) session.getAttribute("user_code");
-//            if (user_code == null) {
-//                return "redirect:/userlogin.action";
-//            }
-
-            int user_code = 1;
-            System.out.println("테스트용 User Code: " + user_code);
+            int user_code = userCode;
+            System.out.println("User Code: " + user_code);
 
             // 대분류 카테고리 ID 조회
             List<CategoryDTO> majorCategoryList = sqlSession.getMapper(ICategoryDAO.class).listCategoryByName(majorCategory);
@@ -295,6 +294,36 @@ public class EquipRegisterController {
                     + "&middleCategory=" + middleCategory + "&brand=" + brand);
             return "redirect";
         }
+    }
+
+    // 장비명으로 평균 가격 정보 조회 API
+    @RequestMapping(value = "/getAvgPricesByEquipName.action", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getAvgPricesByEquipName(@RequestParam("equipName") String equipName) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+            int avgNewPrice = storenDAO.getAvgNewPriceByEquipName(equipName);
+            int avgRentalPrice = storenDAO.getAvgRentalPriceByEquipName(equipName);
+
+            // 포맷 처리
+            NumberFormat nf = NumberFormat.getInstance(Locale.KOREA);
+
+            result.put("success", true);
+            result.put("avgNewPrice", avgNewPrice);
+            result.put("avgRentalPrice", avgRentalPrice);
+            result.put("formattedNewPrice", nf.format(avgNewPrice));
+            result.put("formattedRentalPrice", nf.format(avgRentalPrice));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
     }
 
 }

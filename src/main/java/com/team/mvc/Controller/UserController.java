@@ -25,15 +25,20 @@ public class UserController {
     @RequestMapping(value = "/login-user.action", method = RequestMethod.POST)
     public String login(UserDTO dto, HttpSession session, RedirectAttributes redirect) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        UserDTO loginUser = dao.getUserByIdAndPw(dto); // ID + PW 기준 조회
+        UserDTO loginUser = dao.getUserByIdAndPw(dto);
 
         if (loginUser != null) {
-            // 로그인 성공 시 session 저장
-            session.setAttribute("loginUser", loginUser);
-            session.setAttribute("userCode", loginUser.getUserCode());
-            return "redirect:/main.action";
+            if (loginUser.getUserCode() != null) {
+                session.setAttribute("loginUser", loginUser);
+                session.setAttribute("userCode", loginUser.getUserCode());
+
+                redirect.addFlashAttribute("userCode", loginUser.getUserCode());
+                return "redirect:/main.action";
+            } else {
+                redirect.addAttribute("error", "2");
+                return "redirect:/login-user.action";
+            }
         } else {
-            // 로그인 실패 시 쿼리 파라미터로 에러 전달
             redirect.addAttribute("error", "1");
             return "redirect:/login-user.action";
         }
@@ -41,7 +46,7 @@ public class UserController {
 
     // 메인 페이지 진입
     @RequestMapping(value = "/main.action", method = RequestMethod.GET)
-    public String mainPage() {
+    public String mainPage(@ModelAttribute("userCode") Integer userCode) {
         return "main";
     }
 

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>4-equip-info.jsp</title>
+    <title>equipRegister-newPrice.jsp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <style>
@@ -400,6 +400,47 @@
                 formData.append("photos", selectedFiles[i]);
             }
 
+            // 장비명 선택 시 동적으로 평균 신품가격 및 평균 렌탈가격 표시
+            function updatePriceInfo(equipName) {
+                if (!equipName || equipName === "기타") return;
+
+                $.ajax({
+                    url: "${pageContext.request.contextPath}/getAvgPricesByEquipName.action",
+                    type: "GET",
+                    data: { equipName: equipName },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.success) {
+                            const avgNewPrice = response.avgNewPrice;
+                            const avgRentalPrice = response.avgRentalPrice;
+                            const formattedNewPrice = response.formattedNewPrice;
+                            const formattedRentalPrice = response.formattedRentalPrice;
+
+                            // 신품가격 입력란에 평균가 표시
+                            if (avgNewPrice > 0) {
+                                $("#originalPrice").val(formattedNewPrice);
+                                $("#avgPriceInfo").html("평균 신품 가격: " + formattedNewPrice + "원");
+                                $("#avgPriceInfo").show();
+                            } else {
+                                $("#avgPriceInfo").hide();
+                            }
+
+                            // 평균 렌탈가격 정보 표시
+                            if (avgRentalPrice > 0) {
+                                $("#avgRentalInfo").html("평균 렌탈 가격: " + formattedRentalPrice + "원/일 (참고용)");
+                                $("#avgRentalInfo").show();
+                            } else {
+                                $("#avgRentalInfo").hide();
+                            }
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("가격 정보 불러오기 실패:", error);
+                    }
+                });
+            }
+
+
             // AJAX로 폼 제출
             $.ajax({
                 url: $("#equipmentForm").attr("action"),
@@ -525,7 +566,7 @@
             <div class="button-container">
                 <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}"
                    class="btn">이전</a>
-                <button type="button" class="btn btn-primary" onclick="submitEquipmentForm()">등록</button>
+                <button type="submit" class="btn btn-primary">등록</button>
             </div>
         </form>
     </main>

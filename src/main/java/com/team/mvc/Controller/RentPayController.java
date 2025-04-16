@@ -8,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class RentPayController {
                                 , @RequestParam("userCode") int userCode
                                 , @RequestParam("type") String type
                                 , Model model) {
+
         System.out.println("=== RentPayController : rentStorenPayInfo() : START ===");
         MyPayDTO myPayDTO = rentPayService.getMyPayInfo(transactionId, userCode, type);
         System.out.println("myUser Adderss1 : " + myPayDTO.getUser().getAddress1());
