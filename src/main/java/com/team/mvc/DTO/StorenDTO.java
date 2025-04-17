@@ -7,7 +7,7 @@ public class StorenDTO {
     private int storen_id, equip_code, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
     private String storen_title, storen_content;            //스토렌 제목, 상품내용
     private Integer daily_rent_price;                       //일일 렌탈가격
-    private String created_date;                            //생성일
+    private String created_date;                            //생성일(스토렌 신청일, 매칭 승인 시 티켓 생성일)
 
     private int user_code;
 
@@ -20,8 +20,16 @@ public class StorenDTO {
     private Pagenation pagenation;
 
     // 마이페이지 매칭내역 때문에 추가한 속성
-    private String rental_start_date;                       //렌탈시작일(=검수 후 입고일)
-    private String rental_end_date;                         //렌탈종료일(=입고일 + 보관개월수를 일자로 변환)
+    // 날짜 관련 속성------------------------------------------------------------------------------------------------------
+    private String inspec_completed_date;                   //검수완료일=입고일
+
+    private String rental_start_date;                       //렌탈시작일
+                                // (=검수완료일+3일[창고->사용자])
+    private String rental_end_date;                         //렌탈종료일
+                                // (=입고일 + 보관개월수를 일자로 변환 - 3[사용자->창고] -3[창고->소유자])
+    private String final_return_date;                       //최종반환일
+                                // (=입고일 + 보관개월수)
+    //-------------------------------------------------------------------------------------------------------날짜 관련 속성
     private Integer matching_request_count;                 //매칭수
     private String matching_status;                         //매칭상태
 
@@ -279,5 +287,21 @@ public class StorenDTO {
 
     public void setEquip_grade(String equip_grade) {
         this.equip_grade = equip_grade;
+    }
+
+    public String getInspec_completed_date() {
+        return inspec_completed_date;
+    }
+
+    public void setInspec_completed_date(String inspec_completed_date) {
+        this.inspec_completed_date = inspec_completed_date;
+    }
+
+    public String getFinal_return_date() {
+        return final_return_date;
+    }
+
+    public void setFinal_return_date(String final_return_date) {
+        this.final_return_date = final_return_date;
     }
 }
