@@ -286,75 +286,32 @@
   </div>
 </div>
 
-<!-- 모달 배경 -->
-<div class="modal-backdrop"></div>
+<!-- 완전히 새로 만든 모달 구조 - 공지사항 페이지용 -->
+<div id="custom-modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; z-index: 9999;"></div>
 
-<!-- 확인 모달 수정 -->
-<div class="modal" id="confirmModal">
-  <div class="modal-header">
-    <h5 class="modal-title">${isUpdate ? '공지사항을 수정 하시겠습니까?' : '공지사항을 등록 하시겠습니까?'}</h5>
+<div id="custom-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); z-index: 10000; min-width: 300px; text-align: center; display: none;">
+  <div id="custom-modal-header">
+    <h5>${isUpdate ? '공지사항을 수정 하시겠습니까?' : '공지사항을 등록 하시겠습니까?'}</h5>
   </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" id="cancelBtn">취소</button>
-    <button class="btn btn-primary" id="confirmBtn">확인</button>
+  <div id="custom-modal-footer" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+    <button type="button" class="btn btn-secondary" id="cancelBtn">취소</button>
+    <button type="button" class="btn btn-primary" id="confirmBtn">확인</button>
   </div>
 </div>
 
-<!-- 성공 모달 수정 -->
-<div class="modal" id="successModal">
-  <div class="modal-header">
-    <h5 class="modal-title">${isUpdate ? '공지사항이 수정 되었습니다.' : '공지사항이 등록 되었습니다.'}</h5>
+<div id="custom-success-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); z-index: 10000; min-width: 300px; text-align: center; display: none;">
+  <div id="custom-success-header">
+    <h5>${isUpdate ? '공지사항이 수정 되었습니다.' : '공지사항이 등록 되었습니다.'}</h5>
   </div>
-  <div class="modal-footer">
-    <button class="btn btn-primary" id="okBtn">확인</button>
+  <div id="custom-success-footer" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+    <button type="button" class="btn btn-primary" id="okBtn">확인</button>
   </div>
 </div>
 
 <jsp:include page="footer.jsp"></jsp:include>
 
-<!-- 수정 모드일 경우 폼 제출 처리 스크립트 -->
-<c:if test="${isUpdate}">
-  <script>
-    document.getElementById('postForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      // 폼 데이터 수집
-      const formData = new FormData(this);
-      const jsonData = {};
-
-      // FormData를 JSON으로 변환
-      for (const [key, value] of formData.entries()) {
-        jsonData[key] = value;
-      }
-
-      // AJAX 요청 보내기
-      fetch('api/notice/update.action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonData)
-      })
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  alert('공지사항이 수정되었습니다.');
-                  // 수정된 게시글 상세 페이지로 이동
-                  location.href = 'noticepost.action?postId=' + data.postId;
-                } else {
-                  alert('공지사항 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
-                }
-              })
-              .catch(error => {
-                console.error('Error:', error);
-                alert('공지사항 수정 중 오류가 발생했습니다.');
-              });
-    });
-  </script>
-</c:if>
-
 <script>
-  // 문서가 완전히 로드된 후 실행
+  // 이 스크립트로 교체하세요
   document.addEventListener('DOMContentLoaded', function () {
     console.log("DOM이 로드되었습니다."); // 디버깅용
 
@@ -364,74 +321,127 @@
     const title = document.getElementById('title');
     const postContent = document.getElementById('postContent');
     const submitBtn = document.getElementById('submitBtn');
-    const confirmModal = document.getElementById('confirmModal');
-    const successModal = document.getElementById('successModal');
-    const modalBackdrop = document.querySelector('.modal-backdrop');
+
+    // 새로운 모달 요소 참조
+    const modalOverlay = document.getElementById('custom-modal-overlay');
+    const modal = document.getElementById('custom-modal');
+    const successModal = document.getElementById('custom-success-modal');
     const cancelBtn = document.getElementById('cancelBtn');
     const confirmBtn = document.getElementById('confirmBtn');
     const okBtn = document.getElementById('okBtn');
     const cancelPageBtn = document.getElementById('cancelPageBtn');
 
+    console.log("모달 요소:", modal); // 모달 요소가 있는지 확인
+    console.log("등록 버튼:", submitBtn); // 등록 버튼이 있는지 확인
+
+    // 수정 모드 확인
+    const isUpdateMode = document.querySelector('input[name="postId"]') !== null;
+    console.log("수정 모드:", isUpdateMode); // 디버깅용
+
     // 등록 버튼 클릭 시 확인 모달 표시
     if (submitBtn) {
-      submitBtn.onclick = function() {
+      submitBtn.addEventListener('click', function() {
         console.log("등록 버튼 클릭됨"); // 디버깅용
 
         // 유효성 검사
         if (!title || !title.value || title.value.trim() === '') {
           alert('제목을 입력해주세요.');
+          if (title) title.focus();
           return;
         }
 
         if (!postContent || !postContent.value || postContent.value.trim() === '') {
           alert('내용을 입력해주세요.');
+          if (postContent) postContent.focus();
           return;
         }
 
         // 모달 표시
-        confirmModal.style.display = 'block';
-        modalBackdrop.style.display = 'block';
-      };
+        if (modalOverlay) modalOverlay.style.display = 'block';
+        if (modal) modal.style.display = 'block';
+
+        console.log("모달 표시 시도 완료");
+      });
     }
 
     // 취소 버튼 클릭 시 모달 닫기
     if (cancelBtn) {
-      cancelBtn.onclick = function() {
+      cancelBtn.addEventListener('click', function() {
         console.log("취소 버튼 클릭됨"); // 디버깅용
-        confirmModal.style.display = 'none';
-        modalBackdrop.style.display = 'none';
-      };
+        if (modalOverlay) modalOverlay.style.display = 'none';
+        if (modal) modal.style.display = 'none';
+      });
     }
 
     // 확인 버튼 클릭 시 폼 제출
     if (confirmBtn && postForm) {
-      confirmBtn.onclick = function() {
+      confirmBtn.addEventListener('click', function() {
         console.log("확인 버튼 클릭됨"); // 디버깅용
-        // 모달 닫기
-        confirmModal.style.display = 'none';
-        modalBackdrop.style.display = 'none';
 
-        // 폼 제출
-        postForm.submit();
-      };
+        // 모달 닫기
+        if (modalOverlay) modalOverlay.style.display = 'none';
+        if (modal) modal.style.display = 'none';
+
+        // 수정 모드인 경우 AJAX 처리
+        if (isUpdateMode) {
+          // 폼 데이터 수집
+          const formData = new FormData(postForm);
+          const jsonData = {};
+
+          // FormData를 JSON으로 변환
+          for (const [key, value] of formData.entries()) {
+            jsonData[key] = value;
+          }
+
+          console.log("AJAX 요청 데이터:", jsonData); // 디버깅용
+
+          // AJAX 요청 보내기
+          fetch('api/notice/update.action', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData)
+          })
+                  .then(response => response.json())
+                  .then(data => {
+                    console.log("AJAX 응답:", data); // 디버깅용
+
+                    if (data.success) {
+                      // 성공 모달 표시
+                      if (modalOverlay) modalOverlay.style.display = 'block';
+                      if (successModal) successModal.style.display = 'block';
+                    } else {
+                      alert('공지사항 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error:', error);
+                    alert('공지사항 수정 중 오류가 발생했습니다.');
+                  });
+        } else {
+          // 등록 모드 - 일반 폼 제출
+          postForm.submit();
+        }
+      });
     }
 
     // 성공 모달의 확인 버튼 클릭 시 공지사항 목록으로 이동
     if (okBtn) {
-      okBtn.onclick = function() {
+      okBtn.addEventListener('click', function() {
         console.log("확인 버튼(성공 모달) 클릭됨"); // 디버깅용
-        successModal.style.display = 'none';
-        modalBackdrop.style.display = 'none';
+        if (modalOverlay) modalOverlay.style.display = 'none';
+        if (successModal) successModal.style.display = 'none';
         window.location.href = 'notice.action';
-      };
+      });
     }
 
     // 취소 버튼 클릭 시 이전 페이지로 이동
     if (cancelPageBtn) {
-      cancelPageBtn.onclick = function() {
+      cancelPageBtn.addEventListener('click', function() {
         console.log("페이지 취소 버튼 클릭됨"); // 디버깅용
         window.location.href = 'notice.action';
-      };
+      });
     }
 
     // 말머리 목록 로드 함수
@@ -470,8 +480,6 @@
       loadPostLabels();
     }
   });
-
-
 </script>
 </body>
 </html>
