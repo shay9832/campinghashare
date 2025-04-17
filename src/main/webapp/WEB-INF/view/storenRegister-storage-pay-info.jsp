@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>결제 정보 확인</title>
@@ -8,11 +9,25 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="bg-light">
-<form action="storenRegister-storage-pay-complete.action" method="POST">
-    <input type="hidden" name="equip_code" value="${equip_code}" />
-    <input type="hidden" name="finalStorageCost" value="${finalStorageCost}" />
 
-    <div class="container py-4">
+<main class="main-content container">
+
+    <!-- 에러 메시지 출력 영역 -->
+    <c:if test="${not empty errorMsg}">
+        <div class="alert alert-danger text-center mb-4" style="color: red; font-weight: bold;">
+                ${errorMsg}
+        </div>
+    </c:if>
+
+    <form action="storenRegister-storage-pay-complete.action" method="POST">
+        <input type="hidden" name="equip_code" value="${equip_code}" />
+        <input type="hidden" name="equipSize" value="${param.equipSize}" />
+        <input type="hidden" name="storageDays" value="${storageDays}" />
+        <input type="hidden" name="zipcode" value="${param.zipcode}" />
+        <input type="hidden" name="address1" value="${param.address1}" />
+        <input type="hidden" name="address2" value="${param.address2}" />
+        <input type="hidden" name="finalStorageCost" value="${finalStorageCost}" />
+
         <div class="info-section card mx-auto" style="max-width: 500px;">
             <div class="card-header">
                 <h3 class="card-title text-center">결제 정보 확인</h3>
@@ -26,7 +41,9 @@
                     </tr>
                     <tr class="border-bottom">
                         <td class="p-3 font-medium">최종 결제 금액</td>
-                        <td class="p-3 font-bold text-primary">${finalStorageCost}원</td>
+                        <td class="p-3 font-bold text-primary">
+                            <fmt:formatNumber value="${finalStorageCost}" type="number" groupingUsed="true" />원
+                        </td>
                     </tr>
                 </table>
 
@@ -36,8 +53,8 @@
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</main>
 
 <script>
     function cancelPayment() {
@@ -46,5 +63,6 @@
         }
     }
 </script>
+
 </body>
 </html>

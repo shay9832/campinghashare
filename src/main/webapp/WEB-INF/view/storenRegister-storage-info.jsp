@@ -197,7 +197,7 @@
             <input type="hidden" id="selectedTotalPrice" name="storageCost" value="90000">
 
         <div class="button-container">
-            <a href="${pageContext.request.contextPath}/storenRegister-storage-pay.action?equip_code=${equipCode}" class="btn">이전</a>
+            <a href="${pageContext.request.contextPath}/mypage-myequip.action" class="btn">이전</a>
             <button type="submit" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-pay.action?equip_code=${equipCode}'">다음</button>
         </div>
     </form>
