@@ -98,8 +98,8 @@
             font-size: var(--font-xs);
         }
 
-        /* 모달 스타일 수정 */
-        .modal-overlay {
+        /* 모달 스타일 완전히 새로 작성 */
+        #custom-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -107,32 +107,33 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             display: none;
-            justify-content: center;
-            align-items: center;
             z-index: 9999;
         }
 
-        .modal {
+        #custom-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: white;
-            padding: var(--spacing-lg, 20px);
-            border-radius: var(--radius-md, 8px);
-            min-width: 400px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            min-width: 300px;
             text-align: center;
-            box-shadow: var(--shadow-lg, 0 4px 8px rgba(0, 0, 0, 0.1));
+            display: none;
         }
 
-        .modal-header {
-            font-size: var(--font-md, 18px);
-            font-weight: var(--font-bold, bold);
-            margin-bottom: var(--spacing-lg, 20px);
-            color: var(--text-primary, #333);
+        #custom-modal-header {
+            margin-bottom: 20px;
         }
 
-        .modal-footer {
+        #custom-modal-footer {
+            margin-top: 20px;
             display: flex;
             justify-content: center;
-            gap: var(--spacing-md, 10px);
-            margin-top: var(--spacing-lg, 20px);
+            gap: 10px;
         }
     </style>
 </head>
@@ -285,7 +286,6 @@
 
                                 <textarea class="form-control" name="postContent" rows="10" placeholder="내용을 작성하세요."
                                           required>${isUpdate ? post.postContent : ''}</textarea>
-
                             </div>
                         </div>
 
@@ -297,7 +297,7 @@
                             </div>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                                <button type="submit" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
+                                <button type="button" id="submitBtn" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
                             </div>
                         </div>
                     </form>
@@ -307,133 +307,123 @@
     </div>
 </div>
 
-<!-- 모달 배경 -->
-<div class="modal-backdrop"></div>
-
-<!-- 확인 모달 수정 -->
-<div class="modal" id="confirmModal">
-    <div class="modal-header">
-        <h5 class="modal-title">${isUpdate ? '게시글을 수정 하시겠습니까?' : '게시글을 등록 하시겠습니까?'}</h5>
+<!-- 완전히 새로 만든 모달 구조 -->
+<div id="custom-modal-overlay"></div>
+<div id="custom-modal">
+    <div id="custom-modal-header">
+        <h5>${isUpdate ? '게시글을 수정 하시겠습니까?' : '게시글을 등록 하시겠습니까?'}</h5>
     </div>
-    <div class="modal-footer">
+    <div id="custom-modal-footer">
         <button class="btn btn-secondary" id="cancelBtn">취소</button>
         <button class="btn btn-primary" id="confirmBtn">확인</button>
     </div>
 </div>
 
-<!-- 성공 모달 수정 -->
-<div class="modal" id="successModal">
-    <div class="modal-header">
-        <h5 class="modal-title">${isUpdate ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" id="okBtn">확인</button>
-    </div>
-</div>
-
 <jsp:include page="footer.jsp"></jsp:include>
 
-<!-- 수정 모드일 경우 폼 제출 처리 스크립트 -->
-<c:if test="${isUpdate}">
-    <script>
-        document.getElementById('postForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            // 폼 데이터 수집
-            const formData = new FormData(this);
-            const jsonData = {};
-
-            // FormData를 JSON으로 변환
-            for (const [key, value] of formData.entries()) {
-                jsonData[key] = value;
-            }
-
-            // AJAX 요청 보내기
-            fetch('api/post/update.action', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(jsonData)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('게시글이 수정되었습니다.');
-                        // 수정된 게시글 상세 페이지로 이동
-                        location.href = 'boardfree-post.action?postId=' + data.postId;
-                    } else {
-                        alert('게시글 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('게시글 수정 중 오류가 발생했습니다.');
-                });
-        });
-    </script>
-</c:if>
-
 <script>
-    // 문서가 완전히 로드된 후 실행
-    document.addEventListener('DOMContentLoaded', function () {
-        // 요소 참조
-        const boardSelect = document.getElementById('boardId');
-        const headerTagSelect = document.getElementById('postLabelId');
-        const boardWriteForm = document.getElementById('boardWriteForm');
-        const editorContent = document.querySelector('.editor-content');
-        const postContentInput = document.getElementById('postContent');
-        const submitBtn = document.getElementById('submitBtn');
-        const confirmModal = document.getElementById('confirmModal');
-        const successModal = document.getElementById('successModal');
+    // 순수 자바스크립트로 구현
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM이 로드되었습니다.");
 
-        // 게시판 목록 가져오기
-        loadBoardList();
+        // 요소 참조
+        const submitBtn = document.getElementById('submitBtn');
+        const postForm = document.getElementById('postForm');
+        const modalOverlay = document.getElementById('custom-modal-overlay');
+        const modal = document.getElementById('custom-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        // 등록하기 버튼 클릭 시 처리
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function() {
+                console.log("등록하기 버튼이 클릭되었습니다.");
+
+                // 폼 검증
+                const titleInput = document.querySelector('input[name="postTitle"]');
+                const contentInput = document.querySelector('textarea[name="postContent"]');
+
+                if (!titleInput.value || titleInput.value.trim() === '') {
+                    alert('제목을 입력해주세요.');
+                    titleInput.focus();
+                    return;
+                }
+
+                if (!contentInput.value || contentInput.value.trim() === '') {
+                    alert('내용을 입력해주세요.');
+                    contentInput.focus();
+                    return;
+                }
+
+                // 모달 표시
+                modalOverlay.style.display = 'block';
+                modal.style.display = 'block';
+            });
+        }
+
+        // 취소 버튼 클릭 시 모달 닫기
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                modalOverlay.style.display = 'none';
+                modal.style.display = 'none';
+            });
+        }
+
+        // 확인 버튼 클릭 시 폼 제출
+        if (confirmBtn && postForm) {
+            confirmBtn.addEventListener('click', function() {
+                // 수정 모드 확인
+                const isUpdateMode = document.querySelector('input[name="postId"]') !== null;
+
+                if (isUpdateMode) {
+                    // 수정 모드 AJAX 처리
+                    const formData = new FormData(postForm);
+                    const jsonData = {};
+
+                    for (const [key, value] of formData.entries()) {
+                        jsonData[key] = value;
+                    }
+
+                    fetch('api/post/update.action', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(jsonData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('게시글이 수정되었습니다.');
+                                location.href = 'boardfree-post.action?postId=' + data.postId;
+                            } else {
+                                alert('게시글 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('게시글 수정 중 오류가 발생했습니다.');
+                        });
+                } else {
+                    // 등록 모드 - 일반 폼 제출
+                    postForm.submit();
+                }
+
+                // 모달 닫기
+                modalOverlay.style.display = 'none';
+                modal.style.display = 'none';
+            });
+        }
 
         // 게시판 변경 시 말머리 목록 가져오기
+        const boardSelect = document.getElementById('boardId');
         if (boardSelect) {
-            boardSelect.addEventListener('change', function () {
+            boardSelect.addEventListener('change', function() {
                 const selectedBoardId = this.value;
                 if (selectedBoardId) {
                     loadHeaderTags(selectedBoardId);
                 }
             });
-        }
-
-        // 게시판 목록 로드 함수
-        function loadBoardList() {
-            // 커뮤니티 카테고리(4)의 게시판 목록 가져오기
-            fetch('/api/boards/category/4')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('게시판 목록을 가져오는데 실패했습니다.');
-                    }
-                    return response.json();
-                })
-                .then(boards => {
-                    // 게시판 목록 초기화
-                    if (boardSelect) {
-                        boardSelect.innerHTML = '';
-
-                        // 각 게시판에 대한 옵션 추가
-                        boards.forEach(board => {
-                            const option = document.createElement('option');
-                            option.value = board.boardId;
-                            option.textContent = board.boardName;
-                            boardSelect.appendChild(option);
-                        });
-
-                        // 기본적으로 첫 번째 게시판 선택 및 해당 말머리 로드
-                        if (boards.length > 0) {
-                            const defaultBoardId = boards[0].boardId;
-                            loadHeaderTags(defaultBoardId);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('게시판 목록 로드 오류:', error);
-                    alert('게시판 목록을 가져오는데 실패했습니다. 다시 시도해주세요.');
-                })
         }
 
         // 말머리 목록 로드 함수
@@ -446,11 +436,10 @@
                     return response.json();
                 })
                 .then(labels => {
-                    // 말머리 옵션 초기화
+                    const headerTagSelect = document.getElementById('postLabelId');
                     if (headerTagSelect) {
                         headerTagSelect.innerHTML = '';
 
-                        // 말머리 옵션 추가
                         labels.forEach(label => {
                             const option = document.createElement('option');
                             option.value = label.postLabelId;
@@ -461,112 +450,11 @@
                 })
                 .catch(error => {
                     console.error('말머리 목록 로드 오류:', error);
-                    // 오류 시 기본 옵션 추가
+                    const headerTagSelect = document.getElementById('postLabelId');
                     if (headerTagSelect) {
                         headerTagSelect.innerHTML = '<option value="">말머리를 선택하세요</option>';
                     }
-                })
-        }
-
-        // 에디터 내용 클릭 시 기본 텍스트 제거
-        if (editorContent) {
-            editorContent.addEventListener('focus', function () {
-                if (this.textContent === '내용을 입력하세요.') {
-                    this.textContent = '';
-                }
-            });
-        }
-
-        // 등록 버튼 클릭 시 확인 모달 표시
-        if (submitBtn && confirmModal) {
-            submitBtn.addEventListener('click', function () {
-                confirmModal.classList.add('show');
-                document.querySelector('.modal-backdrop').classList.add('show');
-            });
-        }
-
-        // 취소 버튼 클릭 시 모달 닫기
-        const cancelBtn = document.getElementById('cancelBtn');
-        if (cancelBtn && confirmModal) {
-            cancelBtn.addEventListener('click', function () {
-                confirmModal.classList.remove('show');
-                document.querySelector('.modal-backdrop').classList.remove('show');
-            });
-        }
-
-        // 확인 버튼 클릭 시 폼 제출 처리
-        const confirmBtn = document.getElementById('confirmBtn');
-        if (confirmBtn && confirmModal && boardWriteForm) {
-            confirmBtn.addEventListener('click', function () {
-                // 에디터 내용을 hidden input에 설정
-                if (editorContent && postContentInput) {
-                    let content = editorContent.innerHTML;
-                    if (content === '내용을 입력하세요.') {
-                        content = '';
-                    }
-                    postContentInput.value = content;
-                }
-
-                // 제목과 내용 검증
-                const title = document.getElementById('title').value;
-                if (!title || title.trim() === '') {
-                    alert('제목을 입력해주세요.');
-                    confirmModal.classList.remove('show');
-                    document.querySelector('.modal-backdrop').classList.remove('show');
-                    return;
-                }
-
-                if (!postContentInput.value || postContentInput.value.trim() === '') {
-                    alert('내용을 입력해주세요.');
-                    confirmModal.classList.remove('show');
-                    document.querySelector('.modal-backdrop').classList.remove('show');
-                    return;
-                }
-
-                // 폼 제출
-                boardWriteForm.submit();
-
-                // 모달 닫기
-                confirmModal.classList.remove('show');
-                document.querySelector('.modal-backdrop').classList.remove('show');
-            });
-        }
-
-        // 성공 모달의 확인 버튼 클릭 시 선택된 게시판으로 이동
-        const okBtn = document.getElementById('okBtn');
-        if (okBtn && boardSelect) {
-            okBtn.addEventListener('click', function () {
-                const selectedBoard = boardSelect.value;
-                redirectToBoard(selectedBoard);
-            });
-        }
-
-        // 취소 버튼 클릭 시 자유게시판으로 이동
-        const cancelBoardBtn = document.querySelector('.btn-secondary');
-        if (cancelBoardBtn) {
-            cancelBoardBtn.addEventListener('click', function () {
-                window.location.href = 'boardfree.action';
-            });
-        }
-
-        // 게시판 ID에 따른 리다이렉트 함수
-        function redirectToBoard(boardId) {
-            switch (boardId) {
-                case '7': // 자유게시판
-                    window.location.href = 'boardfree.action';
-                    break;
-                case '8': // 장비 정보
-                    window.location.href = 'boardgear.action';
-                    break;
-                case '9': // 캠핑장 정보
-                    window.location.href = 'boardmarket.action';
-                    break;
-                case '10': // 고독한캠핑방
-                    window.location.href = 'boardimage.action';
-                    break;
-                default:
-                    window.location.href = 'boardmain.action';
-            }
+                });
         }
     });
 </script>
