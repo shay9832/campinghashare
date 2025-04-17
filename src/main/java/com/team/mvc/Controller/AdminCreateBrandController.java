@@ -26,7 +26,7 @@ public class AdminCreateBrandController {
     @RequestMapping("/admin-createBrand.action")
     public String createBrand(
             @RequestParam(value = "action", required = false) String action,
-            @RequestParam(value = "brand_id", required = false) Integer brandId,
+            @RequestParam(value = "brandId", required = false) Integer brandId,
             @RequestParam(value = "equip_name_id", required = false) Integer equipNameId,
             @RequestParam(value = "formAction", required = false) String formAction,
             @RequestParam(value = "brandName", required = false) String brandName,
@@ -47,7 +47,7 @@ public class AdminCreateBrandController {
             // 브랜드 수정
             else if (formAction.equals("updateBrand") && brandId != null && brandName != null) {
                 BrandDTO brand = new BrandDTO();
-                brand.setBrand_Id(brandId);
+                brand.setBrandId(brandId);
                 brand.setBrandName(brandName);
                 adminCreateBrandDAO.updateBrand(brand);
                 return "redirect:/admin-createBrand.action";
@@ -62,14 +62,14 @@ public class AdminCreateBrandController {
             // 장비명 생성
             else if (formAction.equals("createEquipment") && brandId != null && equipName != null) {
                 EquipmentDTO equipment = new EquipmentDTO();
-                // 장비명에는 brand_id 필드가 없으므로 해당 관계는 equip_name 테이블에만 있음
+                // 장비명에는 brandId 필드가 없으므로 해당 관계는 equip_name 테이블에만 있음
                 // 따라서 직접적인 설정은 불가능하며 DAO에서 처리
                 equipment.setEquip_name(equipName);
                 if (categoryId != null) {
                     equipment.setCategory_id(categoryId);
                 }
                 adminCreateBrandDAO.insertEquipment(equipment);
-                return "redirect:/admin-createBrand.action?action=selectBrand&brand_id=" + brandId;
+                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
             }
 
             // 장비명 수정
@@ -82,10 +82,10 @@ public class AdminCreateBrandController {
                 }
                 adminCreateBrandDAO.updateEquipment(equipment);
 
-                // 장비가 속한 브랜드 ID로 리다이렉트 (brand_id 필드가 EquipmentDTO에 없으므로 조정 필요)
+                // 장비가 속한 브랜드 ID로 리다이렉트 (brandId 필드가 EquipmentDTO에 없으므로 조정 필요)
                 EquipmentDTO equipmentInfo = adminCreateBrandDAO.getEquipmentById(equipNameId);
                 // 임시로 redirectAttributes로 전달
-                return "redirect:/admin-createBrand.action?action=selectBrand&brand_id=" + brandId;
+                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
             }
 
             // 장비명 삭제
@@ -93,7 +93,7 @@ public class AdminCreateBrandController {
                 adminCreateBrandDAO.deleteEquipment(equipNameId);
 
                 // 삭제 후 해당 브랜드의 장비 목록으로 리다이렉트
-                return "redirect:/admin-createBrand.action?action=selectBrand&brand_id=" + brandId;
+                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
             }
         }
 

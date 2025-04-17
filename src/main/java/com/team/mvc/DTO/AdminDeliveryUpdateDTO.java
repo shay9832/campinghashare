@@ -72,6 +72,9 @@ public class AdminDeliveryUpdateDTO {
         private Date rentalStartDate;
         private Date rentalEndDate;
 
+        private String memo;  // 메모 필드 추가
+        private String status; // 배송 상태 필드 추가
+
 
         //getter setter 구성
 
@@ -266,5 +269,21 @@ public class AdminDeliveryUpdateDTO {
 
     public void setRentalEndDate(Date rentalEndDate) {
         this.rentalEndDate = rentalEndDate;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

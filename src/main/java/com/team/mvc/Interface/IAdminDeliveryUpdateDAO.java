@@ -39,4 +39,8 @@ public interface IAdminDeliveryUpdateDAO {
     void updateDelivery(AdminDeliveryUpdateDTO dto);
 
 
+    List<AdminDeliveryUpdateDTO> getPendingDeliveries();  // 배송 대기 중인 항목을 조회
+    void createDelivery(AdminDeliveryUpdateDTO dto);      // 새 배송을 생성
+
+
 }

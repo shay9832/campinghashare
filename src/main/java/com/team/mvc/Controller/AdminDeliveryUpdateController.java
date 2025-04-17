@@ -31,7 +31,15 @@ public class AdminDeliveryUpdateController {
     public String getAllDeliveries(Model model) {
         // SqlSession을 통해 매퍼 인터페이스 직접 호출
         IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+
+        // 기존 배송 리스트 조회
         List<AdminDeliveryUpdateDTO> allDeliveries = dao.getAllDeliveries();
+
+        // 배송 대기 중인 항목도 가져오기
+        List<AdminDeliveryUpdateDTO> pendingDeliveries = dao.getPendingDeliveries();
+
+        // 모든 배송 항목 합치기
+        allDeliveries.addAll(pendingDeliveries);
 
         // 배송 유형별로 리스트 분류
         Map<String, List<AdminDeliveryUpdateDTO>> deliveryMap = categorizeDeliveries(allDeliveries);
@@ -43,22 +51,29 @@ public class AdminDeliveryUpdateController {
         model.addAttribute("userReturnShippingList", deliveryMap.get("userReturn"));
         model.addAttribute("storageReturnShippingList", deliveryMap.get("storageReturn"));
         model.addAttribute("storenReturnShippingList", deliveryMap.get("storenReturn"));
+        model.addAttribute("pendingShippingList", deliveryMap.get("pending"));
 
         // 배송 요약 정보 계산
         int totalCount = allDeliveries.size();
-        int completedCount = totalCount;
-        int ongoingCount = 0;
+        int completedCount = (int) allDeliveries.stream()
+                .filter(d -> d.getDeliveryEndDate() != null)
+                .count();
+        int ongoingCount = (int) allDeliveries.stream()
+                .filter(d -> d.getDeliveryStartDate() != null && d.getDeliveryEndDate() == null)
+                .count();
+        int pendingCount = (int) pendingDeliveries.size();
 
         Map<String, Integer> summary = new HashMap<>();
         summary.put("totalCount", totalCount);
         summary.put("ongoingCount", ongoingCount);
         summary.put("completedCount", completedCount);
+        summary.put("pendingCount", pendingCount);
         model.addAttribute("shippingSummary", summary);
 
         return "/admin-deliveryUpdate";
     }
 
-    // 여기에 새로운 POST 메서드 추가
+    // 배송 업데이트 POST 메서드
     @RequestMapping(value="/admin-deliveryUpdate.action", method=RequestMethod.POST)
     public String updateDelivery(
             @RequestParam(value="calculatedDeliveryStartDate", required=false) String calculatedDeliveryStartDate,
@@ -81,10 +96,35 @@ public class AdminDeliveryUpdateController {
 
             // DAO를 통해 DB 업데이트
             IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
-
-            // DAO에 업데이트 메서드가 있는지 확인
-            // 메서드 명은 DAO 인터페이스에 정의된 대로 사용
             dao.updateDelivery(dto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 오류 처리 로직
+        }
+
+        return "redirect:/admin-deliveryUpdate.action";
+    }
+
+    // 새 배송 생성 메서드
+    @RequestMapping(value="/admin-createDelivery.action", method=RequestMethod.POST)
+    public String createDelivery(
+            @RequestParam(value="newDeliveryStartDate", required=false) String newDeliveryStartDate,
+            AdminDeliveryUpdateDTO dto,
+            Model model) {
+        try {
+            // 새 배송 시작일이 있으면 DTO에 설정
+            if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
+                LocalDateTime startDate = LocalDateTime.parse(newDeliveryStartDate + "T00:00:00");
+                dto.setDeliveryStartDate(startDate);
+            } else {
+                // 기본값으로 현재 시간 설정
+                dto.setDeliveryStartDate(LocalDateTime.now());
+            }
+
+            // DAO를 통해 DB에 새 배송 생성
+            IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+            dao.createDelivery(dto);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +142,7 @@ public class AdminDeliveryUpdateController {
         result.put("userReturn", new ArrayList<>());
         result.put("storageReturn", new ArrayList<>());
         result.put("storenReturn", new ArrayList<>());
+        result.put("pending", new ArrayList<>()); // 배송 대기 항목용 리스트 추가
 
         for (AdminDeliveryUpdateDTO delivery : allDeliveries) {
             String type = delivery.getDeliveryType();
@@ -118,6 +159,8 @@ public class AdminDeliveryUpdateController {
                 result.get("storageReturn").add(delivery);
             } else if ("스토렌_최종반환".equals(type)) {
                 result.get("storenReturn").add(delivery);
+            } else if ("스토렌_배송대기".equals(type) || "보관_배송대기".equals(type)) {
+                result.get("pending").add(delivery);
             }
         }
 
