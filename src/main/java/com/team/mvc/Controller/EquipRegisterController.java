@@ -91,6 +91,7 @@ public class EquipRegisterController {
             model.addAttribute("brands", brands);
             model.addAttribute("majorCategory", majorCategory);
             model.addAttribute("middleCategory", middleCategory);
+            System.out.println(brands.get(0).getBrandName());
 
         } catch (Exception e) {
             System.out.println(e.toString());
