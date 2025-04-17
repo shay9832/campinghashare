@@ -6,6 +6,7 @@ import com.team.mvc.Interface.IBoardPostService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -17,6 +18,9 @@ public class BoardPostService implements IBoardPostService {
 
     @Autowired
     private SqlSession sqlSession;
+
+    @Autowired
+    private ReplyService replyService;
 
     @Override
     public List<BoardPostDTO> listPostList(BoardPostDTO dto) {
@@ -181,5 +185,58 @@ public class BoardPostService implements IBoardPostService {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.getPostLabelsByBoardId(boardId);
     }
+
+    @Override
+    public boolean checkRecommend(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.checkRecommend(dto);
+    }
+
+    @Override
+    public int insertRecommend(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertRecommend(dto);
+    }
+
+    @Override
+    public int getRecommendCount(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.getRecommendCount(dto);
+    }
+
+    @Override
+    public int insertHotPostLog(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+
+        // getPostById를 호출하여 최신 게시글 정보 조회
+        BoardPostDTO currentPost = getPostById(dto);
+        int recommendCount = currentPost.getRecommendCount();
+
+        // 추천수가 50 이상인 경우에만 HOT_POST_LOG 테이블에 기록
+        if (recommendCount >= 50) {
+            return dao.insertHotPostLog(dto);
+        }
+
+        return 0; // 추천수가 50 미만이면 아무 작업도 하지 않음
+
+    }
+
+    // 게시글 삭제 시 댓글도 함께 삭제
+    @Transactional
+    public boolean deletePostWithReplies(int postId) {
+        // 1. 해당 게시글의 모든 댓글 조회 및 삭제
+        List<ReplyDTO> replies = getRepliesByPostId(postId);
+        for (ReplyDTO reply : replies) {
+            replyService.deleteReply(reply.getReplyId());
+        }
+
+        // 2. 게시글 삭제
+        BoardPostDTO postDTO = new BoardPostDTO();
+        postDTO.setPostId(postId);
+        int result = deletePost(postDTO);
+
+        return result > 0;
+    }
+
 
 }

@@ -6,6 +6,7 @@ import com.team.mvc.DTO.BoardPostDTO;
 import com.team.mvc.DTO.ReplyDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBoardPostService {
     List<BoardPostDTO> listPostList(BoardPostDTO dto);
@@ -48,4 +49,20 @@ public interface IBoardPostService {
     List<BoardPostDTO> listBestPosts(int limit);
     List<BoardPostDTO> listBoardHotPosts(int boardId, int limit);
     List<BoardDTO> getBoardsByCategoryId(int boardCateId);
+
+
+    // 추천 여부 확인
+    boolean checkRecommend(BoardPostDTO dto);
+
+    // 추천 추가
+    int insertRecommend(BoardPostDTO dto);
+
+    // 추천 수
+    int getRecommendCount(BoardPostDTO dto);
+
+    // 인기글 지정
+    int insertHotPostLog(BoardPostDTO dto);
+
+
+    boolean deletePostWithReplies(int postId);
 }

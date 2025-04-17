@@ -422,4 +422,34 @@
         WHERE POST_ID = #{postId}
     </delete>
 
+
+    <!-- 추천 여부 확인 -->
+    <select id="checkRecommend" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM RECOMMEND
+        WHERE POST_ID = #{postId} AND USER_CODE = #{userCode}
+    </select>
+
+    <!-- 추천 추가 -->
+    <insert id="insertRecommend" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        INSERT INTO RECOMMEND (RECOMMEND_ID, POST_ID, USER_CODE, CREATED_DATE)
+        VALUES (RECOMMEND_SEQ.NEXTVAL, #{postId}, #{userCode}, SYSDATE)
+    </insert>
+
+    <!-- 게시글 추천 수 조회 -->
+    <select id="getRecommendCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM RECOMMEND
+        WHERE POST_ID = #{postId}
+    </select>
+
+    <!-- HOT_POST_LOG 테이블에 로그 추가 -->
+    <insert id="insertHotPostLog" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        INSERT INTO HOT_POST_LOG (HOT_POST_LOG_ID, POST_ID, CREATED_DATE)
+        SELECT HOT_POST_LOG_SEQ.nextval, #{postId}, SYSDATE
+        FROM DUAL
+        WHERE NOT EXISTS (SELECT 1
+                          FROM HOT_POST_LOG
+                          WHERE POST_ID = #{postId})
+    </insert>
 </mapper>

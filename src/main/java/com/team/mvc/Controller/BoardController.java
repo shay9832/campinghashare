@@ -715,9 +715,10 @@ public class BoardController {
 
             // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자인지 확인
             if (post != null && post.getUserCode() == userCode) {
-                int affectedRows = boardPostService.deletePost(dto);
+                // 트랜잭션으로 게시글과 댓글 함께 삭제
+                boolean deleteSuccess = boardPostService.deletePostWithReplies(dto.getPostId());
 
-                if (affectedRows > 0) {
+                if (deleteSuccess) {
                     result.put("success", true);
                     result.put("message", "게시글이 삭제되었습니다.");
                 } else {
@@ -736,7 +737,6 @@ public class BoardController {
 
         return result;
     }
-
 
 
     // 고독한 캠핑방 페이지
@@ -879,6 +879,7 @@ public class BoardController {
                          @RequestParam(value = "size", defaultValue = "10") int size,
                          @RequestParam(value = "searchType", required = false) String searchType,
                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                         HttpSession session,
                          Model model) {
         // 게시판 ID 설정
         int boardId = 1; // 공지사항
@@ -1124,5 +1125,120 @@ public class BoardController {
 
         return result;
     }
+
+    // 공지사항 삭제 처리를 위한 API
+    @RequestMapping(value = "/api/notice/delete.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> deleteNotice(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 세션에서 관리자 정보 가져오기
+            Integer userGrade = (Integer) session.getAttribute("user_grade");
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
+            System.out.println("삭제 요청 - 관리자 등급: " + userGrade + ", 관리자 코드: " + userCode);
+
+            // 관리자가 아니면 권한 없음 응답
+            if (userGrade == null || userGrade > 1) {
+                result.put("success", false);
+                result.put("message", "공지사항 관리 권한이 없습니다.");
+                return result;
+            }
+
+            // 삭제자 정보 기록 (추적용)
+            dto.setUserCode(userCode);
+
+            // 콘솔에 로그 출력 (실제로는 로그 테이블에 저장)
+            System.out.println("관리자(" + userCode + ")가 공지사항 ID: " + dto.getPostId() + " 삭제 시도");
+
+            // 게시글 정보 조회
+            BoardPostDTO post = boardPostService.getPostById(dto);
+
+            if (post != null) {
+                int affectedRows = boardPostService.deletePost(dto);
+
+                if (affectedRows > 0) {
+                    System.out.println("삭제 성공 - 관리자: " + userCode + ", 게시글: " + dto.getPostId());
+                    result.put("success", true);
+                    result.put("message", "공지사항이 삭제되었습니다.");
+                } else {
+                    System.out.println("삭제 실패 - DB 오류");
+                    result.put("success", false);
+                    result.put("message", "공지사항 삭제에 실패했습니다.");
+                }
+            } else {
+                System.out.println("존재하지 않는 게시글: " + dto.getPostId());
+                result.put("success", false);
+                result.put("message", "존재하지 않는 공지사항입니다.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return result;
+    }
+
+    // 추천 수 증가
+    @RequestMapping(value = "/api/post/recommend.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> recommendPost(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 로그인 사용자 확인
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
+            // 테스트용 임시 코드
+            if (userCode == null) {
+                userCode = 2;
+                session.setAttribute("user_code", userCode);
+            }
+
+            // 사용자 코드 설정
+            dto.setUserCode(userCode);
+
+            // 이미 추천했는지 확인
+            boolean alreadyRecommended = boardPostService.checkRecommend(dto);
+
+            if (alreadyRecommended) {
+                // 이미 추천한 경우
+                result.put("success", false);
+                result.put("message", "이미 추천한 게시글입니다.");
+
+                // 게시글 정보 다시 조회하여 현재 추천 수 포함
+                BoardPostDTO currentPost = boardPostService.getPostById(dto);
+                result.put("recommendCount", currentPost.getRecommendCount());
+            } else {
+                // 아직 추천하지 않은 경우 - 추천 추가
+                int insertResult = boardPostService.insertRecommend(dto);
+
+                if (insertResult > 0) {
+                    // HOT_POST_LOG에 기록 (서비스 내부에서 추천수 체크)
+                    boardPostService.insertHotPostLog(dto);
+
+                    // 게시글 정보 다시 조회
+                    BoardPostDTO updatedPost = boardPostService.getPostById(dto);
+                    int recommendCount = updatedPost.getRecommendCount();
+
+                    result.put("success", true);
+                    result.put("message", "게시글을 추천했습니다.");
+                    result.put("recommendCount", updatedPost.getRecommendCount());
+                } else {
+                    result.put("success", false);
+                    result.put("message", "추천 처리에 실패했습니다.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "서버 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return result;
+    }
+
 
 }
