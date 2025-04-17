@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-251.23774.435">
-    <data-source name="final3team" uuid="f6c6c004-ee52-4104-a2c4-2205f1f8dfa5">
+  <component name="dataSourceStorageLocal" created-in="IU-243.26053.27">
+    <data-source name="@211.238.142.179" uuid="7f5008c7-a077-49b2-b775-df4ac1c5e7dd">
       <database-info product="Oracle" version="Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production" jdbc-version="4.3" driver-name="Oracle JDBC driver" driver-version="21.5.0.0.0" dbms="ORACLE" exact-version="11.2.0.2.0" exact-driver-version="21.5">
         <extra-name-characters>$#</extra-name-characters>
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
-      <user-name>final3team</user-name>
+      <user-name>Final3Team</user-name>
       <schema-mapping>
         <introspection-scope>
           <node kind="schema">
