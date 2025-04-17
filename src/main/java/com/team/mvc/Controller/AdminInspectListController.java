@@ -81,6 +81,17 @@ public class AdminInspectListController {
                     String numericPart = platformDeliveryReturnIdStr.replaceAll("[^0-9]", "");
                     if (!numericPart.isEmpty()) {
                         platformDeliveryReturnId = Integer.parseInt(numericPart);
+
+                        // 여기에 반환 ID에 해당하는 원래 배송 ID를 찾는 로직 추가
+                        if (platformDeliveryId == null) {
+                            IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+                            platformDeliveryId = dao.getDeliveryIdFromReturnId(platformDeliveryReturnId);
+
+                            if (platformDeliveryId == null) {
+                                redirectAttributes.addFlashAttribute("error", "반환 ID에 해당하는 원래 배송 ID를 찾을 수 없습니다.");
+                                return "redirect:/admin-inspectList.action";
+                            }
+                        }
                     }
                 } catch (NumberFormatException e) {
                     redirectAttributes.addFlashAttribute("error", "반환 ID 형식이 올바르지 않습니다: " + platformDeliveryReturnIdStr);
@@ -93,6 +104,7 @@ public class AdminInspectListController {
                 redirectAttributes.addFlashAttribute("error", "배송 ID 또는 반환 ID가 필요합니다.");
                 return "redirect:/admin-inspectList.action";
             }
+
 
             // 등급 정보 업데이트 - finalGrade에 따라 equipGradeId 설정
             if (finalGrade != null) {
@@ -123,6 +135,7 @@ public class AdminInspectListController {
                         break;
                 }
             }
+
 
             // 디버깅 로그 추가
             System.out.println("프로시저 호출 정보: delivery=" + platformDeliveryId

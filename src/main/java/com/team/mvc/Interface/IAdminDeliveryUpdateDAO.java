@@ -2,7 +2,9 @@ package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,4 +34,13 @@ public interface IAdminDeliveryUpdateDAO {
      * @return 해당 ID의 배송 정보
      */
     AdminDeliveryUpdateDTO getDeliveryById(Long deliveryId);
+
+    // 렌탈 시작일과 렌탈 종료일에 따른 배송일자 업데이트를 위한
+    void updateDelivery(AdminDeliveryUpdateDTO dto);
+
+
+    List<AdminDeliveryUpdateDTO> getPendingDeliveries();  // 배송 대기 중인 항목을 조회
+    void createDelivery(AdminDeliveryUpdateDTO dto);      // 새 배송을 생성
+
+
 }
