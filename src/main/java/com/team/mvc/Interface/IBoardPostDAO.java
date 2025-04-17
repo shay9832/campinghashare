@@ -76,4 +76,17 @@ public interface IBoardPostDAO {
 
     // 게시판 이름으로 게시판 정보 조회
     BoardDTO getBoardByName(String boardName);
+
+    // 추천 여부 확인
+    boolean checkRecommend(BoardPostDTO dto);
+
+    // 추천 추가
+    int insertRecommend(BoardPostDTO dto);
+
+    // 추천 수
+    int getRecommendCount(BoardPostDTO dto);
+
+    // 인기글 지정
+    int insertHotPostLog(BoardPostDTO dto);
+
 }

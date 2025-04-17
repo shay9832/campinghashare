@@ -1,5 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%
+    // 테스트를 위한 임시 관리자 정보 설정
+    session.setAttribute("user_code", 1);  // 관리자 계정 코드
+    session.setAttribute("user_grade", 1); // 관리자 등급 (1: 관리자)
+%>
 
 <html>
 <head>
@@ -303,10 +308,11 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-
-                        <button class="btn btn-primary" onclick="goToWrite()">
-                            <i class="fa-solid fa-pen"></i> 글쓰기
-                        </button>
+                        <c:if test="${sessionScope.user_grade eq 1}">
+                            <button class="btn btn-primary" onclick="goToWrite()">
+                                <i class="fa-solid fa-pen"></i> 글쓰기
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </div>

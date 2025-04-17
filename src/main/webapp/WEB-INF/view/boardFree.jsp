@@ -466,7 +466,7 @@
                                         class="notice-tag">공지</span></a></td>
                                 <td class="p-3 text-center"><a href="notice.action"><span
                                         class="board-category-tag notice">공지</span></a></td>
-                                <td class="p-3 title-cell"><a href="notice.action">${notice.postTitle}</a></td>
+                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
