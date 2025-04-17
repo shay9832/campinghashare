@@ -35,9 +35,8 @@ public interface IAdminDeliveryUpdateDAO {
      */
     AdminDeliveryUpdateDTO getDeliveryById(Long deliveryId);
 
+    // 렌탈 시작일과 렌탈 종료일에 따른 배송일자 업데이트를 위한
+    void updateDelivery(AdminDeliveryUpdateDTO dto);
 
-    // 배송 정보 수정용 메소드
-    int updateShippingStartDate(@Param("deliveryId") int deliveryId,
-                                @Param("selecteDate") Date selecteDate);
 
 }

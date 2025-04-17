@@ -249,8 +249,8 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${platformShippingList}" var="shipping">
-                            <tr>
-                                <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
+                            <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
                                 <td>${shipping.receiverId}</td>
@@ -304,7 +304,7 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${platformReturnShippingList}" var="shipping">
-                            <tr>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
@@ -354,7 +354,7 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${userShippingList}" var="shipping">
-                            <tr>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
@@ -401,7 +401,7 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${userReturnShippingList}" var="shipping">
-                            <tr>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
@@ -448,7 +448,7 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${storageReturnShippingList}" var="shipping">
-                            <tr>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
@@ -495,7 +495,7 @@
                             <th class="col-actions">관리</th>
                         </tr>
                         <c:forEach items="${storenReturnShippingList}" var="shipping">
-                            <tr>
+                            <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
@@ -529,6 +529,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="shipping-form" method="post" action="${pageContext.request.contextPath}/admin-deliveryUpdate.action">
+                        <input type="hidden" name="platformDeliveryReturnId">
+                        <input type="hidden" name="platformDeliveryId">
                         <input type="hidden" id="shipping-type-hidden" name="deliveryType">
 
                         <div class="form-group">
@@ -573,15 +575,25 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="rental-start-date">렌탈 출발일</label>
+                            <input type="text" id="rental-start-date" name="rentalStartDate" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rental-end-date">렌탈 종료일</label>
+                            <input type="text" id="rental-end-date" name="rentalEndDate" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="start-date">배송 시작일</label>
                             <input type="text" id="start-date" name="deliveryStartDate" class="form-control" readonly>
                         </div>
 
-                        <!-- 새 배송 시작일 필드 추가 -->
                         <div class="form-group">
                             <label for="new-start-date">새 배송 시작일</label>
                             <input type="date" id="new-start-date" name="newDeliveryStartDate" class="form-control">
                         </div>
+
 
                         <div class="form-group">
                             <label for="end-date">배송 종료일</label>
@@ -853,6 +865,10 @@
             const inspectionResult = activeTab.includes('platform') || activeTab.includes('storage') || activeTab.includes('storen') ?
                 cells[12] ? cells[12].textContent : '' : '';
 
+            // 렌탈 출발일과 종료일 설정 (데이터 속성에서 가져오거나 계산)
+            const rentalStartDate = row.dataset.rentalStartDate || '';
+            const rentalEndDate = row.dataset.rentalEndDate || '';
+
             // 모달 필드에 값 설정
             document.getElementById('sender-id').value = senderId;
             document.getElementById('receiver-id').value = receiverId;
@@ -863,6 +879,8 @@
             document.getElementById('start-date').value = deliveryStartDate;
             document.getElementById('end-date').value = deliveryEndDate;
             document.getElementById('tracking').value = waybillNumber;
+            document.getElementById('rental-start-date').value = rentalStartDate;
+            document.getElementById('rental-end-date').value = rentalEndDate;
 
             // 셀렉트 박스 값 설정
             const courierSelect = document.getElementById('courier');
@@ -1035,19 +1053,35 @@
 
     // 현재 날짜 설정
     function setDefaultDates() {
-        const today = new Date();
-        const oneMonthAgo = new Date(today);
-        oneMonthAgo.setMonth(today.getMonth() - 1);
+        try {
+            const today = new Date();
+            const oneMonthAgo = new Date(today);
+            oneMonthAgo.setMonth(today.getMonth() - 1);
 
-        const formatDate = (date) => {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        };
+            const formatDate = (date) => {
+                // 표준 ISO 형식으로 날짜 설정 (YYYY-MM-DD)
+                return date.toISOString().split('T')[0];
+            };
 
-        document.getElementById('start-date-filter').value = formatDate(oneMonthAgo);
-        document.getElementById('end-date-filter').value = formatDate(today);
+            const startDateInput = document.getElementById('start-date-filter');
+            const endDateInput = document.getElementById('end-date-filter');
+
+            if (startDateInput) {
+                startDateInput.value = formatDate(oneMonthAgo);
+                console.log('시작 날짜 설정:', formatDate(oneMonthAgo));
+            } else {
+                console.warn('start-date-filter 요소를 찾을 수 없습니다.');
+            }
+
+            if (endDateInput) {
+                endDateInput.value = formatDate(today);
+                console.log('종료 날짜 설정:', formatDate(today));
+            } else {
+                console.warn('end-date-filter 요소를 찾을 수 없습니다.');
+            }
+        } catch (error) {
+            console.error('날짜 설정 오류:', error);
+        }
     }
 
     // 페이지 로드 시 초기화
@@ -1085,45 +1119,9 @@
         });
     });
 
+    // 폼 제출 이벤트 리스너
     // 폼 제출 이벤트 리스너 추가
-    document.getElementById('shipping-form').addEventListener('submit', function(event) {
 
-        // 새 배송 시작일 유효성 검사
-        const originalStartDate = document.getElementById('start-date').value;
-        const newStartDate = document.getElementById('new-start-date').value;
-
-        if (!newStartDate) {
-            event.preventDefault();
-            alert('새 배송 시작일을 입력해주세요.');
-            return;
-        }
-
-        // 새 날짜가 기존 날짜보다 이전인지 확인
-        const originalDate = new Date(originalStartDate);
-        const newDate = new Date(newStartDate);
-
-        if (!isNaN(originalDate.getTime()) && !isNaN(newDate.getTime()) && newDate < originalDate) {
-            event.preventDefault();
-            alert('새 배송 시작일은 기존 배송 시작일(' + originalStartDate + ')보다 이전일 수 없습니다.');
-            return;
-        }
-
-        // 변경 확인
-        if (originalStartDate !== newStartDate) {
-            if (!confirm('배송 시작일을 ' + originalStartDate + '에서 ' + newStartDate + '로 변경하시겠습니까?')) {
-                event.preventDefault();
-                return;
-            }
-        } else {
-            if (!confirm('배송 정보를 업데이트하시겠습니까?')) {
-                event.preventDefault();
-                return;
-            }
-        }
-
-        // 정상 제출 시 사용자에게 알림
-        alert('배송 정보가 업데이트되었습니다. 페이지가 새로고침됩니다.');
-    });
 
     // 새 배송 시작일 변경 이벤트 리스너
     document.getElementById('new-start-date').addEventListener('change', function() {
