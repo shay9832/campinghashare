@@ -646,7 +646,7 @@
         }
       }
 
-      // 모달 열기 함수 (직접 onclick 속성에서 호출됨)
+      // 모달 열기 함수 수정
       function openModal(code, type, name, category) {
         // 모달 요소 가져오기
         var modal = document.getElementById('inspectionModal');
@@ -657,21 +657,20 @@
         document.getElementById('equipName').value = name;
         document.getElementById('equipCategory').value = category;
 
-        // 검수 유형에 따라 배송 ID 또는 반환 ID 설정
+        // 검수 유형에 따라 적절한 ID 설정
         if (type === '입고검수') {
           document.getElementById('platformDeliveryId').value = code;
-          document.getElementById('platformDeliveryReturnId').value = '';
+          document.getElementById('platformDeliveryReturnId').value = ""; // 비워둠
           document.getElementById('deliveryId').value = 'DELV-' + code;
         } else if (type === '스토렌반환검수') {
-          document.getElementById('platformDeliveryId').value = '';
+          // 반환검수의 경우 반환 ID만 설정 (원본 배송 ID는 서버에서 찾음)
+          document.getElementById('platformDeliveryId').value = ""; // 서버에서 찾을 것임
           document.getElementById('platformDeliveryReturnId').value = code;
           document.getElementById('deliveryId').value = 'DELV-RTN-' + code;
         }
 
         // 모달 표시
         modal.style.display = 'block';
-
-        console.log('모달 열기: ' + code + ', ' + type + ', ' + name + ', ' + category);
       }
 
       // 모달 닫기 함수

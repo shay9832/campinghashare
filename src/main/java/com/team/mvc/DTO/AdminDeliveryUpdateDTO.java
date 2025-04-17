@@ -1,6 +1,7 @@
 package com.team.mvc.DTO;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class AdminDeliveryUpdateDTO {
 
@@ -45,6 +46,9 @@ public class AdminDeliveryUpdateDTO {
         // 배송 시작일
         private LocalDateTime deliveryStartDate;
 
+        // 새로운 배송 시작일
+        private LocalDateTime newDeliveryStartDate;
+
         // 배송 종료일
         private LocalDateTime deliveryEndDate;
 
@@ -53,6 +57,23 @@ public class AdminDeliveryUpdateDTO {
 
         // 검수 결과 처리 유형
         private String inspectionResultType;
+
+        // 플랫폼 배송 반환 유형
+        private int platformDeliveryReturnId,platformDeliveryId;
+
+        //플랫폼 배송 유형
+        private int payId;
+
+        //유저 배송 유형
+        private int userDeliveryReturnId,userDeliveryId;
+        private String waybillEntryDate;
+
+        //렌탈 데이터 유형
+        private Date rentalStartDate;
+        private Date rentalEndDate;
+
+        private String memo;  // 메모 필드 추가
+        private String status; // 배송 상태 필드 추가
 
 
         //getter setter 구성
@@ -176,5 +197,93 @@ public class AdminDeliveryUpdateDTO {
 
     public void setInspectionResultType(String inspectionResultType) {
         this.inspectionResultType = inspectionResultType;
+    }
+
+    public LocalDateTime getNewDeliveryStartDate() {
+        return newDeliveryStartDate;
+    }
+
+    public void setNewDeliveryStartDate(LocalDateTime newDeliveryStartDate) {
+        this.newDeliveryStartDate = newDeliveryStartDate;
+    }
+
+    public int getPlatformDeliveryReturnId() {
+        return platformDeliveryReturnId;
+    }
+
+    public void setPlatformDeliveryReturnId(int platformDeliveryReturnId) {
+        this.platformDeliveryReturnId = platformDeliveryReturnId;
+    }
+
+    public int getPlatformDeliveryId() {
+        return platformDeliveryId;
+    }
+
+    public void setPlatformDeliveryId(int platformDeliveryId) {
+        this.platformDeliveryId = platformDeliveryId;
+    }
+
+    public int getPayId() {
+        return payId;
+    }
+
+    public void setPayId(int payId) {
+        this.payId = payId;
+    }
+
+    public int getUserDeliveryReturnId() {
+        return userDeliveryReturnId;
+    }
+
+    public void setUserDeliveryReturnId(int userDeliveryReturnId) {
+        this.userDeliveryReturnId = userDeliveryReturnId;
+    }
+
+    public int getUserDeliveryId() {
+        return userDeliveryId;
+    }
+
+    public void setUserDeliveryId(int userDeliveryId) {
+        this.userDeliveryId = userDeliveryId;
+    }
+
+    public String getWaybillEntryDate() {
+        return waybillEntryDate;
+    }
+
+    public void setWaybillEntryDate(String waybillEntryDate) {
+        this.waybillEntryDate = waybillEntryDate;
+    }
+
+    public Date getRentalStartDate() {
+        return rentalStartDate;
+    }
+
+    public void setRentalStartDate(Date rentalStartDate) {
+        this.rentalStartDate = rentalStartDate;
+    }
+
+    public Date getRentalEndDate() {
+        return rentalEndDate;
+    }
+
+    public void setRentalEndDate(Date rentalEndDate) {
+        this.rentalEndDate = rentalEndDate;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
