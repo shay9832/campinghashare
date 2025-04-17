@@ -19,6 +19,11 @@
         <result property="deliveryEndDate" column="배송종료일" />
         <result property="inspectionCompletedDate" column="검수결과처리일" />
         <result property="inspectionResultType" column="검수결과처리유형" />
+        <result property="platformDeliveryReturnId" column="PLATFORM_DELIVERY_RETURN_ID"/>
+        <result property="platformDeliveryId" column="PLATFORM_DELIVERY_ID"/>
+        <!-- 렌탈 날짜 필드 추가 -->
+        <result property="rentalStartDate" column="렌탈시작일" />
+        <result property="rentalEndDate" column="렌탈종료일" />
     </resultMap>
 
     <!-- 기본 조회 쿼리 -->
@@ -39,6 +44,8 @@
              , PD.DELIVERY_END_DATE                      AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , NULL                                      AS "렌탈시작일"
+             , NULL                                      AS "렌탈종료일"
         FROM PAY P
                  JOIN STOREN S
                       ON P.STOREN_ID = S.STOREN_ID
@@ -75,6 +82,8 @@
              , PD.DELIVERY_END_DATE                      AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , NULL                                      AS "렌탈시작일"
+             , NULL                                      AS "렌탈종료일"
         FROM PAY P
                  JOIN STORAGE S
                       ON P.STORAGE_ID = S.STORAGE_ID
@@ -111,6 +120,8 @@
              , UD.DELIVERY_END_DATE                      AS "배송종료일"
              , NULL                                      AS "검수결과처리일"
              , NULL                                      AS "검수결과처리유형"
+             , RMR.RENTAL_START_DATE                     AS "렌탈시작일"
+             , RMR.RENTAL_END_DATE                       AS "렌탈종료일"
         FROM PAY P
                  JOIN RENTAL_MATCHING_DONE RMD
                       ON P.RENTAL_MATCHING_DONE_ID = RMD.RENTAL_MATCHING_DONE_ID
@@ -145,6 +156,8 @@
              , PD.DELIVERY_END_DATE                      AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , SMR.RENTAL_START_DATE                     AS "렌탈시작일"
+             , SMR.RENTAL_END_DATE                       AS "렌탈종료일"
         FROM PAY P
                  JOIN STOREN_MATCHING_DONE SMD
                       ON P.STOREN_MATCHING_DONE_ID = SMD.STOREN_MATCHING_DONE_ID
@@ -184,6 +197,8 @@
              , PDR.DELIVERY_END_DATE                     AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , SMR.RENTAL_START_DATE                     AS "렌탈시작일"
+             , SMR.RENTAL_END_DATE                       AS "렌탈종료일"
         FROM PLATFORM_DELIVERY PD
                  JOIN PAY P
                       ON PD.PAY_ID = P.PAY_ID
@@ -227,6 +242,8 @@
              , STLR.DELIVERY_END_DATE                    AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , NULL                                      AS "렌탈시작일"
+             , NULL                                      AS "렌탈종료일"
         FROM STOREN_LAST_RETURN STLR
                  JOIN STOREN S
                       ON STLR.STOREN_ID = S.STOREN_ID
@@ -257,6 +274,8 @@
              , STLR.DELIVERY_END_DATE                    AS "배송종료일"
              , IRA.COMPLETED_DATE                        AS "검수결과처리일"
              , IRAT.INSPEC_RESULT_ACTION_TYPE_NAME       AS "검수결과처리유형"
+             , NULL                                      AS "렌탈시작일"
+             , NULL                                      AS "렌탈종료일"
         FROM STORAGE_LAST_RETURN STLR
                  JOIN STORAGE S
                       ON STLR.STORAGE_ID = S.STORAGE_ID
@@ -287,6 +306,8 @@
              , UDR.DELIVERY_END_DATE                     AS "배송종료일"
              , NULL                                      AS "검수결과처리일"
              , NULL                                      AS "검수결과처리유형"
+             , RMR.RENTAL_START_DATE                     AS "렌탈시작일"
+             , RMR.RENTAL_END_DATE                       AS "렌탈종료일"
         FROM USERS_DELIVERY UD
                  JOIN PAY P
                       ON UD.PAY_ID = P.PAY_ID
@@ -324,13 +345,51 @@
         ) WHERE "배송ID" = #{deliveryId}
     </select>
 
-    <update id="updateShippingStartDATE" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
-        UPDATE PLATFORM_DELIVERY
-        SET
-            DELIVERY_START_DATE = #{deliveryStartDate}
-        WHERE PLATFORM_DELIVERY_ID = #{deliveryId}
-        AND #{selecteDate} BETWEEN DELIVERY_START_DATE AND DELIVERY_END_DATE
+    <!-- 배송 정보 업데이트 -->
+    <update id="updateDelivery" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
+        <!-- 배송 유형에 따라 다른 테이블을 업데이트 -->
+        <choose>
+            <when test="deliveryType == '플랫폼 배송' or deliveryType == 'platform'">
+                UPDATE PLATFORM_DELIVERY
+                SET DELIVERY_START_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate}
+                WHERE PLATFORM_DELIVERY_ID = #{deliveryId}
+            </when>
+            <when test="deliveryType == '플랫폼 배송 반환' or deliveryType == 'platform-return'">
+                UPDATE PLATFORM_DELIVERY_RETURN
+                SET DELIVERY_START_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate}
+                WHERE PLATFORM_DELIVERY_RETURN_ID = #{deliveryId}
+            </when>
+            <when test="deliveryType == '거래자 택배' or deliveryType == 'user'">
+                UPDATE USERS_DELIVERY
+                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate},
+                CARRIER_NAME = #{carrierName},
+                WAYBILL_NUMBER = #{waybillNumber}
+                WHERE USERS_DELIVERY_ID = #{deliveryId}
+            </when>
+            <when test="deliveryType == '거래자 택배 반환' or deliveryType == 'user-return'">
+                UPDATE USERS_DELIVERY_RETURN
+                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate},
+                CARRIER_NAME = #{carrierName},
+                WAYBILL_NUMBER = #{waybillNumber}
+                WHERE USERS_DELIVERY_RETURN_ID = #{deliveryId}
+            </when>
+            <when test="deliveryType == '보관 최종 반환' or deliveryType == 'storage-return'">
+                UPDATE STORAGE_LAST_RETURN
+                SET DELIVERY_START_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate}
+                WHERE STORAGE_LAST_RETURN_ID = #{deliveryId}
+            </when>
+            <when test="deliveryType == '스토렌 최종 반환' or deliveryType == 'storen-return'">
+                UPDATE STOREN_LAST_RETURN
+                SET DELIVERY_START_DATE = #{deliveryStartDate},
+                DELIVERY_END_DATE = #{deliveryEndDate}
+                WHERE STOREN_LAST_RETURN_ID = #{deliveryId}
+            </when>
+        </choose>
     </update>
-
 
 </mapper>

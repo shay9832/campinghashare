@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -57,6 +58,42 @@ public class AdminDeliveryUpdateController {
         return "/admin-deliveryUpdate";
     }
 
+    // 여기에 새로운 POST 메서드 추가
+    @RequestMapping(value="/admin-deliveryUpdate.action", method=RequestMethod.POST)
+    public String updateDelivery(
+            @RequestParam(value="calculatedDeliveryStartDate", required=false) String calculatedDeliveryStartDate,
+            @RequestParam(value="calculatedDeliveryEndDate", required=false) String calculatedDeliveryEndDate,
+            AdminDeliveryUpdateDTO dto,
+            Model model) {
+
+        try {
+            // 계산된 배송 시작일과 종료일이 있으면 DTO에 설정
+            if (calculatedDeliveryStartDate != null && !calculatedDeliveryStartDate.isEmpty()) {
+                // LocalDateTime으로 변환 (컨트롤러가 LocalDateTime을 사용하고 있음)
+                LocalDateTime startDate = LocalDateTime.parse(calculatedDeliveryStartDate + "T00:00:00");
+                dto.setDeliveryStartDate(startDate);
+            }
+
+            if (calculatedDeliveryEndDate != null && !calculatedDeliveryEndDate.isEmpty()) {
+                LocalDateTime endDate = LocalDateTime.parse(calculatedDeliveryEndDate + "T00:00:00");
+                dto.setDeliveryEndDate(endDate);
+            }
+
+            // DAO를 통해 DB 업데이트
+            IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+
+            // DAO에 업데이트 메서드가 있는지 확인
+            // 메서드 명은 DAO 인터페이스에 정의된 대로 사용
+            dao.updateDelivery(dto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 오류 처리 로직
+        }
+
+        return "redirect:/admin-deliveryUpdate.action";
+    }
+
     private Map<String, List<AdminDeliveryUpdateDTO>> categorizeDeliveries(List<AdminDeliveryUpdateDTO> allDeliveries) {
         Map<String, List<AdminDeliveryUpdateDTO>> result = new HashMap<>();
         result.put("platform", new ArrayList<>());
@@ -85,24 +122,5 @@ public class AdminDeliveryUpdateController {
         }
 
         return result;
-    }
-
-
-    @RequestMapping(value="/admin-deliveryUpdate.action",method = RequestMethod.POST)
-    public String updateShippingStartDate(@RequestParam("deliveryId") int deliveryId,
-                                          @RequestParam("selecteDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date selecteDate,
-                                          Model model) {
-
-        IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
-
-        int result = dao.updateShippingStartDate(deliveryId,selecteDate);
-
-        if (result > 0) {
-            model.addAttribute("message","배송 시작일이 성공적으로 업데이트되었습니다.");
-        } else {
-            model.addAttribute("error","선택한 날짜가 허용된 배송 기간이 아닙니다.");
-        }
-
-        return "redirect:/admin-deliveryUpdate.action";
     }
 }
