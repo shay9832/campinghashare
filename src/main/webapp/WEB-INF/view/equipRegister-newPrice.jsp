@@ -145,6 +145,93 @@
         }
 
         /**
+         * 페이지 로드 시 실행될 초기화 함수
+         */
+        function initializeEquipmentForm() {
+            setupEquipNameSearch();
+
+            // 가격 입력 필드에 숫자 포맷팅 적용
+            $("#priceInput").on('input', function() {
+                // 숫자만 추출
+                let value = $(this).val().replace(/[^0-9]/g, '');
+
+                // 천 단위 콤마 추가하여 표시
+                if (value) {
+                    $(this).val(Number(value).toLocaleString());
+                }
+            });
+        }
+
+        /**
+         * 장비명 검색 및 드롭다운 기능 설정
+         */
+        function setupEquipNameSearch() {
+            try {
+                // 브랜드명 가져오기
+                const brand = "${brand}";
+                console.log("브랜드명:", brand);
+
+                // 기존 드롭다운 요소 제거 후 새로 생성
+                $("#equipNameDropdown").remove();
+                $(".search-container").append('<div id="equipNameDropdown" style="display:none;"></div>');
+
+                // 전역에서 사용할 장비명 데이터 변수
+                window.equipNameData = [];
+                window.dataLoaded = false;
+
+                // 검색창 클릭 시 데이터 로드 및 드롭다운 표시
+                $("#equipNameSearch").on('click focus', function() {
+                    if (!window.dataLoaded) {
+                        // 데이터가 로드되지 않은 경우에만 AJAX 요청
+                        fetchEquipNames(brand);
+                    } else {
+                        // 이미 데이터가 로드된 경우 드롭다운만 표시
+                        updateEquipNameDropdown($(this).val());
+                        $("#equipNameDropdown").show();
+                    }
+                });
+
+                // 검색 필터링 처리
+                $("#equipNameSearch").on('input', function() {
+                    if (window.dataLoaded) {
+                        updateEquipNameDropdown($(this).val());
+                        $("#equipNameDropdown").show();
+                    }
+                });
+
+                // 드롭다운 항목 클릭 이벤트
+                $(document).on('click', '#equipNameDropdown .dropdown-item', function() {
+                    const equipName = $(this).data('name');
+                    const price = $(this).data('price');
+
+                    $("#equipNameSearch").val(equipName);
+
+                    // 가격 입력란에 자동 입력 (0보다 큰 경우)
+                    if (price && price > 0) {
+                        $("#priceInput").val(Number(price).toLocaleString());
+                    } else {
+                        // 가격 정보가 없거나 0인 경우 입력란을 비움
+                        $("#priceInput").val('');
+                    }
+
+                    $("#equipNameDropdown").hide();
+
+                    // 평균 가격 업데이트 호출
+                    updatePriceInfo(equipName);
+                });
+
+                // 문서 클릭 시 드롭다운 숨김
+                $(document).on('click', function(e) {
+                    if (!$(e.target).closest('.search-container').length) {
+                        $("#equipNameDropdown").hide();
+                    }
+                });
+            } catch (error) {
+                console.error("setupEquipNameSearch 함수 오류:", error);
+            }
+        }
+
+        /**
          * 브랜드 ID에 따라 장비명 목록을 가져와 드롭다운에 표시하는 함수
          * @param {string} brandId - 선택된 브랜드 ID
          */
@@ -284,89 +371,49 @@
             window.processedNames = [];
         }
 
-        /**
-         * 장비명 검색 및 드롭다운 기능 설정
-         */
-        function setupEquipNameSearch() {
-            try {
-                // 브랜드명 가져오기
-                const brand = "${brand}";
-                console.log("브랜드명:", brand);
 
-                // 기존 드롭다운 요소 제거 후 새로 생성
-                $("#equipNameDropdown").remove();
-                $(".search-container").append('<div id="equipNameDropdown" style="display:none;"></div>');
 
-                // 전역에서 사용할 장비명 데이터 변수
-                window.equipNameData = [];
-                window.dataLoaded = false;
+        // 장비명 선택 시 동적으로 평균 신품가격 및 평균 렌탈가격 표시
+        function updatePriceInfo(equipName) {
+            if (!equipName || equipName === "기타") return;
 
-                // 검색창 클릭 시 데이터 로드 및 드롭다운 표시
-                $("#equipNameSearch").on('click focus', function() {
-                    if (!window.dataLoaded) {
-                        // 데이터가 로드되지 않은 경우에만 AJAX 요청
-                        fetchEquipNames(brand);
-                    } else {
-                        // 이미 데이터가 로드된 경우 드롭다운만 표시
-                        updateEquipNameDropdown($(this).val());
-                        $("#equipNameDropdown").show();
+            $.ajax({
+                url: "${pageContext.request.contextPath}/getAvgPricesByEquipName.action",
+                type: "GET",
+                data: { equipName: equipName },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        const avgNewPrice = response.avgNewPrice;
+                        const avgRentalPrice = response.avgRentalPrice;
+                        const formattedNewPrice = response.formattedNewPrice;
+                        const formattedRentalPrice = response.formattedRentalPrice;
+
+                        // 신품가격 입력란에 평균가 표시
+                        if (avgNewPrice > 0) {
+                            $("#originalPrice").val(formattedNewPrice);
+                            $("#avgPriceInfo").html("평균 신품 가격: " + formattedNewPrice + "원");
+                            $("#avgPriceInfo").show();
+                        } else {
+                            $("#avgPriceInfo").hide();
+                        }
+
+                        // 평균 렌탈가격 정보 표시
+                        if (avgRentalPrice > 0) {
+                            $("#avgRentalInfo").html("평균 렌탈 가격: " + formattedRentalPrice + "원/일 (참고용)");
+                            $("#avgRentalInfo").show();
+                        } else {
+                            $("#avgRentalInfo").hide();
+                        }
                     }
-                });
-
-                // 검색 필터링 처리
-                $("#equipNameSearch").on('input', function() {
-                    if (window.dataLoaded) {
-                        updateEquipNameDropdown($(this).val());
-                        $("#equipNameDropdown").show();
-                    }
-                });
-
-                // 드롭다운 항목 클릭 이벤트
-                $(document).on('click', '#equipNameDropdown .dropdown-item', function() {
-                    const equipName = $(this).data('name');
-                    const price = $(this).data('price');
-
-                    $("#equipNameSearch").val(equipName);
-
-                    // 가격 입력란에 자동 입력 (0보다 큰 경우)
-                    if (price && price > 0) {
-                        $("#priceInput").val(Number(price).toLocaleString());
-                    } else {
-                        // 가격 정보가 없거나 0인 경우 입력란을 비움
-                        $("#priceInput").val('');
-                    }
-
-                    $("#equipNameDropdown").hide();
-                });
-
-                // 문서 클릭 시 드롭다운 숨김
-                $(document).on('click', function(e) {
-                    if (!$(e.target).closest('.search-container').length) {
-                        $("#equipNameDropdown").hide();
-                    }
-                });
-            } catch (error) {
-                console.error("setupEquipNameSearch 함수 오류:", error);
-            }
-        }
-
-        /**
-         * 페이지 로드 시 실행될 초기화 함수
-         */
-        function initializeEquipmentForm() {
-            setupEquipNameSearch();
-
-            // 가격 입력 필드에 숫자 포맷팅 적용
-            $("#priceInput").on('input', function() {
-                // 숫자만 추출
-                let value = $(this).val().replace(/[^0-9]/g, '');
-
-                // 천 단위 콤마 추가하여 표시
-                if (value) {
-                    $(this).val(Number(value).toLocaleString());
+                },
+                error: function(xhr, status, error) {
+                    console.error("가격 정보 불러오기 실패:", error);
                 }
             });
         }
+
+
 
         // 장비 등록 폼 제출
         function submitEquipmentForm() {
@@ -392,76 +439,8 @@
 
             console.log("선택된 파일 수: " + selectedFiles.length);
 
-            // FormData 객체 생성
-            const formData = new FormData(document.getElementById("equipmentForm"));
-
-            // 기존 input[type=file] 필드에 선택된 파일들이 없으므로, 수동으로 파일 추가
-            for (let i = 0; i < selectedFiles.length; i++) {
-                formData.append("photos", selectedFiles[i]);
-            }
-
-            // 장비명 선택 시 동적으로 평균 신품가격 및 평균 렌탈가격 표시
-            function updatePriceInfo(equipName) {
-                if (!equipName || equipName === "기타") return;
-
-                $.ajax({
-                    url: "${pageContext.request.contextPath}/getAvgPricesByEquipName.action",
-                    type: "GET",
-                    data: { equipName: equipName },
-                    dataType: "json",
-                    success: function(response) {
-                        if (response.success) {
-                            const avgNewPrice = response.avgNewPrice;
-                            const avgRentalPrice = response.avgRentalPrice;
-                            const formattedNewPrice = response.formattedNewPrice;
-                            const formattedRentalPrice = response.formattedRentalPrice;
-
-                            // 신품가격 입력란에 평균가 표시
-                            if (avgNewPrice > 0) {
-                                $("#originalPrice").val(formattedNewPrice);
-                                $("#avgPriceInfo").html("평균 신품 가격: " + formattedNewPrice + "원");
-                                $("#avgPriceInfo").show();
-                            } else {
-                                $("#avgPriceInfo").hide();
-                            }
-
-                            // 평균 렌탈가격 정보 표시
-                            if (avgRentalPrice > 0) {
-                                $("#avgRentalInfo").html("평균 렌탈 가격: " + formattedRentalPrice + "원/일 (참고용)");
-                                $("#avgRentalInfo").show();
-                            } else {
-                                $("#avgRentalInfo").hide();
-                            }
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("가격 정보 불러오기 실패:", error);
-                    }
-                });
-            }
-
-
-            // AJAX로 폼 제출
-            $.ajax({
-                url: $("#equipmentForm").attr("action"),
-                type: "POST",
-                data: formData,
-                processData: false,  // FormData와 함께 사용 시 필수
-                contentType: false,  // FormData와 함께 사용 시 필수
-                success: function(response) {
-                    // 성공 시 처리
-                    window.location.href = "${pageContext.request.contextPath}/equipregister-complete.action";
-                },
-                error: function(xhr, status, error) {
-                    // 에러 처리
-                    console.error("Error:", error);
-                    alert("파일 업로드 중 오류가 발생했습니다.");
-                }
-            });
-
-            // 일시적으로 AJAX 대신 직접 폼 제출
+            // AJAX 대신 기본 폼 제출 방식 사용
             document.getElementById("equipmentForm").submit();
-            return false;
         }
     </script>
 </head>
@@ -566,7 +545,7 @@
             <div class="button-container">
                 <a href="${pageContext.request.contextPath}/equipregister-brand.action?majorCategory=${majorCategory}&middleCategory=${middleCategory}"
                    class="btn">이전</a>
-                <button type="submit" class="btn btn-primary">등록</button>
+                <button type="button" class="btn btn-primary" onclick="submitEquipmentForm();">등록</button>
             </div>
         </form>
     </main>

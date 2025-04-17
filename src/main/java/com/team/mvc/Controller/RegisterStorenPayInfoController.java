@@ -23,6 +23,7 @@ public class RegisterStorenPayInfoController {
     @RequestMapping(value="storenRegister-storage-pay-info.action",method = RequestMethod.GET)
     public String storenRegisterStoragePayComplete(@RequestParam("equip_code") int equip_code,
                                                    @RequestParam("finalStorageCost") int finalStorageCost,
+                                                   @RequestParam(name = "storageDays", required = false, defaultValue = "0") int storageDays,
                                                    @ModelAttribute("userCode") Integer userCode,
                                                    Model model) {
 
@@ -34,6 +35,7 @@ public class RegisterStorenPayInfoController {
 
         model.addAttribute("equip_code", equip_code);
         model.addAttribute("finalStorageCost", finalStorageCost);
+        model.addAttribute("storageDays", storageDays);
 
         return "storenRegister-storage-pay-info";
     }

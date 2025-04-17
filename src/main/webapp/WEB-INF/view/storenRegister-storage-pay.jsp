@@ -10,7 +10,7 @@
 <body>
 <jsp:include page="header.jsp" />
 <main class="main-content container">
-    <form action="storenRegister-storage-pay-info.action" method="GET">
+    <form id="storenForm" action="storenRegister-storage-pay-info.action" method="GET">
         <c:set var="discountAmount" value="0" />
         <c:set var="finalStorageCost" value="${storageCost - discountAmount}" />
 
@@ -48,6 +48,9 @@
                             <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="${addressInfo.address1}" readonly />
                             <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="${addressInfo.address2}" />
                             <input type="text" id="extraAddress" class="form-control mt-2" placeholder="참고항목" readonly />
+
+                            <!-- 다음 주소 iframe 위치 -->
+                            <div id="wrap" style="display:none; border:1px solid #000; width:100%; margin-top:10px;"></div>
                         </div>
                     </div>
                 </div>
@@ -147,7 +150,7 @@
                     </div>
                     <div class="button-container mt-3">
                         <a href="${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equip_code}" class="btn">이전</a>
-                        <button type="submit" class="btn btn-primary">다음</button>
+                        <button type="button" class="btn btn-primary" onclick="validateAndSubmit()">다음</button>
                     </div>
                 </div>
             </div>
@@ -240,9 +243,7 @@
         // iframe을 넣은 element를 보이게 한다. (검색창 활성화)
         element_wrap.style.display = 'block';
     }
-</script>
 
-<script>
     document.addEventListener('DOMContentLoaded', function() {
         // 이미지 컨테이너 찾기
         const imageContainer = document.querySelector('.image-upload');
@@ -251,6 +252,68 @@
             [...imageContainer.children].reverse().forEach(child => imageContainer.appendChild(child));
         }
     });
+
+    function validateAndSubmit() {
+        const zipcode = document.getElementById("postcode").value.trim();
+        const address1 = document.getElementById("address").value.trim();
+        const address2 = document.getElementById("detailAddress").value.trim();
+
+        if (!zipcode || !address1 || !address2) {
+            alert("배송지 정보를 모두 입력해주세요.");
+            return;
+        }
+
+        const form = document.getElementById("storenForm");
+
+        // equipSize 처리
+        let inputSize = form.querySelector('input[name="equipSize"]');
+        let equipSize = inputSize ? inputSize.value.trim() : "";
+
+        if (!inputSize) {
+            inputSize = document.createElement("input");
+            inputSize.type = "hidden";
+            inputSize.name = "equipSize";
+            equipSize = "${equipSize}"; // 서버 값이 있다면 보완
+            inputSize.value = equipSize;
+            form.appendChild(inputSize);
+        }
+
+        if (!equipSize) {
+            alert("장비 사이즈를 선택해주세요.");
+            return;
+        }
+
+        // 주소 필드
+        let inputZip = form.querySelector('input[name="zipcode"]');
+        if (!inputZip) {
+            inputZip = document.createElement("input");
+            inputZip.type = "hidden";
+            inputZip.name = "zipcode";
+            form.appendChild(inputZip);
+        }
+
+        let inputAddr1 = form.querySelector('input[name="address1"]');
+        if (!inputAddr1) {
+            inputAddr1 = document.createElement("input");
+            inputAddr1.type = "hidden";
+            inputAddr1.name = "address1";
+            form.appendChild(inputAddr1);
+        }
+
+        let inputAddr2 = form.querySelector('input[name="address2"]');
+        if (!inputAddr2) {
+            inputAddr2 = document.createElement("input");
+            inputAddr2.type = "hidden";
+            inputAddr2.name = "address2";
+            form.appendChild(inputAddr2);
+        }
+
+        inputZip.value = zipcode;
+        inputAddr1.value = address1;
+        inputAddr2.value = address2;
+
+        form.submit();
+    }
 </script>
 
 </body>

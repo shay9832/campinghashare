@@ -21,15 +21,6 @@
 </head>
 <body>
 
-<form action="equipregister-complete.action" method="post">
-    <input type="hidden" name="majorCategory" value="${majorCategory}">
-    <input type="hidden" name="middleCategory" value="${middleCategory}">
-    <input type="hidden" name="brand" value="${brand}">
-    <input type="hidden" name="equipName" value="${equipName}">
-    <input type="hidden" name="originalPrice" value="${originalPrice}">
-    <button type="submit" class="btn btn-primary">장비 등록 완료</button>
-</form>
-
 <!-- 헤더 포함 -->
 <jsp:include page="header.jsp"></jsp:include>
 
