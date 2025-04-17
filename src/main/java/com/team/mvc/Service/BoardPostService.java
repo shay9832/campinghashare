@@ -63,7 +63,9 @@ public class BoardPostService implements IBoardPostService {
     @Override
     public int insertPost(BoardPostDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
-        return dao.insertPost(dto);
+        int result = dao.insertPost(dto);
+        System.out.println("서비스 계층 - 게시글 ID: " + dto.getPostId() + ", 반환 결과: " + result);
+        return dto.getPostId();
     }
 
     @Override
@@ -238,5 +240,11 @@ public class BoardPostService implements IBoardPostService {
         return result > 0;
     }
 
+    // 첨부파일 추가
+    @Override
+    public int insertAttachment(AttachmentDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertAttachment(dto);
+    }
 
 }

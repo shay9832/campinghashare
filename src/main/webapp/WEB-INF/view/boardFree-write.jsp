@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ include file="checkLogin.jsp"%>
+<%@ include file="checkLogin.jsp" %>
 <html>
 <head>
     <title>글쓰기 - 자유게시판</title>
@@ -177,7 +177,7 @@
                 </div>
 
                 <div class="content-box p-5">
-                    <form id="postForm" method="POST"
+                    <form id="postForm" method="POST" enctype="multipart/form-data"
                           action="${isUpdate ? 'api/post/update.action' : 'boardfree-write.action'}">
                         <!-- 수정 모드일 경우 postId 필드 추가 -->
                         <c:if test="${isUpdate}">
@@ -289,15 +289,22 @@
                             </div>
                         </div>
 
+
                         <div class="d-flex justify-content-between gap-2 mt-4">
-                            <div>
-                                <button type="button" class="btn btn-outline-primary"><i
-                                        class="fa-solid fa-paperclip"></i> 첨부파일
-                                </button>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div class="d-flex gap-2 align-items-center">
+                                    <input type="file" class="form-control" id="fileInput" name="uploadFiles" multiple style="display:none;">
+                                    <button type="button" class="btn btn-outline-primary" id="fileUploadBtn">
+                                        <i class="fa-solid fa-paperclip"></i> 파일 선택
+                                    </button>
+                                    <span id="fileCount">선택된 파일 없음</span>
+                                </div>
+                                <div id="fileList" class="mt-2"></div>
                             </div>
                             <div class="d-flex gap-2">
                                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                                <button type="button" id="submitBtn" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
+                                <button type="button" id="submitBtn"
+                                        class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
                             </div>
                         </div>
                     </form>
@@ -323,7 +330,7 @@
 
 <script>
     // 순수 자바스크립트로 구현
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         console.log("DOM이 로드되었습니다.");
 
         // 요소 참조
@@ -336,7 +343,7 @@
 
         // 등록하기 버튼 클릭 시 처리
         if (submitBtn) {
-            submitBtn.addEventListener('click', function() {
+            submitBtn.addEventListener('click', function () {
                 console.log("등록하기 버튼이 클릭되었습니다.");
 
                 // 폼 검증
@@ -363,7 +370,7 @@
 
         // 취소 버튼 클릭 시 모달 닫기
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
+            cancelBtn.addEventListener('click', function () {
                 modalOverlay.style.display = 'none';
                 modal.style.display = 'none';
             });
@@ -371,7 +378,7 @@
 
         // 확인 버튼 클릭 시 폼 제출
         if (confirmBtn && postForm) {
-            confirmBtn.addEventListener('click', function() {
+            confirmBtn.addEventListener('click', function () {
                 // 수정 모드 확인
                 const isUpdateMode = document.querySelector('input[name="postId"]') !== null;
 
@@ -418,7 +425,7 @@
         // 게시판 변경 시 말머리 목록 가져오기
         const boardSelect = document.getElementById('boardId');
         if (boardSelect) {
-            boardSelect.addEventListener('change', function() {
+            boardSelect.addEventListener('change', function () {
                 const selectedBoardId = this.value;
                 if (selectedBoardId) {
                     loadHeaderTags(selectedBoardId);
@@ -457,6 +464,45 @@
                 });
         }
     });
+
+
+    // 파일 업로드 버튼 클릭 시 파일 선택 창 열기
+    const fileUploadBtn = document.getElementById('fileUploadBtn');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const fileCount = document.getElementById('fileCount');
+
+    fileUploadBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    // 파일 선택 시 목록 표시
+    fileInput.addEventListener('change', function() {
+        fileList.innerHTML = '';
+
+        if (this.files.length > 0) {
+            fileCount.textContent = '선택된 파일: ' + this.files.length + '개';
+
+            for (let i = 0; i < this.files.length; i++) {
+                const file = this.files[i];
+                const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+
+                const fileItem = document.createElement('div');
+                fileItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
+                fileItem.innerHTML =
+                    '<div>' +
+                    '<i class="fa-solid fa-file me-2"></i>' +
+                    '<span>' + file.name + '</span>' +
+                    '<small class="text-muted ms-2">(' + fileSize + ')</small>' +
+                    '</div>';
+
+                fileList.appendChild(fileItem);
+            }
+        } else {
+            fileCount.textContent = '선택된 파일 없음';
+        }
+    });
+
 </script>
 </body>
 </html>

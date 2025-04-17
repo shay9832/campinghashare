@@ -63,6 +63,9 @@ public interface IBoardPostService {
     // 인기글 지정
     int insertHotPostLog(BoardPostDTO dto);
 
-
+    // 게시글 삭제시 댓글 삭제
     boolean deletePostWithReplies(int postId);
+
+    // 첨부파일 추가
+    int insertAttachment(AttachmentDTO dto);
 }

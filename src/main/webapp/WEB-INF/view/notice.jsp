@@ -250,7 +250,6 @@
                                     </option>
                                     <option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
                                     <option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
-                                    <option value="writer" ${searchType == 'writer' ? 'selected' : ''}>작성자</option>
                                 </select>
                                 <input type="text" name="searchKeyword" value="${searchKeyword}"
                                        class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요"

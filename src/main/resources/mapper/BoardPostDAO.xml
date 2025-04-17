@@ -452,4 +452,13 @@
                           FROM HOT_POST_LOG
                           WHERE POST_ID = #{postId})
     </insert>
+
+    <!-- 첨부파일 등록 -->
+    <insert id="insertAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        INSERT INTO ATTACHMENT_POST (ATTACHMENT_POST_ID, POST_ID, ATTACHMENT_NAME, ATTACHMENT_PATH, ATTACHMENT_SIZE, ATTACHMENT_ORDER, CREATED_DATE)
+        VALUES (ATTACHMENT_POST_SEQ.nextval, #{postId}, #{attachmentName}, #{attachmentPath}, #{attachmentSize}, #{attachmentOrder}, SYSDATE)
+    </insert>
+
+
+
 </mapper>
