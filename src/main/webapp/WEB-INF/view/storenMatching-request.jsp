@@ -3,20 +3,8 @@
 <%@ page import="java.util.Locale" %>
 <%@ page import="com.team.mvc.DTO.StorenDTO" %>
 <%
-    // 임시 변수 설정
-    String selectedDateRange = "";
-    String selectedDays = "0";
-    String selectedPrice = "0원";
-    String matching_done = "false";
 
     StorenDTO storen = (StorenDTO)request.getAttribute("storen");
-
-    // JSP 파일 상단에 추가
-    if (storen != null && selectedDateRange == null) {
-        // DB에서 가져온 날짜를 초기 값으로 설정
-        selectedDateRange = storen.getRental_start_date() + " ~ " + storen.getRental_end_date();
-        // 날짜 차이 계산 로직 (moment.js와 같은 라이브러리로 일수 계산)
-    }
 
     // 장비 관련 임시 데이터
     int avgNewPrice = 2500000;
@@ -214,15 +202,14 @@
                         <td>
                             <div class="date-container">
                                 <div class="date-range-container">
-                                    <input type="text" id="date-range" placeholder="날짜 선택" readonly
-                                           value="<%= selectedDateRange != null ? selectedDateRange : "" %>">
+                                    <input type="text" id="date-range" placeholder="날짜 선택" readonly>
                                     <span class="date-range-icon">
                                         <i class="fa-regular fa-calendar"></i>
                                     </span>
                                 </div>
                             </div>
                             <!-- 렌탈 일수 표시 -->
-                            <div id="rental-days"><%= selectedDays != null ? "(" + selectedDays + "일)" : "(0일)" %></div>
+                            <div id="rental-days">(0일)</div>
                         </td>
                     </tr>
                 </table>
@@ -230,21 +217,10 @@
                 <div class="total-price">
                     <span class="font-medium">총 렌탈 금액</span>
                     <!-- 총 렌탈 금액 표시 -->
-                    <div id="total-price-value"><%= selectedPrice != null ? selectedPrice : "0원" %></div>
+                    <div id="total-price-value">0원</div>
                 </div>
 
-                <%
-                    // [E] 매칭 중이면 버튼 disabled 처리
-                    if ("true".equals(matching_done)) {
-                %>
-                <button class="match-btn disabled" disabled="disabled">매칭 중</button>
-                <%
-                } else {
-                %>
                 <button class="match-btn btn-primary btn-block">매칭 신청</button>
-                <%
-                    }
-                %>
             </div>
         </div>
 
@@ -278,10 +254,11 @@
 <script type="text/javascript">
     // [H] JSP 값 가져오기 - 렌탈 가격 정보
     var dailyRentalPrice = ${storen.daily_rent_price};
-    var selectedDateRange = "<%= selectedDateRange != null ? selectedDateRange : "" %>";
-    var selectedDays = "<%= selectedDays != null ? selectedDays : "0" %>";
-    var selectedPrice = "<%= selectedPrice != null ? selectedPrice : "0원" %>";
-    let lastValidDays = selectedDays !== "0" ? parseInt(selectedDays) : 0;
+    var selectedDateRange = $("#date-range").text() != null ? $("#data-range").text() : "";
+    // (13일) 형식의 문자열에서 숫자만 추출
+    var selectedDays = $("#rental-days").text().match(/\d+/);
+    var selectedPrice = $("#total-price-value").text();
+    let lastValidDays = selectedDays !== null ? parseInt(selectedDays) : 0;
     let lastValidPrice = selectedPrice !== "0원" ? selectedPrice : "0원";
 
     // 이미지 관련 설정
@@ -326,6 +303,7 @@
         // 두 번째 모달의 확인 버튼 클릭 이벤트 - 매칭 완료 처리
         // 두 번째 모달의 확인 버튼 클릭 이벤트 - 매칭 완료 처리 (AJAX 방식)
         $("#confirm2").on("click", function () {
+            const storenId = "${storen.storen_id}";
             // 수정: 선택된 날짜 범위와 일수 파라미터도 함께 전달
             //const dateRange = $('#date-range').val();
             //const days = lastValidDays;
@@ -348,7 +326,7 @@
                 type: "POST",
                 url: "${pageContext.request.contextPath}/api/storen/matching-request",
                 data: {
-                    storenId: ${storen.storen_id}, // 장비 ID
+                    storenId: storenId, // 장비 ID
                     rentalStartDate: rentalStartDate,
                     rentalEndDate: rentalEndDate,
                 },
@@ -406,7 +384,7 @@
 
         // 선택된 날짜 범위가 있으면 해당 값을 초기 날짜로 설정
         if (selectedDateRange && selectedDateRange !== "") {
-            const dateRangeParts = selectedDateRange.split(' - ');
+            const dateRangeParts = selectedDateRange.split(' ~ ');
             if (dateRangeParts.length === 2) {
                 initialStartDate = moment(dateRangeParts[0], 'YYYY.MM.DD');
                 initialEndDate = moment(dateRangeParts[1], 'YYYY.MM.DD');
@@ -595,9 +573,9 @@
     }
 
 
+
     // 매칭 상태 확인 함수
     function checkMatchingStatus() {
-        console.log("storenId 값 확인:", ${storen.storen_id});
         $.ajax({
             type: "GET",
             url: "${pageContext.request.contextPath}/api/storen/check-matching-status",
@@ -608,16 +586,23 @@
                 //alert("매칭상태정보를 잘 가져왔습니다!" + response.hasMatching);
                 if (response.hasMatching) {
                     // 이미 매칭 신청한 경우 UI 업데이트
-                    $(".match-btn").addClass("disabled").attr("disabled", "disabled").text("매칭승인대기");
+                    $(".match-btn").addClass("disabled").attr("disabled", "disabled")
+                    if (response.status === '결제대기'){
+                        $(".match-btn").text("렌탈비 결제대기");
+                    }
+                    else if (response.status === '결제완료'){
+                        $(".match-btn").text("렌탈비 결제완료");
+                    }
+                    else $(".match-btn").text("매칭승인대기");
 
                     // 선택했던 날짜 범위 복원
-                    if (response.dateRange) {
-                        $('#date-range').val(response.dateRange);
+                    if (response.startDate !== null && response.endDate !== null) {
+                        $('#date-range').val(response.startDate + " ~ " + response.endDate);
                     }
 
                     // 일수와 가격 표시 복원
                     $('#rental-days').text('(' + response.days + '일)');
-                    $('#total-price-value').text(response.price);
+                    $('#total-price-value').text(response.price + '원');
                 }
             }
         });

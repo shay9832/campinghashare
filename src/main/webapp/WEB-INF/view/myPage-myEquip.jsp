@@ -189,15 +189,19 @@
                 <div class="urgent-header">즉시 확인 필요</div>
                 <div class="urgent-content">
                     <a href="#" class="urgent-item">
-                        <div class="item-label">검수 결과 확인</div>
+                        <div class="item-label">보관비 결제 대기</div>
                         <div class="item-count">3</div>
                     </a>
                     <a href="#" class="urgent-item">
-                        <div class="item-label">매칭 승인 대기</div>
+                        <div class="item-label">검수 결과 확인</div>
                         <div class="item-count">5</div>
                     </a>
                     <a href="#" class="urgent-item">
-                        <div class="item-label">추가 비용 결제 대기</div>
+                        <div class="item-label">매칭 승인 대기</div>
+                        <div class="item-count">2</div>
+                    </a>
+                    <a href="#" class="urgent-item">
+                        <div class="item-label">문제 상황 발생</div>
                         <div class="item-count">2</div>
                     </a>
                 </div>
@@ -233,22 +237,22 @@
                             </a>
                             <a href="#" class="arrow-step">
                                 <span class="arrow-badge">2</span>
-                                <span class="arrow-label">매칭대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
                                 <span class="arrow-label">승인대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
                                 <span class="arrow-badge">2</span>
-                                <span class="arrow-label">렌탈 중</span>
+                                <span class="arrow-label">결제대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
                                 <span class="arrow-badge">2</span>
-                                <span class="arrow-label">반환 중</span>
+                                <span class="arrow-label">대여 중</span>
+                                <div class="arrow-chevron"></div>
+                            </a>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">2</span>
+                                <span class="arrow-label">반납 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                         </div>
@@ -259,27 +263,27 @@
                         <div class="status-type">렌탈</div>
                         <div class="chevron-arrows">
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">매칭대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">승인대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">렌탈 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">반환 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
@@ -291,27 +295,27 @@
                         <div class="status-type">보관</div>
                         <div class="chevron-arrows">
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">검수 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">보관 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">반환 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
@@ -496,8 +500,8 @@
                                                 <a href="storenmatching-request.action?storen_id=${storen.storen_id}" class="equipment-name">${storen.storen_title}</a>
                                                 <div class="equipment-category">${storen.store_month} 개월 보관</div>
                                                 <div class="equipment-date">스토렌등록 : ${storen.created_date}</div>
-                                                <div class="equipment-date">보관시작일 : ${storen.rental_start_date}</div>
-                                                <div class="equipment-date">보관종료일 : ${storen.rental_end_date}</div>
+                                                <div class="equipment-date">보관시작일 : ${storen.inspec_completed_date != null ? storen.inspec_completed_date : '정보 없음'}</div>
+                                                <div class="equipment-date">보관종료일 : ${storen.final_return_date != null ? storen.final_return_date : '정보 없음'}</div>
                                             </div>
                                         </td>
                                         <td>
