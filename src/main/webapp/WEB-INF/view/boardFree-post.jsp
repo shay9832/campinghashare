@@ -665,15 +665,40 @@
                     <div class="post-body">
                         ${fn:replace(post.postContent, cn, br)}
 
-                        <!-- 첨부 이미지가 있는 경우 표시 -->
-                        <c:if test="${not empty post.attachments and fn:length(post.attachments) > 0}">
-                            <div class="post-images">
+
+                        <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
+                        <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
+                            <p>첨부파일 정보:</p>
+                            <p>post.attachments 존재 여부: ${not empty post.attachments}</p>
+                            <p>첨부파일 개수: ${fn:length(post.attachments)}</p>
+
+                            <c:if test="${not empty post.attachments}">
+                                <ul>
+                                    <c:forEach var="attachment" items="${post.attachments}" varStatus="status">
+                                        <li>
+                                            첨부파일 ${status.index+1}: ${attachment.attachmentName},
+                                            경로: ${attachment.attachmentPath},
+                                            크기: ${attachment.attachmentSize}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </c:if>
+                        </div>
+
+                        <!-- 간단한 첨부파일 표시 시도 -->
+                        <c:if test="${not empty post.attachments}">
+                            <div class="mt-4 p-3 border rounded">
+                                <h5>첨부파일</h5>
                                 <c:forEach var="attachment" items="${post.attachments}">
-                                    <c:if test="${not empty attachment.attachmentPath}">
-                                        <div class="post-image">
-                                            <img src="${attachment.attachmentPath}" alt="${attachment.attachmentName}">
-                                        </div>
-                                    </c:if>
+                                    <div class="mb-2">
+                                        <strong>${attachment.attachmentName}</strong> (${attachment.attachmentSize}
+                                        bytes)
+                                        <br>
+                                        <!-- 간단한 이미지 표시 시도 -->
+                                        <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
+                                             alt="${attachment.attachmentName}"
+                                             style="max-width: 300px; margin-top: 10px;">
+                                    </div>
                                 </c:forEach>
                             </div>
                         </c:if>
@@ -1225,7 +1250,7 @@
                 sendAjaxRequest('api/reply/add.action', 'POST', {
                     postId: postId,
                     replyContent: content
-                }, function(data) {
+                }, function (data) {
                     if (data.success) {
                         location.reload();
                     } else {
@@ -1252,7 +1277,7 @@
                     postId: '${post.postId}', // JSP EL 표현식 사용
                     rootReplyId: parentId,
                     replyContent: content
-                }, function(data) {
+                }, function (data) {
                     if (data.success) {
                         location.reload();
                     } else {
@@ -1274,7 +1299,7 @@
                 // AJAX 요청 통합 함수 사용
                 sendAjaxRequest('api/reply/delete.action', 'POST', {
                     replyId: replyId
-                }, function(data) {
+                }, function (data) {
                     if (data.success) {
                         location.reload();
                     } else {
@@ -1298,13 +1323,13 @@
     function initializePostRecommendation() {
         const likeButton = document.getElementById('likeButton');
         if (likeButton) {
-            likeButton.addEventListener('click', function() {
+            likeButton.addEventListener('click', function () {
                 const postId = this.getAttribute('data-post-id');
 
                 // AJAX 요청 통합 함수 사용
                 sendAjaxRequest('/api/post/recommend.action', 'POST', {
                     postId: postId
-                }, function(response) {
+                }, function (response) {
                     // 추천 수 업데이트 (성공/실패 상관없이)
                     if (response.recommendCount !== undefined) {
                         document.getElementById('likeCount').textContent = "추천 " + response.recommendCount;
@@ -1448,14 +1473,14 @@
         submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
 
         // 삭제 확인 버튼 이벤트
-        newSubmitBtn.addEventListener('click', function() {
+        newSubmitBtn.addEventListener('click', function () {
             // 모달 닫기
             closeModal(document.getElementById('reportModal'));
 
             // 삭제 요청 보내기
             sendAjaxRequest('api/post/delete.action', 'POST', {
                 postId: postId
-            }, function(data) {
+            }, function (data) {
                 // 모달 내용 설정
                 const iconElement = document.querySelector('#completionModal .popup-alert-icon i');
                 const iconContainer = document.querySelector('#completionModal .popup-alert-icon');
@@ -1497,7 +1522,7 @@
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
-        newConfirmBtn.addEventListener('click', function() {
+        newConfirmBtn.addEventListener('click', function () {
             // 모달 닫기
             closeAllModals();
 
@@ -1516,7 +1541,7 @@
             const newCancelBtn = cancelBtn.cloneNode(true);
             cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
 
-            newCancelBtn.addEventListener('click', function() {
+            newCancelBtn.addEventListener('click', function () {
                 closeAllModals();
             });
         }
@@ -1527,7 +1552,7 @@
             const newCloseBtn = closeBtn.cloneNode(true);
             closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
 
-            newCloseBtn.addEventListener('click', function() {
+            newCloseBtn.addEventListener('click', function () {
                 closeAllModals();
             });
         }

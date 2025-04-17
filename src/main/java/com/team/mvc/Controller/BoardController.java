@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.IBoardPostService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.util.*;
 
 @Controller
 public class BoardController {
@@ -548,7 +548,10 @@ public class BoardController {
 
     // 자유게시판 글쓰기(글 등록)
     @RequestMapping(value = "/boardfree-write.action", method = RequestMethod.POST)
-    public String insertPost(BoardPostDTO dto, HttpSession session) {
+    public String insertPost(BoardPostDTO dto,
+                             @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+                             HttpServletRequest request,
+                             HttpSession session) {
         // 현재 로그인한 회원의 user_code 가져오기
 //            Integer user_code = (Integer) session.getAttribute("user_code");
 //            if (user_code == null) {
@@ -562,12 +565,59 @@ public class BoardController {
         dto.setUserCode(userCode);
 
         try {
+            System.out.println("게시글 등록 전 DTO 상태: " + dto.getPostId());
             // 게시글 등록
             int postId = boardPostService.insertPost(dto);
+            System.out.println("게시글 등록 후 반환된 ID: " + postId);
+            System.out.println("게시글 등록 후 DTO 상태: " + dto.getPostId());
+
+            // 첨부파일 처리
+            if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                // 업로드 경로를 webapp/resources/uploads로 설정
+                String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+                System.out.println("업로드 경로: " + uploadPath);
+
+                // 디렉토리가 없으면 생성
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    boolean created = directory.mkdirs();
+                    System.out.println("디렉토리 생성 결과: " + created);
+                }
+
+                // 각 파일 처리
+                for (int i = 0; i < uploadFiles.size(); i++) {
+                    MultipartFile file = uploadFiles.get(i);
+
+                    if (!file.isEmpty()) {
+                        // 파일명 중복 방지를 위한 uuid 추가
+                        String originalFileName = file.getOriginalFilename();
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String savedFileName = UUID.randomUUID().toString() + extension;
+
+                        // 파일 저장 경로 설정
+                        File savedFile = new File(directory, savedFileName);
+
+                        // 파일 저장
+                        file.transferTo(savedFile);
+
+                        // DB에 첨부파일 정보 저장
+                        AttachmentDTO attachmentDTO = new AttachmentDTO();
+                        attachmentDTO.setPostId(postId);
+                        System.out.println("첨부파일에 저장되는 게시글 ID: " + postId);
+                        attachmentDTO.setAttachmentName(originalFileName);
+                        attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                        attachmentDTO.setAttachmentSize((int)file.getSize());
+                        attachmentDTO.setAttachmentOrder(i + 1);
+
+                        boardPostService.insertAttachment(attachmentDTO);
+                    }
+                }
+            }
 
             // 게시판 ID에 따른 리다이렉트 URL 결정
             int boardId = dto.getBoardId();
             String redirectUrl;
+            System.out.println("리다이렉트 URL 결정 - 게시판 ID: " + boardId);
 
             switch (boardId) {
                 case 7: // 자유게시판
@@ -577,7 +627,7 @@ public class BoardController {
                     redirectUrl = "boardgear.action";
                     break;
                 case 9: // 캠핑장 정보
-                    redirectUrl = "boardmarket.action=";
+                    redirectUrl = "boardmarket.action";
                     break;
                 case 10: // 고독한캠핑방
                     redirectUrl = "boardimage.action";
@@ -585,10 +635,12 @@ public class BoardController {
                 default:
                     redirectUrl = "boardmain.action";
             }
+            System.out.println("최종 리다이렉트 URL: " + redirectUrl);
 
             return "redirect:" + redirectUrl;
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("오류 발생: " + e.getMessage());
             // 에러 발생 시 메인 페이지로 리다이렉트
             return "redirect:boardmain.action";
         }
@@ -644,7 +696,8 @@ public class BoardController {
     // 게시글 수정 처리를 위한 api
     @RequestMapping(value = "/api/post/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updatePost(@RequestBody BoardPostDTO dto,
+    public Map<String, Object> updatePost(@RequestPart("post") BoardPostDTO dto,
+                                          @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
                                           HttpSession session) {
         Map<String, Object> result = new HashMap<>();
 
@@ -873,6 +926,7 @@ public class BoardController {
         return "event";
     }
 
+
     // 공지사항 페이지
     @RequestMapping("/notice.action")
     public String notice(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -911,6 +965,8 @@ public class BoardController {
         return "notice";
     }
 
+
+    // 공지사항 게시글 페이지
     @RequestMapping("/noticepost.action")
     public String noticepost(@RequestParam(value = "page", defaultValue = "1") int page,
                              @RequestParam(value = "size", defaultValue = "10") int size,
@@ -1006,6 +1062,7 @@ public class BoardController {
         return "notice-write";
     }
 
+
     // 공지사항 등록 처리
     @RequestMapping(value = "/notice-write.action", method = RequestMethod.POST)
     public String insertNotice(BoardPostDTO dto, HttpSession session) {
@@ -1077,6 +1134,7 @@ public class BoardController {
         return "notice-write";
     }
 
+
     // 공지사항 수정 처리를 위한 API
     @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
     @ResponseBody
@@ -1125,6 +1183,7 @@ public class BoardController {
 
         return result;
     }
+
 
     // 공지사항 삭제 처리를 위한 API
     @RequestMapping(value = "/api/notice/delete.action", method = RequestMethod.POST)
@@ -1180,6 +1239,7 @@ public class BoardController {
 
         return result;
     }
+
 
     // 추천 수 증가
     @RequestMapping(value = "/api/post/recommend.action", method = RequestMethod.POST)

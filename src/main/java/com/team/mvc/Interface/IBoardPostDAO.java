@@ -89,4 +89,7 @@ public interface IBoardPostDAO {
     // 인기글 지정
     int insertHotPostLog(BoardPostDTO dto);
 
+    // 첨부파일 추가
+    int insertAttachment(AttachmentDTO dto);
+
 }
