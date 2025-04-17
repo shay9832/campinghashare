@@ -63,23 +63,23 @@
                     <c:forEach var="brand" items="${brandList}" varStatus="status">
                         <tr>
                             <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${status.count}</td>
-                            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${brand.brand_Id}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${brand.brandId}</td>
                             <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${brand.brandName}</td>
                             <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">
                                 <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get" style="display: inline-block;">
                                     <input type="hidden" name="action" value="editBrand">
-                                    <input type="hidden" name="brand_Id" value="${brand.brand_Id}">
+                                    <input type="hidden" name="brandId" value="${brand.brandId}">
                                     <button type="submit" class="option-button">수정</button>
                                 </form>
                                 <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="post" style="display: inline-block;"
                                       onsubmit="return confirm('정말로 이 브랜드를 삭제하시겠습니까? 연관된 모든 장비명도 함께 삭제됩니다.');">
                                     <input type="hidden" name="formAction" value="deleteBrand">
-                                    <input type="hidden" name="brand_Id" value="${brand.brand_Id}">
+                                    <input type="hidden" name="brandId" value="${brand.brandId}">
                                     <button type="submit" class="option-button">삭제</button>
                                 </form>
                                 <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get" style="display: inline-block;">
                                     <input type="hidden" name="action" value="selectBrand">
-                                    <input type="hidden" name="brand_Id" value="${brand.brand_Id}">
+                                    <input type="hidden" name="brandId" value="${brand.brandId}">
                                     <button type="submit" class="option-button">장비명 관리</button>
                                 </form>
                             </td>
@@ -108,7 +108,7 @@
                 <c:choose>
                     <c:when test="${not empty brandToEdit}">
                         <input type="hidden" name="formAction" value="updateBrand">
-                        <input type="hidden" name="brand_Id" value="${brandToEdit.brand_Id}">
+                        <input type="hidden" name="brandId" value="${brandToEdit.brandId}">
                     </c:when>
                     <c:otherwise>
                         <input type="hidden" name="formAction" value="createBrand">
@@ -216,7 +216,7 @@
                                 <input type="hidden" name="formAction" value="createEquipment">
                             </c:otherwise>
                         </c:choose>
-                        <input type="hidden" name="brand_Id" value="${selectedBrand.brand_Id}">
+                        <input type="hidden" name="brandId" value="${selectedBrand.brandId}">
 
                         <!-- 장비명 -->
                         <div class="form-row">
@@ -253,7 +253,7 @@
                         <div class="button-group">
                             <c:choose>
                                 <c:when test="${not empty equipmentToEdit}">
-                                    <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-createBrand.action?action=selectBrand&brandId=${selectedBrand.brand_Id}'">취소</button>
+                                    <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-createBrand.action?action=selectBrand&brandId=${selectedBrand.brandId}'">취소</button>
                                     <button type="submit" class="button create">수정</button>
                                 </c:when>
                                 <c:otherwise>

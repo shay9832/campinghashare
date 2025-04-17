@@ -1,7 +1,7 @@
 package com.team.mvc.DTO;
 
 public class BrandDTO {
-    private int brand_Id;
+    private int brandId;
     private String brandName;
     private String reg_date;
 
@@ -12,12 +12,12 @@ public class BrandDTO {
     // getter, setter
 
 
-    public int getBrand_Id() {
-        return brand_Id;
+    public int getBrandId() {
+        return brandId;
     }
 
-    public void setBrand_Id(int brand_Id) {
-        this.brand_Id = brand_Id;
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
     }
 
     public String getBrandName() {
