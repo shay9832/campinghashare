@@ -1,8 +1,10 @@
 package com.team.mvc.Filter;
 
+import java.io.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class UserSessionFilter implements Filter {
 
@@ -26,7 +28,6 @@ public class UserSessionFilter implements Filter {
                 uri.startsWith(ctx + "/idcheck.action") ||
                 uri.startsWith(ctx + "/nicknamecheck.action") ||
                 uri.startsWith(ctx + "/oauth/") ||
-                uri.startsWith(ctx + "/main.action") ||
                 uri.startsWith(ctx + "/board") ||
                 uri.startsWith(ctx + "/event.action") ||
                 uri.startsWith(ctx + "/notice.action") ||
@@ -37,9 +38,13 @@ public class UserSessionFilter implements Filter {
                 uri.startsWith(ctx + "/api/") ||
                 uri.startsWith(ctx + "/get") ||
                 uri.startsWith(ctx + "/error") ||
-                uri.startsWith(ctx + "/admin");
+                uri.startsWith(ctx + "/admin") ||
+                uri.contains("/main.action") ||
+                uri.equals("/main.action");
 
-        if (!isExcluded && (session == null || session.getAttribute("loginUser") == null)) {
+        if (!isExcluded &&
+                (session == null ||
+                        (session.getAttribute("loginUser") == null && session.getAttribute("loginAdmin") == null))) {
 
             if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

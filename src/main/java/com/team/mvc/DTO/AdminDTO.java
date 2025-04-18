@@ -1,13 +1,15 @@
 package com.team.mvc.DTO;
 
+import org.apache.ibatis.type.Alias;
+
+@Alias("AdminDTO")
 public class AdminDTO {
 
-    private String adminId;   // ADMIN_ID (PK)
-    private String adminPw;   // ADMIN_PW
-    private String adminTel;  // ADMIN_TEL
-    private int userCode;     // USER_CODE (FK)
-
-    public AdminDTO() {}
+    private String adminId;
+    private String adminPw;
+    private String adminTel;
+    private Integer userCode;
+    private String createdDate;
 
     public String getAdminId() {
         return adminId;
@@ -33,21 +35,19 @@ public class AdminDTO {
         this.adminTel = adminTel;
     }
 
-    public int getUserCode() {
+    public Integer getUserCode() {
         return userCode;
     }
 
-    public void setUserCode(int userCode) {
+    public void setUserCode(Integer userCode) {
         this.userCode = userCode;
     }
 
-    @Override
-    public String toString() {
-        return "AdminDTO{" +
-                "adminId='" + adminId + '\'' +
-                ", adminPw='" + adminPw + '\'' +
-                ", adminTel='" + adminTel + '\'' +
-                ", userCode=" + userCode +
-                '}';
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 }

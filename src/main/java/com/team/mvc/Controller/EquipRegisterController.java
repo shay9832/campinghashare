@@ -50,7 +50,6 @@ public class EquipRegisterController {
         categoryIcons.put("수납/운반용품", "fa-solid fa-box");
         categoryIcons.put("기타", "fa-solid fa-grip");
 
-
         model.addAttribute("majorCategory", majorCategory);
         model.addAttribute("categoryIcons", categoryIcons);
 

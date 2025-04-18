@@ -14,6 +14,8 @@ public class UserDTO {
     private String zipCode;                 //우편번호
     private String address1;                //주소1
     private String address2;                //주소2 (주소 상세)
+    private String adminId;
+    private boolean admin;
 
     public UserDTO() {}
 
@@ -127,5 +129,21 @@ public class UserDTO {
 
     public void setAddress2(String address2) {
         this.address2 = address2;
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

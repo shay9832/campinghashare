@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.DTO.AdminDTO;
 import com.team.mvc.DTO.UserDTO;
 import com.team.mvc.Interface.IUserDAO;
 import org.apache.ibatis.session.SqlSession;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 @Controller
 public class UserController {
@@ -29,6 +31,14 @@ public class UserController {
 
         if (loginUser != null) {
             if (loginUser.getUserCode() != null) {
+                // 로그인 성공 시 관리자 여부 설정
+                if ("admin".equals(loginUser.getUserId())) {
+                    loginUser.setAdmin(true);  // 관리자인 경우
+                } else {
+                    loginUser.setAdmin(false); // 관리자가 아닌 경우
+                }
+
+                // 세션에 로그인 사용자 정보 저장
                 session.setAttribute("loginUser", loginUser);
                 session.setAttribute("userCode", loginUser.getUserCode());
 
@@ -45,10 +55,21 @@ public class UserController {
     }
 
     // 메인 페이지 진입
-    @RequestMapping(value = "/main.action", method = RequestMethod.GET)
-    public String mainPage(@ModelAttribute("userCode") Integer userCode) {
+    @RequestMapping("/main.action")
+    public String mainPage(HttpSession session, Model model) {
+        Object loginUser = session.getAttribute("loginUser");
+        Object loginAdmin = session.getAttribute("loginAdmin");
+
+        if (loginUser instanceof UserDTO) {
+            UserDTO user = (UserDTO) loginUser;
+            model.addAttribute("user", user);
+        } else if (loginAdmin instanceof AdminDTO) {
+            AdminDTO admin = (AdminDTO) loginAdmin;
+            model.addAttribute("admin", admin);
+        }
         return "main";
     }
+
 
     // 로그아웃 처리
     @RequestMapping(value = "/logout.action", method = RequestMethod.GET)
