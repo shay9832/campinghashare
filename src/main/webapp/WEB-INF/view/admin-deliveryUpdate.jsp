@@ -298,7 +298,7 @@
                         </tr>
                         <c:forEach items="${platformShippingList}" var="shipping">
                             <tr data-rental-start-date="${shipping.rentalStartDate}" data-rental-end-date="${shipping.rentalEndDate}">
-                            <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
+                                <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryId}</td>
                                 <td>${shipping.senderId}</td>
                                 <td>${shipping.receiverId}</td>
@@ -577,8 +577,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="shipping-form" method="post" action="${pageContext.request.contextPath}/admin-deliveryUpdate.action">
-                        <input type="hidden" name="platformDeliveryReturnId">
-                        <input type="hidden" name="platformDeliveryId">
+                        <input type="hidden" name="platformDeliveryReturnId" value="${shipping.platformDeliveryReturnId}">
+                        <input type="hidden" name="platformDeliveryId" value="${shipping.platformDeliveryId}">
                         <input type="hidden" id="shipping-type-hidden" name="deliveryType">
 
                         <div class="form-group">
@@ -700,6 +700,77 @@
                             <button type="button" class="btn btn-danger" id="cancel-btn">취소</button>
                         </div>
                     </form>
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 배송 시작 모달 (배송 대기 중인 항목용) -->
+        <div id="shipping-start-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>새 배송 시작</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="shipping-start-form" method="post" action="${pageContext.request.contextPath}/admin-deliveryUpdate.action">
+                        <input type="hidden" id="start-shipping-type" name="deliveryType">
+                        <input type="hidden" name="payId" value="${shipping.payId}">
+
+                        <div class="form-group">
+                            <label for="start-sender-id">발송인 ID</label>
+                            <input type="text" id="start-sender-id" name="senderId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-storen-id">스토렌 ID</label>
+                            <input type="text" id="start-storen-id" name="storenId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-storage-id">보관 ID</label>
+                            <input type="text" id="start-storage-id" name="storageId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-equipment-name">장비명</label>
+                            <input type="text" id="start-equipment-name" name="equipmentName" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delivery-start-date">배송 시작일</label>
+                            <input type="date" id="delivery-start-date" name="newDeliveryStartDate" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-courier">택배사</label>
+                            <select id="start-courier" name="carrierName" class="form-control">
+                                <option value="대한통운">CJ대한통운</option>
+                                <option value="한진택배">한진택배</option>
+                                <option value="우체국택배">우체국택배</option>
+                                <option value="로젠택배">로젠택배</option>
+                                <option value="롯데택배">롯데택배</option>
+                                <option value="기타">기타</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-tracking">운송장번호</label>
+                            <input type="text" id="start-tracking" name="waybillNumber" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-memo">메모</label>
+                            <textarea id="start-memo" name="memo" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">배송 시작</button>
+                            <button type="button" class="btn btn-danger" id="start-cancel-btn">취소</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -707,6 +778,8 @@
 </div>
 
 <script>
+    const contextPath = '${pageContext.request.contextPath}';
+
     // 드롭다운 메뉴 기능 구현
     const menuButtons = document.querySelectorAll('.menu-button');
 
@@ -1026,70 +1099,34 @@
             const storenId = this.getAttribute('data-storen');
             const storageId = this.getAttribute('data-storage');
             const equipmentName = this.getAttribute('data-equipment');
-            const deliveryType = this.getAttribute('data-type');
+
+            // 모달 필드 초기화
+            document.getElementById('start-sender-id').value = senderId;
+            document.getElementById('start-storen-id').value = storenId || '';
+            document.getElementById('start-storage-id').value = storageId || '';
+            document.getElementById('start-equipment-name').value = equipmentName;
+
+            // 배송 유형 결정 (스토렌ID가 있으면 스토렌_최초입고, 보관ID가 있으면 보관_최초입고)
+            let deliveryType = '';
+            if (storenId && storenId !== 'null' && storenId !== '') {
+                deliveryType = '스토렌_최초입고';
+            } else if (storageId && storageId !== 'null' && storageId !== '') {
+                deliveryType = '보관_최초입고';
+            }
+            document.getElementById('start-shipping-type').value = deliveryType;
+
+            // 배송 시작일은 오늘로 설정
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('delivery-start-date').value = today;
 
             // 배송 시작 모달 표시
-            const shippingModal = document.getElementById('shipping-modal');
-
-            // 필드 초기화
-            document.getElementById('sender-id').value = senderId;
-            document.getElementById('receiver-id').value = -1; // 기본값
-            document.getElementById('storen-id').value = storenId || '';
-            document.getElementById('storage-id').value = storageId || '';
-            document.getElementById('product-name').value = equipmentName;
-            document.getElementById('rental-id').value = '';
-
-            // 배송 유형 결정 (storenId가 있으면 스토렌, storageId가 있으면 보관)
-            let shippingType = 'platform';
-            let shippingTypeDisplay = '플랫폼 배송';
-
-            if (deliveryType && deliveryType.includes('스토렌')) {
-                shippingType = 'platform';
-                shippingTypeDisplay = '플랫폼 배송';
-            } else if (deliveryType && deliveryType.includes('보관')) {
-                shippingType = 'platform';
-                shippingTypeDisplay = '플랫폼 배송';
-            }
-
-            document.getElementById('shipping-type-hidden').value = shippingType;
-            document.getElementById('shipping-type').value = shippingTypeDisplay;
-
-            // 검수 관련 필드 초기화
-            if (document.getElementById('inspection-date')) {
-                document.getElementById('inspection-date').value = '';
-            }
-            if (document.getElementById('inspection-type')) {
-                document.getElementById('inspection-type').value = '';
-            }
-
-            // 렌탈 날짜 필드 초기화
-            document.getElementById('rental-start-date').value = '';
-            document.getElementById('rental-end-date').value = '';
-
-            // 배송 관련 필드 초기화
-            document.getElementById('start-date').value = '';
-            document.getElementById('end-date').value = '';
-            document.getElementById('tracking').value = '';
-
-            // 새 배송 시작일은 오늘로 설정
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('new-start-date').value = today;
-
-            // 배송 상태는 '배송 준비중'으로 설정
-            document.getElementById('shipping-status').value = 'preparing';
-
-            // 택배사는 기본값으로 설정
-            document.getElementById('courier').value = '대한통운';
-
-            // 배송ID는 null (새 배송이므로)
-            document.getElementById('shipping-id').value = '';
-
-            // 모달 타이틀 변경
-            document.querySelector('.modal-header h3').textContent = '새 배송 등록';
-
-            // 모달 표시
-            shippingModal.style.display = 'block';
+            document.getElementById('shipping-start-modal').style.display = 'block';
         });
+    });
+
+    // 취소 버튼 클릭 시 모달 닫기
+    document.getElementById('start-cancel-btn').addEventListener('click', function() {
+        document.getElementById('shipping-start-modal').style.display = 'none';
     });
 
     // 폼 제출 이벤트 리스너 추가
@@ -1099,7 +1136,7 @@
             e.preventDefault(); // 폼 기본 제출 방지
 
             // 폼 액션 변경 후 제출
-            this.action = '${pageContext.request.contextPath}/admin-createDelivery.action';
+            this.action = '${pageContext.request.contextPath}/admin-deliveryUpdate.action';
             this.submit();
         }
     });

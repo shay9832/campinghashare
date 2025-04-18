@@ -1,5 +1,7 @@
 package com.team.mvc.DTO;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -59,18 +61,20 @@ public class AdminDeliveryUpdateDTO {
         private String inspectionResultType;
 
         // 플랫폼 배송 반환 유형
-        private int platformDeliveryReturnId,platformDeliveryId;
+        private Integer platformDeliveryReturnId,platformDeliveryId;
 
         //플랫폼 배송 유형
-        private int payId;
+        private Integer payId;
 
         //유저 배송 유형
-        private int userDeliveryReturnId,userDeliveryId;
+        private Integer userDeliveryReturnId,userDeliveryId;
         private String waybillEntryDate;
 
         //렌탈 데이터 유형
-        private Date rentalStartDate;
-        private Date rentalEndDate;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private String rentalStartDate;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private String rentalEndDate;
 
         private String memo;  // 메모 필드 추가
         private String status; // 배송 상태 필드 추가
@@ -78,6 +82,14 @@ public class AdminDeliveryUpdateDTO {
 
         //getter setter 구성
 
+
+    public Long getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(Long deliveryId) {
+        this.deliveryId = deliveryId;
+    }
 
     public String getDeliveryType() {
         return deliveryType;
@@ -135,14 +147,6 @@ public class AdminDeliveryUpdateDTO {
         this.rentalId = rentalId;
     }
 
-    public Long getDeliveryId() {
-        return deliveryId;
-    }
-
-    public void setDeliveryId(Long deliveryId) {
-        this.deliveryId = deliveryId;
-    }
-
     public String getEquipmentName() {
         return equipmentName;
     }
@@ -175,6 +179,14 @@ public class AdminDeliveryUpdateDTO {
         this.deliveryStartDate = deliveryStartDate;
     }
 
+    public LocalDateTime getNewDeliveryStartDate() {
+        return newDeliveryStartDate;
+    }
+
+    public void setNewDeliveryStartDate(LocalDateTime newDeliveryStartDate) {
+        this.newDeliveryStartDate = newDeliveryStartDate;
+    }
+
     public LocalDateTime getDeliveryEndDate() {
         return deliveryEndDate;
     }
@@ -199,51 +211,43 @@ public class AdminDeliveryUpdateDTO {
         this.inspectionResultType = inspectionResultType;
     }
 
-    public LocalDateTime getNewDeliveryStartDate() {
-        return newDeliveryStartDate;
-    }
-
-    public void setNewDeliveryStartDate(LocalDateTime newDeliveryStartDate) {
-        this.newDeliveryStartDate = newDeliveryStartDate;
-    }
-
-    public int getPlatformDeliveryReturnId() {
+    public Integer getPlatformDeliveryReturnId() {
         return platformDeliveryReturnId;
     }
 
-    public void setPlatformDeliveryReturnId(int platformDeliveryReturnId) {
+    public void setPlatformDeliveryReturnId(Integer platformDeliveryReturnId) {
         this.platformDeliveryReturnId = platformDeliveryReturnId;
     }
 
-    public int getPlatformDeliveryId() {
+    public Integer getPlatformDeliveryId() {
         return platformDeliveryId;
     }
 
-    public void setPlatformDeliveryId(int platformDeliveryId) {
+    public void setPlatformDeliveryId(Integer platformDeliveryId) {
         this.platformDeliveryId = platformDeliveryId;
     }
 
-    public int getPayId() {
+    public Integer getPayId() {
         return payId;
     }
 
-    public void setPayId(int payId) {
+    public void setPayId(Integer payId) {
         this.payId = payId;
     }
 
-    public int getUserDeliveryReturnId() {
+    public Integer getUserDeliveryReturnId() {
         return userDeliveryReturnId;
     }
 
-    public void setUserDeliveryReturnId(int userDeliveryReturnId) {
+    public void setUserDeliveryReturnId(Integer userDeliveryReturnId) {
         this.userDeliveryReturnId = userDeliveryReturnId;
     }
 
-    public int getUserDeliveryId() {
+    public Integer getUserDeliveryId() {
         return userDeliveryId;
     }
 
-    public void setUserDeliveryId(int userDeliveryId) {
+    public void setUserDeliveryId(Integer userDeliveryId) {
         this.userDeliveryId = userDeliveryId;
     }
 
@@ -255,19 +259,19 @@ public class AdminDeliveryUpdateDTO {
         this.waybillEntryDate = waybillEntryDate;
     }
 
-    public Date getRentalStartDate() {
+    public String getRentalStartDate() {
         return rentalStartDate;
     }
 
-    public void setRentalStartDate(Date rentalStartDate) {
+    public void setRentalStartDate(String rentalStartDate) {
         this.rentalStartDate = rentalStartDate;
     }
 
-    public Date getRentalEndDate() {
+    public String getRentalEndDate() {
         return rentalEndDate;
     }
 
-    public void setRentalEndDate(Date rentalEndDate) {
+    public void setRentalEndDate(String rentalEndDate) {
         this.rentalEndDate = rentalEndDate;
     }
 
