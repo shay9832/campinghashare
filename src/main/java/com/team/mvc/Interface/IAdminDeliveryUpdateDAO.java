@@ -4,6 +4,7 @@ import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public interface IAdminDeliveryUpdateDAO {
     /**
      * 특정 ID의 배송 정보 조회
      *
+     *
      * @param deliveryId 배송 ID
      * @return 해당 ID의 배송 정보
      */
@@ -41,6 +43,15 @@ public interface IAdminDeliveryUpdateDAO {
 
     List<AdminDeliveryUpdateDTO> getPendingDeliveries();  // 배송 대기 중인 항목을 조회
     void createDelivery(AdminDeliveryUpdateDTO dto);      // 새 배송을 생성
+
+    // platformDeliveryId 조회
+    Integer getPlatformDeliveryId(Long deliveryId);
+
+    // platformDeliveryReturnId 조회
+    Integer getPlatformDeliveryReturnId(Long deliveryId);
+
+    // 기존 배송 시작일 조회
+    LocalDateTime getExistingDeliveryStartDate(Long deliveryId);
 
 
 }

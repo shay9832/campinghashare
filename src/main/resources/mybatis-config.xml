@@ -15,7 +15,7 @@
         <setting name="jdbcTypeForNull" value="NULL"/>
 
         <!-- SQL 로깅 설정 (개발 시에만 STDOUT으로 설정, 운영 시에는 NO_LOGGING 권장) -->
-        <setting name="logImpl" value="NO_LOGGING"/>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
     </settings>
 
     <!-- 자주 사용하는 타입에 대해 별칭 설정 -->

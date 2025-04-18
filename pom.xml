@@ -109,6 +109,7 @@
       <artifactId>commons-fileupload</artifactId>
       <version>1.5</version>
     </dependency>
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
@@ -123,18 +124,17 @@
       <version>2.17.0</version>
     </dependency>
 
-    <!-- Jackson 데이터 포맷 모듈 (날짜/시간 처리 등) -->
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.17.0</version>
-    </dependency>
-
     <!-- 라이브러리 없음 오류 예상 (추가) -->
     <dependency>
       <groupId>net.bytebuddy</groupId>
       <artifactId>byte-buddy</artifactId>
       <version>1.14.9</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.13.0</version> <!-- 현재 사용 중인 Jackson 버전과 맞추세요 -->
     </dependency>
 
   </dependencies>
