@@ -16,7 +16,7 @@
     <!-- 마이페이지 사이드바 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
-    <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
     <style>
         /* 확장 행을 위한 스타일 */
         .matching-row.rental-header {
@@ -692,8 +692,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        alert("안녕하세요");
+    $(function() {
         // 탭 전환 이벤트 ========= ======================================================================================
         // URL에서 탭 정보 가져오기
         const urlParams = new URLSearchParams(window.location.search);
@@ -971,19 +970,29 @@
         let apiUrl = '';
         let colSpan = '5';
 
+        // targetTable 초기화를 위한 변수
+        let targetTable;
+
         // 메인 탭과 서브 탭에 따라 API URL 결정
         if (mainTab === 'general') { // 일반 장비 탭
             apiUrl = '/api/myequipment/general';
             colSpan = '4';
-        } else{ // 스토렌 탭
+            targetTable = $('#general-content tbody'); // 일반 장비 탭의 tbody
+        } else if (mainTab === 'storen') { // 스토렌 탭
             apiUrl = '/api/myequipment/storen';
+            targetTable = $('#storen-content tbody'); // 스토렌 탭의 tbody
+        } else if (mainTab === 'rental') {
+            apiUrl = '/api/myequipment/rental';
+            targetTable = $('#rental-content tbody'); // 렌탈 탭의 tbody
+        } else { // 보관 탭
+            apiUrl = '/api/myequipment/storage';
+            targetTable = $('#storage-content tbody'); // 보관 탭의 tbody
         }
-        // @렌탈 탭과 보관 탭은 추후 추가 예정
 
         console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab);
 
         // 로딩 인디케이터 표시
-        targetTable.html('<tr><td colspan="8" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 장비 데이터를 불러오는 중...</td></tr>');
+        targetTable.html('<tr><td colspan="' + colSpan + '" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 장비 데이터를 불러오는 중...</td></tr>');
 
         // AJAX 요청
         $.ajax({
@@ -993,6 +1002,7 @@
             cache: false, // 캐시 사용 안 함
             success: function (data) {
                 console.log("데이터 로드 성공:", data.length, "건");
+                console.log("데이터 구조:", JSON.stringify(data[0])); // 첫 번째 항목의 구조 확인
                 // 로딩 표시 비활성화
                 hideLoading();
 
@@ -1016,16 +1026,6 @@
                         icon = 'fas fa-warehouse mb-3';
                         text = '캠핑 시즌이 아닐 때는 장비를 안전하게 보관해보세요.';
                     }
-                    targetTable.html(
-                        <tr>
-                            <td colSpan="4" className="text-center py-5">
-                                <div className="empty-state">
-                                    <i className="fas fa-box-open mb-3" style="font-size: 2rem; color: #ccc;"></i>
-                                    <p className="mb-1">소유한 일반 장비가 없습니다.</p>
-                                    <p className="small text-muted">캠핑 장비를 등록하고 스토렌, 렌탈, 보관 서비스를 이용해보세요.</p>
-                                </div>
-                            </td>
-                        </tr>);
                     return;
                 }
                 // 메인 탭의 정보 렌더링
@@ -1064,10 +1064,15 @@
             } else if (item.status === '배송대기') {
                 buttonList = `
                     <button class="btn-sm btn-pay" disabled="disabled">보관비 결제</button>
+                    <button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>
+                    <button class="btn-sm btn-shipping">배송 내역 조회</button>
+                `;
+            } else
+                buttonList = `
+                    <button class="btn-sm btn-pay" disabled="disabled">보관비 결제</button>
                     <button class="btn-sm btn-inspection">검수 결과 확인</button>
                     <button class="btn-sm btn-shipping">배송 내역 조회</button>
                 `;
-            }
 
             // 아이콘 클래스 결정
             let matchingCountClass = '';
@@ -1076,22 +1081,41 @@
             } else {matchingCountClass = 'fas fa-user';}
 
             html +=
-                '<tr class="table-row matching-row rental-header" data-id="' + item.storen_id + '" data-expanded="false">' +
-                '<td>' + item.storen_id + '</td>' +
-                '<td class="title-cell rental-title">' +
-                '<a href="storen-detail.action?id=' + item.storen_id + '" class="rental-link">' + item.storen_title + '</a>' +
-                '</td>' +
-                '<td>' +
-                '<a href="equipment-detail.action?id=' + item.equip_code + '" class="equipment-link">' + item.equip_code + '</a>' +
-                '</td>' +
-                '<td class="title-cell">' + item.equipmentDTO.equip_name + '</td>' +
-                '<td>' + item.rental_start_date + '</td>' +
-                '<td>' + item.rental_end_date + '</td>' +
-                '<td><span class="match-count">' + item.matching_request_count + '</span> <i class="' + matchingCountClass + '"></i></td>' +
-                '<td>' +
-                '<span class="status-badge ' + statusClass + '">' + item.matching_status + '</span>' +
-                '</td>' +
-                '</tr>';
+                `<tr class="table-row matching-row rental-header" data-id="` + item.equip_code + `" data-expanded="false">
+                    <td class="checkbox-col">
+                        <input type="checkbox" class="my-form-check-input storen-checkbox">
+                    </td>
+                    <td>
+                        <div class="product-image">
+                            <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="equipment-info-container">
+                            <div class="equipment-code">장비 코드 : ` + item.equip_code + `</div>
+                            <a href="#" class="equipment-name">` + item.equipmentDTO.equip_name + `</a>
+                            <div class="equipment-category">` + item.equipmentDTO.majorCategory + ` > ` + item.equipmentDTO.middleCategory + `</div>
+                            <div class="equipment-brand">` + item.equipmentDTO.brand + `</div>
+                            <div class="equipment-date">` + item.equipmentDTO.created_date + `</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="equipment-info-container">
+                            <input type="hidden" name="id" value=` + item.storen_id + `">
+                            <div class="equipment-code">스토렌ID : ` + item.storen_id + `</div>
+                            <a href="storenmatching-request.action?storen_id=` + item.storen_id + `" class="equipment-name">` + item.storen_title + `</a>
+                            <div class="equipment-category">` + item.store_month + `개월 보관</div>
+                            <div class="equipment-date">스토렌등록 : ` + item.created_date + `</div>
+                            <div class="equipment-date">보관시작일 : ` + item.inspec_completed_date != null ? item.inspec_completed_date : '검수 중' + `</div>
+                            <div class="equipment-date">보관종료일 : ` + item.final_return_date != null ? item.final_return_data : '검수 중' + `</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="button-group-vertical">` +
+                            buttonList +
+                        `</div>
+                    </td>
+                </tr>`;
         });
         targetTable.html(html);
     }
