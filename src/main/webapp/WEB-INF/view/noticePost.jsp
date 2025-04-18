@@ -416,7 +416,14 @@
             color: var(--color-maple);
         }
 
+        /* 하트 아이콘 기본 상태: 회색 */
         .icon-heart {
+            color: var(--color-gray-500);
+            transition: color 0.3s ease;
+        }
+
+        /* 하트 아이콘 활성 상태: 빨간색 */
+        .icon-heart.active {
             color: var(--color-error);
         }
 
@@ -489,39 +496,18 @@
     </style>
 
     <script>
-        // 페이지 로드 시 실행할 함수들
-        $(document).ready(function () {
-            // 추천 버튼 클릭 이벤트
-            $("#likeButton").click(function () {
-                const postId = $(this).data("post-id");
-
-                // AJAX 요청으로 추천 처리
-                $.ajax({
-                    url: "/api/post/recommend.action",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        postId: postId
-                    }),
-                    success: function (response) {
-                        // 추천 수 업데이트 (성공/실패 상관없이)
-                        if (response.recommendCount !== undefined) {
-                            $("#likeCount").text("추천 " + response.recommendCount);
-                        }
-
-                        // 메시지 표시
-                        alert(response.message);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error:", error);
-                        alert("추천 처리 중 오류가 발생했습니다.");
-                    }
-                });
-            });
-
+        // 모든 기능을 하나의 DOMContentLoaded 이벤트로 통합
+        document.addEventListener("DOMContentLoaded", function () {
             // 모달 관련 이벤트 설정
             setupModalEvents();
+
+            // 게시글 추천 기능 설정
+            initializePostRecommendation();
+
+            // 페이지 로드 시 추천 확인
+            checkRecommendStatus();
         });
+
 
         // 모달 관련 이벤트 설정
         function setupModalEvents() {
@@ -531,21 +517,21 @@
 
             // 모달 닫기 버튼 이벤트
             if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', function() {
+                closeModalBtn.addEventListener('click', function () {
                     closeAllModals();
                 });
             }
 
             // 취소 버튼 이벤트
             if (cancelReportBtn) {
-                cancelReportBtn.addEventListener('click', function() {
+                cancelReportBtn.addEventListener('click', function () {
                     closeAllModals();
                 });
             }
 
             // 배경 클릭 시 모달 닫기
             if (modalBackdrop) {
-                modalBackdrop.addEventListener('click', function() {
+                modalBackdrop.addEventListener('click', function () {
                     closeAllModals();
                 });
             }
@@ -553,14 +539,14 @@
             // 모달 내부 클릭 시 이벤트 버블링 방지
             const reportModal = document.getElementById('reportModal');
             if (reportModal) {
-                reportModal.addEventListener('click', function(e) {
+                reportModal.addEventListener('click', function (e) {
                     e.stopPropagation();
                 });
             }
 
             const completionModal = document.getElementById('completionModal');
             if (completionModal) {
-                completionModal.addEventListener('click', function(e) {
+                completionModal.addEventListener('click', function (e) {
                     e.stopPropagation();
                 });
             }
@@ -643,14 +629,14 @@
             submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
 
             // 삭제 확인 버튼 이벤트
-            newSubmitBtn.addEventListener('click', function() {
+            newSubmitBtn.addEventListener('click', function () {
                 // 모달 닫기
                 closeModal(document.getElementById('reportModal'));
 
                 // 삭제 요청 보내기
                 sendAjaxRequest('api/post/delete.action', 'POST', {
                     postId: postId
-                }, function(data) {
+                }, function (data) {
                     // 모달 내용 설정
                     const iconElement = document.querySelector('#completionModal .popup-alert-icon i');
                     const iconContainer = document.querySelector('#completionModal .popup-alert-icon');
@@ -692,7 +678,7 @@
             const newConfirmBtn = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
-            newConfirmBtn.addEventListener('click', function() {
+            newConfirmBtn.addEventListener('click', function () {
                 // 모달 닫기
                 closeAllModals();
 
@@ -711,7 +697,7 @@
                 const newCancelBtn = cancelBtn.cloneNode(true);
                 cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
 
-                newCancelBtn.addEventListener('click', function() {
+                newCancelBtn.addEventListener('click', function () {
                     closeAllModals();
                 });
             }
@@ -722,11 +708,68 @@
                 const newCloseBtn = closeBtn.cloneNode(true);
                 closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
 
-                newCloseBtn.addEventListener('click', function() {
+                newCloseBtn.addEventListener('click', function () {
                     closeAllModals();
                 });
             }
         }
+
+        // 게시글 추천 기능 초기화
+        function initializePostRecommendation() {
+            const likeButton = document.getElementById('likeButton');
+            if (likeButton) {
+                likeButton.addEventListener('click', function () {
+                    const postId = this.getAttribute('data-post-id');
+                    const likeIcon = this.querySelector('i');
+
+                    // AJAX 요청 통합 함수 사용
+                    sendAjaxRequest('/api/post/recommend.action', 'POST', {
+                        postId: postId
+                    }, function (response) {
+                        // 추천 수 업데이트 (성공/실패 상관없이)
+                        if (response.recommendCount !== undefined) {
+                            document.getElementById('likeCount').textContent = "추천 " + response.recommendCount;
+                        }
+
+                        // 성공 시 추천 아이콘 변경 - 활성화
+                        if (response.success) {
+                            likeIcon.classList.add('active');
+                        }
+                    });
+                });
+
+                // 페이지 로드 시 추천 상태 확인
+                checkRecommendStatus();
+            }
+        }
+
+        // 추천 상태 확인 함수
+        function checkRecommendStatus() {
+            const likeButton = document.getElementById('likeButton');
+
+            if (likeButton) {
+                const postId = likeButton.getAttribute('data-post-id');
+
+                // AJAX 요청으로 추천 상태 확인
+                sendAjaxRequest('/api/post/checkRecommend.action', 'POST', {
+                    postId: postId
+                }, function(response) {
+                    console.log("추천 상태 확인 응답:", response); // 디버깅용
+
+                    if (response.success) {
+                        const likeIcon = likeButton.querySelector('i');
+
+                        // 추천 상태에 따라 UI 업데이트
+                        if (response.isRecommended) {
+                            likeIcon.classList.add('active');
+                        } else {
+                            likeIcon.classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+
 
         // 공지사항 작성 페이지로
         function goToWrite() {
@@ -750,7 +793,7 @@
         <div class="main-content d-flex gap-4 my-5">
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <h1 class="page-title"><i class="fa-solid fa-bullhorn"></i> 공지사항</h1>
+                    <a href="notice.action"><h1 class="page-title"><i class="fa-solid fa-bullhorn"></i> 공지사항</h1></a>
                 </div>
                 <!-- 게시글 영역 -->
                 <div class="post-container">
@@ -778,17 +821,33 @@
                     <div class="post-body">
                         ${fn:replace(post.postContent, cn, br)}
 
-                        <!-- 첨부 이미지가 있는 경우 표시 -->
-                        <c:if test="${not empty post.attachments and fn:length(post.attachments) > 0}">
-                            <div class="post-images">
-                                <c:forEach var="attachment" items="${post.attachments}">
-                                    <c:if test="${not empty attachment.attachmentPath}">
-                                        <div class="post-image">
-                                            <img src="${attachment.attachmentPath}" alt="${attachment.attachmentName}">
-                                        </div>
-                                    </c:if>
-                                </c:forEach>
-                            </div>
+                        <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
+<%--                                                <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+<%--                                                    <p>첨부파일 정보:</p>--%>
+<%--                                                    <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
+<%--                                                    <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
+
+<%--                                                    <c:if test="${not empty post.attachments}">--%>
+<%--                                                        <ul>--%>
+<%--                                                            <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
+<%--                                                                <li>--%>
+<%--                                                                    첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
+<%--                                                                    경로: ${attachment.attachmentPath},--%>
+<%--                                                                    크기: ${attachment.attachmentSize}--%>
+<%--                                                                </li>--%>
+<%--                                                            </c:forEach>--%>
+<%--                                                        </ul>--%>
+<%--                                                    </c:if>--%>
+<%--                                                </div>--%>
+
+                        <!-- 간단한 첨부파일 표시 시도 -->
+                        <c:if test="${not empty post.attachments}">
+                            <c:forEach var="attachment" items="${post.attachments}">
+                                <!-- 간단한 이미지 표시 시도 -->
+                                <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
+                                     alt="${attachment.attachmentName}"
+                                     style="max-width: 300px; margin-top: 10px;">
+                            </c:forEach>
                         </c:if>
                     </div>
 

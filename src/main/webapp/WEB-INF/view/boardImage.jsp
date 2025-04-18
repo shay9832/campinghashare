@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <html>
 <head>
     <title>고독한캠핑방</title>
@@ -508,12 +509,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -535,7 +536,7 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1>
+                    <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1></a>
                 </div>
 
                 <!-- 정렬 및 필터 옵션 -->
@@ -563,7 +564,7 @@
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>
-                            <th width="10%" class="p-3 text-center">분류</th>
+                            <th width="8%" class="p-3 text-center">분류</th>
                             <th width="47%" class="p-3 text-center">제목</th>
                             <th width="10%" class="p-3 text-center">작성자</th>
                             <th width="10%" class="p-3 text-center">작성일</th>
@@ -573,67 +574,53 @@
                         </thead>
                         <tbody>
                         <!-- 공지사항 -->
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a> </td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a> </td>
-                            <td class="p-3 title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">1,245</td>
-                            <td class="p-3 text-center">32</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">고독한캠핑방 이용 규칙 안내</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">876</td>
-                            <td class="p-3 text-center">28</td>
-                        </tr>
-                        <tr class="board-row notice border-bottom">
-                            <td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a> </td>
-                            <td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>
-                            <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>
-                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
-                            <td class="p-3 text-center">2025-03-25</td>
-                            <td class="p-3 text-center">987</td>
-                            <td class="p-3 text-center">45</td>
-                        </tr>
+                        <c:forEach var="notice" items="${notice}">
+                            <tr class="board-row notice border-bottom">
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="notice-tag">공지</span></a></td>
+                                <td class="p-3 text-center"><a href="notice.action"><span
+                                        class="board-category-tag notice">공지</span></a></td>
+                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
+                                <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
+                                <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
+                                <td class="p-3 text-center">${notice.viewCount}</td>
+                                <td class="p-3 text-center"><i
+                                        class="fa-solid fa-heart table-icon icon-heart"></i>${notice.recommendCount}
+                                </td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
 
+
+
                 <!-- 심플 카드 형식의 게시판 -->
                 <div class="posts-grid">
-                    <!-- 심플 카드 1 -->
-                    <a href="boardimage-post.action?postId=1" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-mountain-sun"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">강원도 양양 혼캠 다녀왔습니다</h3>
-                            <div class="simple-card-author">혼캠러버</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-31</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>254</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>42</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>15</span>
+                    <c:forEach var="postList" items="${postList}">
+                        <a href="boardimage-post.action?postId=${postList.postId}" class="simple-card">
+                            <div class="simple-card-image">
+                                <i class="fa-solid fa-mountain-sun"></i>
+                            </div>
+                            <div class="simple-card-content">
+                                <h3 class="simple-card-title">${postList.postTitle}</h3>
+                                <div class="simple-card-author">${postList.nickName}</div>
+                                <div class="simple-card-footer">
+                                    <div class="simple-card-date">${postList.createdDate.substring(0, 10)}</div>
+                                    <div class="simple-card-stats">
+                                        <div class="simple-card-stat">
+                                            <i class="fa-solid fa-eye"></i>
+                                            <span>${postList.viewCount}</span>
+                                        </div>
+                                        <div class="simple-card-stat">
+                                            <i class="fa-solid fa-heart"></i>
+                                            <span>${postList.recommendCount}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-
+                        </a>
+                    </c:forEach>
                     <!-- 심플 카드 2 -->
                     <a href="boardimage-post.action?postId=2" class="simple-card">
                         <div class="simple-card-image">

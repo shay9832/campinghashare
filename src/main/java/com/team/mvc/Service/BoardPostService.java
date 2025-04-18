@@ -63,8 +63,7 @@ public class BoardPostService implements IBoardPostService {
     @Override
     public int insertPost(BoardPostDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
-        int result = dao.insertPost(dto);
-        System.out.println("서비스 계층 - 게시글 ID: " + dto.getPostId() + ", 반환 결과: " + result);
+        dao.insertPost(dto);
         return dto.getPostId();
     }
 
@@ -226,13 +225,23 @@ public class BoardPostService implements IBoardPostService {
     // 게시글 삭제 시 댓글도 함께 삭제
     @Transactional
     public boolean deletePostWithReplies(int postId) {
-        // 1. 해당 게시글의 모든 댓글 조회 및 삭제
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+
+        // 1. 해당 게시글의 북마크 삭제
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setPostId(postId);
+        dao.deleteBookmarksByPostId(postId);
+
+        // 2. 해당 게시글의 추천 기록 삭제
+        dao.deleteRecommendsByPostId(postId);
+
+        // 3. 해당 게시글의 모든 댓글 조회 및 삭제
         List<ReplyDTO> replies = getRepliesByPostId(postId);
         for (ReplyDTO reply : replies) {
             replyService.deleteReply(reply.getReplyId());
         }
 
-        // 2. 게시글 삭제
+        // 4. 게시글 삭제
         BoardPostDTO postDTO = new BoardPostDTO();
         postDTO.setPostId(postId);
         int result = deletePost(postDTO);
@@ -246,5 +255,27 @@ public class BoardPostService implements IBoardPostService {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.insertAttachment(dto);
     }
+
+    // 북마크 여부 확인
+    @Override
+    public boolean checkBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.checkBookmark(dto);
+    }
+
+    // 북마크 추가
+    @Override
+    public int insertBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertBookmark(dto);
+    }
+
+    // 북마크 제거
+    @Override
+    public int deleteBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.deleteBookmark(dto);
+    }
+
 
 }

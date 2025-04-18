@@ -68,4 +68,13 @@ public interface IBoardPostService {
 
     // 첨부파일 추가
     int insertAttachment(AttachmentDTO dto);
+
+    // 북마크 여부 확인
+    boolean checkBookmark(BoardPostDTO dto);
+
+    // 북마크 추가
+    int insertBookmark(BoardPostDTO dto);
+
+    // 북마크 제거
+    int deleteBookmark(BoardPostDTO dto);
 }

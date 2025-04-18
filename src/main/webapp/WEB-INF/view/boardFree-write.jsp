@@ -146,12 +146,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -284,14 +284,18 @@
                                     </div>
                                 </div>
 
-                                <textarea class="form-control" name="postContent" rows="10" placeholder="내용을 작성하세요."
+                                <textarea class="form-control" id="contentArea" name="postContent" rows="10" placeholder="내용을 작성하세요."
                                           required>${isUpdate ? post.postContent : ''}</textarea>
+                            </div>
+                            <div class="charCounter text-right mt-1 text-secondary">
+                                0/5000byte
                             </div>
                         </div>
 
 
+
                         <div class="d-flex justify-content-between gap-2 mt-4">
-                            <div class="form-group" style="margin-bottom: 0;">
+                            <div class="form-group" style="margin-bottom: 0; flex-grow: 1;">
                                 <div class="d-flex gap-2 align-items-center">
                                     <input type="file" class="form-control" id="fileInput" name="uploadFiles" multiple style="display:none;">
                                     <button type="button" class="btn btn-outline-primary" id="fileUploadBtn">
@@ -299,12 +303,14 @@
                                     </button>
                                     <span id="fileCount">선택된 파일 없음</span>
                                 </div>
-                                <div id="fileList" class="mt-2"></div>
+                                <!-- 파일 목록이 여기에 추가되지만, 버튼 위치에 영향을 주지 않도록 설정 -->
+                                <div id="fileList" class="mt-2" style="max-height: 300px; overflow-y: auto;"></div>
                             </div>
-                            <div class="d-flex gap-2">
+
+                            <!-- 버튼 영역은 그대로 유지하되, 파일 영역과 분리 -->
+                            <div class="d-flex gap-2 align-self-start">
                                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                                <button type="button" id="submitBtn"
-                                        class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
+                                <button type="button" id="submitBtn" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
                             </div>
                         </div>
                     </form>
@@ -332,6 +338,9 @@
     // 순수 자바스크립트로 구현
     document.addEventListener('DOMContentLoaded', function () {
         console.log("DOM이 로드되었습니다.");
+
+        // 바이트 카운터 적용
+        initializeByteCounters();
 
         // 요소 참조
         const submitBtn = document.getElementById('submitBtn');
@@ -502,6 +511,116 @@
             fileCount.textContent = '선택된 파일 없음';
         }
     });
+
+    // 바이트 카운터 초기화 및 적용
+    function initializeByteCounters() {
+        console.log("바이트 카운터 초기화");
+        // 메인 댓글 입력창에 바이트 카운터 적용
+        const mainContentArea = document.getElementById("contentArea");
+        if (mainContentArea) {
+            console.log("콘텐츠 영역 발견:", mainContentArea);
+            applyByteCounter(mainContentArea);
+        } else {
+            console.error("contentArea 요소를 찾을 수 없습니다.");
+        }
+    }
+
+    // 바이트 수 계산 함수 - 기존 코드 유지
+    function calculateBytes(str) {
+        let byteCount = 0;
+        for (let i = 0; i < str.length; i++) {
+            const charCode = str.codePointAt(i);
+
+            // '서로게이트 페어(Surrogate Pair)' 처리 - 이모지 등 특수 문자
+            if (charCode > 0xFFFF) {
+                byteCount += 4;
+                i++;
+            } else if (charCode > 0x7FF) {
+                byteCount += 3;
+            } else if (charCode > 0x7F) {
+                byteCount += 2;
+            } else {
+                byteCount += 1;
+            }
+        }
+        return byteCount;
+    }
+
+    // 디바운스 함수 정의 - 연속 이벤트 처리 최적화 - 기존 코드 유지
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    // 바이트 카운터 적용 함수 - 수정
+    function applyByteCounter(textarea) {
+        if (!textarea) return;
+
+        // 해당 텍스트영역 다음에 있는 .charCounter 요소 찾기
+        // 수정: 부모 요소에서 .charCounter 클래스를 가진 요소 찾기
+        const counterEl = textarea.closest('.editor-container').nextElementSibling;
+
+        console.log("카운터 요소 검색 결과:", counterEl);
+
+        if (!counterEl || !counterEl.classList.contains('charCounter')) {
+            console.error("charCounter 요소를 찾을 수 없습니다.");
+            return;
+        }
+
+        // 바이트 업데이트 함수
+        function updateByteCount() {
+            console.log("바이트 카운트 업데이트 중");
+            const text = textarea.value;
+            let currentBytes = calculateBytes(text);
+
+            // 1000 byte 초과 시 자르기
+            if (currentBytes > 5000) {
+                // 바이너리 검색 최적화
+                let start = 0;
+                let end = text.length;
+                let mid;
+                let cutText = text;
+
+                while (start < end) {
+                    mid = Math.floor((start + end) / 2);
+                    cutText = text.substring(0, mid);
+
+                    if (calculateBytes(cutText) <= 5000) {
+                        start = mid + 1;
+                    } else {
+                        end = mid;
+                    }
+                }
+
+                // 최종 적합한 지점 찾기
+                while (calculateBytes(cutText) > 5000) {
+                    cutText = cutText.slice(0, -1);
+                }
+
+                // 잘린 텍스트로 업데이트
+                textarea.value = cutText;
+                currentBytes = calculateBytes(cutText);
+            }
+
+            // 카운터 업데이트
+            counterEl.textContent = currentBytes + '/5000byte';
+            console.log("카운터 업데이트:", currentBytes + '/5000byte');
+        }
+
+        // 디바운싱 적용
+        const debouncedUpdate = debounce(updateByteCount, 100);
+
+        // 이미 리스너가 있을 수 있으므로 한 번 제거했다가 다시 추가
+        textarea.removeEventListener('input', debouncedUpdate);
+        textarea.addEventListener('input', debouncedUpdate);
+
+        // 초기 카운트 표시
+        updateByteCount();
+    }
+
 
 </script>
 </body>

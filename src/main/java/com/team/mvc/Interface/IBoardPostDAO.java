@@ -92,4 +92,18 @@ public interface IBoardPostDAO {
     // 첨부파일 추가
     int insertAttachment(AttachmentDTO dto);
 
+    // 북마크 여부 확인
+    boolean checkBookmark(BoardPostDTO dto);
+
+    // 북마크 추가
+    int insertBookmark(BoardPostDTO dto);
+
+    // 북마크 제거
+    int deleteBookmark(BoardPostDTO dto);
+
+    // 게시글 ID로 북마크 삭제
+    int deleteBookmarksByPostId(int postId);
+
+    // 게시글 ID로 추천 삭제
+    int deleteRecommendsByPostId(int postId);
 }

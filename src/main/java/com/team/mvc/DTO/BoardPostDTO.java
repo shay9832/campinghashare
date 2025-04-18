@@ -3,7 +3,7 @@ package com.team.mvc.DTO;
 import java.util.List;
 
 public class BoardPostDTO {
-    private int postId, userCode, boardId, postLabelId;
+    private int postId, userCode, boardId, postLabelId, bookmarkId;
     private String  postTitle, postContent, createdDate;
 
     private int viewCount, recommendCount, replyCount, isHot, isBlinded, rowNum;
