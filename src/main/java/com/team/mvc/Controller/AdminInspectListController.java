@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.DTO.AdminInspectListDTO;
 import com.team.mvc.Interface.IAdminInspectListDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class AdminInspectListController {
             model.addAttribute("getGradeList", dao.getGradeList());
             model.addAttribute("getEquipList", dao.getEquipList());
             model.addAttribute("equipGrades", dao.getGradeList()); // 추가: 등급 정보를 모델에 직접 포함
+
 
             return "admin-inspectList";
         } catch (Exception e) {

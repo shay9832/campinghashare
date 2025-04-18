@@ -51,7 +51,7 @@ public class AdminDeliveryUpdateController {
         model.addAttribute("userReturnShippingList", deliveryMap.get("userReturn"));
         model.addAttribute("storageReturnShippingList", deliveryMap.get("storageReturn"));
         model.addAttribute("storenReturnShippingList", deliveryMap.get("storenReturn"));
-        model.addAttribute("pendingShippingList", deliveryMap.get("pending"));
+        model.addAttribute("pendingDeliveryList", deliveryMap.get("pending"));
 
         // 배송 요약 정보 계산
         int totalCount = allDeliveries.size();

@@ -246,7 +246,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -289,7 +289,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -356,7 +356,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -423,7 +423,7 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
                     <button class="process-btn disabled" disabled>처리완료</button>
@@ -647,26 +647,27 @@
       }
 
       // 모달 열기 함수 수정
-      function openModal(code, type, name, category) {
+      function openModal(code, platformDeliveryId, inspectName, equipName, category) {
+        console.log("모달 열기:", code, platformDeliveryId, inspectName, equipName, category);
+
         // 모달 요소 가져오기
         var modal = document.getElementById('inspectionModal');
 
         // 폼 데이터 설정
         document.getElementById('equipCode').value = code;
-        document.getElementById('inspectionType').value = type;
-        document.getElementById('equipName').value = name;
+        document.getElementById('inspectionType').value = inspectName;
+        document.getElementById('equipName').value = equipName;
         document.getElementById('equipCategory').value = category;
 
         // 검수 유형에 따라 적절한 ID 설정
-        if (type === '입고검수') {
-          document.getElementById('platformDeliveryId').value = code;
-          document.getElementById('platformDeliveryReturnId').value = ""; // 비워둠
-          document.getElementById('deliveryId').value = 'DELV-' + code;
-        } else if (type === '스토렌반환검수') {
-          // 반환검수의 경우 반환 ID만 설정 (원본 배송 ID는 서버에서 찾음)
-          document.getElementById('platformDeliveryId').value = ""; // 서버에서 찾을 것임
-          document.getElementById('platformDeliveryReturnId').value = code;
-          document.getElementById('deliveryId').value = 'DELV-RTN-' + code;
+        if (inspectName === '입고검수') {
+          document.getElementById('platformDeliveryId').value = platformDeliveryId;
+          document.getElementById('platformDeliveryReturnId').value = "";
+          document.getElementById('deliveryId').value = 'DELV-' + platformDeliveryId;
+        } else if (inspectName === '스토렌반환검수') {
+          document.getElementById('platformDeliveryReturnId').value = platformDeliveryId;
+          document.getElementById('platformDeliveryId').value = "";
+          document.getElementById('deliveryId').value = 'DELV-RTN-' + platformDeliveryId;
         }
 
         // 모달 표시
