@@ -17,7 +17,6 @@
             min-width: auto !important;
         }
 
-
         /* 게시판 특화 스타일 */
         .board-category-tag {
             display: inline-block;
@@ -381,6 +380,7 @@
             });
         });
 
+        // 글쓰기 페이지로
         function goToWrite() {
             window.location.href = "boardfree-write.action";
         }
@@ -395,12 +395,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -422,7 +422,7 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
                 </div>
 
                 <!-- 정렬 및 필터 옵션 -->
@@ -598,7 +598,6 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-
                         <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>

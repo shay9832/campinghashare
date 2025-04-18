@@ -21,6 +21,7 @@ public class BoardController {
     @Autowired
     private IBoardPostService boardPostService;
 
+//----------------------------------------------------------------------------------------------------------------------
     // 커뮤니티 메인 페이지
     @RequestMapping("/boardmain.action")
     public String boardMain(Model model) {
@@ -69,7 +70,7 @@ public class BoardController {
             return "error"; // error.jsp 필요
         }
     }
-
+//----------------------------------------------------------------------------------------------------------------------
     // 전체 인기글 페이지
     @RequestMapping("/boardbest.action")
     public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -92,6 +93,7 @@ public class BoardController {
         return "boardBest";
     }
 
+//----------------------------------------------------------------------------------------------------------------------
     // boardTemplate 페이지
     @RequestMapping("/board{boardName}.action")
     public String boardTemplate(@PathVariable(value = "boardName") String boardName,
@@ -282,6 +284,7 @@ public class BoardController {
         return result;
     }
 
+//----------------------------------------------------------------------------------------------------------------------
     // 자유 게시판 페이지
     @RequestMapping("/boardfree.action")
     public String boardFree(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -580,8 +583,8 @@ public class BoardController {
                 // 디렉토리가 없으면 생성
                 File directory = new File(uploadPath);
                 if (!directory.exists()) {
-                    boolean created = directory.mkdirs();
-                    System.out.println("디렉토리 생성 결과: " + created);
+                    directory.mkdirs();
+                    System.out.println("디렉토리 생성 결과: " + directory.mkdirs());
                 }
 
                 // 각 파일 처리
@@ -614,9 +617,12 @@ public class BoardController {
                 }
             }
 
+            // 리다이렉트 URL 결정
+            String redirectUrl = "boardfree.action";
+
+
             // 게시판 ID에 따른 리다이렉트 URL 결정
             int boardId = dto.getBoardId();
-            String redirectUrl;
             System.out.println("리다이렉트 URL 결정 - 게시판 ID: " + boardId);
 
             switch (boardId) {
@@ -791,10 +797,48 @@ public class BoardController {
         return result;
     }
 
-
+//----------------------------------------------------------------------------------------------------------------------
     // 고독한 캠핑방 페이지
     @RequestMapping("/boardimage.action")
-    public String boardImage(){
+    public String boardImage(@RequestParam(value = "page", defaultValue = "1") int page,
+                             @RequestParam(value = "size", defaultValue = "9") int size,
+                             @RequestParam(value = "searchType", required = false) String searchType,
+                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                             Model model) {
+
+        // 게시판 ID 설정
+        int boardId = 8;    // 자유게시판 ID
+
+        // 공지사항 조회(최대 3개)
+        List<BoardPostDTO> notice = boardPostService.listNotice();
+        model.addAttribute("notice", notice);
+
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setBoardId(boardId);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 전체 게시물 수 조회 (일반 게시물만)
+        int totalPostCount = boardPostService.getTotalPostCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 일반 게시물 목록 조회
+        List<BoardPostDTO> postList = boardPostService.listPostList(dto);
+
+        // 모델에 데이터 추가
+        model.addAttribute("postList", postList);
+        model.addAttribute("pagenation", pagenation);
+
         return "boardImage";
     }
 
@@ -920,13 +964,7 @@ public class BoardController {
         return "boardImage-write";
     }
 
-    // 이벤트 페이지
-    @RequestMapping("/event.action")
-    public String event(){
-        return "event";
-    }
-
-
+//----------------------------------------------------------------------------------------------------------------------
     // 공지사항 페이지
     @RequestMapping("/notice.action")
     public String notice(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -988,6 +1026,8 @@ public class BoardController {
 
                 // 첨부파일 조회
                 List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+                System.out.println("공지사항 ID: " + postId + ", 첨부파일 조회: " + (attachments != null ? attachments.size() : "null"));
+
                 post.setAttachments(attachments);
 
                 // 이전글, 다음글 ID 조회
@@ -1065,7 +1105,10 @@ public class BoardController {
 
     // 공지사항 등록 처리
     @RequestMapping(value = "/notice-write.action", method = RequestMethod.POST)
-    public String insertNotice(BoardPostDTO dto, HttpSession session) {
+    public String insertNotice(BoardPostDTO dto,
+                               @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+                               HttpServletRequest request,
+                               HttpSession session) {
         // 관리자 권한 확인
 //        Integer userCode = (Integer) session.getAttribute("user_code");
 //        Integer userGrade = (Integer) session.getAttribute("user_grade");
@@ -1092,6 +1135,49 @@ public class BoardController {
         try {
             // 공지사항 등록
             int postId = boardPostService.insertPost(dto);
+
+            // 첨부파일 처리
+            if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                // 업로드 경로를 webapp/resources/uploads로 설정
+                String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+                System.out.println("업로드 경로: " + uploadPath);
+
+                // 디렉토리가 없으면 생성
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                    System.out.println("디렉토리 생성 결과: " + directory.mkdirs());
+                }
+
+                // 각 파일 처리
+                for (int i = 0; i < uploadFiles.size(); i++) {
+                    MultipartFile file = uploadFiles.get(i);
+
+                    if (!file.isEmpty()) {
+                        // 파일명 중복 방지를 위한 uuid 추가
+                        String originalFileName = file.getOriginalFilename();
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String savedFileName = UUID.randomUUID().toString() + extension;
+
+                        // 파일 저장 경로 설정
+                        File savedFile = new File(directory, savedFileName);
+
+                        // 파일 저장
+                        file.transferTo(savedFile);
+
+                        // DB에 첨부파일 정보 저장
+                        AttachmentDTO attachmentDTO = new AttachmentDTO();
+                        attachmentDTO.setPostId(postId);
+                        System.out.println("첨부파일에 저장되는 게시글 ID: " + postId);
+                        attachmentDTO.setAttachmentName(originalFileName);
+                        attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                        attachmentDTO.setAttachmentSize((int)file.getSize());
+                        attachmentDTO.setAttachmentOrder(i + 1);
+
+                        boardPostService.insertAttachment(attachmentDTO);
+                    }
+                }
+            }
 
             // 등록 성공 시 공지사항 목록으로 리다이렉트
             return "redirect:/notice.action";
@@ -1240,6 +1326,13 @@ public class BoardController {
         return result;
     }
 
+//----------------------------------------------------------------------------------------------------------------------
+    // 이벤트 페이지
+    @RequestMapping("/event.action")
+    public String event(){
+        return "event";
+    }
+//----------------------------------------------------------------------------------------------------------------------
 
     // 추천 수 증가
     @RequestMapping(value = "/api/post/recommend.action", method = RequestMethod.POST)
@@ -1300,5 +1393,126 @@ public class BoardController {
         return result;
     }
 
+    // 추천 상태 확인 API
+    @RequestMapping(value = "/api/post/checkRecommend.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> checkRecommendStatus(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
 
+        try {
+            // 로그인 사용자 확인
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
+            // 테스트용 임시 코드
+            if (userCode == null) {
+                userCode = 2;
+                session.setAttribute("user_code", userCode);
+            }
+
+            // 사용자 코드 설정
+            dto.setUserCode(userCode);
+
+            // 추천 상태 확인
+            boolean isRecommended = boardPostService.checkRecommend(dto);
+
+            result.put("success", true);
+            result.put("isRecommended", isRecommended);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("isRecommended", false);
+            result.put("message", "추천 상태 확인 중 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return result;
+    }
+
+    // 북마크 API
+    @RequestMapping(value = "/api/post/bookmark.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> bookmarkPost(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        try{
+            // 로그인 사용자 확인
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
+            if (userCode == null) {
+                userCode = 2;
+                session.setAttribute("user_code", userCode);
+            }
+
+            // 사용자 코드 설정
+            dto.setUserCode(userCode);
+
+            // 이미 북마크했는지 확인
+            boolean isBookmarked = boardPostService.checkBookmark(dto);
+
+            if (isBookmarked) {
+                // 이미 북마큰한 경우 - 북마크 삭제
+                int deleteResult = boardPostService.deleteBookmark(dto);
+
+                if (deleteResult > 0) {
+                    result.put("success", true);
+                    result.put("isBookmarked", isBookmarked);
+                    result.put("message", "북마크가 삭제되었습니다.");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "북마크 추가에 실패했습니다.");
+                }
+            } else {
+                // 아직 북마크하지 않은 경우 - 북마크 추가
+                int insertResult = boardPostService.insertBookmark(dto);
+
+                if (insertResult > 0) {
+                    result.put("success", true);
+                    result.put("isBookmarked", true);
+                    result.put("message", "북마크에 추가되었습니다.");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "북마크 추가에 실패했습니다.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "서버 오류가 발생했습니다." + e.getMessage());
+        }
+        return result;
+    }
+
+
+    // 북마크 상태 확인 API
+    @RequestMapping(value = "/api/post/checkbookmark.action", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> checkBookmark(@RequestBody BoardPostDTO dto, HttpSession session) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 로그인 사용자 확인
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
+            // 테스트용 임시 코드 (실제 구현시 제거)
+            if (userCode == null) {
+                userCode = 2;
+                session.setAttribute("user_code", userCode);
+            }
+
+            // 사용자 코드 설정
+            dto.setUserCode(userCode);
+
+            // 북마크 상태 확인
+            boolean isBookmarked = boardPostService.checkBookmark(dto);
+
+            result.put("success", true);
+            result.put("isBookmarked", isBookmarked);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("isBookmarked", false);
+            result.put("message", "북마크 상태 확인 중 오류가 발생했습니다: " + e.getMessage());
+        }
+
+        return result;
+    }
 }

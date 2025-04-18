@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ include file="checkLogin.jsp"%>
+<%@ include file="checkLogin.jsp" %>
 <html>
 <head>
     <title>BEST 게시판</title>
@@ -113,12 +113,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link active">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -177,7 +177,8 @@
                                         class="notice-tag">공지</span></a></td>
                                 <td class="p-3 text-center"><a href="notice.action"><span
                                         class="board-category-tag notice">공지</span></a></td>
-                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
+                                <td class="p-3 title-cell"><a
+                                        href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
@@ -191,12 +192,17 @@
                         <c:forEach var="totalHotPost" items="${totalHotPost}" varStatus="status">
                             <tr class="board-row border-bottom">
                                 <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
-                                <td class="p-3 text-center"><a href="boardfree.action"><span class="board-category-tag
-                                                                                       ${totalHotPost.boardName == '자유 게시판' ? 'freeboard' :
-                                                                                         totalHotPost.boardName == '고독한 캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}</span></a>
+                                <td class="p-3 text-center">
+                                    <a href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree.action' :
+                                               totalHotPost.boardName == '고독한 캐핑방' ? 'boardimage.action' : 'boardmain.action'}">
+                                        <span class="board-category-tag ${totalHotPost.boardName == '자유 게시판' ? 'freeboard' :
+                                                                          totalHotPost.boardName == '고독한 캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}
+                                        </span>
+                                    </a>
                                 </td>
                                 <td class="p-3 title-cell"><a
-                                        href="boardfree-post.action?postId=1">${totalHotPost.postTitle}
+                                        href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree-post.action' :
+                                                totalHotPost.boardName == '고독한 캐핑방' ? 'boardimage-post.action' : 'boardmain.action'}?postId=${totalHotPost.postId}">${totalHotPost.postTitle}
                                         <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
@@ -222,7 +228,7 @@
                 <div style="display: flex; align-items: center; margin-top: 30px; width: 100%;">
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
-                        <form action="boardfree.action" method="get">
+                        <form action="boardbest.action" method="get">
                             <div class="d-flex border rounded">
                                 <select name="searchType" class="form-control-sm border-0"
                                         style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
@@ -291,6 +297,6 @@
         </div>
     </div>
 </div>
-    <jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"></jsp:include>
 </body>
 </html>

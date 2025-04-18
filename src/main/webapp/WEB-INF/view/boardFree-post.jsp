@@ -166,6 +166,16 @@
             color: var(--text-secondary);
         }
 
+        /* 하트 아이콘 기본 상태: 회색 */
+        .icon-heart {
+            color: var(--color-gray-500);
+            transition: color 0.3s ease;
+        }
+
+        /* 하트 아이콘 활성 상태: 빨간색 */
+        .icon-heart.active {
+            color: var(--color-error);
+        }
 
         /* 댓글 영역 */
         .comments-container {
@@ -581,14 +591,50 @@
             color: var(--color-maple);
         }
 
-        .icon-heart {
-            color: var(--color-error);
-        }
 
         .table-icon {
             margin-right: 5px;
         }
 
+        /* 북마크 아이콘 스타일 */
+        .icon-bookmark {
+            color: var(--color-gray-500);
+            transition: color 0.3s ease;
+        }
+
+        .icon-bookmark.active {
+            color: var(--color-maple);
+        }
+
+        /* 북마크 버튼 스타일 */
+        .bookmark-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .bookmark-icon:hover {
+            background-color: #e6f0ff;
+        }
+
+        .bookmark-icon i {
+            color: var(--color-gray-600);
+            font-size: var(--font-md);
+        }
+
+        .bookmark-icon.active i {
+            color: var(--color-maple);
+        }
+
+        .ml-3 {
+            margin-left: 12px;
+        }
     </style>
 
 </head>
@@ -609,12 +655,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -635,7 +681,7 @@
 
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <h1 class="page-title">자유게시판</h1>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
                 </div>
                 <!-- 게시글 영역 -->
                 <div class="post-container">
@@ -667,40 +713,32 @@
 
 
                         <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
-                        <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-                            <p>첨부파일 정보:</p>
-                            <p>post.attachments 존재 여부: ${not empty post.attachments}</p>
-                            <p>첨부파일 개수: ${fn:length(post.attachments)}</p>
+                        <%--                        <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+                        <%--                            <p>첨부파일 정보:</p>--%>
+                        <%--                            <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
+                        <%--                            <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
 
-                            <c:if test="${not empty post.attachments}">
-                                <ul>
-                                    <c:forEach var="attachment" items="${post.attachments}" varStatus="status">
-                                        <li>
-                                            첨부파일 ${status.index+1}: ${attachment.attachmentName},
-                                            경로: ${attachment.attachmentPath},
-                                            크기: ${attachment.attachmentSize}
-                                        </li>
-                                    </c:forEach>
-                                </ul>
-                            </c:if>
-                        </div>
+                        <%--                            <c:if test="${not empty post.attachments}">--%>
+                        <%--                                <ul>--%>
+                        <%--                                    <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
+                        <%--                                        <li>--%>
+                        <%--                                            첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
+                        <%--                                            경로: ${attachment.attachmentPath},--%>
+                        <%--                                            크기: ${attachment.attachmentSize}--%>
+                        <%--                                        </li>--%>
+                        <%--                                    </c:forEach>--%>
+                        <%--                                </ul>--%>
+                        <%--                            </c:if>--%>
+                        <%--                        </div>--%>
 
                         <!-- 간단한 첨부파일 표시 시도 -->
                         <c:if test="${not empty post.attachments}">
-                            <div class="mt-4 p-3 border rounded">
-                                <h5>첨부파일</h5>
-                                <c:forEach var="attachment" items="${post.attachments}">
-                                    <div class="mb-2">
-                                        <strong>${attachment.attachmentName}</strong> (${attachment.attachmentSize}
-                                        bytes)
-                                        <br>
-                                        <!-- 간단한 이미지 표시 시도 -->
-                                        <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
-                                             alt="${attachment.attachmentName}"
-                                             style="max-width: 300px; margin-top: 10px;">
-                                    </div>
-                                </c:forEach>
-                            </div>
+                            <c:forEach var="attachment" items="${post.attachments}">
+                                <!-- 간단한 이미지 표시 시도 -->
+                                <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
+                                     alt="${attachment.attachmentName}"
+                                     style="max-width: 300px; margin-top: 10px;">
+                            </c:forEach>
                         </c:if>
                     </div>
 
@@ -708,10 +746,17 @@
                         <div class="post-actions">
                             <!-- 추천 버튼을 왼쪽으로 배치 -->
                             <div class="like-area">
+                                <!-- 추천 버튼 -->
                                 <button class="btn btn-icon" id="likeButton" data-post-id="${post.postId}">
                                     <i class="fas fa-heart icon-heart"></i>
                                 </button>
                                 <span class="font-bold" id="likeCount">추천 ${post.recommendCount}</span>
+
+                                <!-- 북마크 버튼 -->
+                                <button class="btn btn-icon ml-3" id="bookmarkButton" data-post-id="${post.postId}">
+                                    <i class="fas fa-bookmark icon-bookmark"></i>
+                                </button>
+                                <span class="font-bold" id="bookmarkStatus">북마크</span>
                             </div>
 
                             <!-- 이전글, 목록, 다음글 버튼을 오른쪽으로 배치 -->
@@ -978,7 +1023,6 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-
                         <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>
@@ -1069,6 +1113,14 @@
 
         // 게시글 추천 기능 설정
         initializePostRecommendation();
+
+        // 북마크 기능 초기화
+        initializeBookmarkFeature();
+
+
+        // 페이지 로드 시 추천 및 북마크 상태 확인
+        checkRecommendStatus();
+        checkBookmarkStatus();
     });
 
     // 모달 관련 요소 및 이벤트 초기화 함수
@@ -1288,7 +1340,7 @@
         });
 
         // 댓글 삭제 이벤트 처리
-        document.querySelectorAll('.delete-reply').forEach(button => {
+        document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', function () {
                 if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
                     return;
@@ -1325,6 +1377,7 @@
         if (likeButton) {
             likeButton.addEventListener('click', function () {
                 const postId = this.getAttribute('data-post-id');
+                const likeIcon = this.querySelector('i');
 
                 // AJAX 요청 통합 함수 사용
                 sendAjaxRequest('/api/post/recommend.action', 'POST', {
@@ -1335,12 +1388,45 @@
                         document.getElementById('likeCount').textContent = "추천 " + response.recommendCount;
                     }
 
-                    // 메시지 표시
-                    alert(response.message);
+                    // 성공 시 추천 아이콘 변경 - 활성화
+                    if (response.success) {
+                        likeIcon.classList.add('active');
+                    }
                 });
+            });
+
+            // 페이지 로드 시 추천 상태 확인
+            checkRecommendStatus();
+        }
+    }
+
+    // 추천 상태 확인 함수
+    function checkRecommendStatus() {
+        const likeButton = document.getElementById('likeButton');
+
+        if (likeButton) {
+            const postId = likeButton.getAttribute('data-post-id');
+
+            // AJAX 요청으로 추천 상태 확인
+            sendAjaxRequest('/api/post/checkRecommend.action', 'POST', {
+                postId: postId
+            }, function(response) {
+                console.log("추천 상태 확인 응답:", response); // 디버깅용
+
+                if (response.success) {
+                    const likeIcon = likeButton.querySelector('i');
+
+                    // 추천 상태에 따라 UI 업데이트
+                    if (response.isRecommended) {
+                        likeIcon.classList.add('active');
+                    } else {
+                        likeIcon.classList.remove('active');
+                    }
+                }
             });
         }
     }
+
 
     // AJAX 요청 통합 함수
     function sendAjaxRequest(url, method, data, successCallback) {
@@ -1556,6 +1642,86 @@
                 closeAllModals();
             });
         }
+    }
+
+
+    // 북마크 기능 초기화
+    function initializeBookmarkFeature() {
+        const bookmarkButton = document.getElementById('bookmarkButton');
+
+        if (bookmarkButton) {
+            // 북마크 버튼 클릭 이벤트 추가
+            bookmarkButton.addEventListener('click', function() {
+                const postId = this.getAttribute('data-post-id');
+                const bookmarkIcon = this.querySelector('i');
+                const bookmarkStatus = document.getElementById('bookmarkStatus');
+
+                // 현재 상태 확인 (클래스로 결정)
+                const isCurrentlyBookmarked = bookmarkIcon.classList.contains('active');
+
+                // 즉시 UI 업데이트 (서버 응답 전)
+                if (isCurrentlyBookmarked) {
+                    bookmarkIcon.classList.remove('active');
+                    bookmarkStatus.textContent = "북마크";
+                } else {
+                    bookmarkIcon.classList.add('active');
+                    bookmarkStatus.textContent = "북마크됨";
+                }
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('/api/post/bookmark.action', 'POST', {
+                    postId: postId
+                }, function(response) {
+                    // 서버 응답에 따라 UI를 조정
+                    if (!response.success) {
+                        // 실패 시 원래 상태로 되돌림
+                        if (isCurrentlyBookmarked) {
+                            bookmarkIcon.classList.add('active');
+                            bookmarkStatus.textContent = "북마크됨";
+                        } else {
+                            bookmarkIcon.classList.remove('active');
+                            bookmarkStatus.textContent = "북마크";
+                        }
+                        alert('북마크 처리 중 오류가 발생했습니다: ' + response.message);
+                    }
+                });
+            });
+        }
+    }
+
+    // 북마크 상태 확인 함수
+    function checkBookmarkStatus() {
+        const bookmarkButton = document.getElementById('bookmarkButton');
+        const bookmarkStatus = document.getElementById('bookmarkStatus');
+
+        if (bookmarkButton) {
+            const postId = bookmarkButton.getAttribute('data-post-id');
+
+            // AJAX 요청으로 북마크 상태 확인
+            sendAjaxRequest('/api/post/checkbookmark.action', 'POST', {
+                postId: postId
+            }, function(response) {
+                console.log("북마크 상태 확인 응답:", response); // 디버깅용
+
+                if (response.success) {
+                    const bookmarkIcon = bookmarkButton.querySelector('i');
+
+                    // 북마크 상태에 따라 UI 업데이트
+                    if (response.isBookmarked) {
+                        bookmarkIcon.classList.add('active');
+                        bookmarkStatus.textContent = "북마크됨";
+                    } else {
+                        bookmarkIcon.classList.remove('active');
+                        bookmarkStatus.textContent = "북마크";
+                    }
+                }
+            });
+        }
+    }
+
+    // 글쓰기 페이지로
+    function goToWrite() {
+        window.location.href = "boardfree-write.action";
     }
 </script>
 </body>
