@@ -442,67 +442,50 @@
         <choose>
             <when test="deliveryType == '플랫폼 배송' or deliveryType == 'platform'">
                 UPDATE PLATFORM_DELIVERY
-                SET DELIVERY_START_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate}
-                WHERE PLATFORM_DELIVERY_ID = #{deliveryId}
+                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP}
+                WHERE PLATFORM_DELIVERY_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '플랫폼 배송 반환' or deliveryType == 'platform-return'">
                 UPDATE PLATFORM_DELIVERY_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate}
-                WHERE PLATFORM_DELIVERY_RETURN_ID = #{deliveryId}
+                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP}
+                WHERE PLATFORM_DELIVERY_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '거래자 택배' or deliveryType == 'user'">
                 UPDATE USERS_DELIVERY
-                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate},
+                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP},
                 CARRIER_NAME = #{carrierName},
                 WAYBILL_NUMBER = #{waybillNumber}
-                WHERE USERS_DELIVERY_ID = #{deliveryId}
+                WHERE USERS_DELIVERY_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '거래자 택배 반환' or deliveryType == 'user-return'">
                 UPDATE USERS_DELIVERY_RETURN
-                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate},
+                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP},
                 CARRIER_NAME = #{carrierName},
                 WAYBILL_NUMBER = #{waybillNumber}
-                WHERE USERS_DELIVERY_RETURN_ID = #{deliveryId}
+                WHERE USERS_DELIVERY_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '보관 최종 반환' or deliveryType == 'storage-return'">
                 UPDATE STORAGE_LAST_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate}
-                WHERE STORAGE_LAST_RETURN_ID = #{deliveryId}
+                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP}
+                WHERE STORAGE_LAST_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '스토렌 최종 반환' or deliveryType == 'storen-return'">
                 UPDATE STOREN_LAST_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate},
-                DELIVERY_END_DATE = #{deliveryEndDate}
-                WHERE STOREN_LAST_RETURN_ID = #{deliveryId}
+                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=TIMESTAMP},
+                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=TIMESTAMP}
+                WHERE STOREN_LAST_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
         </choose>
     </update>
 
     <!-- 새 배송 생성 -->
-    <insert id="createPayment" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
-        <selectKey keyProperty="payId" resultType="int" order="BEFORE">
-            SELECT NVL(MAX(PAY_ID), 0) + 1 FROM PAY
-        </selectKey>
-
-        INSERT INTO PAY (
-        PAY_ID, PAY_METHOD_ID, PAY_AMOUNT, PAY_DATE, STOREN_ID, STORAGE_ID
-        ) VALUES (
-        #{payId}, 1, 0, SYSDATE,
-        <if test="storenId != null and storenId != ''">#{storenId},</if>
-        <if test="storenId == null or storenId == ''">NULL,</if>
-        <if test="storageId != null and storageId != ''">#{storageId}</if>
-        <if test="storageId == null or storageId == ''">NULL</if>
-        )
-    </insert>
-
-    <!-- 새 배송 생성 - PLATFORM_DELIVERY 테이블 삽입 -->
-    <insert id="createPlatformDelivery" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
-        <selectKey keyProperty="deliveryId" resultType="int" order="BEFORE">
+    <insert id="createDelivery" parameterType="com.team.mvc.DTO.AdminDeliveryUpdateDTO">
+        <selectKey keyProperty="deliveryId" resultType="Long" order="BEFORE">
             SELECT NVL(MAX(PLATFORM_DELIVERY_ID), 0) + 1 FROM PLATFORM_DELIVERY
         </selectKey>
 
@@ -512,4 +495,28 @@
         #{deliveryId}, #{payId}, #{deliveryStartDate}, NULL
         )
     </insert>
+
+    <!-- platformDeliveryId 조회 -->
+    <select id="getPlatformDeliveryId" parameterType="long" resultType="java.lang.Integer">
+        SELECT PLATFORM_DELIVERY_ID
+        FROM PLATFORM_DELIVERY
+        WHERE PLATFORM_DELIVERY_ID = #{deliveryId,jdbcType=NUMERIC}
+    </select>
+
+    <!-- platformDeliveryReturnId 조회 -->
+    <select id="getPlatformDeliveryReturnId" parameterType="long" resultType="java.lang.Integer">
+        SELECT PLATFORM_DELIVERY_RETURN_ID
+        FROM PLATFORM_DELIVERY_RETURN
+        WHERE PLATFORM_DELIVERY_RETURN_ID = #{deliveryId,jdbcType=NUMERIC}
+    </select>
+
+    <!-- 기존 배송 시작일 조회 -->
+    <select id="getExistingDeliveryStartDate" resultType="java.time.LocalDateTime" parameterType="long">
+        SELECT DELIVERY_START_DATE
+        FROM PLATFORM_DELIVERY
+        WHERE PLATFORM_DELIVERY_ID = #{deliveryId,jdbcType=NUMERIC}
+    </select>
+
+
+
 </mapper>
