@@ -50,7 +50,7 @@
              , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
              , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-             , EQUIP_GRADE
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code}
     </select>
@@ -67,7 +67,7 @@
              , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
              , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-             , EQUIP_GRADE
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
     </select>
@@ -86,7 +86,7 @@
                      , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
                      , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
                      , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-                     , EQUIP_GRADE
+                     , EQUIP_GRADE, STATUS
                  FROM VW_STOREN
                  WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
                  ORDER BY CREATED_DATE ASC
@@ -174,7 +174,7 @@
              , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
              , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-             , EQUIP_GRADE
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND MATCHING_REQUEST_COUNT > 0
     </select>
@@ -191,7 +191,7 @@
              , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
              , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-             , EQUIP_GRADE
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN s
         WHERE s.STOREN_ID IN (SELECT TRANSACTION_ID
                               FROM VW_RENTAL_APPLICANT
@@ -234,6 +234,38 @@
             AND MATCHING_STATUS != '매칭완료'
             AND EQUIP_GRADE IS NOT NULL
     </select>
+
+
+    <!-- 해당 유저가 가진 스토렌 장비코드만 조회 (중복제거) -->
+    <select id="listStorenEquipCodes" resultType="java.lang.Integer">
+        SELECT EQUIP_CODE
+        FROM VW_STOREN
+        WHERE USER_CODE = #{userCode}
+        GROUP BY EQUIP_CODE
+    </select>
+
+    <!-- 해당 유저가 가진 스토렌 장비의 각 상태의 개수 조회 -->
+    <select id="getStorenStatus" resultType="map">
+        SELECT
+            NVL(SUM(DECODE(STATUS, '보관비 결제 대기', 1, 0)), 0) AS "보관비 결제 대기",
+            NVL(SUM(DECODE(STATUS, '배송 대기', 1, 0)), 0) AS "배송 대기",
+            NVL(SUM(DECODE(STATUS, '배송 중', 1, 0)), 0) AS "배송 중",
+            NVL(SUM(DECODE(STATUS, '검수 중', 1, 0)), 0) AS "검수 중",
+            NVL(SUM(DECODE(STATUS, '보관 중', 1, 0)), 0) AS "보관 중",
+            NVL(SUM(DECODE(STATUS, '강제 반환', 1, 0)), 0) AS "강제 반환",
+            NVL(SUM(DECODE(STATUS, '승인 대기', 1, 0)), 0) AS "승인 대기",
+            NVL(SUM(DECODE(STATUS, '결제 대기', 1, 0)), 0) AS "결제 대기",
+            NVL(SUM(DECODE(STATUS, '렌탈 중', 1, 0)), 0) AS "렌탈 중",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "반납 중",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "거래 완료",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "최종 반환",
+            NVL(SUM(DECODE(STATUS, '상태 불명', 1, 0)), 0) AS "상태 불명"
+        FROM
+            VW_STOREN
+        WHERE
+            USER_CODE = #{userCode}
+    </select>
+
 
 
 </mapper>

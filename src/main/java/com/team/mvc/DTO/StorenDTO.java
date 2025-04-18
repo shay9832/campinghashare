@@ -36,6 +36,9 @@ public class StorenDTO {
     //장비 등급 추가
     private String equip_grade;                             //장비등급이름
 
+    // 장비 상태 추가
+    private String status;                                  //장비상태
+
     // 추가된 필드: 이미지 리스트 및 평균가 비교 관련
     private List<AttachmentDTO> photoList;                  // 장비 사진 리스트
     private boolean otherBrand;                             // 기타 브랜드 여부
@@ -303,5 +306,13 @@ public class StorenDTO {
 
     public void setFinal_return_date(String final_return_date) {
         this.final_return_date = final_return_date;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

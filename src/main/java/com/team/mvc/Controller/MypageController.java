@@ -85,31 +85,64 @@ public class MypageController {
     }
 
     // 마이페이지-내가 소유한 장비
+//    @RequestMapping(value="/mypage-myequip.action")
+//    public String mypageMyEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
+//        MyEquipDTO data = myEquipService.listMyEquip(userCode);
+//
+//        System.out.println("로그인한 userCode: " + userCode);
+//
+//        System.out.println("=== MypageController : mypageMyEquip() : START ===");
+//
+//        System.out.println("EquipList size: " + data.getEquipList().size()); // 콘솔 출력
+//        System.out.println("StorenMap size: " + data.getStorenMap().size()); // 콘솔 출력
+//        System.out.println("firstStorenList size: " + data.getFirstStorenList().size()); // 콘솔 출력
+//
+//        if (!data.getFirstStorenList().isEmpty()) {
+//            System.out.println("firstStorenList start_date : " + data.getFirstStorenList().getFirst().getRental_start_date());
+//        } else {
+//            System.out.println("firstStorenList is empty.");
+//        }
+//
+//        model.addAttribute("equipList", data.getEquipList());
+//        model.addAttribute("storenMap", data.getStorenMap());
+//        model.addAttribute("firstStorenList", data.getFirstStorenList());
+//        //rentalList, storageList도 받아와야함
+//
+//        System.out.println("=== MypageController : mypageMyEquip() : END ===");
+//        return "myPage-myEquip";
+//    }
+
+    // 마이페이지-내가 소유한 장비(첫 요청 시)
     @RequestMapping(value="/mypage-myequip.action")
-    public String mypageMyEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
-        MyEquipDTO data = myEquipService.listMyEquip(userCode);
-
-        System.out.println("로그인한 userCode: " + userCode);
-
+    public String getMypageMyEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
         System.out.println("=== MypageController : mypageMyEquip() : START ===");
+        
+        // 일반 장비 리스트 가져오기
+        List<EquipmentDTO> equipmentList = myEquipService.listMyGeneral(userCode);
+        // 장비 상태현황 맵 가져오기
+        Map<String, Map<String, Integer>> statusMap = myEquipService.getMyEquipmentStatus(userCode);
 
-        System.out.println("EquipList size: " + data.getEquipList().size()); // 콘솔 출력
-        System.out.println("StorenMap size: " + data.getStorenMap().size()); // 콘솔 출력
-        System.out.println("firstStorenList size: " + data.getFirstStorenList().size()); // 콘솔 출력
-
-        if (!data.getFirstStorenList().isEmpty()) {
-            System.out.println("firstStorenList start_date : " + data.getFirstStorenList().getFirst().getRental_start_date());
-        } else {
-            System.out.println("firstStorenList is empty.");
-        }
-
-        model.addAttribute("equipList", data.getEquipList());
-        model.addAttribute("storenMap", data.getStorenMap());
-        model.addAttribute("firstStorenList", data.getFirstStorenList());
-        //rentalList, storageList도 받아와야함
-
+        model.addAttribute("equipList", equipmentList);
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
+        model.addAttribute("activeTab", "general"); // 초기 탭 지정
+        
         System.out.println("=== MypageController : mypageMyEquip() : END ===");
         return "myPage-myEquip";
+    }
+
+    @RequestMapping(value="/api/myequipment/general", produces="application/json")
+    @ResponseBody
+    public List<EquipmentDTO> getMypageMyGeneral(@ModelAttribute("userCode") Integer userCode) {
+        return myEquipService.listMyGeneral(userCode);
+    }
+
+    // 마이페이지-내가 소유한 장비(스토렌)
+    @RequestMapping(value="/api/myequipment/storen", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> getMypageMyStoren(@ModelAttribute("userCode") Integer userCode) {
+        return myEquipService.listMyStoren(userCode);
     }
 
 
