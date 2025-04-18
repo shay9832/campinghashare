@@ -32,6 +32,7 @@ public class AdminPaymentController {
      */
     @RequestMapping(value = "/admin-payment.action", method = RequestMethod.GET)
     public String adminPayment(
+            @ModelAttribute("adminId") String adminId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "searchType", required = false) String searchType,
@@ -140,6 +141,7 @@ public class AdminPaymentController {
      */
     @RequestMapping(value = "/admin-cancelPayUpdate.action", method = RequestMethod.POST)
     public String cancelPayment(
+            @ModelAttribute("adminId") String adminId,
             @RequestParam("paymentId") int paymentId,
             @RequestParam("cancelReason") String cancelReason,
             RedirectAttributes redirectAttributes
@@ -172,6 +174,7 @@ public class AdminPaymentController {
      */
     @RequestMapping(value = "/admin-updatePayment.action", method = RequestMethod.POST)
     public String updatePaymentStatus(
+            @ModelAttribute("adminId") String adminId,
             @RequestParam("paymentId") int paymentId,
             @RequestParam("status") String status,
             @RequestParam(value = "cancelDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date cancelDate,

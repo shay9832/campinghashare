@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 @Controller
 public class AdminInspectListController {
 
@@ -20,7 +19,7 @@ public class AdminInspectListController {
      * 검수 목록 페이지 (GET 요청 처리)
      */
     @RequestMapping(value="/admin-inspectList.action", method = RequestMethod.GET)
-    public String adminInspectList(Model model, RedirectAttributes redirectAttributes) {
+    public String adminInspectList(@ModelAttribute("adminId") String adminId, Model model, RedirectAttributes redirectAttributes) {
         try {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
@@ -46,6 +45,7 @@ public class AdminInspectListController {
      */
     @PostMapping("/admin-inspectList.action")
     public String adminInspectListAdd(
+            @ModelAttribute("adminId") String adminId,
             @RequestParam(value = "platformDeliveryId", required = false) String platformDeliveryIdStr,
             @RequestParam(value = "platformDeliveryReturnId", required = false) String platformDeliveryReturnIdStr,
             @RequestParam(value = "inspecGradeId", required = false, defaultValue = "1") Integer inspecGradeId,
@@ -58,9 +58,6 @@ public class AdminInspectListController {
             // 문자열에서 숫자 추출 및 변환
             Integer platformDeliveryId = null;
             Integer platformDeliveryReturnId = null;
-
-            // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
-            String adminId = "ADMIN1"; // 기본 관리자 ID 설정
 
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {

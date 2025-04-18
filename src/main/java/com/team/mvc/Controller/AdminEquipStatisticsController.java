@@ -4,6 +4,8 @@ import com.team.mvc.Interface.IAdminEquipStatisticsDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -14,7 +16,7 @@ public class AdminEquipStatisticsController {
     private SqlSession sqlSession;
 
     @RequestMapping(value="/admin-equipStatistics.action",method = RequestMethod.GET)
-    public String adminEquipStatistics(){
+    public String adminEquipStatistics(@ModelAttribute("adminId") String adminId, Model model){
 
         IAdminEquipStatisticsDAO adminEquipStatisticsDAO = sqlSession.getMapper(IAdminEquipStatisticsDAO.class);
 

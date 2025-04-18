@@ -50,17 +50,36 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
         // 사용자가 등록한 일반 장비 개수만큼 첫등록 스토렌 리스트 만들기
         for (EquipmentDTO equipment : equipmentList) {
+            if (equipment == null || equipment.getEquip_code() == null) {
+                System.out.println("error : equipment or equip_code is null");
+                continue;
+            }
+
             StorenDTO firstStoren = storenDAO.getStorenByEquipCode(user_code, equipment.getEquip_code());
 
-            // Null이 아닐 때만 리스트에 추가
             if (firstStoren != null) {
                 firstStorenList.add(firstStoren);
             }
         }
 
+
+        // 디버깅
+        for (EquipmentDTO e : equipmentList) {
+            if (e == null) {
+                System.out.println("null equip_code error");
+            } else {
+                System.out.println("equip_code check : " + e.getEquip_code());
+            }
+        }
+
         //equipmentList를 장비 코드로 쉽게 검색할 수 있는 Map으로 변환
         Map<Integer, EquipmentDTO> equipmentMap = equipmentList.stream()
-                .collect(Collectors.toMap(EquipmentDTO::getEquip_code, equipment -> equipment));
+                .filter(e -> e != null) // null 방지
+                .collect(Collectors.toMap(
+                        EquipmentDTO::getEquip_code,
+                        equipment -> equipment,
+                        (existing, replacement) -> replacement  // 중복 key 발생 시 마지막 값 사용
+                ));
 
         // 첫등록 스토렌 리스트의 각 storenDTO에 해당하는 equipmentDTO 설정
         for (StorenDTO firstStoren : firstStorenList) {
@@ -71,8 +90,15 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         }
 
         // equip_code에 따라 여러개의 storenId를 넣어주는 map 만들기
-        for (int i = 0; i < storenList.size(); i++) {
-            storenMap.put(storenList.get(i).getEquip_code(), storenDAO.listByUserCodeEquipCode(user_code, storenList.get(i).getEquip_code()));
+        for (StorenDTO storen : storenList) {
+            if (storen != null && storen.getEquip_code() > 0) {
+                List<StorenDTO> list = storenDAO.listByUserCodeEquipCode(user_code, storen.getEquip_code());
+                if (list != null) {
+                    storenMap.put(storen.getEquip_code(), list);
+                }
+            } else {
+                System.out.println("storen null or invalid equip_code: " + (storen != null ? storen.getEquip_code() : "null"));
+            }
         }
 
         // 디버깅 콘솔체크

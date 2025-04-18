@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import com.team.mvc.DTO.BrandDTO;
 import com.team.mvc.DTO.EquipmentDTO;
@@ -25,6 +26,7 @@ public class AdminCreateBrandController {
      */
     @RequestMapping("/admin-createBrand.action")
     public String createBrand(
+            @ModelAttribute("adminId") String adminId,
             @RequestParam(value = "action", required = false) String action,
             @RequestParam(value = "brandId", required = false) Integer brandId,
             @RequestParam(value = "equip_name_id", required = false) Integer equipNameId,

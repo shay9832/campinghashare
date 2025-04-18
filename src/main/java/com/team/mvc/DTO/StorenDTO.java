@@ -4,7 +4,8 @@ import java.util.List;
 
 public class StorenDTO {
     private EquipmentDTO equipmentDTO;                      //일반 장비 DTO
-    private int storen_id, equip_code, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
+    private int storen_id, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
+    private Integer equip_code;
     private String storen_title, storen_content;            //스토렌 제목, 상품내용
     private Integer daily_rent_price;                       //일일 렌탈가격
     private String created_date;                            //생성일
@@ -41,6 +42,7 @@ public class StorenDTO {
 
     // Getter/Setter -----------------------------------------
 
+
     public EquipmentDTO getEquipmentDTO() {
         return equipmentDTO;
     }
@@ -57,14 +59,6 @@ public class StorenDTO {
         this.storen_id = storen_id;
     }
 
-    public int getEquip_code() {
-        return equip_code;
-    }
-
-    public void setEquip_code(int equip_code) {
-        this.equip_code = equip_code;
-    }
-
     public int getSize_id() {
         return size_id;
     }
@@ -79,6 +73,14 @@ public class StorenDTO {
 
     public void setStore_month(int store_month) {
         this.store_month = store_month;
+    }
+
+    public Integer getEquip_code() {
+        return equip_code;
+    }
+
+    public void setEquip_code(Integer equip_code) {
+        this.equip_code = equip_code;
     }
 
     public String getStoren_title() {
@@ -145,6 +147,14 @@ public class StorenDTO {
         this.daily_storage_fee = daily_storage_fee;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getSearchKeyword() {
         return searchKeyword;
     }
@@ -159,14 +169,6 @@ public class StorenDTO {
 
     public void setPagenation(Pagenation pagenation) {
         this.pagenation = pagenation;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getRental_start_date() {
@@ -199,6 +201,14 @@ public class StorenDTO {
 
     public void setMatching_status(String matching_status) {
         this.matching_status = matching_status;
+    }
+
+    public String getEquip_grade() {
+        return equip_grade;
+    }
+
+    public void setEquip_grade(String equip_grade) {
+        this.equip_grade = equip_grade;
     }
 
     public List<AttachmentDTO> getPhotoList() {
@@ -271,13 +281,5 @@ public class StorenDTO {
 
     public void setAvgRentalPrice(int avgRentalPrice) {
         this.avgRentalPrice = avgRentalPrice;
-    }
-
-    public String getEquip_grade() {
-        return equip_grade;
-    }
-
-    public void setEquip_grade(String equip_grade) {
-        this.equip_grade = equip_grade;
     }
 }
