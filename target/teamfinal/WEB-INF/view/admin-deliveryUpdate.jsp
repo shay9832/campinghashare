@@ -215,8 +215,8 @@
         <!-- 탭 컨테이너 -->
         <div class="tab-container">
             <div class="tab-button-group">
-                <button type="button" class="tab-button" data-tab="pending-tab">배송 대기 중</button>
-                <button type="button" class="tab-button active" data-tab="platform-tab">플랫폼 배송</button>
+                <button type="button" class="tab-button active" data-tab="pending-tab">배송 대기 중</button>
+                <button type="button" class="tab-button" data-tab="platform-tab">플랫폼 배송</button>
                 <button type="button" class="tab-button" data-tab="platform-return-tab">플랫폼 배송 반환</button>
                 <button type="button" class="tab-button" data-tab="user-tab">거래자 택배</button>
                 <button type="button" class="tab-button" data-tab="user-return-tab">거래자 택배 반환</button>
@@ -225,7 +225,7 @@
             </div>
 
             <!-- 배송 대기중 -->
-            <div id="pending-tab" class="tab-content">
+            <div id="pending-tab" class="tab-content active">
                 <!-- 전체 선택 체크박스 -->
                 <div class="select-all-checkbox">
                     <input type="checkbox" id="pending-select-all"> <label for="pending-select-all">전체 선택</label>
@@ -234,7 +234,7 @@
                 <div class="shipping-table">
                     <table>
                         <tr>
-                            <th class="col-select"><input type="checkbox"></th>
+                            <th class="col-select"><input type="checkbox" id="pending-header-checkbox"></th>
                             <th class="col-delivery-type">배송 유형</th>
                             <th class="col-customer">발송인</th>
                             <th class="col-storen-id">스토렌ID</th>
@@ -272,7 +272,7 @@
             </div>
 
             <!-- 플랫폼 배송 탭 -->
-            <div id="platform-tab" class="tab-content active">
+            <div id="platform-tab" class="tab-content">
                 <!-- 전체 선택 체크박스 -->
                 <div class="select-all-checkbox">
                     <input type="checkbox" id="platform-select-all"> <label for="platform-select-all">전체 선택</label>
@@ -824,6 +824,16 @@
                 <span class="route-point">고객 수령</span>
             `;
                 break;
+            case 'pending-tab':
+                flowTitle.textContent = '배송 대기 중 장비 흐름도';
+                shippingRoute.innerHTML = `
+                <span class="route-point">장비 등록</span>
+                <span class="route-arrow">→</span>
+                <span class="route-point">배송 대기</span>
+                <span class="route-arrow">→</span>
+                <span class="route-point">배송 시작</span>
+            `;
+                break;
         }
     }
 
@@ -958,7 +968,6 @@
                 shippingStatus.value = 'preparing'; // 배송 준비 중
             }
 
-
             // 원래 배송 시작일 값 가져오기
             const originalStartDate = cells[7] ? cells[7].textContent.trim() : '';
 
@@ -979,10 +988,120 @@
                 console.warn('날짜 형식 변환 오류:', e);
             }
 
+            // 모달 타이틀 설정
+            document.querySelector('.modal-header h3').textContent = '배송 상세 정보';
 
             // 모달 표시
             shippingModal.style.display = 'block';
         });
+    });
+
+    // 배송 대기 탭에서 전체 선택 체크박스 기능 추가
+    document.getElementById('pending-select-all').addEventListener('change', function() {
+        const pendingTab = document.getElementById('pending-tab');
+        const checkboxes = pendingTab.querySelectorAll('td.col-select input[type="checkbox"]');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+    // 배송 대기 탭에서 테이블 헤더 체크박스 기능 추가
+    document.getElementById('pending-header-checkbox').addEventListener('change', function() {
+        const pendingTab = document.getElementById('pending-tab');
+        const checkboxes = pendingTab.querySelectorAll('td.col-select input[type="checkbox"]');
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+
+        // selectAll 체크박스도 동기화
+        document.getElementById('pending-select-all').checked = this.checked;
+    });
+
+    // 배송 시작 버튼 이벤트
+    document.querySelectorAll('.create-shipping-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const senderId = this.getAttribute('data-sender');
+            const storenId = this.getAttribute('data-storen');
+            const storageId = this.getAttribute('data-storage');
+            const equipmentName = this.getAttribute('data-equipment');
+            const deliveryType = this.getAttribute('data-type');
+
+            // 배송 시작 모달 표시
+            const shippingModal = document.getElementById('shipping-modal');
+
+            // 필드 초기화
+            document.getElementById('sender-id').value = senderId;
+            document.getElementById('receiver-id').value = -1; // 기본값
+            document.getElementById('storen-id').value = storenId || '';
+            document.getElementById('storage-id').value = storageId || '';
+            document.getElementById('product-name').value = equipmentName;
+            document.getElementById('rental-id').value = '';
+
+            // 배송 유형 결정 (storenId가 있으면 스토렌, storageId가 있으면 보관)
+            let shippingType = 'platform';
+            let shippingTypeDisplay = '플랫폼 배송';
+
+            if (deliveryType && deliveryType.includes('스토렌')) {
+                shippingType = 'platform';
+                shippingTypeDisplay = '플랫폼 배송';
+            } else if (deliveryType && deliveryType.includes('보관')) {
+                shippingType = 'platform';
+                shippingTypeDisplay = '플랫폼 배송';
+            }
+
+            document.getElementById('shipping-type-hidden').value = shippingType;
+            document.getElementById('shipping-type').value = shippingTypeDisplay;
+
+            // 검수 관련 필드 초기화
+            if (document.getElementById('inspection-date')) {
+                document.getElementById('inspection-date').value = '';
+            }
+            if (document.getElementById('inspection-type')) {
+                document.getElementById('inspection-type').value = '';
+            }
+
+            // 렌탈 날짜 필드 초기화
+            document.getElementById('rental-start-date').value = '';
+            document.getElementById('rental-end-date').value = '';
+
+            // 배송 관련 필드 초기화
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('tracking').value = '';
+
+            // 새 배송 시작일은 오늘로 설정
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('new-start-date').value = today;
+
+            // 배송 상태는 '배송 준비중'으로 설정
+            document.getElementById('shipping-status').value = 'preparing';
+
+            // 택배사는 기본값으로 설정
+            document.getElementById('courier').value = '대한통운';
+
+            // 배송ID는 null (새 배송이므로)
+            document.getElementById('shipping-id').value = '';
+
+            // 모달 타이틀 변경
+            document.querySelector('.modal-header h3').textContent = '새 배송 등록';
+
+            // 모달 표시
+            shippingModal.style.display = 'block';
+        });
+    });
+
+    // 폼 제출 이벤트 리스너 추가
+    document.getElementById('shipping-form').addEventListener('submit', function(e) {
+        // 배송ID가 없는 경우 (새 배송) 생성 모드로 설정
+        if (!document.getElementById('shipping-id').value) {
+            e.preventDefault(); // 폼 기본 제출 방지
+
+            // 폼 액션 변경 후 제출
+            this.action = '${pageContext.request.contextPath}/admin-createDelivery.action';
+            this.submit();
+        }
     });
 
     // 배송조회 버튼 클릭 이벤트
@@ -1132,45 +1251,6 @@
         }
     }
 
-    // 페이지 로드 시 초기화
-    document.addEventListener('DOMContentLoaded', function() {
-        // 선택된 탭의 배송 흐름도 업데이트
-        const activeTabId = document.querySelector('.tab-button.active').getAttribute('data-tab');
-        updateShippingFlow(activeTabId);
-
-        // 기본 날짜 설정
-        setDefaultDates();
-    });
-
-    //페이지네이션 버튼 클릭 이벤트
-    const paginationButtons = document.querySelectorAll('.pagination-btn');
-    paginationButtons.forEach(button => {
-        button.addEventListener('click',function () {
-            //페이지 버튼이 아닌 경우 (이전/다음 페이지)
-            if (this.textContent === '«' || this.textContent === '»') {
-                // 이전/다음 페이지 로직 처리
-                return;
-            }
-
-            // 현재 활성화된 페이지 버튼 비활성화
-            document.querySelector('.pagination-btn.active').classList.remove('active');
-
-            // 클릭한 페이지 버튼 활성화
-            this.classList.add('active');
-
-            // 실제 구현에서는 서버에 해당 페이지 데이터 요청
-            const page = this.textContent;
-            console.log({
-                action:'페이지 이동',
-                page
-            });
-        });
-    });
-
-    // 폼 제출 이벤트 리스너
-    // 폼 제출 이벤트 리스너 추가
-
-
     // 새 배송 시작일 변경 이벤트 리스너
     document.getElementById('new-start-date').addEventListener('change', function() {
         const originalStartDate = document.getElementById('start-date').value;
@@ -1188,65 +1268,40 @@
         }
     });
 
-    // 배송 시작 버튼 이벤트
-    document.querySelectorAll('.create-shipping-btn').forEach(button => {
+    // 페이지네이션 버튼 클릭 이벤트
+    const paginationButtons = document.querySelectorAll('.pagination-btn');
+    paginationButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const senderId = this.getAttribute('data-sender');
-            const storenId = this.getAttribute('data-storen');
-            const storageId = this.getAttribute('data-storage');
-            const equipmentName = this.getAttribute('data-equipment');
+            // 페이지 버튼이 아닌 경우 (이전/다음 페이지)
+            if (this.textContent === '«' || this.textContent === '»') {
+                // 이전/다음 페이지 로직 처리
+                return;
+            }
 
-            // 배송 시작 모달 표시
-            const shippingModal = document.getElementById('shipping-modal');
+            // 현재 활성화된 페이지 버튼 비활성화
+            document.querySelector('.pagination-btn.active').classList.remove('active');
 
-            // 필드 초기화
-            document.getElementById('sender-id').value = senderId;
-            document.getElementById('receiver-id').value = -1; // 기본값
-            document.getElementById('storen-id').value = storenId;
-            document.getElementById('storage-id').value = storageId;
-            document.getElementById('product-name').value = equipmentName;
+            // 클릭한 페이지 버튼 활성화
+            this.classList.add('active');
 
-            // 배송 유형 결정 (storenId가 있으면 스토렌, storageId가 있으면 보관)
-            const shippingType = storenId ? 'platform' : 'platform';
-            document.getElementById('shipping-type-hidden').value = shippingType;
-            document.getElementById('shipping-type').value = storenId ? '플랫폼 배송' : '플랫폼 배송';
-
-            // 새 배송 시작일은 오늘로 설정
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('new-start-date').value = today;
-
-            // 배송ID는 null (새 배송이므로)
-            document.getElementById('shipping-id').value = '';
-
-            // 모달 타이틀 변경
-            document.querySelector('.modal-header h3').textContent = '새 배송 등록';
-
-            // 모달 표시
-            shippingModal.style.display = 'block';
+            // 실제 구현에서는 서버에 해당 페이지 데이터 요청
+            const page = this.textContent;
+            console.log({
+                action: '페이지 이동',
+                page
+            });
         });
     });
 
-    // 배송 시작 처리를 위한 폼 제출 핸들러 추가
-    document.getElementById('shipping-form').addEventListener('submit', function(e) {
-        // 배송ID가 없는 경우 (새 배송) 생성 모드로 설정
-        if (!document.getElementById('shipping-id').value) {
-            // 폼 액션 변경
-            this.action = '${pageContext.request.contextPath}/admin-createDelivery.action';
-        }
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        // 선택된 탭의 배송 흐름도 업데이트
+        const activeTabId = document.querySelector('.tab-button.active').getAttribute('data-tab');
+        updateShippingFlow(activeTabId);
+
+        // 기본 날짜 설정
+        setDefaultDates();
     });
-
-    // 배송 대기 탭에서 전체 선택 체크박스 기능 추가
-    document.getElementById('pending-select-all').addEventListener('change', function() {
-        const pendingTab = document.getElementById('pending-tab');
-        const checkboxes = pendingTab.querySelectorAll('td.col-select input[type="checkbox"]');
-
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = this.checked;
-        });
-    });
-
-
-
 </script>
 </body>
 </html>
