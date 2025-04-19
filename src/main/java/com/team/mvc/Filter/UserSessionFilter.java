@@ -39,8 +39,8 @@ public class UserSessionFilter implements Filter {
                 uri.startsWith(ctx + "/get") ||
                 uri.startsWith(ctx + "/error") ||
                 uri.startsWith(ctx + "/admin") ||
-                uri.contains("/main.action") ||
-                uri.equals("/main.action");
+                uri.equals(ctx + "/") ||
+                uri.equals(ctx + "/main.action");
 
         if (!isExcluded &&
                 (session == null ||
