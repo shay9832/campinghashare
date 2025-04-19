@@ -24,21 +24,13 @@ public class UserSessionFilter implements Filter {
                 uri.startsWith(ctx + "/favicon.ico") ||
                 uri.startsWith(ctx + "/login-user") ||
                 uri.startsWith(ctx + "/logout") ||
+                uri.startsWith(ctx + "/sitemap.action") ||
                 uri.startsWith(ctx + "/registeruser-") ||
                 uri.startsWith(ctx + "/idcheck.action") ||
                 uri.startsWith(ctx + "/nicknamecheck.action") ||
-                uri.startsWith(ctx + "/oauth/") ||
-                uri.startsWith(ctx + "/board") ||
-                uri.startsWith(ctx + "/event.action") ||
-                uri.startsWith(ctx + "/notice.action") ||
-                uri.startsWith(ctx + "/inspec-result.action") ||
-                uri.startsWith(ctx + "/rentalsearch-main.action") ||
-                uri.startsWith(ctx + "/storenmatching-request.action") ||
-                uri.startsWith(ctx + "/api/storen/check-matching-status") ||
-                uri.startsWith(ctx + "/api/") ||
-                uri.startsWith(ctx + "/get") ||
                 uri.startsWith(ctx + "/error") ||
                 uri.startsWith(ctx + "/admin") ||
+                uri.startsWith(ctx + "/admin-") ||
                 uri.equals(ctx + "/") ||
                 uri.equals(ctx + "/main.action");
 
