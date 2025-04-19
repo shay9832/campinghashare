@@ -63,7 +63,7 @@ public class AdminDeliveryUpdateDTO {
         // 플랫폼 배송 반환 유형
         private Integer platformDeliveryReturnId,platformDeliveryId;
 
-        //플랫폼 배송 유형
+        //결재 유형
         private Integer payId;
 
         //유저 배송 유형

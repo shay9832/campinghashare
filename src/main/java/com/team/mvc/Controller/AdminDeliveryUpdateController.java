@@ -87,6 +87,7 @@ public class AdminDeliveryUpdateController {
             @RequestParam(value="deliveryEndDate", required=false) String deliveryEndDate,
             @RequestParam(value="deliveryId", required=false) Long deliveryId,
             @RequestParam(value="deliveryType", required=false) String deliveryType,
+            @RequestParam(value="payId", required=false) Integer payId,
             AdminDeliveryUpdateDTO dto,
             Model model) {
 
@@ -104,6 +105,13 @@ public class AdminDeliveryUpdateController {
                     System.err.println("배송 타입이 없습니다. 생성할 수 없습니다.");
                     return "redirect:/admin-deliveryUpdate.action";
                 }
+
+                if (payId == null) {
+                    System.err.println("결제 정보가 없습니다 !!");
+                    return "redirect:/admin-deliveryUpdate.action";
+                }
+
+                dto.setPayId(payId);
 
                 // 시작일이 비어 있으면 현재 시간 사용
                 if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
