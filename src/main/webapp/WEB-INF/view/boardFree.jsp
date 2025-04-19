@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%--<%@ include file="checkLogin.jsp"%>--%>
+<%@ include file="checkLogin.jsp"%>
 <html>
 <head>
     <title>자유게시판</title>
@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
+        /* 테이블에만 적용되는 스타일 */
+        #boardfree-table th,
+        #boardfree-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+
         /* 게시판 특화 스타일 */
         .board-category-tag {
             display: inline-block;
@@ -373,6 +380,7 @@
             });
         });
 
+        // 글쓰기 페이지로
         function goToWrite() {
             window.location.href = "boardfree-write.action";
         }
@@ -387,12 +395,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -414,7 +422,7 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
                 </div>
 
                 <!-- 정렬 및 필터 옵션 -->
@@ -438,7 +446,7 @@
 
                 <!-- 게시글 테이블 -->
                 <div class="content-box mb-5">
-                    <table class="w-100">
+                    <table class="w-100" id="boardfree-table">
                         <thead>
                         <tr class="border-bottom">
                             <th width="6%" class="p-3 text-center">번호</th>
@@ -458,7 +466,7 @@
                                         class="notice-tag">공지</span></a></td>
                                 <td class="p-3 text-center"><a href="notice.action"><span
                                         class="board-category-tag notice">공지</span></a></td>
-                                <td class="p-3 title-cell"><a href="notice.action">${notice.postTitle}</a></td>
+                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
@@ -590,7 +598,6 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-
                         <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>

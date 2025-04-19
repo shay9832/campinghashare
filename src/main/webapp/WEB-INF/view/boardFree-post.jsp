@@ -1,7 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ include file="checkLogin.jsp"%>
+<%@ include file="checkLogin.jsp" %>
+<%
+    // 줄바꿈
+    pageContext.setAttribute("br", "<br/>");
+    pageContext.setAttribute("cn", "\n");
+%>
+
 <html>
 <head>
     <title>자유게시판 - 게시글 상세</title>
@@ -11,6 +17,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        /* 테이블에만 적용되는 스타일 */
+        #boardfree-table th,
+        #boardfree-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+
+
         /* 게시글 상세 페이지 관련 스타일 */
         .post-container {
             background-color: var(--bg-primary);
@@ -93,10 +107,24 @@
             transform: scale(1.05);
         }
 
+
         .post-actions {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* 양쪽 끝으로 정렬 */
             align-items: center;
+            width: 100%;
+        }
+
+        .like-area {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px; /* 버튼 사이 간격 */
+            margin-top: 0 !important;
         }
 
         .post-buttons {
@@ -138,9 +166,15 @@
             color: var(--text-secondary);
         }
 
-        .post-actions {
-            display: flex;
-            gap: var(--spacing-sm);
+        /* 하트 아이콘 기본 상태: 회색 */
+        .icon-heart {
+            color: var(--color-gray-500);
+            transition: color 0.3s ease;
+        }
+
+        /* 하트 아이콘 활성 상태: 빨간색 */
+        .icon-heart.active {
+            color: var(--color-error);
         }
 
         /* 댓글 영역 */
@@ -159,6 +193,7 @@
         .comment-item {
             padding: var(--spacing-md) var(--spacing-lg);
             border-bottom: 1px solid var(--border-light);
+            transition: background-color 0.2s ease;
         }
 
         .comment-item:last-child {
@@ -202,48 +237,39 @@
             gap: var(--spacing-sm);
         }
 
-        .comment-btn {
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-medium);
-            background-color: var(--bg-secondary);
-            cursor: pointer;
-            font-size: var(--font-xxs);
-            transition: all var(--transition-normal);
-        }
-
-        .comment-btn:hover {
-            background-color: var(--color-gray-200);
-        }
-
-        .report-btn {
-            color: var(--text-secondary);
-            border: none;
-            background-color: transparent;
-            padding: 0;
-        }
-
-        .edit-btn, .delete-btn {
+        .comment-btn, .delete-btn, .update-btn, .report-btn {
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            padding: 0;
-            margin-left: 10px;
+            padding: 5px 5px;
             font-size: var(--font-xs);
+            transition: all 0.2s ease;
         }
 
-        .edit-btn:hover, .delete-btn:hover {
+        .comment-btn:hover, .delete-btn:hover, .update-btn:hover, .report-btn:hover {
             color: var(--color-maple);
-            text-decoration: underline;
+        }
+
+        .post-header {
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* 위에 정렬 */
+        }
+
+        .post-actions-right {
+            display: flex;
+            gap: 10px;
         }
 
         .comment-reply-area {
-            background-color: transparent;
-            padding: var(--spacing-md) 0;
             margin-top: var(--spacing-sm);
-            margin-bottom: var(--spacing-sm);
-            display: none;
+            padding: var(--spacing-sm);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
         }
 
         .comment-reply-input {
@@ -266,6 +292,7 @@
             margin-left: 30px;
             border-left: 2px solid var(--border-light);
             padding-left: var(--spacing-md);
+            background-color: rgba(0, 0, 0, 0.01); /* 약간 어두운 배경으로 구분 */
         }
 
         .write-comment {
@@ -564,19 +591,63 @@
             color: var(--color-maple);
         }
 
-        .icon-heart {
-            color: var(--color-error);
-        }
 
         .table-icon {
             margin-right: 5px;
         }
 
+        /* 북마크 아이콘 스타일 */
+        .icon-bookmark {
+            color: var(--color-gray-500);
+            transition: color 0.3s ease;
+        }
+
+        .icon-bookmark.active {
+            color: var(--color-maple);
+        }
+
+        /* 북마크 버튼 스타일 */
+        .bookmark-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .bookmark-icon:hover {
+            background-color: #e6f0ff;
+        }
+
+        .bookmark-icon i {
+            color: var(--color-gray-600);
+            font-size: var(--font-md);
+        }
+
+        .bookmark-icon.active i {
+            color: var(--color-maple);
+        }
+
+        .ml-3 {
+            margin-left: 12px;
+        }
     </style>
 
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
+<!-- 디버깅용 정보 (테스트 후 제거) -->
+<c:if test="${not empty sessionScope.user_code}">
+    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
+        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.user_code},
+        일치 여부: ${post.userCode == sessionScope.user_code}
+    </div>
+</c:if>
+
 
 <div class="page-wrapper">
     <div class="container" style="max-width: 1500px; padding: 0 15px;">
@@ -584,12 +655,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -610,7 +681,7 @@
 
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <h1 class="page-title">자유게시판</h1>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
                 </div>
                 <!-- 게시글 영역 -->
                 <div class="post-container">
@@ -626,40 +697,70 @@
                                 <div class="post-views">조회수 ${post.viewCount}</div>
                                 <div class="post-likes">추천 ${post.recommendCount}</div>
                                 <button class="report-btn" data-id="${post.postId}">신고</button>
-
-                                <c:if test="${post.userCode eq sessionScope.userCode}">
-                                    <button class="edit-btn" onclick="location.href='boardfree-edit.action?postId=${post.postId}'">수정</button>
-                                    <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
-                                </c:if>
                             </div>
+                        </div>
+                        <div class="post-actions-right">
+                            <c:if test="${post.userCode eq sessionScope.user_code}">
+                                <button class="update-btn"
+                                        onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정
+                                </button>
+                                <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
+                            </c:if>
                         </div>
                     </div>
                     <div class="post-body">
-                        ${post.postContent}
+                        ${fn:replace(post.postContent, cn, br)}
 
-                        <!-- 첨부 이미지가 있는 경우 표시 -->
-                        <c:if test="${not empty post.attachments and fn:length(post.attachments) > 0}">
-                            <div class="post-images">
-                                <c:forEach var="attachment" items="${post.attachments}">
-                                    <c:if test="${not empty attachment.attachmentPath}">
-                                        <div class="post-image">
-                                            <img src="${attachment.attachmentPath}" alt="${attachment.attachmentName}">
-                                        </div>
-                                    </c:if>
-                                </c:forEach>
-                            </div>
+
+                        <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
+                        <%--                        <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+                        <%--                            <p>첨부파일 정보:</p>--%>
+                        <%--                            <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
+                        <%--                            <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
+
+                        <%--                            <c:if test="${not empty post.attachments}">--%>
+                        <%--                                <ul>--%>
+                        <%--                                    <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
+                        <%--                                        <li>--%>
+                        <%--                                            첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
+                        <%--                                            경로: ${attachment.attachmentPath},--%>
+                        <%--                                            크기: ${attachment.attachmentSize}--%>
+                        <%--                                        </li>--%>
+                        <%--                                    </c:forEach>--%>
+                        <%--                                </ul>--%>
+                        <%--                            </c:if>--%>
+                        <%--                        </div>--%>
+
+                        <!-- 간단한 첨부파일 표시 시도 -->
+                        <c:if test="${not empty post.attachments}">
+                            <c:forEach var="attachment" items="${post.attachments}">
+                                <!-- 간단한 이미지 표시 시도 -->
+                                <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
+                                     alt="${attachment.attachmentName}"
+                                     style="max-width: 300px; margin-top: 10px;">
+                            </c:forEach>
                         </c:if>
                     </div>
 
                     <div class="p-4 border-top">
                         <div class="post-actions">
+                            <!-- 추천 버튼을 왼쪽으로 배치 -->
                             <div class="like-area">
+                                <!-- 추천 버튼 -->
                                 <button class="btn btn-icon" id="likeButton" data-post-id="${post.postId}">
                                     <i class="fas fa-heart icon-heart"></i>
                                 </button>
                                 <span class="font-bold" id="likeCount">추천 ${post.recommendCount}</span>
+
+                                <!-- 북마크 버튼 -->
+                                <button class="btn btn-icon ml-3" id="bookmarkButton" data-post-id="${post.postId}">
+                                    <i class="fas fa-bookmark icon-bookmark"></i>
+                                </button>
+                                <span class="font-bold" id="bookmarkStatus">북마크</span>
                             </div>
-                            <div class="btn-group">
+
+                            <!-- 이전글, 목록, 다음글 버튼을 오른쪽으로 배치 -->
+                            <div class="nav-buttons" style="display: flex; gap: 8px;">
                                 <button class="btn btn-sm"
                                         onclick="location.href='boardfree-post.action?postId=${prevPostId}'">이전글
                                 </button>
@@ -683,7 +784,7 @@
                                         <div class="comment-item" id="reply-${reply.replyId}">
                                             <div class="comment-header">
                                                 <div class="comment-author">
-                                                    <img src="/api/placeholder/24/24" alt="작성자 아이콘">
+                                                    <img src="/resources/images/rank-icon5.png" alt="작성자 아이콘">
                                                     <span>${reply.nickname}</span>
                                                 </div>
                                                 <div style="display: flex; gap: 15px; align-items: center;">
@@ -691,17 +792,19 @@
                                                     <button class="report-btn" data-id="${reply.replyId}">신고</button>
                                                 </div>
                                             </div>
-                                            <div class="comment-text">
-                                                    ${reply.replyContent}
-                                            </div>
-                                            <div class="comment-actions">
-                                                <button class="comment-btn reply-toggle">답글</button>
-                                                <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                <c:if test="${reply.userCode eq sessionScope.userCode}">
-                                                    <button class="comment-btn delete-reply" data-id="${reply.replyId}">
-                                                        삭제
-                                                    </button>
-                                                </c:if>
+                                            <div style="display: flex; justify-content: space-between;">
+                                                <div class="comment-text">
+                                                        ${reply.replyContent}
+                                                </div>
+                                                <div class="comment-actions">
+                                                    <button class="comment-btn">답글</button>
+                                                    <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
+                                                    <c:if test="${reply.userCode eq sessionScope.user_code}">
+                                                        <button class="delete-btn" data-id="${reply.replyId}">
+                                                            삭제
+                                                        </button>
+                                                    </c:if>
+                                                </div>
                                             </div>
                                             <div class="comment-reply-area">
                                                 <div class="comment-input-area">
@@ -731,7 +834,8 @@
                                                     <div class="comment-item reply-comment">
                                                         <div class="comment-header">
                                                             <div class="comment-author">
-                                                                <img src="/api/placeholder/24/24" alt="작성자 아이콘">
+                                                                <img src="/resources/images/rank-icon5.png"
+                                                                     alt="작성자 아이콘">
                                                                 <span>${childReply.nickname}</span>
                                                             </div>
                                                             <div style="display: flex; gap: 15px; align-items: center;">
@@ -741,17 +845,19 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <div class="comment-text">
-                                                                ${childReply.replyContent}
-                                                        </div>
-                                                        <div class="comment-actions">
-                                                            <button class="comment-btn reply-toggle">답글</button>
-                                                            <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                            <c:if test="${childReply.userCode eq sessionScope.userCode}">
-                                                                <button class="comment-btn delete-reply"
-                                                                        data-id="${childReply.replyId}">삭제
-                                                                </button>
-                                                            </c:if>
+                                                        <div style="display: flex; justify-content: space-between;">
+                                                            <div class="comment-text">
+                                                                    ${childReply.replyContent}
+                                                            </div>
+                                                            <div class="comment-actions">
+                                                                <button class="comment-btn">답글</button>
+                                                                <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
+                                                                <c:if test="${childReply.userCode eq sessionScope.user_code}">
+                                                                    <button class="delete-btn"
+                                                                            data-id="${childReply.replyId}">삭제
+                                                                    </button>
+                                                                </c:if>
+                                                            </div>
                                                         </div>
                                                         <div class="comment-reply-area">
                                                             <div class="comment-input-area">
@@ -798,7 +904,7 @@
                 </div>
 
                 <!-- 게시글 목록 -->
-                <table class="board-table" width="100%">
+                <table class="board-table" width="100%" id="boardfree-table">
                     <colgroup>
                         <col width="10%">
                         <col width="10%">
@@ -917,7 +1023,6 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-
                         <button class="btn btn-primary" onclick="goToWrite()">
                             <i class="fa-solid fa-pen"></i> 글쓰기
                         </button>
@@ -995,44 +1100,353 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
-    // 모든 기능 초기화
-    document.addEventListener('DOMContentLoaded', function () {
-        // 모든 댓글 답글 영역 숨기기
-        document.querySelectorAll('.comment-reply-area').forEach(area => {
-            area.style.display = 'none';
+    // 모든 기능을 하나의 DOMContentLoaded 이벤트로 통합
+    document.addEventListener("DOMContentLoaded", function () {
+        // 모달 관련 요소 초기화
+        initializeModalElements();
+
+        // 댓글 및 답글 관련 이벤트 설정
+        initializeCommentEvents();
+
+        // 바이트 카운터 적용
+        initializeByteCounters();
+
+        // 게시글 추천 기능 설정
+        initializePostRecommendation();
+
+        // 북마크 기능 초기화
+        initializeBookmarkFeature();
+
+
+        // 페이지 로드 시 추천 및 북마크 상태 확인
+        checkRecommendStatus();
+        checkBookmarkStatus();
+    });
+
+    // 모달 관련 요소 및 이벤트 초기화 함수
+    function initializeModalElements() {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const reportModal = document.getElementById('reportModal');
+        const completionModal = document.getElementById('completionModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelReportBtn = document.getElementById('cancelReportBtn');
+        const submitReportBtn = document.getElementById('submitReportBtn');
+
+        // 신고 대상 정보를 저장할 변수
+        let reportTargetType = '';
+        let reportTargetId = '';
+
+        // 신고 버튼 클릭 이벤트 위임
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('report-btn') || e.target.closest('.report-btn')) {
+                e.preventDefault();
+
+                // 실제 클릭된 버튼을 찾음
+                const reportBtn = e.target.classList.contains('report-btn') ?
+                    e.target : e.target.closest('.report-btn');
+
+                // 신고 대상 정보 설정
+                const commentItem = reportBtn.closest('.comment-item');
+
+                if (commentItem) {
+                    // 댓글 신고
+                    reportTargetType = 'comment';
+                    reportTargetId = reportBtn.dataset.id || '1';
+                } else {
+                    // 게시글 신고
+                    reportTargetType = 'post';
+                    reportTargetId = reportBtn.dataset.id || '13150';
+                }
+
+                // 모달 표시
+                showModal(reportModal);
+            }
         });
 
-        // 답글 버튼 클릭 시 답글 영역 토글
-        document.querySelectorAll('.reply-toggle').forEach(button => {
-            button.addEventListener('click', function () {
+        // 모달 닫기 버튼 이벤트
+        if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeModal(reportModal));
+        if (cancelReportBtn) cancelReportBtn.addEventListener('click', () => closeModal(reportModal));
+
+        // 배경 클릭 시 모달 닫기
+        if (modalBackdrop) modalBackdrop.addEventListener('click', () => closeAllModals());
+
+        // 모달 내부 클릭 시 이벤트 버블링 방지
+        if (reportModal) reportModal.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // 신고 제출 버튼 클릭 시
+        if (submitReportBtn) submitReportBtn.addEventListener('click', function () {
+            const reportReason = document.getElementById('reportReason').value;
+            const reportDetail = document.getElementById('reportDetail').value;
+
+            // 필수 항목 검증
+            if (!reportReason) {
+                alert('신고 사유를 선택해주세요.');
+                return;
+            }
+
+            // 여기에 신고 데이터 처리 AJAX 요청을 추가할 수 있음
+            // 예: sendAjaxRequest('/api/report', 'POST', {신고 데이터...})
+
+            // 신고 모달 닫기
+            closeModal(reportModal);
+
+            // 완료 모달 표시
+            showModal(completionModal);
+            completionModal.classList.add('zoom-in');
+        });
+
+        // 완료 모달의 확인 버튼 클릭 시 목록 페이지로 이동
+        const confirmReportBtn = document.getElementById('confirmReportBtn');
+        if (confirmReportBtn) confirmReportBtn.addEventListener('click', function () {
+            // 모달 닫기
+            closeAllModals();
+
+            // 목록 페이지로 이동
+            window.location.href = 'boardfree.action';
+        });
+    }
+
+    // 모달 표시 함수
+    function showModal(modal) {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        if (modalBackdrop) modalBackdrop.style.display = 'block';
+        if (modal) {
+            modal.style.display = 'block';
+            modal.classList.add('show', 'fade-in');
+        }
+        if (modalBackdrop) modalBackdrop.classList.add('show');
+    }
+
+    // 모달 닫기 함수
+    function closeModal(modal) {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        if (modalBackdrop) modalBackdrop.style.display = 'none';
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove('fade-in');
+        }
+
+        // 폼 초기화
+        const reportForm = document.getElementById('reportForm');
+        if (reportForm) reportForm.reset();
+    }
+
+    // 모든 모달 닫기
+    function closeAllModals() {
+        const modalBackdrop = document.getElementById('modalBackdrop');
+        const reportModal = document.getElementById('reportModal');
+        const completionModal = document.getElementById('completionModal');
+
+        if (modalBackdrop) modalBackdrop.style.display = 'none';
+        if (reportModal) reportModal.style.display = 'none';
+        if (completionModal) completionModal.style.display = 'none';
+    }
+
+    // 댓글 및 답글 관련 이벤트 초기화
+    function initializeCommentEvents() {
+        // 모든 답글 버튼에 이벤트 추가
+        document.querySelectorAll('.comment-btn').forEach(button => {
+            button.addEventListener("click", function () {
                 const commentItem = this.closest('.comment-item');
                 const replyArea = commentItem.querySelector('.comment-reply-area');
 
-                // 모든 답글 영역을 먼저 숨김
-                document.querySelectorAll('.comment-reply-area').forEach(area => {
-                    area.style.display = 'none';
-                });
+                // 이미 열려있으면 닫고, 닫혀있으면 열기
+                if (replyArea.style.display === "block") {
+                    replyArea.style.display = "none";
+                } else {
+                    // 다른 모든 답글 영역을 닫음
+                    document.querySelectorAll('.comment-reply-area').forEach(area => {
+                        area.style.display = "none";
+                    });
 
-                // 클릭한 답글 영역만 보이게 함
-                if (replyArea) {
-                    replyArea.style.display = 'block';
+                    // 클릭한 답글 영역만 열기
+                    replyArea.style.display = "block";
+
+                    // 열린 답글 입력창에 바이트 카운터 적용
+                    const textarea = replyArea.querySelector('.comment-reply-input');
+                    if (textarea) {
+                        applyByteCounter(textarea);
+                    }
                 }
             });
         });
 
-        // 취소 버튼 이벤트 리스너
+        // 취소 버튼 이벤트
         document.querySelectorAll('.cancel-reply').forEach(button => {
-            button.addEventListener('click', function () {
+            button.addEventListener("click", function () {
                 const replyArea = this.closest('.comment-reply-area');
-                if (replyArea) {
-                    replyArea.style.display = 'none';
-                }
+                replyArea.style.display = "none";
             });
         });
-    });
+
+        // 페이지 로드 시 모든 댓글 답글 영역 초기 상태로 숨기기
+        document.querySelectorAll('.comment-reply-area').forEach(area => {
+            area.style.display = "none";
+        });
+
+        // 댓글 등록 이벤트 처리
+        const commentSubmit = document.getElementById('commentSubmit');
+        if (commentSubmit) {
+            commentSubmit.addEventListener('click', function () {
+                const postId = this.getAttribute('data-post-id');
+                const content = document.getElementById('contentArea').value;
+
+                if (content.trim() === '') {
+                    alert('댓글 내용을 입력해주세요.');
+                    return;
+                }
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('api/reply/add.action', 'POST', {
+                    postId: postId,
+                    replyContent: content
+                }, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('댓글 등록에 실패했습니다: ' + data.message);
+                    }
+                });
+            });
+        }
+
+        // 답글 등록 이벤트 처리
+        document.querySelectorAll('.reply-submit').forEach(button => {
+            button.addEventListener('click', function () {
+                const parentId = this.getAttribute('data-parent-id');
+                const replyArea = this.closest('.comment-reply-area');
+                const content = replyArea.querySelector('.comment-reply-input').value;
+
+                if (content.trim() === '') {
+                    alert('답글 내용을 입력해주세요.');
+                    return;
+                }
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('api/reply/add.action', 'POST', {
+                    postId: '${post.postId}', // JSP EL 표현식 사용
+                    rootReplyId: parentId,
+                    replyContent: content
+                }, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('답글 등록에 실패했습니다: ' + data.message);
+                    }
+                });
+            });
+        });
+
+        // 댓글 삭제 이벤트 처리
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+                    return;
+                }
+
+                const replyId = this.getAttribute('data-id');
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('api/reply/delete.action', 'POST', {
+                    replyId: replyId
+                }, function (data) {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('댓글 삭제에 실패했습니다: ' + data.message);
+                    }
+                });
+            });
+        });
+    }
+
+    // 바이트 카운터 초기화 및 적용
+    function initializeByteCounters() {
+        // 메인 댓글 입력창에 바이트 카운터 적용
+        const mainCommentArea = document.getElementById("contentArea");
+        if (mainCommentArea) {
+            applyByteCounter(mainCommentArea);
+        }
+    }
+
+    // 게시글 추천 기능 초기화
+    function initializePostRecommendation() {
+        const likeButton = document.getElementById('likeButton');
+        if (likeButton) {
+            likeButton.addEventListener('click', function () {
+                const postId = this.getAttribute('data-post-id');
+                const likeIcon = this.querySelector('i');
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('/api/post/recommend.action', 'POST', {
+                    postId: postId
+                }, function (response) {
+                    // 추천 수 업데이트 (성공/실패 상관없이)
+                    if (response.recommendCount !== undefined) {
+                        document.getElementById('likeCount').textContent = "추천 " + response.recommendCount;
+                    }
+
+                    // 성공 시 추천 아이콘 변경 - 활성화
+                    if (response.success) {
+                        likeIcon.classList.add('active');
+                    }
+                });
+            });
+
+            // 페이지 로드 시 추천 상태 확인
+            checkRecommendStatus();
+        }
+    }
+
+    // 추천 상태 확인 함수
+    function checkRecommendStatus() {
+        const likeButton = document.getElementById('likeButton');
+
+        if (likeButton) {
+            const postId = likeButton.getAttribute('data-post-id');
+
+            // AJAX 요청으로 추천 상태 확인
+            sendAjaxRequest('/api/post/checkRecommend.action', 'POST', {
+                postId: postId
+            }, function(response) {
+                console.log("추천 상태 확인 응답:", response); // 디버깅용
+
+                if (response.success) {
+                    const likeIcon = likeButton.querySelector('i');
+
+                    // 추천 상태에 따라 UI 업데이트
+                    if (response.isRecommended) {
+                        likeIcon.classList.add('active');
+                    } else {
+                        likeIcon.classList.remove('active');
+                    }
+                }
+            });
+        }
+    }
 
 
-    // 2. 모든 텍스트 입력창(메인 댓글 + 대댓글)에 바이트 카운터 기능 적용
+    // AJAX 요청 통합 함수
+    function sendAjaxRequest(url, method, data, successCallback) {
+        fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (successCallback) successCallback(data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('요청 처리 중 오류가 발생했습니다.');
+            });
+    }
+
     // 바이트 수 계산 함수
     function calculateBytes(str) {
         let byteCount = 0;
@@ -1063,7 +1477,7 @@
         };
     }
 
-    // 모든 댓글 및 대댓글 텍스트 영역에 바이트 체크 적용
+    // 바이트 카운터 적용 함수
     function applyByteCounter(textarea) {
         if (!textarea) return;
 
@@ -1120,321 +1534,195 @@
         updateByteCount();
     }
 
-    // 메인 댓글창에 적용
-    const mainCommentArea = document.getElementById('contentArea');
-    if (mainCommentArea) {
-        applyByteCounter(mainCommentArea);
-    }
-
-    // 답글 표시 버튼 클릭 시 대댓글 입력창에도 바이트 카운터 적용
-    document.querySelectorAll('.reply-toggle').forEach(button => {
-        button.addEventListener('click', function () {
-            // 해당 댓글 항목 찾기
-            const commentItem = this.closest('.comment-item');
-            if (!commentItem) return;
-
-            // 대댓글 입력창 찾기
-            const replyArea = commentItem.querySelector('.comment-reply-area');
-            if (!replyArea) return;
-
-            // 대댓글 텍스트 영역 찾기
-            const replyTextarea = replyArea.querySelector('textarea');
-            if (replyTextarea) {
-                // 약간 지연을 두고 적용 (표시 애니메이션 이후)
-                setTimeout(() => {
-                    applyByteCounter(replyTextarea);
-                }, 50);
-            }
-        });
-    });
-
-
-    //-------------------------------------------------------------------------------
-    document.addEventListener('DOMContentLoaded', function () {
-        const modalBackdrop = document.getElementById('modalBackdrop');
-        const reportModal = document.getElementById('reportModal');
-        const completionModal = document.getElementById('completionModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelReportBtn = document.getElementById('cancelReportBtn');
-        const submitReportBtn = document.getElementById('submitReportBtn');
-
-        // 신고 대상 정보를 저장할 변수
-        let reportTargetType = ''; // 'post' 또는 'comment'
-        let reportTargetId = '';   // 게시글 ID 또는 댓글 ID
-
-        // 모든 신고 버튼에 직접 onclick 핸들러 할당 (이벤트 위임 방식으로 변경)
-        document.addEventListener('click', function (e) {
-            // 클릭된 요소가 report-btn 클래스를 가지고 있는지 확인
-            if (e.target.classList.contains('report-btn') ||
-                e.target.closest('.report-btn')) {
-                e.preventDefault();
-
-                // 실제 클릭된 버튼을 찾음
-                const reportBtn = e.target.classList.contains('report-btn') ?
-                    e.target : e.target.closest('.report-btn');
-
-                // 신고 대상 정보 설정
-                const commentItem = reportBtn.closest('.comment-item');
-
-                if (commentItem) {
-                    // 댓글 신고
-                    reportTargetType = 'comment';
-                    // data-id 속성이 있으면 사용, 없으면 기본값 사용
-                    reportTargetId = reportBtn.dataset.id || '1';
-                } else {
-                    // 게시글 신고
-                    reportTargetType = 'post';
-                    reportTargetId = reportBtn.dataset.id || '13150';
-                }
-
-                // 모달 표시
-                showModal();
-            }
-        });
-
-        // 모달 닫기 함수
-        function closeModal() {
-            modalBackdrop.style.display = 'none';
-            reportModal.style.display = 'none';
-
-            // 모달 닫을 때 애니메이션 클래스 제거
-            reportModal.classList.remove('fade-in');
-
-            // 폼 초기화
-            document.getElementById('reportForm').reset();
-        }
-
-        // 모달 표시 함수
-        function showModal() {
-            modalBackdrop.style.display = 'block';
-            reportModal.style.display = 'block';
-            reportModal.classList.add('show', 'fade-in');
-            modalBackdrop.classList.add('show');
-        }
-
-        // 닫기 버튼 클릭 시 모달 닫기
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelReportBtn.addEventListener('click', closeModal);
-
-        // 배경 클릭 시 모달 닫기
-        modalBackdrop.addEventListener('click', closeModal);
-
-        // 모달 내부 클릭 시 이벤트 버블링 방지
-        reportModal.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        // 신고 제출 버튼 클릭 시
-        submitReportBtn.addEventListener('click', function () {
-            const reportReason = document.getElementById('reportReason').value;
-            const reportDetail = document.getElementById('reportDetail').value;
-
-            // 필수 항목 검증
-            if (!reportReason) {
-                alert('신고 사유를 선택해주세요.');
-                return;
-            }
-
-            // 여기에 신고 데이터 처리 AJAX 요청을 추가할 수 있음
-            // 예: fetch('/api/report', { method: 'POST', body: JSON.stringify({...}) })
-
-            // 신고 모달 닫기
-            reportModal.style.display = 'none';
-
-            // 완료 모달 표시
-            completionModal.style.display = 'block';
-            completionModal.classList.add('zoom-in');
-        });
-
-        // 완료 모달의 확인 버튼 클릭 시 목록 페이지로 이동
-        document.getElementById('confirmReportBtn').addEventListener('click', function () {
-            // 모달 닫기
-            modalBackdrop.style.display = 'none';
-            completionModal.style.display = 'none';
-
-            // 목록 페이지로 이동
-            window.location.href = 'boardfree.action'; // 실제 구현 시 적절한 URL로 변경 필요
-        });
-    });
-
-    // 댓글 등록 이벤트 처리
-    document.getElementById('commentSubmit').addEventListener('click', function () {
-        const postId = this.getAttribute('data-post-id');
-        const content = document.getElementById('contentArea').value;
-
-        if (content.trim() === '') {
-            alert('댓글 내용을 입력해주세요.');
-            return;
-        }
-
-        // AJAX를 사용하여 댓글 등록 요청
-        fetch('api/reply/add.action', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                postId: postId,
-                replyContent: content
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // 성공적으로 등록된 경우 페이지 새로고침
-                    location.reload();
-                } else {
-                    alert('댓글 등록에 실패했습니다: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('댓글 등록 중 오류가 발생했습니다.');
-            });
-    });
-
-    // 답글 등록 이벤트 처리
-    document.querySelectorAll('.reply-submit').forEach(button => {
-        button.addEventListener('click', function () {
-            const parentId = this.getAttribute('data-parent-id');
-            const replyArea = this.closest('.comment-reply-area');
-            const content = replyArea.querySelector('.comment-reply-input').value;
-
-            if (content.trim() === '') {
-                alert('답글 내용을 입력해주세요.');
-                return;
-            }
-
-            // AJAX를 사용하여 답글 등록 요청
-            fetch('api/reply/add.action', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    postId: '${post.postId}', // JSP EL 표현식 사용
-                    rootReplyId: parentId,
-                    replyContent: content
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // 성공적으로 등록된 경우 페이지 새로고침
-                        location.reload();
-                    } else {
-                        alert('답글 등록에 실패했습니다: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('답글 등록 중 오류가 발생했습니다.');
-                });
-        });
-    });
-
-    // 댓글 삭제 이벤트 처리
-    document.querySelectorAll('.delete-reply').forEach(button => {
-        button.addEventListener('click', function () {
-            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
-                return;
-            }
-
-            const replyId = this.getAttribute('data-id');
-
-            // AJAX를 사용하여 댓글 삭제 요청
-            fetch('api/reply/delete.action', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    replyId: replyId
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // 성공적으로 삭제된 경우 페이지 새로고침
-                        location.reload();
-                    } else {
-                        alert('댓글 삭제에 실패했습니다: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('댓글 삭제 중 오류가 발생했습니다.');
-                });
-        });
-    });
-
-
-    // 추천(좋아요) 버튼 이벤트 처리
-    document.getElementById('likeButton').addEventListener('click', function () {
-        const postId = this.getAttribute('data-post-id');
-
-        // AJAX를 사용하여 추천 토글 요청
-        fetch('api/post/recommend.action', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                postId: postId
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // 추천 수 업데이트
-                    document.getElementById('likeCount').textContent = '추천 ' + data.recommendCount;
-
-                    // 추천 버튼 상태 업데이트 (활성화/비활성화)
-                    if (data.recommended) {
-                        this.classList.add('active');
-                    } else {
-                        this.classList.remove('active');
-                    }
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('추천 처리 중 오류가 발생했습니다.');
-            });
-    });
-
     // 게시글 삭제 함수
     function confirmDelete(postId) {
-        if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+        // 모달 내용 설정
+        document.querySelector('#reportModal .modal-title').textContent = '게시글 삭제';
+        document.querySelector('#reportModal .modal-body').innerHTML = `
+        <p>정말 이 게시글을 삭제하시겠습니까?</p>
+        <p>삭제된 게시글은 복구할 수 없습니다.</p>
+    `;
+
+        // 취소 버튼 텍스트 변경
+        document.getElementById('cancelReportBtn').textContent = '취소';
+
+        // 신고하기 버튼 텍스트와 색상 변경
+        const submitBtn = document.getElementById('submitReportBtn');
+        submitBtn.textContent = '삭제하기';
+        submitBtn.className = 'btn btn-danger';
+
+        // 모달 표시
+        showModal(document.getElementById('reportModal'));
+
+        // 기존 이벤트 리스너 제거하고 새로운 리스너 설정
+        const newSubmitBtn = submitBtn.cloneNode(true);
+        submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+
+        // 삭제 확인 버튼 이벤트
+        newSubmitBtn.addEventListener('click', function () {
+            // 모달 닫기
+            closeModal(document.getElementById('reportModal'));
+
             // 삭제 요청 보내기
-            fetch('api/post/delete.action', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    postId: postId
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('게시글이 삭제되었습니다.');
-                        // 게시글 목록 페이지로 이동
-                        location.href = 'boardfree.action';
-                    } else {
-                        alert('게시글 삭제에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('게시글 삭제 중 오류가 발생했습니다.');
-                });
+            sendAjaxRequest('api/post/delete.action', 'POST', {
+                postId: postId
+            }, function (data) {
+                // 모달 내용 설정
+                const iconElement = document.querySelector('#completionModal .popup-alert-icon i');
+                const iconContainer = document.querySelector('#completionModal .popup-alert-icon');
+                const titleElement = document.querySelector('#completionModal .popup-alert-title');
+                const contentElement = document.querySelector('#completionModal .popup-alert-content');
+
+                if (data.success) {
+                    // 성공 모달 설정
+                    iconElement.className = 'fa-solid fa-check-circle';
+                    iconContainer.className = 'popup-alert-icon text-success';
+                    titleElement.textContent = '삭제 완료';
+                    contentElement.textContent = '게시글이 성공적으로 삭제되었습니다.';
+
+                    // 확인 버튼 이벤트 처리
+                    setupConfirmButton(true);
+                } else {
+                    // 실패 모달 설정
+                    iconElement.className = 'fa-solid fa-exclamation-circle';
+                    iconContainer.className = 'popup-alert-icon text-danger';
+                    titleElement.textContent = '삭제 실패';
+                    contentElement.textContent = data.message || '알 수 없는 오류가 발생했습니다.';
+
+                    // 확인 버튼 이벤트 처리
+                    setupConfirmButton(false);
+                }
+
+                // 완료 모달 표시
+                showModal(document.getElementById('completionModal'));
+            });
+        });
+
+        // 취소 및 닫기 버튼 이벤트 리스너 재설정
+        setupCancelButtons();
+    }
+
+    // 확인 버튼 설정 함수
+    function setupConfirmButton(redirectToList) {
+        const confirmBtn = document.getElementById('confirmReportBtn');
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+        newConfirmBtn.addEventListener('click', function () {
+            // 모달 닫기
+            closeAllModals();
+
+            // 목록 페이지로 리다이렉트 (성공한 경우에만)
+            if (redirectToList) {
+                window.location.href = 'boardfree.action';
+            }
+        });
+    }
+
+    // 취소 및 닫기 버튼 설정 함수
+    function setupCancelButtons() {
+        // 취소 버튼 이벤트 리스너 교체
+        const cancelBtn = document.getElementById('cancelReportBtn');
+        if (cancelBtn) {
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            newCancelBtn.addEventListener('click', function () {
+                closeAllModals();
+            });
+        }
+
+        // 닫기 버튼 이벤트 리스너 교체
+        const closeBtn = document.getElementById('closeModalBtn');
+        if (closeBtn) {
+            const newCloseBtn = closeBtn.cloneNode(true);
+            closeBtn.parentNode.replaceChild(newCloseBtn, closeBtn);
+
+            newCloseBtn.addEventListener('click', function () {
+                closeAllModals();
+            });
         }
     }
 
+
+    // 북마크 기능 초기화
+    function initializeBookmarkFeature() {
+        const bookmarkButton = document.getElementById('bookmarkButton');
+
+        if (bookmarkButton) {
+            // 북마크 버튼 클릭 이벤트 추가
+            bookmarkButton.addEventListener('click', function() {
+                const postId = this.getAttribute('data-post-id');
+                const bookmarkIcon = this.querySelector('i');
+                const bookmarkStatus = document.getElementById('bookmarkStatus');
+
+                // 현재 상태 확인 (클래스로 결정)
+                const isCurrentlyBookmarked = bookmarkIcon.classList.contains('active');
+
+                // 즉시 UI 업데이트 (서버 응답 전)
+                if (isCurrentlyBookmarked) {
+                    bookmarkIcon.classList.remove('active');
+                    bookmarkStatus.textContent = "북마크";
+                } else {
+                    bookmarkIcon.classList.add('active');
+                    bookmarkStatus.textContent = "북마크됨";
+                }
+
+                // AJAX 요청 통합 함수 사용
+                sendAjaxRequest('/api/post/bookmark.action', 'POST', {
+                    postId: postId
+                }, function(response) {
+                    // 서버 응답에 따라 UI를 조정
+                    if (!response.success) {
+                        // 실패 시 원래 상태로 되돌림
+                        if (isCurrentlyBookmarked) {
+                            bookmarkIcon.classList.add('active');
+                            bookmarkStatus.textContent = "북마크됨";
+                        } else {
+                            bookmarkIcon.classList.remove('active');
+                            bookmarkStatus.textContent = "북마크";
+                        }
+                        alert('북마크 처리 중 오류가 발생했습니다: ' + response.message);
+                    }
+                });
+            });
+        }
+    }
+
+    // 북마크 상태 확인 함수
+    function checkBookmarkStatus() {
+        const bookmarkButton = document.getElementById('bookmarkButton');
+        const bookmarkStatus = document.getElementById('bookmarkStatus');
+
+        if (bookmarkButton) {
+            const postId = bookmarkButton.getAttribute('data-post-id');
+
+            // AJAX 요청으로 북마크 상태 확인
+            sendAjaxRequest('/api/post/checkbookmark.action', 'POST', {
+                postId: postId
+            }, function(response) {
+                console.log("북마크 상태 확인 응답:", response); // 디버깅용
+
+                if (response.success) {
+                    const bookmarkIcon = bookmarkButton.querySelector('i');
+
+                    // 북마크 상태에 따라 UI 업데이트
+                    if (response.isBookmarked) {
+                        bookmarkIcon.classList.add('active');
+                        bookmarkStatus.textContent = "북마크됨";
+                    } else {
+                        bookmarkIcon.classList.remove('active');
+                        bookmarkStatus.textContent = "북마크";
+                    }
+                }
+            });
+        }
+    }
+
+    // 글쓰기 페이지로
+    function goToWrite() {
+        window.location.href = "boardfree-write.action";
+    }
 </script>
 </body>
 </html>

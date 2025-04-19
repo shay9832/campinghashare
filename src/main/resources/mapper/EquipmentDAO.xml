@@ -71,7 +71,6 @@
                      END, EN.EQUIP_NAME
     </select>
 
-
     <!-- 유저 코드로 장비 정보 조회 -->
     <select id="listByUserCode" resultType="com.team.mvc.DTO.EquipmentDTO" resultMap="equipmentResultMap">
         SELECT EQUIP_ID, EQUIP_CODE, USER_CODE, CATEGORY_ID

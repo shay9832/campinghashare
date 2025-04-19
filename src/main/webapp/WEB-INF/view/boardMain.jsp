@@ -228,12 +228,12 @@
             <!-- 사이드바 -->
             <aside class="sidebar" style="width: 220px; margin-right: 20px;">
                 <div class="sidebar-header">
-                    <h2 class="sidebar-title">커뮤니티</h2>
+                    <a href="boardmain.action"><h2 class="sidebar-title">커뮤니티</h2></a>
                 </div>
                 <ul class="sidebar-menu">
                     <li class="sidebar-menu-item">
                         <a href="boardbest.action" class="sidebar-link">
-                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-trophy"></i>
                             <span>BEST</span>
                         </a>
                     </li>
@@ -427,9 +427,9 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                     <c:if test="${not empty post.attachments && fn:length(post.attachments) > 0}">
-                            <span class="attachment-icon">
-                                <i class="fa-solid fa-paperclip"></i>
-                            </span>
+                                                        <span class="attachment-icon">
+                                                            <i class="fa-solid fa-paperclip"></i>
+                                                        </span>
                                                     </c:if>
                                                 </div>
                                                 <div class="created-date">

@@ -12,10 +12,10 @@
             CREATED_DATE
         ) VALUES (
                      REPLY_SEQ.NEXTVAL,
-                     #{rootReplyId},
-                     #{userCode},
-                     #{postId},
-                     #{replyContent},
+                     #{rootReplyId, jdbcType=INTEGER},
+                     #{userCode, jdbcType=INTEGER},
+                     #{postId, jdbcType=INTEGER},
+                     #{replyContent, jdbcType=VARCHAR},
                      SYSDATE
                  )
     </insert>

@@ -26,8 +26,14 @@ public interface IBoardPostDAO {
     // 게시판별 말머리 목록 조회
     List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
 
+    // 전체 공지사항 조회
+    List<BoardPostDTO> listTotalNotice();
+
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
+
+    // 공지사항 총 개수 조회
+    int getTotalNoticeCount(BoardPostDTO dto);
 
     //인기글 목록을 원본 글번호와 함께 조회
     List<BoardPostDTO> listHotPostsWithRownum(BoardPostDTO dto);
@@ -70,4 +76,34 @@ public interface IBoardPostDAO {
 
     // 게시판 이름으로 게시판 정보 조회
     BoardDTO getBoardByName(String boardName);
+
+    // 추천 여부 확인
+    boolean checkRecommend(BoardPostDTO dto);
+
+    // 추천 추가
+    int insertRecommend(BoardPostDTO dto);
+
+    // 추천 수
+    int getRecommendCount(BoardPostDTO dto);
+
+    // 인기글 지정
+    int insertHotPostLog(BoardPostDTO dto);
+
+    // 첨부파일 추가
+    int insertAttachment(AttachmentDTO dto);
+
+    // 북마크 여부 확인
+    boolean checkBookmark(BoardPostDTO dto);
+
+    // 북마크 추가
+    int insertBookmark(BoardPostDTO dto);
+
+    // 북마크 제거
+    int deleteBookmark(BoardPostDTO dto);
+
+    // 게시글 ID로 북마크 삭제
+    int deleteBookmarksByPostId(int postId);
+
+    // 게시글 ID로 추천 삭제
+    int deleteRecommendsByPostId(int postId);
 }
