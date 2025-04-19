@@ -17,5 +17,11 @@ public interface IMypageMyEquipService {
     Map<String, Map<String, Integer>> getMyEquipmentStatus(int userCode);
     // 첫번째 등록된(근본) 스토렌 장비 전체 조회
     List<StorenDTO> listMyStoren(int userCode);
+    // 같은 장비 코드의 여러 스토렌 장비 조회(스토렌 탭-상세)
+    List<StorenDTO> listMyStorenDetail(int userCode, int equipCode);
+    // 스토렌-화살표로 상태 필터링
+    List<StorenDTO> listMyStorenByStatus(int userCode, String status);
+    // 즉시 확인 필요로 상태 필터링(일단은 스토렌만)
+    List<StorenDTO> listMyStorenByStatus(int userCode, String type, String[] statuses);
 
 }

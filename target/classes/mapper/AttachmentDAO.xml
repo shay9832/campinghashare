@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mvc.Interface.IAttachmentDAO">
+
+    <!-- 첨부파일 등록 -->
+    <insert id="insertAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        INSERT INTO ATTACHMENT_EQUIP_REG (
+            ATTACHMENT_EQUIP_REG_ID, EQUIP_CODE,
+            ATTACHMENT_NAME, ATTACHMENT_PATH,
+            ATTACHMENT_SIZE, ATTACHMENT_ORDER,
+            CREATED_DATE
+        )
+        VALUES (
+                   ATTACHMENT_EQUIP_REG_SEQ.NEXTVAL,
+                   #{equipCode}, #{attachmentName}, #{attachmentPath},
+                   #{attachmentSize}, #{attachmentOrder},
+                   SYSDATE
+               )
+    </insert>
+
+    <!-- 장비 코드로 첨부파일 목록 조회 -->
+    <select id="listAttachmentByEquipCode" resultType="com.team.mvc.DTO.AttachmentDTO">
+        SELECT ATTACHMENT_EQUIP_REG_ID AS attachmentEquipRegId,
+               EQUIP_CODE               AS equipCode,
+               ATTACHMENT_NAME          AS attachmentName,
+               ATTACHMENT_PATH          AS attachmentPath,
+               ATTACHMENT_SIZE          AS attachmentSize,
+               ATTACHMENT_ORDER         AS attachmentOrder,
+               TO_CHAR(CREATED_DATE, 'YYYY-MM-DD') AS createdDate
+        FROM ATTACHMENT_EQUIP_REG
+        WHERE EQUIP_CODE = #{equipCode}
+        ORDER BY ATTACHMENT_ORDER
+    </select>
+
+</mapper>
