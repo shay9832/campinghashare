@@ -37,7 +37,7 @@
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <!-- 미니 헤더 -->
-<div class="mini-header" id="miniHeader">
+<div class="mini-header" style="position:sticky;" id="miniHeader">
     <div class="left-wrap">
         <div class="toggle-menu">
             <button id="categoryToggleMini">
@@ -86,7 +86,7 @@
 </div>
 
 <!-- 메인 헤더 -->
-<header class="header-container" id="mainHeader">
+<header class="header-container" style="position:sticky;" id="mainHeader">
     <div class="header__top">
         <a href="${pageContext.request.contextPath}/main.action"><img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고" class="logo" /></a>
         <div class="top__menu">

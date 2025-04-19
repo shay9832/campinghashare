@@ -895,10 +895,14 @@
 
     // 컨테이너 업데이트
     const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
+    let payment_date = '결제대기중';
+    if (matchedUser.payment_date !== null && matchedUser.payment_date !== ""){
+      payment_date = matchedUser.payment_date;
+    }
     detailContainer.html(`
             <h6 class="content-box-title details-title">매칭 완료 정보</h6>
                 <div class="details-info matched">
-                    <p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=` + matchedUser.user_code + '" class="user-link">' + matchedUser.user_nickname + '</a> 님과 매칭되었습니다. (결제일: ' + matchedUser.payment_date + ')</p>' +
+                    <p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=` + matchedUser.user_code + '" class="user-link">' + matchedUser.user_nickname + '</a> 님과 매칭되었습니다. (결제일: ' + payment_date + ')</p>' +
             '</div>');
   }
 
