@@ -1,31 +1,15 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="ko"> <!-- 한국어 페이지로 설정 -->
+<html lang="ko">
 <head>
-  <meta charset="UTF-8"> <!-- 문자 인코딩을 UTF-8로 설정하여 한글 등 다양한 문자 지원 -->
-  <title>Admin Title</title> <!-- 브라우저 탭에 표시될 페이지 제목 -->
+  <meta charset="UTF-8">
+  <title>admin-main.jsp</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-main.css">
   <link>
 </head>
-
 <body>
-<!-- 헤더 영역 - 페이지 상단 타이틀 표시 -->
-<div id="header">
-  <h1>관리자 시스템</h1>
-
-  <!-- 관리자 정보 및 로그아웃 버튼 -->
-  <div style="position: absolute; top: 20px; right: 30px; display: flex; gap: 10px; align-items: center;">
-    <c:if test="${not empty sessionScope.adminUser}">
-      <span style="color: var(--color-white); font-weight: bold; font-size: 14px;">
-        ${sessionScope.adminUser.adminId} 님</span>
-      <form action="${pageContext.request.contextPath}/admin/admin-logout.action" method="get" style="margin: 0;">
-        <button type="submit" style="padding: 6px 12px; background-color: var(--color-maple); color: var(--color-white);
-          border: none; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;">로그아웃</button>
-      </form>
-    </c:if>
-  </div>
-</div>
+<jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
 <!-- 메인 컨테이너 -->
 <div id="container">
@@ -61,7 +45,7 @@
     <!-- 결제 관리 메뉴 -->
     <button class="menu-button">결제 관리</button>
     <div class="submenu">
-      <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+      <form action="${pageContext.request.contextPath}/admin-payment.action" method="get">
         <button type="submit" class="submenu-btn">결제 관리</button>
       </form>
     </div>

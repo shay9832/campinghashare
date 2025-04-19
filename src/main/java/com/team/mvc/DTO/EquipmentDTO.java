@@ -1,26 +1,20 @@
 package com.team.mvc.DTO;
 
 public class EquipmentDTO {
-    private int equip_id, equip_code, user_code, category_id, equip_name_id, original_price;
+    private int equip_id, user_code, category_id, equip_name_id, original_price;
+    private Integer equip_code;
     private String created_date;
 
     private String equip_name, majorCategory, middleCategory, brand;
 
     // getter/setter
+
     public int getEquip_id() {
         return equip_id;
     }
 
     public void setEquip_id(int equip_id) {
         this.equip_id = equip_id;
-    }
-
-    public int getEquip_code() {
-        return equip_code;
-    }
-
-    public void setEquip_code(int equip_code) {
-        this.equip_code = equip_code;
     }
 
     public int getUser_code() {
@@ -53,6 +47,14 @@ public class EquipmentDTO {
 
     public void setOriginal_price(int original_price) {
         this.original_price = original_price;
+    }
+
+    public Integer getEquip_code() {
+        return equip_code;
+    }
+
+    public void setEquip_code(Integer equip_code) {
+        this.equip_code = equip_code;
     }
 
     public String getCreated_date() {

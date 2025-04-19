@@ -7,6 +7,9 @@ public interface IAdminDAO {
     // 로그인 처리용 (ID + PW)
     AdminDTO getAdminByIdAndPw(AdminDTO dto);
 
+    // 관리자 ID로 정보 조회
+    AdminDTO getAdminById(String adminId);
+
     // 관리자 등록
     void insertAdmin(AdminDTO dto);
 

@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IStorenDAO">
+    <!-- 전체 스토렌 장비 리스트 조회 (TYPE 필드 추가)  -->
+
+    <!-- resultMap: StorenDTO + 내부 EquipmentDTO 매핑 -->
+    <resultMap id="storenRentalInfoMap" type="com.team.mvc.DTO.StorenDTO">
+        <result property="equip_size_name" column="EQUIP_SIZE_NAME"/>
+        <result property="required_space" column="REQUIRED_SPACE"/>
+        <result property="daily_storage_fee" column="DAILY_STORAGE_FEE"/>
+        <result property="store_month" column="STORE_MONTH"/>
+        <result property="daily_rent_price" column="DAILY_RENT_PRICE"/>
+        <result property="storen_title" column="STOREN_TITLE"/>
+        <result property="storen_content" column="STOREN_CONTENT"/>
+
+        <association property="equipmentDTO" javaType="com.team.mvc.DTO.EquipmentDTO">
+            <id property="equip_id" column="EQUIP_ID"/>
+            <result property="equip_code" column="EQUIP_CODE"/>
+            <result property="equip_name" column="EQUIP_NAME"/>
+            <result property="brand" column="BRAND_NAME"/>
+            <result property="original_price" column="ORIGINAL_PRICE"/>
+            <result property="majorCategory" column="MAJOR_CATEGORY"/>
+            <result property="middleCategory" column="MIDDLE_CATEGORY"/>
+        </association>
+    </resultMap>
+
+    <!-- 전체 스토렌 장비 리스트 조회   -->
+    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
+             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+             , s.STOREN_TITLE, s.STOREN_CONTENT
+             , s.DAILY_RENT_PRICE, s.CREATED_DATE
+             , e.TYPE
+        FROM VW_STOREN s
+                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
+        WHERE MATCHING_STATUS != '매칭완료'
+          AND EQUIP_GRADE IS NOT NULL
+    </select>
+
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
     <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
@@ -8,6 +45,12 @@
              , DAILY_STORAGE_FEE, STORE_MONTH
              , STOREN_TITLE, STOREN_CONTENT
              , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code}
     </select>
@@ -19,6 +62,12 @@
              , DAILY_STORAGE_FEE, STORE_MONTH
              , STOREN_TITLE, STOREN_CONTENT
              , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
     </select>
@@ -28,15 +77,195 @@
         SELECT *
         FROM (
                  SELECT STOREN_ID, EQUIP_CODE, USER_CODE
-                      , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
-                      , DAILY_STORAGE_FEE, STORE_MONTH
-                      , STOREN_TITLE, STOREN_CONTENT
-                      , DAILY_RENT_PRICE, CREATED_DATE
+                     , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+                     , DAILY_STORAGE_FEE, STORE_MONTH
+                     , STOREN_TITLE, STOREN_CONTENT
+                     , DAILY_RENT_PRICE, CREATED_DATE
+                     , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+                     , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+                     , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+                     , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+                     , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+                     , EQUIP_GRADE, STATUS
                  FROM VW_STOREN
                  WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
                  ORDER BY CREATED_DATE ASC
              )
         WHERE ROWNUM = 1
     </select>
+
+    <!-- storen_id로 렌탈 정보 조회 -->
+    <select id="getRentalInfoByStorenId" parameterType="int" resultMap="storenRentalInfoMap">
+        SELECT
+            ER.EQUIP_CODE,
+            ER.EQUIP_ID,
+            EN.EQUIP_NAME,
+            B.BRAND_NAME,
+            ER.ORIGINAL_PRICE,
+            CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
+            CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
+            ES.EQUIP_SIZE_NAME,
+            ES.REQUIRED_SPACE,
+            ES.DAILY_STORAGE_FEE,
+            S.STORE_MONTH,
+            S.DAILY_RENT_PRICE,
+            S.STOREN_TITLE,
+            S.STOREN_CONTENT,
+            S.STOREN_ID
+        FROM EQUIPMENT_REGISTRATION ER
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+                 JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
+                 JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
+                 JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
+                 JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
+                 JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
+        WHERE S.STOREN_ID = #{storen_id}
+    </select>
+
+    <!-- 렌탈 희망 정보 업데이트 -->
+    <update id="updateStorenRegisterRentalRegister" parameterType="com.team.mvc.DTO.StorenDTO">
+        UPDATE STOREN
+        SET STOREN_TITLE = #{storen_title},
+            STOREN_CONTENT = #{storen_content},
+            DAILY_RENT_PRICE = #{daily_rent_price}
+        WHERE STOREN_ID = #{storen_id}
+    </update>
+
+    <!-- 평균 신품 가격 조회 -->
+    <select id="getAvgNewPrice" resultType="int">
+        SELECT NVL(ROUND(AVG(ORIGINAL_PRICE)), 0)
+        FROM EQUIPMENT_REGISTRATION
+        WHERE EQUIP_CODE = #{equip_code}
+    </select>
+
+    <!-- 평균 렌탈 가격 조회 -->
+    <select id="getAvgRentalPrice" resultType="int">
+        SELECT NVL(ROUND(AVG(DAILY_RENT_PRICE)), 0)
+        FROM RENTAL
+        WHERE EQUIP_CODE = #{equip_code}
+    </select>
+
+    <!-- 장비명으로 평균 신품 가격 조회 (추가) -->
+    <select id="getAvgNewPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(ER.ORIGINAL_PRICE)), 0)
+        FROM EQUIPMENT_REGISTRATION ER
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
+    </select>
+
+    <!-- 장비명으로 평균 렌탈 가격 조회 (추가) -->
+    <select id="getAvgRentalPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(R.DAILY_RENT_PRICE)), 0)
+        FROM RENTAL R
+                 JOIN EQUIPMENT_REGISTRATION ER ON R.EQUIP_CODE = ER.EQUIP_CODE
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
+    </select>
+
+    <!-- 매칭 신청 수가 1 이상인 스토렌 리스트 가져오기 -->
+    <select id="listMatchingStorenByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE, STATUS
+        FROM VW_STOREN
+        WHERE USER_CODE = #{user_code} AND MATCHING_REQUEST_COUNT > 0
+    </select>
+
+    <!-- 내가 매칭 신청한 스토렌 리스트 가져오기 -->
+    <select id="listMyStorenApplicationsByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE, STATUS
+        FROM VW_STOREN s
+        WHERE s.STOREN_ID IN (SELECT TRANSACTION_ID
+                              FROM VW_RENTAL_APPLICANT
+                              WHERE USER_CODE = #{user_code}
+                                    AND TRANSACTION_TYPE LIKE '스토렌%')
+        ORDER BY s.CREATED_DATE DESC
+    </select>
+
+    <!-- 스토렌id로 특정 스토렌 정보 가져오기 -->
+    <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+             , EQUIP_GRADE
+        FROM VW_STOREN
+        WHERE STOREN_ID = #{storen_id}
+    </select>
+
+    <!-- 스토렌 장비 검색 -->
+    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO">
+        SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
+             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+             , s.STOREN_TITLE, s.STOREN_CONTENT
+             , s.DAILY_RENT_PRICE, s.CREATED_DATE
+             , e.TYPE
+        FROM VW_STOREN s
+                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
+        WHERE (e.EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR s.STOREN_TITLE LIKE '%' || #{searchKeyword} || '%')
+            AND MATCHING_STATUS != '매칭완료'
+            AND EQUIP_GRADE IS NOT NULL
+    </select>
+
+
+    <!-- 해당 유저가 가진 스토렌 장비코드만 조회 (중복제거) -->
+    <select id="listStorenEquipCodes" resultType="java.lang.Integer">
+        SELECT EQUIP_CODE
+        FROM VW_STOREN
+        WHERE USER_CODE = #{userCode}
+        GROUP BY EQUIP_CODE
+    </select>
+
+    <!-- 해당 유저가 가진 스토렌 장비의 각 상태의 개수 조회 -->
+    <select id="getStorenStatus" resultType="map">
+        SELECT
+            NVL(SUM(DECODE(STATUS, '보관비 결제 대기', 1, 0)), 0) AS "보관비 결제 대기",
+            NVL(SUM(DECODE(STATUS, '배송 대기', 1, 0)), 0) AS "배송 대기",
+            NVL(SUM(DECODE(STATUS, '배송 중', 1, 0)), 0) AS "배송 중",
+            NVL(SUM(DECODE(STATUS, '검수 중', 1, 0)), 0) AS "검수 중",
+            NVL(SUM(DECODE(STATUS, '보관 중', 1, 0)), 0) AS "보관 중",
+            NVL(SUM(DECODE(STATUS, '강제 반환', 1, 0)), 0) AS "강제 반환",
+            NVL(SUM(DECODE(STATUS, '승인 대기', 1, 0)), 0) AS "승인 대기",
+            NVL(SUM(DECODE(STATUS, '결제 대기', 1, 0)), 0) AS "결제 대기",
+            NVL(SUM(DECODE(STATUS, '렌탈 중', 1, 0)), 0) AS "렌탈 중",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "반납 중",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "거래 완료",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "최종 반환",
+            NVL(SUM(DECODE(STATUS, '상태 불명', 1, 0)), 0) AS "상태 불명"
+        FROM
+            VW_STOREN
+        WHERE
+            USER_CODE = #{userCode}
+    </select>
+
+
 
 </mapper>

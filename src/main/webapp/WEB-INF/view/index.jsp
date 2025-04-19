@@ -14,7 +14,7 @@
 <a href="registerUser-sns-id.jsp" target="_blank">registerUser-sns-id.jsp</a><br>
 <br>
 <a href="login-admin.jsp" target="_blank">login-admin.jsp</a><br>
-<a href="registerAdmin-id.jsp" target="_blank">registerAdmin-id.jsp</a><br>
+<a href="admin-registerId.jsp" target="_blank">registerAdmin-id.jsp</a><br>
 <br><br>
 
 

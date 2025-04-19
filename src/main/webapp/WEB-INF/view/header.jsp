@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>header.jsp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" href="<c:url value='/favicon.ico' />" type="image/x-icon" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
 </head>
 <body>
@@ -36,60 +37,85 @@
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
 <!-- 미니 헤더 -->
-<div class="mini-header" id="miniHeader">
+<div class="mini-header" style="position:sticky;" id="miniHeader">
     <div class="left-wrap">
         <div class="toggle-menu">
             <button id="categoryToggleMini">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <a href="/"><img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고" class="logo" /></a>
+            <a href="${pageContext.request.contextPath}/main.action"><img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고" class="logo" /></a>
             <div class="toggle-container">
                 <input type="radio" name="toggle-mini" id="trade-radio-mini" class="toggle-radio" checked />
                 <input type="radio" name="toggle-mini" id="community-radio-mini" class="toggle-radio" />
                 <div class="toggle-slider"></div>
                 <div class="toggle-options">
-                    <label for="trade-radio-mini" class="toggle-option trade-option">거래</label>
-                    <label for="community-radio-mini" class="toggle-option community-option">커뮤니티</label>
+                    <a href="${pageContext.request.contextPath}/main.action" class="toggle-option trade-option">거래</a>
+                    <a href="${pageContext.request.contextPath}/boardmain.action" class="toggle-option community-option">커뮤니티</a>
                 </div>
             </div>
         </div>
     </div>
     <div class="mini-menu">
         <c:choose>
-            <c:when test="${not empty sessionScope.loginUser}">
-                <span>${sessionScope.loginUser.nickname} 님</span>
-                <button class="add-equip" onclick="location.href='${pageContext.request.contextPath}/equip-register.action'">내 장비 등록</button>
-                <a href="${pageContext.request.contextPath}/notifications.action"><i class="fa-solid fa-bell"></i> 알림</a>
-                <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i> 마이페이지</a>
-                <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i> 캠핑일지</a>
+            <c:when test="${not empty sessionScope.loginAdmin}">
+                <span class="header-nickname">${sessionScope.loginAdmin.adminId} 관리자님</span>
+                <button type="submit" class="btn-admin-page"
+                        onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">관리자 페이지</button>
+                <a href="${pageContext.request.contextPath}/admin-logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+                <a href="#">사이트맵</a>
             </c:when>
+
+            <c:when test="${isUser}">
+                <c:set var="user" value="${sessionScope.loginUser}" />
+                <span class="header-nickname">${user.nickname} 님</span>
+                <button class="add-equip"
+                        onclick="location.href='${pageContext.request.contextPath}/equipregister-majorcategory.action'">내 장비 등록</button>
+                <a href="${pageContext.request.contextPath}/logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+                <a href="#"><i class="fa-solid fa-bell"></i></a>
+                <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i></a>
+                <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i></a>
+            </c:when>
+
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/login-user.action">로그인</a>
-                <a href="${pageContext.request.contextPath}/registeruser-tel.action">회원가입</a>
-                <a href="${pageContext.request.contextPath}/sitemap.jsp">사이트맵</a>
+                <a href="${pageContext.request.contextPath}/registerUser-id.action">회원가입</a>
+                <a href="#">사이트맵</a>
             </c:otherwise>
         </c:choose>
     </div>
 </div>
 
 <!-- 메인 헤더 -->
-<header class="header-container" id="mainHeader">
+<header class="header-container" style="position:sticky;" id="mainHeader">
     <div class="header__top">
-        <a href="/"><img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고" class="logo" /></a>
+        <a href="${pageContext.request.contextPath}/main.action"><img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고" class="logo" /></a>
         <div class="top__menu">
-            <c:choose>
-                <c:when test="${not empty sessionScope.loginUser}">
-                    <span>${sessionScope.loginUser.nickname} 님</span>
-                    <button class="add-equip" onclick="location.href='${pageContext.request.contextPath}/register-equip.action'">내 장비 등록</button>
-                    <a href="${pageContext.request.contextPath}/logout.action">로그아웃</a>
-                    <a href="${pageContext.request.contextPath}/sitemap.jsp">사이트맵</a>
-                </c:when>
-                <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/login-user.action">로그인</a>
-                    <a href="${pageContext.request.contextPath}/registeruser-tel.action">회원가입</a>
-                    <a href="${pageContext.request.contextPath}/sitemap.jsp">사이트맵</a>
-                </c:otherwise>
-            </c:choose>
+            <div class="top__menu">
+                <c:choose>
+                    <c:when test="${not empty sessionScope.loginAdmin}">
+                        <span class="header-nickname">${sessionScope.loginAdmin.adminId} 관리자님</span>
+                        <button type="submit" class="btn-admin-page"
+                                onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">관리자 페이지</button>
+                        <a href="${pageContext.request.contextPath}/admin-logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+                        <a href="#">사이트맵</a>
+                    </c:when>
+
+                    <c:when test="${isUser}">
+                        <c:set var="user" value="${sessionScope.loginUser}" />
+                        <span class="header-nickname">${user.nickname} 님</span>
+                        <button class="add-equip"
+                                onclick="location.href='${pageContext.request.contextPath}/equipregister-majorcategory.action'">내 장비 등록</button>
+                        <a href="${pageContext.request.contextPath}/logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+                        <a href="#">사이트맵</a>
+                    </c:when>
+
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/login-user.action">로그인</a>
+                        <a href="${pageContext.request.contextPath}/registerUser-id.action">회원가입</a>
+                        <a href="#">사이트맵</a>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
 
@@ -103,16 +129,18 @@
                 <input type="radio" name="toggle" id="community-radio" class="toggle-radio" />
                 <div class="toggle-slider"></div>
                 <div class="toggle-options">
-                    <label for="trade-radio" class="toggle-option trade-option">거래</label>
-                    <label for="community-radio" class="toggle-option community-option">커뮤니티</label>
+                    <a href="${pageContext.request.contextPath}/main.action" class="toggle-option trade-option">거래</a>
+                    <a href="${pageContext.request.contextPath}/boardmain.action" class="toggle-option community-option">커뮤니티</a>
                 </div>
             </div>
         </div>
-        <div class="user-menu">
-            <a href="#"><i class="fa-solid fa-bell"></i> <span>알림</span></a>
-            <a href="#"><i class="fa-solid fa-user"></i> <span>마이페이지</span></a>
-            <a href="#"><i class="fa-solid fa-book"></i> <span>캠핑일지</span></a>
-        </div>
+        <c:if test="${isUser}">
+            <div class="user-menu">
+                <a href="#"><i class="fa-solid fa-bell"></i> <span>알림</span></a>
+                <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i> <span>마이페이지</span></a>
+                <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i> <span>캠핑일지</span></a>
+            </div>
+        </c:if>
     </div>
 </header>
 

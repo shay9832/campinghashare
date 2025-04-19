@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AdminEquipListController {
@@ -14,18 +16,13 @@ public class AdminEquipListController {
     private SqlSession sqlSession;
 
     @RequestMapping(value="/admin-equipList.action", method = RequestMethod.GET)
-    public String adminEquipList(Model model) {
+    public String adminEquipList(@ModelAttribute("adminId") String adminId, Model model) {
 
         IAdminEquipListDAO dao = sqlSession.getMapper(IAdminEquipListDAO.class);
-
 
         model.addAttribute("getList", dao.getList());
         model.addAttribute("getLists", dao.getLists());
 
-
-
         return "admin-equipList";
-
     }
-
 }

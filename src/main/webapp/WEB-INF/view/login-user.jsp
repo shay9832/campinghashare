@@ -129,7 +129,7 @@
             </div>
 
             <form action="${pageContext.request.contextPath}/login-user.action" method="post">
-            <input type="text" name="userId" placeholder="아이디" class="login-input" required>
+                <input type="text" name="userId" placeholder="아이디" class="login-input" required>
                 <input type="password" name="password" placeholder="비밀번호" class="login-input" required>
 
                 <button type="submit" class="login-button">로그인</button>

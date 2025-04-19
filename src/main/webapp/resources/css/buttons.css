@@ -110,6 +110,23 @@
     background-color: transparent;
 }
 
+.btn-admin-page {
+    padding: 6px 12px;
+    background-color: #3f861d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-admin-page:hover {
+    background-color: #265012;
+    transform: translateY(-1px);
+}
+
+
 /* 비활성화된 버튼 */
 .btn:disabled,
 .btn.disabled {

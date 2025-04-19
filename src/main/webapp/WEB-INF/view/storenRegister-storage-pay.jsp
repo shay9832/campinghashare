@@ -1,221 +1,161 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    // 배송지 정보 저장할 변수
-    String recipient = "고길동";
-    String tel = "010-0000-0000";
-    String zipCode = "04001";
-    String address1 = "서울 마포구 월드컵북로 21";
-    String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
-
-    // 장비 정보를 저장할 변수
-    String categoryMain = "텐트/쉘터";
-    String categorySub = "텐트";
-    String brand = "스노우피크";
-    String equipName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
-    String equipSize = "M";
-
-    // 보관 정보 저장
-    String storagePeriod = "3개월";
-    int storageCost = 90000;
-    int discountAmount = 20000;
-    int finalPayment = storageCost - discountAmount;
-
-    // 천 단위 콤마 형식 지정
-    java.text.NumberFormat formatter = java.text.NumberFormat.getInstance();
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>storenRegister-storage-pay.jsp</title>
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
-
 </head>
 <body>
-
-<jsp:include page="header.jsp"/>
-
+<jsp:include page="header.jsp" />
 <main class="main-content container">
-    <div class="storen-container">
-        <h1 class="page-title page-title-storen-register">스토렌 신청(보관비 결제)</h1>
+    <form id="storenForm" action="storenRegister-storage-pay-info.action" method="GET">
+        <c:set var="discountAmount" value="0" />
+        <c:set var="finalStorageCost" value="${storageCost - discountAmount}" />
 
-        <!-- 배송지 정보 섹션 -->
-        <div class="info-section card">
-            <div class="card-header">
-                <h3 class="card-title">배송 정보</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <label class="form-label">받는 사람</label>
-                    <div class="form-input"><%=recipient%></div>
-                </div>
-                <div class="form-row">
-                    <label class="form-label">휴대 전화</label>
-                    <div class="form-input"><%=tel%></div>
-                </div>
-                <div class="form-row">
-                    <label class="form-label">주소</label>
-                    <div class="form-input">
-                        <div class="zipcode-row">
-                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="<%= zipCode %>">
-                            <button onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
-                        </div>
-                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="<%= address1 %>" readonly>
-                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="<%= address2 %>">
+        <input type="hidden" name="equip_code" value="${equip_code}" />
+        <input type="hidden" name="equipSize" value="${equipSize}" />
+        <input type="hidden" name="storageDays" value="${storageDays}" />
+        <input type="hidden" name="storageCost" value="${storageCost}" />
+        <input type="hidden" name="discountAmount" value="${discountAmount}" />
+        <input type="hidden" name="finalStorageCost" value="${finalStorageCost}" />
 
-                        <!-- 우편번호 검색 API 컨테이너 (기본 숨김) -->
-                        <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
-                        </div>
+        <div class="storen-container">
+            <h1 class="page-title page-title-storen-register">스토렌 신청(보관비 결제)</h1>
 
-                    </div>
+            <!-- 배송지 정보 섹션 -->
+            <div class="info-section card">
+                <div class="card-header">
+                    <h3 class="card-title">배송 정보</h3>
                 </div>
-            </div>
-        </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <label class="form-label">받는 사람</label>
+                        <div class="form-input">${addressInfo.userName}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">휴대 전화</label>
+                        <div class="form-input">${addressInfo.userTel}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">주소</label>
+                        <div class="form-input">
+                            <div class="zipcode-row">
+                                <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="${addressInfo.zipcode}" />
+                                <button type="button" onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
+                            </div>
+                            <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="${addressInfo.address1}" readonly />
+                            <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="${addressInfo.address2}" />
+                            <input type="text" id="extraAddress" class="form-control mt-2" placeholder="참고항목" readonly />
 
-        <!-- 신청 정보 섹션 -->
-        <div class="info-section card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">신청 정보</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <label class="form-label">장비 사진</label>
-                    <div class="form-input">
-                        <div class="image-upload d-flex gap-3">
-                            <div class="image-placeholder"></div>
-                            <div class="image-placeholder"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">카테고리(대)</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= categoryMain %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">카테고리(중)</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= categorySub %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">브랜드</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= brand %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">장비명</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= equipName %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">장비 사이즈</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= equipSize %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">보관 기간</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= storagePeriod %></span>
-                    </div>
-                </div>
-                <div class="form-row mt-3">
-                    <label class="form-label">총 보관 비용</label>
-                    <div class="form-input">
-                        <span class="info-text"><%= formatter.format(storageCost) %>원</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 할인 섹션 -->
-        <div class="info-section card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">할인</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <label class="form-label">보유 쿠폰</label>
-                    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-                        <div>3장</div>
-                        <button class="btn btn-secondary">쿠폰 적용</button>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">쿠폰 할인 금액</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 결제 정보 섹션 -->
-        <div class="info-section card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">결제 정보</h3>
-            </div>
-            <div class="card-body">
-                <div class="row mb-2">
-                    <div class="col-6">주문상품</div>
-                    <div class="col-6 text-right"><%= formatter.format(storageCost) %>원</div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">배송비</div>
-                    <div class="col-6 text-right">+0원</div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">할인</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
-                </div>
-                <hr class="my-3">
-                <div class="row">
-                    <div class="col-6 font-weight-bold">최종 결제 금액</div>
-                    <div class="col-6 text-right font-weight-bold text-primary"><%= formatter.format(finalPayment) %>원</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 결제 수단 섹션 -->
-        <div class="info-section card mt-4">
-            <div class="card-header">
-                <h3 class="card-title">결제 수단</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <label class="form-label">결제수단 선택</label>
-                    <div class="form-input">
-                        <div class="form-check form-check-inline">
-                            <input type="radio" class="form-check-input" name="payment_method" id="credit_card" value="credit_card" checked>
-                            <label class="form-check-label" for="credit_card">신용카드</label>
-                        </div>
-                        <div class="form-check form-check-inline ml-3">
-                            <input type="radio" class="form-check-input" name="payment_method" id="bank_transfer" value="bank_transfer">
-                            <label class="form-check-label" for="bank_transfer">무통장 입금</label>
+                            <!-- 다음 주소 iframe 위치 -->
+                            <div id="wrap" style="display:none; border:1px solid #000; width:100%; margin-top:10px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 주문 확인 및 버튼 섹션 -->
-        <div class="info-section card mt-4">
-            <div class="card-body">
-                <div class="form-check text-center mb-4">
-                    <input type="checkbox" class="form-check-input" name="confirm_order" id="confirm_order">
-                    <label class="form-check-label" for="confirm_order">주문 내용을 확인하였습니다.</label>
+            <!-- 신청 정보 섹션 -->
+            <div class="info-section card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">신청 정보</h3>
                 </div>
-                <!-- 버튼 컨테이너 -->
-                <div class="button-container">
-                    <a href="#" class="btn">이전</a>
-                    <a href="#" class="btn btn-primary">다음</a>
+                <div class="card-body">
+                    <div class="form-row">
+                        <label class="form-label">카테고리(대)</label>
+                        <div class="form-input">${equipInfo.majorCategory}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">카테고리(중)</label>
+                        <div class="form-input">${equipInfo.middleCategory}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">브랜드</label>
+                        <div class="form-input">${equipInfo.brand}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">장비명</label>
+                        <div class="form-input">${equipInfo.equip_name}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">장비 사이즈</label>
+                        <div class="form-input">${equipSize}</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">보관 기간</label>
+                        <div class="form-input">${storageDays}개월</div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label">총 보관 비용</label>
+                        <div class="form-input">
+                            <fmt:formatNumber value="${storageCost}" type="number" groupingUsed="true" />원
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 할인 섹션 -->
+            <div class="info-section card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">할인</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <label class="form-label">보유 쿠폰</label>
+                        <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                            <div>3장</div>
+                            <button type="button" class="btn btn-secondary">쿠폰 적용</button>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">쿠폰 할인 금액</div>
+                        <div class="col-6 text-right text-coral">-<fmt:formatNumber value="${discountAmount}" type="number" groupingUsed="true" />원</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 결제 정보 섹션 -->
+            <div class="info-section card mt-4">
+                <div class="card-header">
+                    <h3 class="card-title">결제 정보</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-6">주문상품</div>
+                        <div class="col-6 text-right"><fmt:formatNumber value="${storageCost}" type="number" groupingUsed="true" />원</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">배송비</div>
+                        <div class="col-6 text-right">+0원</div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-6">할인</div>
+                        <div class="col-6 text-right">-<fmt:formatNumber value="${discountAmount}" type="number" groupingUsed="true" />원</div>
+                    </div>
+                    <hr class="my-3" />
+                    <div class="row">
+                        <div class="col-6 font-weight-bold">최종 결제 금액</div>
+                        <div class="col-6 text-right font-weight-bold text-primary"><fmt:formatNumber value="${finalStorageCost}" type="number" groupingUsed="true" />원</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 버튼 섹션 -->
+            <div class="info-section card mt-4">
+                <div class="card-body text-center">
+                    <div class="form-check d-inline-flex align-items-center justify-content-center gap-2">
+                        <input type="checkbox" class="form-check-input" id="confirm_order" name="confirm_order">
+                        <label class="form-check-label mb-0" for="confirm_order">주문 내용을 확인하였습니다.</label>
+                    </div>
+                    <div class="button-container mt-3">
+                        <a href="${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equip_code}" class="btn">이전</a>
+                        <button type="button" class="btn btn-primary" onclick="validateAndSubmit()">다음</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </main>
 
 <jsp:include page="footer.jsp"/>
@@ -302,6 +242,77 @@
 
         // iframe을 넣은 element를 보이게 한다. (검색창 활성화)
         element_wrap.style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 이미지 컨테이너 찾기
+        const imageContainer = document.querySelector('.image-upload');
+        if(imageContainer) {
+            // 이미지 순서 역순으로 정렬 (마지막 올린 것이 처음으로 오게 정렬)
+            [...imageContainer.children].reverse().forEach(child => imageContainer.appendChild(child));
+        }
+    });
+
+    function validateAndSubmit() {
+        const zipcode = document.getElementById("postcode").value.trim();
+        const address1 = document.getElementById("address").value.trim();
+        const address2 = document.getElementById("detailAddress").value.trim();
+
+        if (!zipcode || !address1 || !address2) {
+            alert("배송지 정보를 모두 입력해주세요.");
+            return;
+        }
+
+        const form = document.getElementById("storenForm");
+
+        // equipSize 처리
+        let inputSize = form.querySelector('input[name="equipSize"]');
+        let equipSize = inputSize ? inputSize.value.trim() : "";
+
+        if (!inputSize) {
+            inputSize = document.createElement("input");
+            inputSize.type = "hidden";
+            inputSize.name = "equipSize";
+            equipSize = "${equipSize}"; // 서버 값이 있다면 보완
+            inputSize.value = equipSize;
+            form.appendChild(inputSize);
+        }
+
+        if (!equipSize) {
+            alert("장비 사이즈를 선택해주세요.");
+            return;
+        }
+
+        // 주소 필드
+        let inputZip = form.querySelector('input[name="zipcode"]');
+        if (!inputZip) {
+            inputZip = document.createElement("input");
+            inputZip.type = "hidden";
+            inputZip.name = "zipcode";
+            form.appendChild(inputZip);
+        }
+
+        let inputAddr1 = form.querySelector('input[name="address1"]');
+        if (!inputAddr1) {
+            inputAddr1 = document.createElement("input");
+            inputAddr1.type = "hidden";
+            inputAddr1.name = "address1";
+            form.appendChild(inputAddr1);
+        }
+
+        let inputAddr2 = form.querySelector('input[name="address2"]');
+        if (!inputAddr2) {
+            inputAddr2 = document.createElement("input");
+            inputAddr2.type = "hidden";
+            inputAddr2.name = "address2";
+            form.appendChild(inputAddr2);
+        }
+
+        inputZip.value = zipcode;
+        inputAddr1.value = address1;
+        inputAddr2.value = address2;
+
+        form.submit();
     }
 </script>
 

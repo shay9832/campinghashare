@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.DTO.AdminDTO;
 import com.team.mvc.DTO.UserDTO;
 import com.team.mvc.Interface.IUserDAO;
 import org.apache.ibatis.session.SqlSession;
@@ -8,12 +9,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 @Controller
 public class UserController {
 
     @Autowired
     private SqlSession sqlSession;
+
+    // 서버 재시작 시 최초 페이지 설정
+    @RequestMapping("/")
+    public String rootRedirect() {
+        return "redirect:/main.action";
+    }
 
     // 로그인 페이지 진입
     @RequestMapping(value = "/login-user.action", method = RequestMethod.GET)
@@ -25,23 +33,46 @@ public class UserController {
     @RequestMapping(value = "/login-user.action", method = RequestMethod.POST)
     public String login(UserDTO dto, HttpSession session, RedirectAttributes redirect) {
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        UserDTO loginUser = dao.getUserByIdAndPw(dto); // ID + PW 기준 조회
+        UserDTO loginUser = dao.getUserByIdAndPw(dto);
 
         if (loginUser != null) {
-            // 로그인 성공 시 session 저장
-            session.setAttribute("loginUser", loginUser);
-            session.setAttribute("userCode", loginUser.getUserCode());
-            return "redirect:/main.action";
+            if (loginUser.getUserCode() != null) {
+                // 로그인 성공 시 관리자 여부 설정
+                if ("admin".equals(loginUser.getUserId())) {
+                    loginUser.setAdmin(true);  // 관리자인 경우
+                } else {
+                    loginUser.setAdmin(false); // 관리자가 아닌 경우
+                }
+
+                // 세션에 로그인 사용자 정보 저장
+                session.setAttribute("loginUser", loginUser);
+                session.setAttribute("userCode", loginUser.getUserCode());
+
+                redirect.addFlashAttribute("userCode", loginUser.getUserCode());
+                return "redirect:/main.action";
+            } else {
+                redirect.addAttribute("error", "2");
+                return "redirect:/login-user.action";
+            }
         } else {
-            // 로그인 실패 시 쿼리 파라미터로 에러 전달
             redirect.addAttribute("error", "1");
             return "redirect:/login-user.action";
         }
     }
 
     // 메인 페이지 진입
-    @RequestMapping(value = "/main.action", method = RequestMethod.GET)
-    public String mainPage() {
+    @RequestMapping("/main.action")
+    public String mainPage(HttpSession session, Model model) {
+        Object loginUser = session.getAttribute("loginUser");
+        Object loginAdmin = session.getAttribute("loginAdmin");
+
+        if (loginUser instanceof UserDTO) {
+            model.addAttribute("user", (UserDTO) loginUser);
+        } else if (loginAdmin instanceof AdminDTO) {
+            model.addAttribute("admin", (AdminDTO) loginAdmin);
+        }
+
+        // 로그인 안 된 상태라도 return "main" 허용
         return "main";
     }
 

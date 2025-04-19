@@ -1,12 +1,21 @@
 package com.team.mvc.DTO;
 
 public class UserDTO {
-    private int userCode;
+    private Integer userCode;
     private String userId;
     private String password;
     private String userName;
     private String nickname;
     private String userTel;
+    private String userEmail;               //이메일 추가(null일 때는 '미입력')
+    private String emailConsent;            //이메일 수신동의 추가(1일 때만 '동의', 아닐 땐 '미동의')
+    private int totalPoint;                 //현재 누적 포인트
+    private int totalTrust;                 //현재 누적 신뢰도
+    private String zipCode;                 //우편번호
+    private String address1;                //주소1
+    private String address2;                //주소2 (주소 상세)
+    private String adminId;
+    private boolean admin;
 
     public UserDTO() {}
 
@@ -50,13 +59,9 @@ public class UserDTO {
         this.userTel = userTel;
     }
 
-    public int getUserCode() {
-        return userCode;
-    }
+    public Integer getUserCode() { return userCode; }
 
-    public void setUserCode(int userCode) {
-        this.userCode = userCode;
-    }
+    public void setUserCode(Integer userCode) { this.userCode = userCode; }
 
     @Override
     public String toString() {
@@ -68,5 +73,77 @@ public class UserDTO {
                 ", userTel='" + userTel + '\'' +
                 ", userCode=" + userCode +
                 '}';
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getEmailConsent() {
+        return emailConsent;
+    }
+
+    public void setEmailConsent(String emailConsent) {
+        this.emailConsent = emailConsent;
+    }
+
+    public int getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(int totalPoint) {
+        this.totalPoint = totalPoint;
+    }
+
+    public int getTotalTrust() {
+        return totalTrust;
+    }
+
+    public void setTotalTrust(int totalTrust) {
+        this.totalTrust = totalTrust;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

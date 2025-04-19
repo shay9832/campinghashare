@@ -31,4 +31,12 @@ public interface IUserDAO {
     // 비밀번호 업데이트
     void updateUserPassword(@Param("userId") String userId,
                             @Param("newPassword") String newPassword);
+
+
+
+    // 유저코드로 유저 정보 가져오기
+    UserDTO getUserByUserCode(@Param("userCode") int userCode);
+
+    // 해당 유저의 주소 신규 등록
+    int insertAddress(@Param("userCode") int userCode, @Param("zipCode") String zipCode, @Param("address1") String address1, @Param("address2") String address2);
 }

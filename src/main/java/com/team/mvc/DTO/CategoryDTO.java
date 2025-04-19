@@ -3,7 +3,9 @@ package com.team.mvc.DTO;
 public class CategoryDTO {
     private int category_id;
     private String category_name;
-    private Integer parentCategory_id;
+    private Integer parent_category_id;  // Integer 사용 (null 허용)
+
+    // getter, setter
 
     public int getCategory_id() {
         return category_id;
@@ -21,11 +23,11 @@ public class CategoryDTO {
         this.category_name = category_name;
     }
 
-    public Integer getParentCategory_id() {
-        return parentCategory_id;
+    public Integer getParent_category_id() {
+        return parent_category_id;
     }
 
-    public void setParentCategory_id(Integer parentCategory_id) {
-        this.parentCategory_id = parentCategory_id;
+    public void setParent_category_id(Integer parent_category_id) {
+        this.parent_category_id = parent_category_id;
     }
 }
