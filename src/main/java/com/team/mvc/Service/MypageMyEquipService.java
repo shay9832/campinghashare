@@ -175,6 +175,14 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
             // Null이 아닐 때만 리스트에 추가
             if (firstStoren != null) {
+                firstStoren.setEquipmentDTO(equipment);
+
+                // 디버깅
+                System.out.println(">> StorenDTO 확인: equip_code=" + equipment.getEquip_code()
+                        + ", storen_id=" + firstStoren.getStoren_id()
+                        + ", storen_title=" + firstStoren.getStoren_title()
+                        + ", created_date=" + firstStoren.getCreated_date());
+
                 firstStorenList.add(firstStoren);
             }
         }
