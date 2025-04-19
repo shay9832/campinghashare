@@ -30,7 +30,7 @@ public class SearchMatchingRequestService implements ISearchMatchingRequestServi
         // 스토렌에 장비 정보 넣어주기
         storenDto.setEquipmentDTO(equipmentDto);
 
-        System.out.println("user_code : " + equipmentDto.getUser_code());
+        System.out.println("OWNER userCode : " + equipmentDto.getUser_code());
 
         // 해당 장비의 소유자 정보 가져오기
         UserDTO userDto = userDAO.getUserByUserCode(equipmentDto.getUser_code());
@@ -49,6 +49,8 @@ public class SearchMatchingRequestService implements ISearchMatchingRequestServi
 
         // 매개변수로 넣을 matchingDto 세팅
         MatchingRequestDTO matchingDto = new MatchingRequestDTO();
+
+        System.out.println("storenId : " + storenId);
 
         matchingDto.setTransaction_id(storenId);
         matchingDto.setUser_code(user_code);

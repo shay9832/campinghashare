@@ -26,7 +26,7 @@
         VALUES (
                    STOREN_MATCHING_REQ_SEQ.NEXTVAL
                    , #{user_code}
-                   , (SELECT INSPEC_RESULT_ACTION_ID FROM STOREN_IRA WHERE STOREN_ID = #{transaction_id})
+                   , (SELECT STOREN_IRA_ID FROM STOREN_IRA WHERE STOREN_ID = #{transaction_id})
                    , TO_DATE(#{rental_start_date}, 'YYYY-MM-DD')
                    , TO_DATE(#{rental_end_date}, 'YYYY-MM-DD')
                    , SYSDATE

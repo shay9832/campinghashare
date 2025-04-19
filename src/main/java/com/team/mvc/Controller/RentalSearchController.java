@@ -102,7 +102,6 @@ public class RentalSearchController {
 
         // 결과 처리 담아둘 맵
         Map<String, Object> result = new HashMap<>();
-
         int user_code = userCode;
 
         try {
@@ -135,14 +134,18 @@ public class RentalSearchController {
 
         int user_code = userCode;
 
+        //System.out.println("userCode = " + user_code + " storenId = " + storenId);
+
         try {
             MatchingRequestDTO matching = searchMatchingRequestService.getMatchingByStorenAndUser(storenId, user_code);
 
             if (matching != null) {
                 result.put("hasMatching", true);
-                result.put("dateRange", matching.getRental_start_date() + " ~ " + matching.getRental_end_date());
+                result.put("startDate", matching.getRental_start_date());
+                result.put("endDate", matching.getRental_end_date());
                 result.put("days", matching.getRental_duration());
                 result.put("price", matching.getRental_pay());
+                result.put("status", matching.getPayment_status());
             } else {
                 System.out.println("matching은 null입니다.");
                 result.put("hasMatching", false);

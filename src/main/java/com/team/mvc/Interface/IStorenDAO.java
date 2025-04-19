@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IStorenDAO {
@@ -52,4 +53,11 @@ public interface IStorenDAO {
 
     // 장비명으로 평균 렌탈 가격 조회 (추가)
     int getAvgRentalPriceByEquipName(@Param("equipName") String equipName);
+
+
+    // 해당 유저가 가진 스토렌의 장비 코드들만 조회(중복제거)
+    List<Integer> listStorenEquipCodes(@Param("userCode") int userCode);
+
+    // 해당 유저가 가진 스토렌 장비의 각 상태의 개수 조회
+    Map<String, Object> getStorenStatus(@Param("userCode") int userCode);
 }
