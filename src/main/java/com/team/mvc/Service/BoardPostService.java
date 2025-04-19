@@ -6,6 +6,7 @@ import com.team.mvc.Interface.IBoardPostService;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -18,10 +19,25 @@ public class BoardPostService implements IBoardPostService {
     @Autowired
     private SqlSession sqlSession;
 
+    @Autowired
+    private ReplyService replyService;
+
     @Override
     public List<BoardPostDTO> listPostList(BoardPostDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.listPostList(dto);
+    }
+
+    @Override
+    public List<BoardPostDTO> listTotalNotice() {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.listTotalNotice();
+    }
+
+    @Override
+    public int getTotalNoticeCount(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.getTotalNoticeCount(dto);
     }
 
     @Override
@@ -47,7 +63,8 @@ public class BoardPostService implements IBoardPostService {
     @Override
     public int insertPost(BoardPostDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
-        return dao.insertPost(dto);
+        dao.insertPost(dto);
+        return dto.getPostId();
     }
 
     @Override
@@ -169,5 +186,96 @@ public class BoardPostService implements IBoardPostService {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.getPostLabelsByBoardId(boardId);
     }
+
+    @Override
+    public boolean checkRecommend(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.checkRecommend(dto);
+    }
+
+    @Override
+    public int insertRecommend(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertRecommend(dto);
+    }
+
+    @Override
+    public int getRecommendCount(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.getRecommendCount(dto);
+    }
+
+    @Override
+    public int insertHotPostLog(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+
+        // getPostById를 호출하여 최신 게시글 정보 조회
+        BoardPostDTO currentPost = getPostById(dto);
+        int recommendCount = currentPost.getRecommendCount();
+
+        // 추천수가 50 이상인 경우에만 HOT_POST_LOG 테이블에 기록
+        if (recommendCount >= 50) {
+            return dao.insertHotPostLog(dto);
+        }
+
+        return 0; // 추천수가 50 미만이면 아무 작업도 하지 않음
+
+    }
+
+    // 게시글 삭제 시 댓글도 함께 삭제
+    @Transactional
+    public boolean deletePostWithReplies(int postId) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+
+        // 1. 해당 게시글의 북마크 삭제
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setPostId(postId);
+        dao.deleteBookmarksByPostId(postId);
+
+        // 2. 해당 게시글의 추천 기록 삭제
+        dao.deleteRecommendsByPostId(postId);
+
+        // 3. 해당 게시글의 모든 댓글 조회 및 삭제
+        List<ReplyDTO> replies = getRepliesByPostId(postId);
+        for (ReplyDTO reply : replies) {
+            replyService.deleteReply(reply.getReplyId());
+        }
+
+        // 4. 게시글 삭제
+        BoardPostDTO postDTO = new BoardPostDTO();
+        postDTO.setPostId(postId);
+        int result = deletePost(postDTO);
+
+        return result > 0;
+    }
+
+    // 첨부파일 추가
+    @Override
+    public int insertAttachment(AttachmentDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertAttachment(dto);
+    }
+
+    // 북마크 여부 확인
+    @Override
+    public boolean checkBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.checkBookmark(dto);
+    }
+
+    // 북마크 추가
+    @Override
+    public int insertBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.insertBookmark(dto);
+    }
+
+    // 북마크 제거
+    @Override
+    public int deleteBookmark(BoardPostDTO dto) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.deleteBookmark(dto);
+    }
+
 
 }

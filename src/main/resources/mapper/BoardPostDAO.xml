@@ -4,6 +4,7 @@
     <resultMap id="boardPostResultMap" type="com.team.mvc.DTO.BoardPostDTO">
         <result column="게시물ID" property="postId"/>
         <result property="rowNum" column="RNUM"/>
+        <result column="USER_CODE" property="userCode"/>
         <result column="회원닉네임" property="nickName"/>
         <result column="게시판카테고리" property="boardCategory"/>
         <result column="말머리이름" property="postLabelName"/>
@@ -47,7 +48,7 @@
             WHERE BOARD_ID = #{boardId})
             AND "게시판이름" != '공지사항'
             AND "블라인드여부" = 0
-            <if test="postLabelId = 0">
+            <if test="postLabelId != 0">
                 AND "말머리이름" = (SELECT POST_LABEL_NAME
                 FROM POST_LABEL
                 WHERE POST_LABEL_ID = #{postLabelId})
@@ -58,10 +59,10 @@
                         AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'content'">
-                        AND "게시물내용" LIKE '%' || ${searchKeyword} || '%'
+                        AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'writer'">
-                        AND "회원닉네임" LIKE '%' || ${searchKeyword} || '%'
+                        AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'titlecontent'">
                         AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
@@ -174,6 +175,7 @@
         ORDER BY BOARD_ID
     </select>
 
+    <!-- 게시판별 말머리 조회 -->
     <select id="getPostLabelsByBoardId" parameterType="int" resultType="com.team.mvc.DTO.BoardPostDTO">
         SELECT
             POST_LABEL_ID as postLabelId,
@@ -201,10 +203,10 @@
                         AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'content'">
-                        AND "게시물내용" LIKE '%' || ${searchKeyword} || '%'
+                        AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'writer'">
-                        AND "회원닉네임" LIKE '%' || ${searchKeyword} || '%'
+                        AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'titlecontent'">
                         AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
@@ -259,6 +261,16 @@
         WHERE ROWNUMBER >= #{pagenation.startRow}
     </select>
 
+    <!-- 전체 공지사항 조회   -->
+    <select id="listTotalNotice" resultMap="boardPostResultMap">
+        SELECT *
+        FROM VW_POST_MANAGEMENT
+        WHERE "게시판이름" = '공지사항'
+          AND "블라인드여부" = 0
+        ORDER BY "게시물생성일" DESC
+    </select>
+
+
     <!-- 공지사항 조회 (최대 3개) -->
     <select id="listNotice" resultMap="boardPostResultMap">
         SELECT *
@@ -269,6 +281,37 @@
               ORDER BY "게시물생성일" DESC)
         WHERE ROWNUM &lt;= 3
     </select>
+
+    <!-- 공지사항 전체 게시물 수 -->
+    <select id="getTotalNoticeCount" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="int">
+        SELECT COUNT(*)
+        FROM VW_POST_MANAGEMENT
+        WHERE "게시판이름" = '공지사항'
+        AND "블라인드여부" = 0
+        <if test="postLabelId != 0">
+            AND "말머리이름" = (SELECT POST_LABEL_NAME
+            FROM POST_LABEL
+            WHERE POST_LABEL_ID = #{postLabelId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'titlecontent'">
+                    AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                    OR "게시물내용" LIKE '%' || #{searchKeyword} || '%')
+                </when>
+            </choose>
+        </if>
+    </select>
+
 
     <!-- 게시판 ID로 게시판 정보 조회 -->
     <select id="getBoardById" parameterType="int" resultType="com.team.mvc.DTO.BoardDTO">
@@ -283,8 +326,9 @@
 
     <!-- 특정 게시물 조회 -->
     <select id="getPostById" parameterType="com.team.mvc.DTO.BoardPostDTO" resultMap="boardPostResultMap">
-        SELECT *
-        FROM VW_POST_MANAGEMENT
+        SELECT V.*, P.USER_CODE AS USER_CODE
+        FROM VW_POST_MANAGEMENT V
+        JOIN POST P ON V."게시물ID" = P.POST_ID
         WHERE "게시물ID" = #{postId}
     </select>
 
@@ -353,11 +397,14 @@
 
 
     <!-- 게시물 등록 -->
-    <insert id="insertPost" parameterType="com.team.mvc.DTO.BoardPostDTO">
+    <insert id="insertPost" parameterType="com.team.mvc.DTO.BoardPostDTO" useGeneratedKeys="true" keyProperty="postId">
         INSERT INTO POST (POST_ID, USER_CODE, BOARD_ID, POST_LABEL_ID,
                           POST_TITLE, POST_CONTENT, CREATED_DATE)
         VALUES (POST_SEQ.NEXTVAL, #{userCode}, #{boardId}, #{postLabelId},
                 #{postTitle}, #{postContent}, SYSDATE)
+        <selectKey keyProperty="postId" resultType="int" order="AFTER">
+            SELECT POST_SEQ.currval FROM DUAL
+        </selectKey>
     </insert>
 
     <!-- 게시물 수정 -->
@@ -376,4 +423,70 @@
         WHERE POST_ID = #{postId}
     </delete>
 
+
+    <!-- 추천 여부 확인 -->
+    <select id="checkRecommend" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM RECOMMEND
+        WHERE POST_ID = #{postId} AND USER_CODE = #{userCode}
+    </select>
+
+    <!-- 추천 추가 -->
+    <insert id="insertRecommend" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        INSERT INTO RECOMMEND (RECOMMEND_ID, POST_ID, USER_CODE, CREATED_DATE)
+        VALUES (RECOMMEND_SEQ.NEXTVAL, #{postId}, #{userCode}, SYSDATE)
+    </insert>
+
+    <!-- 게시글 추천 수 조회 -->
+    <select id="getRecommendCount" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM RECOMMEND
+        WHERE POST_ID = #{postId}
+    </select>
+
+    <!-- HOT_POST_LOG 테이블에 로그 추가 -->
+    <insert id="insertHotPostLog" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        INSERT INTO HOT_POST_LOG (HOT_POST_LOG_ID, POST_ID, CREATED_DATE)
+        SELECT HOT_POST_LOG_SEQ.nextval, #{postId}, SYSDATE
+        FROM DUAL
+        WHERE NOT EXISTS (SELECT 1
+                          FROM HOT_POST_LOG
+                          WHERE POST_ID = #{postId})
+    </insert>
+
+    <!-- 첨부파일 등록 -->
+    <insert id="insertAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        INSERT INTO ATTACHMENT_POST (ATTACHMENT_POST_ID, POST_ID, ATTACHMENT_NAME, ATTACHMENT_PATH, ATTACHMENT_SIZE, ATTACHMENT_ORDER, CREATED_DATE)
+        VALUES (ATTACHMENT_POST_SEQ.nextval, #{postId}, #{attachmentName}, #{attachmentPath}, #{attachmentSize}, #{attachmentOrder}, SYSDATE)
+    </insert>
+
+    <!-- 북마크 추가 -->
+    <insert id="insertBookmark" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        INSERT INTO BOOKMARK (BOOKMARK_ID, USER_CODE, POST_ID, CREATED_DATE)
+        VALUES (BOOKMARK_SEQ.nextval, #{userCode}, #{postId}, SYSDATE)
+    </insert>
+
+    <!-- 북마크 제거 -->
+    <delete id="deleteBookmark" parameterType="com.team.mvc.DTO.BoardPostDTO">
+        DELETE
+        FROM BOOKMARK
+        WHERE USER_CODE = #{userCode} AND POST_ID = #{postId}
+    </delete>
+    
+    <!-- 북마크 여부 -->
+    <select id="checkBookmark" parameterType="com.team.mvc.DTO.BoardPostDTO" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM BOOKMARK
+        WHERE POST_ID = #{postId} AND USER_CODE = #{userCode}
+    </select>
+
+    <!-- 게시글 ID로 북마크 삭제 -->
+    <delete id="deleteBookmarksByPostId" parameterType="int">
+        DELETE FROM BOOKMARK WHERE POST_ID = #{postId}
+    </delete>
+
+    <!-- 게시글 ID로 추천 삭제 -->
+    <delete id="deleteRecommendsByPostId" parameterType="int">
+        DELETE FROM RECOMMEND WHERE POST_ID = #{postId}
+    </delete>
 </mapper>

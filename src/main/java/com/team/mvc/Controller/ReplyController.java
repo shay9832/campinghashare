@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,17 +21,18 @@ public class ReplyController {
     @Autowired
     private IReplyService replyService;
 
-    /**
-     * 댓글 추가
-     */
+    // 댓글 등록
     @PostMapping("/add.action")
     public ResponseEntity<Map<String, Object>> addReply(
             @RequestBody ReplyDTO replyDTO,
-            @ModelAttribute("userCode") Integer userCode) {
+            HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // 세션에서 로그인한 사용자 정보 가져오기
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
             // 로그인 체크
             if (userCode == null) {
                 response.put("success", false);
@@ -57,22 +56,24 @@ public class ReplyController {
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "오류가 발생했습니다: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * 댓글 삭제
-     */
+    // 댓글 삭제
     @PostMapping("/delete.action")
     public ResponseEntity<Map<String, Object>> deleteReply(
             @RequestBody Map<String, Object> requestData,
-            @ModelAttribute("userCode") Integer userCode) {
+            HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // 세션에서 로그인한 사용자 정보 가져오기
+            Integer userCode = (Integer) session.getAttribute("user_code");
+
             // 로그인 체크
             if (userCode == null) {
                 response.put("success", false);
@@ -81,7 +82,20 @@ public class ReplyController {
             }
 
             // 요청 데이터에서 댓글 ID 가져오기
-            int replyId = ((Number) requestData.get("replyId")).intValue();
+            int replyId;
+            Object replyIdObj = requestData.get("replyId");
+
+            if (replyIdObj instanceof String) {
+                // 문자열인 경우 정수로 변환
+                replyId = Integer.parseInt((String) replyIdObj);
+            } else if (replyIdObj instanceof Number) {
+                // 숫자인 경우 정수로 변환
+                replyId = ((Number) replyIdObj).intValue();
+            } else {
+                response.put("success", false);
+                response.put("message", "댓글 ID가 올바르지 않습니다.");
+                return ResponseEntity.ok(response);
+            }
 
             // 댓글 작성자 확인 (자신의 댓글만 삭제 가능)
             ReplyDTO reply = replyService.getReplyById(replyId);
