@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,17 +133,50 @@ public class MypageController {
         return "myPage-myEquip";
     }
 
+    // 마이페이지-내가 소유한 장비 - 일반 탭
     @RequestMapping(value="/api/myequipment/general", produces="application/json")
     @ResponseBody
     public List<EquipmentDTO> getMypageMyGeneral(@ModelAttribute("userCode") Integer userCode) {
         return myEquipService.listMyGeneral(userCode);
     }
 
-    // 마이페이지-내가 소유한 장비(스토렌)
+    // 마이페이지-내가 소유한 장비 - 스토렌 탭
     @RequestMapping(value="/api/myequipment/storen", produces="application/json")
     @ResponseBody
     public List<StorenDTO> getMypageMyStoren(@ModelAttribute("userCode") Integer userCode) {
+        System.out.println("Storen-userCode : " + userCode);
         return myEquipService.listMyStoren(userCode);
+    }
+
+    // 마이페이지-내가 소유한 장비 - 스토렌 탭 - 상세
+    @RequestMapping(value="/api/myequipment/storen/details", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> getMypageMyStorenDetails(@ModelAttribute("userCode") Integer userCode
+                                                    , @RequestParam("equipCode") Integer equipCode) {
+        return myEquipService.listMyStorenDetail(userCode, equipCode);
+    }
+
+    // 마이페이지-화살표 : 상태별 스토렌 조회
+    @GetMapping("/api/myequipment/storen/filter")
+    @ResponseBody
+    public List<StorenDTO> getStorenByStatus(@ModelAttribute("userCode") Integer userCode
+                                                     , @RequestParam("status") String status) {
+        // 서비스 메소드 호출하여 여러 상태로 필터링된 스토렌 목록 가져오기
+        return myEquipService.listMyStorenByStatus(userCode, status);
+    }
+
+    // 마이페이지-긴급 확인 필요 : 상태별 스토렌 탭 조회(추후 통합 탭 조회로 수정 예정)
+    @GetMapping("/api/myequipment/emergency-filter")
+    @ResponseBody
+    public List<StorenDTO> getStorenByMultipleStatus(@ModelAttribute("userCode") Integer userCode,
+                                                       @RequestParam("keyword") String keyword,
+                                                       @RequestParam("statuses") String statusesParam) {
+        // 쉼표로 구분된 상태 문자열을 배열로 변환
+        String[] statuses = statusesParam.split(",");
+        System.out.println("Received statuses: " + Arrays.toString(statuses)); // 로그 추가
+
+        // 서비스 메소드 호출하여 즉시 확인 필요 항목 가져오기
+        return myEquipService.listMyStorenByStatus(userCode, keyword, statuses);
     }
 
 
