@@ -24,7 +24,18 @@ public class BoardController {
 //----------------------------------------------------------------------------------------------------------------------
     // 커뮤니티 메인 페이지
     @RequestMapping("/boardmain.action")
-    public String boardMain(Model model) {
+    public String boardMain(Model model,
+                            @ModelAttribute("userCode") Integer userCode,
+                            @ModelAttribute("adminId") String adminId) {
+
+        // 조건 분기
+        if (userCode != null) {
+            System.out.println("로그인한 사용자 코드: " + userCode);
+        }
+        if (adminId != null) {
+            System.out.println("로그인한 관리자 ID: " + adminId);
+        }
+
         try {
             // BEST 게시글 로드
             List<BoardPostDTO> bestPosts = null;
@@ -75,7 +86,9 @@ public class BoardController {
     @RequestMapping("/boardbest.action")
     public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
-                            Model model) {
+                            Model model,
+                            @ModelAttribute("userCode") Integer userCode,
+                            @ModelAttribute("adminId") String adminId) {
         // 공지사항 조회(최대 3개)
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
@@ -101,7 +114,9 @@ public class BoardController {
                                 @RequestParam(value = "size", defaultValue = "10") int size,
                                 @RequestParam(value = "searchType", required = false) String searchType,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                                Model model) {
+                                Model model,
+                                @ModelAttribute("userCode") Integer userCode,
+                                @ModelAttribute("adminId") String adminId) {
         // 실제 한글 보드 이름으로 변환
         String actualBoardName = boardName.equals("image") ? "고독한 캠핑방" :
                                  boardName.equals("free") ? "자유 게시판" :
@@ -168,7 +183,10 @@ public class BoardController {
                                                 @RequestParam(value = "searchType", required = false) String searchType,
                                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                                 @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
-                                                @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson) {
+                                                @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
+                                                @ModelAttribute("userCode") Integer userCode,
+                                                @ModelAttribute("adminId") String adminId
+                                                ) {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -291,7 +309,9 @@ public class BoardController {
                             @RequestParam(value = "size", defaultValue = "10") int size,
                             @RequestParam(value = "searchType", required = false) String searchType,
                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                            Model model) {
+                            Model model,
+                            @ModelAttribute("userCode") Integer userCode,
+                            @ModelAttribute("adminId") String adminId) {
 
         // 게시판 ID 설정
         int boardId = 7;    // 자유게시판 ID
@@ -342,7 +362,9 @@ public class BoardController {
                                             @RequestParam(value = "searchType", required = false) String searchType,
                                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                             @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
-                                            @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson) {
+                                            @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
+                                            @ModelAttribute("userCode") Integer userCode,
+                                            @ModelAttribute("adminId") String adminId) {
 
         Map<String, Object> result = new HashMap<>();
         int boardId = 7;    // 자유게시판 ID
@@ -446,7 +468,9 @@ public class BoardController {
                                 @RequestParam(value = "searchType", required = false) String searchType,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                 @RequestParam(value="postId", required=false, defaultValue="0") int postId,
-                                Model model) {
+                                Model model,
+                                @ModelAttribute("userCode") Integer userCode,
+                                @ModelAttribute("adminId") String adminId) {
 
         // 게시글이 존재하는 경우
         if (postId > 0) {
@@ -518,7 +542,9 @@ public class BoardController {
     // 게시판 카테고리별 게시판 목록 조회 (AJAX)
     @GetMapping("/api/boards/category/{categoryId}")
     @ResponseBody
-    public List<BoardDTO> getBoardsByCategoryId(@PathVariable("categoryId") int categoryId) {
+    public List<BoardDTO> getBoardsByCategoryId(@PathVariable("categoryId") int categoryId,
+                                                @ModelAttribute("userCode") Integer userCode,
+                                                @ModelAttribute("adminId") String adminId) {
         List<BoardDTO> boards = boardPostService.getBoardsByCategoryId(categoryId);
         return boards != null ? boards : new ArrayList<>();
     }
@@ -527,7 +553,9 @@ public class BoardController {
     // 게시판별 말머리 목록 조회 (AJAX)
     @GetMapping("/api/post-labels/board/{boardId}")
     @ResponseBody
-    public List<BoardPostDTO> getPostLabelsByBoard(@PathVariable("boardId") int boardId) {
+    public List<BoardPostDTO> getPostLabelsByBoard(@PathVariable("boardId") int boardId,
+                                                   @ModelAttribute("userCode") Integer userCode,
+                                                   @ModelAttribute("adminId") String adminId) {
 //        System.out.println("Received boardId: " + boardId);
         List<BoardPostDTO> labels = boardPostService.getPostLabelsByBoardId(boardId);
         return labels != null ? labels : new ArrayList<>();
@@ -536,7 +564,9 @@ public class BoardController {
 
     // 자유 게시판 글쓰기 페이지 (게시판 목록, 말머리 목록 조회)
     @RequestMapping(value = "/boardfree-write.action", method = RequestMethod.GET)
-    public String boardFreeWrite(Model model) {
+    public String boardFreeWrite(Model model,
+                                 @ModelAttribute("userCode") Integer userCode,
+                                 @ModelAttribute("adminId") String adminId) {
         // 커뮤니티 게시판 목록 조회
         List<BoardDTO> communityBoards = boardPostService.getBoardsByCategoryId(4);
         model.addAttribute("communityBoards", communityBoards);
@@ -554,17 +584,19 @@ public class BoardController {
     public String insertPost(BoardPostDTO dto,
                              @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
                              HttpServletRequest request,
-                             HttpSession session) {
-        // 현재 로그인한 회원의 user_code 가져오기
+                             HttpSession session,
+                             @ModelAttribute("userCode") Integer userCode,
+                             @ModelAttribute("adminId") String adminId) {
+//        // 현재 로그인한 회원의 user_code 가져오기
 //            Integer user_code = (Integer) session.getAttribute("user_code");
 //            if (user_code == null) {
 //                return "redirect:/userlogin.action";
 //            }
-
+//
 //        session.setAttribute("userCode", 2);
 //        // 세션에서 로그인 정보 확인
 //        Integer userCode = (Integer) session.getAttribute("userCode");
-        int userCode = 2;
+//        int userCode = 2;
         dto.setUserCode(userCode);
 
         try {
@@ -655,15 +687,19 @@ public class BoardController {
 
     // 게시글 수정 페이지
     @RequestMapping("/boardfree-update.action")
-    public String boardFreeUpdate(@RequestParam("postId") int postId, HttpSession session, Model model) {
-        // 세션에서 로그인한 사용자 코드 가져오기
-        Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+    public String boardFreeUpdate(@RequestParam("postId") int postId,
+                                  HttpSession session,
+                                  Model model,
+                                  @ModelAttribute("userCode") Integer userCode,
+                                  @ModelAttribute("adminId") String adminId) {
+//        // 세션에서 로그인한 사용자 코드 가져오기
+//        Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
         System.out.println("boardFreeUpdate 메서드 호출됨 - postId: " + postId);
 
-        // 로그인 안 된 경우 로그인 페이지로 리다이렉트 (이미 checkLogin.jsp에서 처리됨)
-        if (userCode == null) {
-            return "redirect:/login-user.action";
-        }
+//        // 로그인 안 된 경우 로그인 페이지로 리다이렉트 (이미 checkLogin.jsp에서 처리됨)
+//        if (userCode == null) {
+//            return "redirect:/login-user.action";
+//        }
 
         // 게시글 정보 조회
         BoardPostDTO dto = new BoardPostDTO();
@@ -704,21 +740,23 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> updatePost(@RequestPart("post") BoardPostDTO dto,
                                           @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
-                                          HttpSession session) {
+                                          HttpSession session,
+                                          @ModelAttribute("userCode") Integer userCode,
+                                          @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 세션에서 로그인한 사용자 코드 가져오기
-            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+//            // 세션에서 로그인한 사용자 코드 가져오기
+//            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
             System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
             dto.setUserCode(userCode);
 
-            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
-            if (userCode == null) {
-                result.put("success", false);
-                result.put("message", "로그인이 필요합니다.");
-                return result;
-            }
+//            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
+//            if (userCode == null) {
+//                result.put("success", false);
+//                result.put("message", "로그인이 필요합니다.");
+//                return result;
+//            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
@@ -755,19 +793,21 @@ public class BoardController {
     @RequestMapping(value = "/api/post/delete.action", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> deletePost(@RequestBody BoardPostDTO dto,
-                                          HttpSession session) {
+                                          HttpSession session,
+                                          @ModelAttribute("userCode") Integer userCode,
+                                          @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 세션에서 로그인한 사용자 코드 가져오기
-            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
-
-            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
-            if (userCode == null) {
-                result.put("success", false);
-                result.put("message", "로그인이 필요합니다.");
-                return result;
-            }
+//            // 세션에서 로그인한 사용자 코드 가져오기
+//            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+//
+//            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
+//            if (userCode == null) {
+//                result.put("success", false);
+//                result.put("message", "로그인이 필요합니다.");
+//                return result;
+//            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
@@ -804,7 +844,9 @@ public class BoardController {
                              @RequestParam(value = "size", defaultValue = "9") int size,
                              @RequestParam(value = "searchType", required = false) String searchType,
                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                             Model model) {
+                             Model model,
+                             @ModelAttribute("userCode") Integer userCode,
+                             @ModelAttribute("adminId") String adminId) {
 
         // 게시판 ID 설정
         int boardId = 8;    // 자유게시판 ID
@@ -845,7 +887,10 @@ public class BoardController {
 
     // 고독한 캠핑방 게시글 페이지
     @RequestMapping("boardimage-post.action")
-    public String boardImagePost(@RequestParam(value="postId", required=false, defaultValue="0") int postId, Model model) {
+    public String boardImagePost(@RequestParam(value="postId", required=false, defaultValue="0") int postId,
+                                 Model model,
+                                 @ModelAttribute("userCode") Integer userCode,
+                                 @ModelAttribute("adminId") String adminId) {
         if (postId > 0) {
             BoardPostDTO dto = new BoardPostDTO();
             dto.setPostId(postId);
@@ -866,7 +911,9 @@ public class BoardController {
                                              @RequestParam(value = "searchType", required = false) String searchType,
                                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                              @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
-                                             @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson) {
+                                             @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
+                                             @ModelAttribute("userCode") Integer userCode,
+                                             @ModelAttribute("adminId") String adminId) {
 
         Map<String, Object> result = new HashMap<>();
         int boardId = 8;    // 고독한캠핑방 ID
@@ -960,7 +1007,8 @@ public class BoardController {
 
     // 고독한 캠핌방 글쓰기
     @RequestMapping("/boardimage-write.action")
-    public String boardImageWrite(){
+    public String boardImageWrite(@ModelAttribute("userCode") Integer userCode,
+                                  @ModelAttribute("adminId") String adminId) {
         return "boardImage-write";
     }
 
@@ -972,7 +1020,9 @@ public class BoardController {
                          @RequestParam(value = "searchType", required = false) String searchType,
                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                          HttpSession session,
-                         Model model) {
+                         Model model,
+                         @ModelAttribute("userCode") Integer userCode,
+                         @ModelAttribute("adminId") String adminId) {
         // 게시판 ID 설정
         int boardId = 1; // 공지사항
 
@@ -1011,7 +1061,9 @@ public class BoardController {
                              @RequestParam(value = "searchType", required = false) String searchType,
                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                              @RequestParam(value = "postId", required = false, defaultValue = "0") int postId,
-                             Model model) {
+                             Model model,
+                             @ModelAttribute("userCode") Integer userCode,
+                             @ModelAttribute("adminId") String adminId) {
         // 게시글이 존재하는 경우
         if (postId > 0) {
             // 게시글 정보 조회
@@ -1080,20 +1132,28 @@ public class BoardController {
 
     // 공지사항 작성 페이지
     @RequestMapping(value = "/notice-write.action", method = RequestMethod.GET)
-    public String noticeWrite(Model model, HttpSession session) {
+    public String noticeWrite(Model model,
+                              HttpSession session,
+                              @ModelAttribute("userCode") Integer userCode,
+                              @ModelAttribute("adminId") String adminId) {
         // 관리자 권한 확인 (관리자만 공지사항 작성 가능)
 //        Integer userCode = (Integer) session.getAttribute("user_code");
 //        Integer userGrade = (Integer) session.getAttribute("user_grade");
 
         // 테스트를 위해 세션에 관리자 정보 직접 설정
-        session.setAttribute("user_code", 1);  // ADMIN1 계정의 user_code
-        session.setAttribute("user_grade", 1); // 관리자 등급
+//        session.setAttribute("user_code", 1);  // ADMIN1 계정의 user_code
+//        session.setAttribute("user_grade", 1); // 관리자 등급
 
         // 관리자가 아니면 공지사항 목록으로 리다이렉트
         // userGrade 값이 1인 경우 관리자로 가정 (실제 구현에 맞게 수정 필요)
 //        if (userGrade == null || userGrade > 1) {
 //            return "redirect:/notice.action";
 //        }
+
+        // adminId 여부로 접근 제한
+        if (adminId == null) {
+            return "redirect:/notice.action"; // 관리자 아니면 진입 제한
+        }
 
         // 공지사항 게시판의 말머리 목록 조회 (boardId = 1)
         List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(1);
@@ -1108,7 +1168,9 @@ public class BoardController {
     public String insertNotice(BoardPostDTO dto,
                                @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
                                HttpServletRequest request,
-                               HttpSession session) {
+                               HttpSession session,
+                               @ModelAttribute("userCode") Integer userCode,
+                               @ModelAttribute("adminId") String adminId) {
         // 관리자 권한 확인
 //        Integer userCode = (Integer) session.getAttribute("user_code");
 //        Integer userGrade = (Integer) session.getAttribute("user_grade");
@@ -1122,15 +1184,20 @@ public class BoardController {
 //        dto.setBoardId(1);
 //        dto.setUserCode(userCode);
 
-        // 테스트를 위해 세션에 관리자 정보 직접 설정 (없는 경우에만)
-        if (session.getAttribute("user_code") == null) {
-            session.setAttribute("user_code", 1);
-            session.setAttribute("user_grade", 1);
+//        // 테스트를 위해 세션에 관리자 정보 직접 설정 (없는 경우에만)
+//        if (session.getAttribute("user_code") == null) {
+//            session.setAttribute("user_code", 1);
+//            session.setAttribute("user_grade", 1);
+//        }
+
+        // 관리자 권한 확인
+        if (adminId == null) {
+            return "redirect:/notice.action";
         }
 
         // 게시판 ID를 공지사항(1)으로 강제 설정
         dto.setBoardId(1);
-        dto.setUserCode(1); // 강제로 ADMIN1 계정의 user_code 설정
+        dto.setUserCode(userCode); // 로그인된 userCode를 설정
 
         try {
             // 공지사항 등록
@@ -1191,13 +1258,22 @@ public class BoardController {
 
     // 공지사항 수정 페이지
     @RequestMapping("/notice-update.action")
-    public String noticeUpdate(@RequestParam("postId") int postId, HttpSession session, Model model) {
-        // 관리자 권한 확인
-        Integer userCode = (Integer) session.getAttribute("user_code");
-        Integer userGrade = (Integer) session.getAttribute("user_grade");
+    public String noticeUpdate(@RequestParam("postId") int postId,
+                               HttpSession session,
+                               Model model,
+                               @ModelAttribute("userCode") Integer userCode,
+                               @ModelAttribute("adminId") String adminId) {
+//        // 관리자 권한 확인
+//        Integer userCode = (Integer) session.getAttribute("user_code");
+//        Integer userGrade = (Integer) session.getAttribute("user_grade");
+//
+//        // 관리자가 아니면 공지사항 목록으로 리다이렉트
+//        if (userGrade == null || userGrade > 1) {
+//            return "redirect:/notice.action";
+//        }
 
-        // 관리자가 아니면 공지사항 목록으로 리다이렉트
-        if (userGrade == null || userGrade > 1) {
+        // 관리자 권한 확인
+        if (adminId == null) {
             return "redirect:/notice.action";
         }
 
@@ -1224,16 +1300,26 @@ public class BoardController {
     // 공지사항 수정 처리를 위한 API
     @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateNotice(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> updateNotice(@RequestBody BoardPostDTO dto,
+                                            HttpSession session,
+                                            @ModelAttribute("userCode") Integer userCode,
+                                            @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 관리자 권한 확인
-            Integer userCode = (Integer) session.getAttribute("user_code");
-            Integer userGrade = (Integer) session.getAttribute("user_grade");
+//            // 관리자 권한 확인
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//            Integer userGrade = (Integer) session.getAttribute("user_grade");
+//
+//            // 관리자가 아니면 권한 없음 응답
+//            if (userGrade == null || userGrade > 1) {
+//                result.put("success", false);
+//                result.put("message", "공지사항 관리 권한이 없습니다.");
+//                return result;
+//            }
 
-            // 관리자가 아니면 권한 없음 응답
-            if (userGrade == null || userGrade > 1) {
+            // 관리자 권한 확인
+            if (adminId == null) {
                 result.put("success", false);
                 result.put("message", "공지사항 관리 권한이 없습니다.");
                 return result;
@@ -1274,18 +1360,30 @@ public class BoardController {
     // 공지사항 삭제 처리를 위한 API
     @RequestMapping(value = "/api/notice/delete.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> deleteNotice(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> deleteNotice(@RequestBody BoardPostDTO dto,
+                                            HttpSession session,
+                                            @ModelAttribute("userCode") Integer userCode,
+                                            @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 세션에서 관리자 정보 가져오기
-            Integer userGrade = (Integer) session.getAttribute("user_grade");
-            Integer userCode = (Integer) session.getAttribute("user_code");
+//            // 세션에서 관리자 정보 가져오기
+//            Integer userGrade = (Integer) session.getAttribute("user_grade");
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//
+//            System.out.println("삭제 요청 - 관리자 등급: " + userGrade + ", 관리자 코드: " + userCode);
 
-            System.out.println("삭제 요청 - 관리자 등급: " + userGrade + ", 관리자 코드: " + userCode);
+//            // 관리자가 아니면 권한 없음 응답
+//            if (userGrade == null || userGrade > 1) {
+//                result.put("success", false);
+//                result.put("message", "공지사항 관리 권한이 없습니다.");
+//                return result;
+//            }
 
-            // 관리자가 아니면 권한 없음 응답
-            if (userGrade == null || userGrade > 1) {
+            System.out.println("삭제 요청 - 관리자 코드: " + userCode);
+
+            // 관리자 권한 확인
+            if (adminId == null) {
                 result.put("success", false);
                 result.put("message", "공지사항 관리 권한이 없습니다.");
                 return result;
@@ -1329,7 +1427,8 @@ public class BoardController {
 //----------------------------------------------------------------------------------------------------------------------
     // 이벤트 페이지
     @RequestMapping("/event.action")
-    public String event(){
+    public String event(@ModelAttribute("userCode") Integer userCode,
+                        @ModelAttribute("adminId") String adminId){
         return "event";
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -1337,18 +1436,21 @@ public class BoardController {
     // 추천 수 증가
     @RequestMapping(value = "/api/post/recommend.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> recommendPost(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> recommendPost(@RequestBody BoardPostDTO dto,
+                                             HttpSession session,
+                                             @ModelAttribute("userCode") Integer userCode,
+                                             @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 로그인 사용자 확인
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
-            // 테스트용 임시 코드
-            if (userCode == null) {
-                userCode = 2;
-                session.setAttribute("user_code", userCode);
-            }
+//            // 로그인 사용자 확인
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//
+//            // 테스트용 임시 코드
+//            if (userCode == null) {
+//                userCode = 2;
+//                session.setAttribute("user_code", userCode);
+//            }
 
             // 사용자 코드 설정
             dto.setUserCode(userCode);
@@ -1396,18 +1498,21 @@ public class BoardController {
     // 추천 상태 확인 API
     @RequestMapping(value = "/api/post/checkRecommend.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> checkRecommendStatus(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> checkRecommendStatus(@RequestBody BoardPostDTO dto,
+                                                    HttpSession session,
+                                                    @ModelAttribute("userCode") Integer userCode,
+                                                    @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 로그인 사용자 확인
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
-            // 테스트용 임시 코드
-            if (userCode == null) {
-                userCode = 2;
-                session.setAttribute("user_code", userCode);
-            }
+//            // 로그인 사용자 확인
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//
+//            // 테스트용 임시 코드
+//            if (userCode == null) {
+//                userCode = 2;
+//                session.setAttribute("user_code", userCode);
+//            }
 
             // 사용자 코드 설정
             dto.setUserCode(userCode);
@@ -1430,17 +1535,20 @@ public class BoardController {
     // 북마크 API
     @RequestMapping(value = "/api/post/bookmark.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> bookmarkPost(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> bookmarkPost(@RequestBody BoardPostDTO dto,
+                                            HttpSession session,
+                                            @ModelAttribute("userCode") Integer userCode,
+                                            @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try{
-            // 로그인 사용자 확인
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
-            if (userCode == null) {
-                userCode = 2;
-                session.setAttribute("user_code", userCode);
-            }
+//            // 로그인 사용자 확인
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//
+//            if (userCode == null) {
+//                userCode = 2;
+//                session.setAttribute("user_code", userCode);
+//            }
 
             // 사용자 코드 설정
             dto.setUserCode(userCode);
@@ -1485,18 +1593,21 @@ public class BoardController {
     // 북마크 상태 확인 API
     @RequestMapping(value = "/api/post/checkbookmark.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> checkBookmark(@RequestBody BoardPostDTO dto, HttpSession session) {
+    public Map<String, Object> checkBookmark(@RequestBody BoardPostDTO dto,
+                                             HttpSession session,
+                                             @ModelAttribute("userCode") Integer userCode,
+                                             @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 로그인 사용자 확인
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
-            // 테스트용 임시 코드 (실제 구현시 제거)
-            if (userCode == null) {
-                userCode = 2;
-                session.setAttribute("user_code", userCode);
-            }
+//            // 로그인 사용자 확인
+//            Integer userCode = (Integer) session.getAttribute("user_code");
+//
+//            // 테스트용 임시 코드 (실제 구현시 제거)
+//            if (userCode == null) {
+//                userCode = 2;
+//                session.setAttribute("user_code", userCode);
+//            }
 
             // 사용자 코드 설정
             dto.setUserCode(userCode);
