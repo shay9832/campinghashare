@@ -17,6 +17,12 @@ public class UserController {
     @Autowired
     private SqlSession sqlSession;
 
+    // 서버 재시작 시 최초 페이지 설정
+    @RequestMapping("/")
+    public String rootRedirect() {
+        return "redirect:/main.action";
+    }
+
     // 로그인 페이지 진입
     @RequestMapping(value = "/login-user.action", method = RequestMethod.GET)
     public String loginPage() {
@@ -61,15 +67,14 @@ public class UserController {
         Object loginAdmin = session.getAttribute("loginAdmin");
 
         if (loginUser instanceof UserDTO) {
-            UserDTO user = (UserDTO) loginUser;
-            model.addAttribute("user", user);
+            model.addAttribute("user", (UserDTO) loginUser);
         } else if (loginAdmin instanceof AdminDTO) {
-            AdminDTO admin = (AdminDTO) loginAdmin;
-            model.addAttribute("admin", admin);
+            model.addAttribute("admin", (AdminDTO) loginAdmin);
         }
+
+        // 로그인 안 된 상태라도 return "main" 허용
         return "main";
     }
-
 
     // 로그아웃 처리
     @RequestMapping(value = "/logout.action", method = RequestMethod.GET)

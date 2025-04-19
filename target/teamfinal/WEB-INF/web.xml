@@ -25,12 +25,14 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
     </init-param>
-    <load-on-startup>1</load-on-startup>
+
     <multipart-config>
-      <max-file-size>10485760</max-file-size> <!-- 10MB -->
-      <max-request-size>20971520</max-request-size> <!-- 20MB -->
-      <file-size-threshold>0</file-size-threshold>
+      <max-file-size>52428800</max-file-size>         <!-- 50MB = 50 * 1024 * 1024 -->
+      <max-request-size>209715200</max-request-size>  <!-- 200MB = 200 * 1024 * 1024 -->
+      <file-size-threshold>0</file-size-threshold>     <!-- 임시 파일 저장 임계값 -->
     </multipart-config>
+
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
