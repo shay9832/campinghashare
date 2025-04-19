@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:25
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko"> <!-- 한국어 페이지 설정 -->
@@ -17,10 +10,7 @@
 </head>
 
 <body>
-<!-- 헤더 영역 - 페이지 상단 타이틀 -->
-<div id="header">
-    <h1>관리자 시스템</h1>
-</div>
+<jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
 <!-- 메인 컨테이너 -->
 <div id="container">
@@ -56,7 +46,7 @@
         <!-- 결제 관리 메뉴 -->
         <button class="menu-button">결제 관리</button>
         <div class="submenu">
-            <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+            <form action="${pageContext.request.contextPath}/admin-payment.action" method="get">
                 <button type="submit" class="submenu-btn">결제 관리</button>
             </form>
         </div>

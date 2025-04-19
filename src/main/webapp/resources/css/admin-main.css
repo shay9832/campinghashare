@@ -7,14 +7,18 @@ body {
 
 /* 상단 헤더 영역 스타일링 */
 #header {
-    height: 60px; /* 헤더 높이 설정 */
-    background-color: #3f861d; /* 헤더 배경색 (어두운 회색) */
-    color: white; /* 헤더 내 텍스트 색상 */
-    width: 100%; /* 헤더가 화면 가로 전체를 차지하도록 설정 */
-    padding: 10px; /* 헤더 내부 여백 */
-    box-sizing: border-box; /* 패딩을 포함한 크기 계산 방식 */
-    display: flex; /* 자식 요소 배치를 위한 플렉스 박스 사용 */
-    align-items: center; /* 자식 요소를 세로 중앙에 배치 */
+    position: sticky; /* 상단 고정 */
+    top: 0; /* 브라우저 상단에 고정 */
+    z-index: 999; /* 다른 요소보다 위에 배치 */
+    height: 60px;
+    background-color: #3f861d;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 좌우 정렬을 위한 속성 추가 */
 }
 
 /* 헤더 내 제목 스타일링 */

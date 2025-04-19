@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IAdminInspectListDAO {
@@ -24,13 +25,16 @@ public interface IAdminInspectListDAO {
     //장비 등급 테이블 조회
     List<AdminInspectListDTO> getEquipList();
 
+    //반환 ID에 해당하는 원래 배송 ID를 찾는 메소드
+    Integer getDeliveryIdFromReturnId(Integer returnId);
+
 
 
     // 검수 결과 추가 - DTO 사용
     void add(AdminInspectListDTO dto);
 
     // 확장된 프로시저 호출 메소드
-    void callINSPECT_RESULT_EXTENDED(
+    void callINSPECT_RESULT(
             @Param("platformDeliveryId") Integer platformDeliveryId,
             @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
             @Param("inspecGradeId") Integer inspecGradeId,

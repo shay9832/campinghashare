@@ -360,6 +360,10 @@
             <button class="banner-next"><i class="fas fa-chevron-right"></i></button>
         </div>
 
+        <c:if test="${not empty sessionScope.loginAdmin}">
+            <button type="submit" class="btn-admin-page" onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">관리자 권한 테스트용</button>
+        </c:if>
+
         <!-- 필터 영역 -->
         <div class="filter-container">
             <div class="filter-content">
@@ -416,7 +420,7 @@
         <!-- 스토렌 MD Pick 섹션 -->
         <div class="section-title">
             <h2>스토렌 MD Pick!</h2>
-            <a href="#" class="view-all">전체보기</a>
+            <a href="${pageContext.request.contextPath}/rentalsearch-main.action?tab=storen" class="view-all">전체보기</a>
         </div>
         <div class="item-slider" id="md-picks">
             <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>
@@ -556,7 +560,7 @@
         <!-- 최근 등록된 렌탈 상품 섹션 -->
         <div class="section-title">
             <h2>최근 등록된 렌탈 상품</h2>
-            <a href="#" class="view-all">전체보기</a>
+            <a href="${pageContext.request.contextPath}/rentalsearch-main.action?tab=rental" class="view-all">전체보기</a>
         </div>
         <div class="item-slider" id="recent-products">
             <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>

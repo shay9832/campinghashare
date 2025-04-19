@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.Interface.IStorenDAO;
 import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.BrandDTO;
 import com.team.mvc.DTO.CategoryDTO;
@@ -19,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.io.File;
 import java.util.*;
 
@@ -46,7 +49,6 @@ public class EquipRegisterController {
         categoryIcons.put("냉/난방용품", "fa-solid fa-fan");
         categoryIcons.put("수납/운반용품", "fa-solid fa-box");
         categoryIcons.put("기타", "fa-solid fa-grip");
-
 
         model.addAttribute("majorCategory", majorCategory);
         model.addAttribute("categoryIcons", categoryIcons);
@@ -88,6 +90,7 @@ public class EquipRegisterController {
             model.addAttribute("brands", brands);
             model.addAttribute("majorCategory", majorCategory);
             model.addAttribute("middleCategory", middleCategory);
+            System.out.println(brands.get(0).getBrandName());
 
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -109,47 +112,41 @@ public class EquipRegisterController {
     }
 
 
-    // 장비명 검색창에 장비명 데이터 불러오기
+    // 검색창에 장비명, 신품가격 데이터 불러오기
     @RequestMapping(value = "/listequipnamesbybrandid.action")
     @ResponseBody
-    public List<String> listEquipNamesByBrand(@RequestParam("brand") String brand) {
-//        System.out.println("브랜드명: " + brand);
-
-        // 임시 데이터 반환
-//        List<String> sampleEquipNames = new ArrayList<>();
-//        sampleEquipNames.add("아메니티 돔 M");
-//        sampleEquipNames.add("랜드 브리즈 M");
-//        sampleEquipNames.add("랜드 로지 Pro. M");
-//        sampleEquipNames.add("기타");
-//
-//        return sampleEquipNames;
+    public List<Map<String, Object>> listEquipNamesByBrand(@RequestParam("brand") String brand) {
+        System.out.println("브랜드명: " + brand);
 
         try {
-            // 브랜드 ID 조화
+            // 브랜드 ID 조회
             List<BrandDTO> brandList = sqlSession.getMapper(IBrandDAO.class).getBrandByName(brand);
-//          System.out.println("브랜드 목록 조회 결과: " + (brandList != null ? brandList.size() : "null"));
+            System.out.println("브랜드 목록 조회 결과: " + (brandList != null ? brandList.size() : "null"));
 
             if (brandList == null || brandList.isEmpty()) {
-                return Collections.singletonList("기타");
+                return Collections.emptyList();
             }
 
             int brandId = brandList.get(0).getBrandId();
 
             // 해당 브랜드의 장비명 목록 조회
-            List<String> equipNames = sqlSession.getMapper(IEquipmentDAO.class).listEquipNamesByBrand(brandId);
+            List<Map<String, Object>> equipList = sqlSession.getMapper(IEquipmentDAO.class).listEquipNamesByBrand(brandId);
+            System.out.println("장비명 목록 조회 결과: " + (equipList != null ? equipList.size() : "null"));
 
-            return equipNames;
+            return equipList;
 
         } catch (Exception e) {
             System.out.println("에러 발생: " + e.toString());
-            // 로깅 및 에러 처리
-            return Collections.singletonList("기타");
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 
     // 장비 등록 완료 페이지로 이동 (장비 정보는 테이블에 저장)
     @RequestMapping(value = "/equipregister-complete.action", method = RequestMethod.POST)
-    public String equipComplete(@RequestParam("majorCategory") String majorCategory,
+    public String equipComplete(
+                                @ModelAttribute("userCode") Integer userCode,
+                                @RequestParam("majorCategory") String majorCategory,
                                 @RequestParam("middleCategory") String middleCategory,
                                 @RequestParam("brand") String brand,
                                 @RequestParam("equipName") String equipName,
@@ -167,13 +164,8 @@ public class EquipRegisterController {
         System.out.println("사진 있음: " + (photos != null ? "예" : "아니오"));
 
         try {
-            // 현재 로그인한 회원의 user_code 가져오기
-//            Integer user_code = (Integer) session.getAttribute("user_code");
-//            if (user_code == null) {
-//                return "redirect:/userlogin.action";
-//            }
-            int user_code = 1;
-            System.out.println("테스트용 User Code: " + user_code);
+            int user_code = userCode;
+            System.out.println("User Code: " + user_code);
 
             // 대분류 카테고리 ID 조회
             List<CategoryDTO> majorCategoryList = sqlSession.getMapper(ICategoryDAO.class).listCategoryByName(majorCategory);
@@ -302,6 +294,36 @@ public class EquipRegisterController {
                     + "&middleCategory=" + middleCategory + "&brand=" + brand);
             return "redirect";
         }
+    }
+
+    // 장비명으로 평균 가격 정보 조회 API
+    @RequestMapping(value = "/getAvgPricesByEquipName.action", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getAvgPricesByEquipName(@RequestParam("equipName") String equipName) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+            int avgNewPrice = storenDAO.getAvgNewPriceByEquipName(equipName);
+            int avgRentalPrice = storenDAO.getAvgRentalPriceByEquipName(equipName);
+
+            // 포맷 처리
+            NumberFormat nf = NumberFormat.getInstance(Locale.KOREA);
+
+            result.put("success", true);
+            result.put("avgNewPrice", avgNewPrice);
+            result.put("avgRentalPrice", avgRentalPrice);
+            result.put("formattedNewPrice", nf.format(avgNewPrice));
+            result.put("formattedRentalPrice", nf.format(avgRentalPrice));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", e.getMessage());
+        }
+
+        return result;
     }
 
 }

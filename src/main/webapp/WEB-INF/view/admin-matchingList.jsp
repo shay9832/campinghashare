@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko"> <!-- 한국어 페이지 설정 -->
@@ -8,10 +9,7 @@
 </head>
 
 <body>
-<!-- 헤더 영역 - 페이지 상단 타이틀 -->
-<div id="header">
-  <h1>관리자 시스템</h1>
-</div>
+<jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
 <!-- 메인 컨테이너 -->
 <div id="container">
@@ -47,7 +45,7 @@
     <!-- 결제 관리 메뉴 -->
     <button class="menu-button">결제 관리</button>
     <div class="submenu">
-      <form action="${pageContext.request.contextPath}/admin-payUpdate.action" method="get">
+      <form action="${pageContext.request.contextPath}/admin-payment.action" method="get">
         <button type="submit" class="submenu-btn">결제 관리</button>
       </form>
     </div>
@@ -136,8 +134,7 @@
 
     <!-- 렌탈 타입 탭 메뉴 -->
     <div class="rental-type-tabs">
-      <div class="rental-tab active" data-tab="all-rentals">전체 렌탈</div>
-      <div class="rental-tab" data-tab="store-rentals">스토렌</div>
+      <div class="rental-tab active" data-tab="store-rentals">스토렌</div>
       <div class="rental-tab" data-tab="regular-rentals">일반렌탈</div>
     </div>
 
@@ -158,7 +155,6 @@
 
       <span>렌탈타입</span>
       <select>
-        <option>전체</option>
         <option>스토렌</option>
         <option>일반렌탈</option>
       </select>
@@ -179,140 +175,6 @@
       <!-- 검색 버튼 -->
       <div class="content-search-btn">
         <input type="button" value="검색하기">
-      </div>
-    </div>
-
-    <!-- 전체 렌탈 영역 -->
-    <div id="all-rentals" class="content-area active">
-      <!-- 매칭현황 요약 - 주요 통계 -->
-      <div class="matching-summary">
-        <div class="summary-box total-matches">
-          <span>전체 매칭 건수: 356건</span>
-        </div>
-        <div class="summary-box pending-matches">
-          <span>승인대기: 42건</span>
-        </div>
-        <div class="summary-box approved-matches">
-          <span>승인완료: 314건</span>
-        </div>
-        <div class="summary-box current-rentals">
-          <span>현재 렌탈중: 68건</span>
-        </div>
-      </div>
-
-      <!-- 매칭현황 테이블 - 가로 스크롤 가능 -->
-      <div class="matching-table">
-        <table>
-          <tr>
-            <!-- 테이블 헤더 - 각 열의 제목 -->
-          <tr>
-            <!-- 테이블 헤더 - 각 열의 제목 -->
-            <th class="col-rental-id">렌탈ID</th>
-            <th class="col-rental-type">렌탈타입</th>
-            <th class="col-rental-title">렌탈제목</th>
-            <th class="col-equipment-code">장비코드</th>
-            <th class="col-equipment-name">장비명</th>
-            <th class="col-owner-code">소유자코드</th>
-            <th class="col-applicant-code">신청자코드</th>
-            <th class="col-rental-start">렌탈_시작일</th>
-            <th class="col-rental-end">렌탈_종료일</th>
-            <th class="col-application-date">매칭신청일</th>
-            <th class="col-matching-status">매칭상태</th>
-            <th class="col-approval-date">승인_일자</th>
-          </tr>
-          </tr>
-
-          <!-- 매칭현황 데이터 행 -->
-          <tr>
-            <td>8532</td>
-            <td><span class="rental-type-badge type-store">스토렌</span></td>
-            <td><span class="rental-title">소니 A7S3 미러리스 카메라 대여합니다</span></td>
-            <td>E2025410</td>
-            <td>소니 A7S3</td>
-            <td>U78245</td>
-            <td>U56981</td>
-            <td>2025-04-10</td>
-            <td>2025-04-15</td>
-            <td>2025-04-05</td>
-            <td><span class="status-badge status-pending">승인대기</span></td>
-            <td>-</td>
-          </tr>
-
-          <tr>
-            <td>8531</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">캐논 24-70mm F2.8 L II USM 줌렌즈 단기대여</span></td>
-            <td>E2025308</td>
-            <td>캐논 24-70mm</td>
-            <td>U34509</td>
-            <td>U29876</td>
-            <td>2025-04-08</td>
-            <td>2025-04-20</td>
-            <td>2025-04-04</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-05</td>
-          </tr>
-
-          <tr>
-            <td>8528</td>
-            <td><span class="rental-type-badge type-store">스토렌</span></td>
-            <td><span class="rental-title">DJI 매빅 3 프로 드론 최저가 대여</span></td>
-            <td>E2025185</td>
-            <td>DJI 매빅 3 프로</td>
-            <td>U18753</td>
-            <td>U62314</td>
-            <td>2025-04-12</td>
-            <td>2025-04-14</td>
-            <td>2025-04-03</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-04</td>
-          </tr>
-
-          <tr>
-            <td>8526</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">맥북 프로 16인치 M3 맥스 주말대여</span></td>
-            <td>E2025097</td>
-            <td>맥북 프로 16인치</td>
-            <td>U44812</td>
-            <td>U31578</td>
-            <td>2025-04-13</td>
-            <td>2025-04-14</td>
-            <td>2025-04-02</td>
-            <td><span class="status-badge status-pending">승인대기</span></td>
-            <td>-</td>
-          </tr>
-
-          <tr>
-            <td>8525</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">삼성 Z 폴드5 스마트폰 단기 대여</span></td>
-            <td>E2024975</td>
-            <td>삼성 Z 폴드5</td>
-            <td>U52189</td>
-            <td>U28763</td>
-            <td>2025-04-06</td>
-            <td>2025-04-09</td>
-            <td>2025-04-01</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-02</td>
-          </tr>
-        </table>
-      </div>
-
-      <!-- 페이지네이션 -->
-      <div class="pagination">
-        <button class="page-btn first-page">&laquo;</button>
-        <button class="page-btn prev-page">&lt;</button>
-        <div class="page-numbers">
-          <button class="page-btn active">1</button>
-          <button class="page-btn">2</button>
-          <button class="page-btn">3</button>
-          <button class="page-btn">4</button>
-          <button class="page-btn">5</button>
-        </div>
-        <button class="page-btn next-page">&gt;</button>
-        <button class="page-btn last-page">&raquo;</button>
       </div>
     </div>
 
@@ -339,65 +201,31 @@
         <table>
           <tr>
             <!-- 테이블 헤더 - 각 열의 제목 -->
-            <th class="col-rental-id">렌탈ID</th>
-            <th class="col-rental-type">렌탈타입</th>
-            <th class="col-rental-title">렌탈제목</th>
-            <th class="col-equipment-code">장비코드</th>
-            <th class="col-equipment-name">장비명</th>
-            <th class="col-owner-code">소유자코드</th>
-            <th class="col-applicant-code">신청자코드</th>
-            <th class="col-rental-start">렌탈_시작일</th>
-            <th class="col-rental-end">렌탈_종료일</th>
-            <th class="col-application-date">매칭신청일</th>
-            <th class="col-matching-status">매칭상태</th>
-            <th class="col-approval-date">승인_일자</th>
+            <th class="col-storen-id">스토렌ID</th>
+            <th class="col-equip-code">장비코드</th>
+            <th class="col-storen-title">스토렌제목</th>
+            <th class="col-storen-required-code">매칭신청자코드</th>
+            <th class="col-rental-start">렌탈시작일</th>
+            <th class="col-rental-end">렌탈종료일</th>
+            <th class="col-matching-start">매칭신청일</th>
+            <th class="col-approve-status">승인여부</th>
+            <th class="col-approve-start">승인일자</th>
           </tr>
-
-          <!-- 매칭현황 데이터 행 - 스토렌만 표시 -->
-          <tr>
-            <td>8532</td>
-            <td><span class="rental-type-badge type-store">스토렌</span></td>
-            <td><span class="rental-title">소니 A7S3 미러리스 카메라 대여합니다</span></td>
-            <td>E2025410</td>
-            <td>소니 A7S3</td>
-            <td>U78245</td>
-            <td>U56981</td>
-            <td>2025-04-10</td>
-            <td>2025-04-15</td>
-            <td>2025-04-05</td>
-            <td><span class="status-badge status-pending">승인대기</span></td>
-            <td>-</td>
-          </tr>
-
-          <tr>
-            <td>8528</td>
-            <td><span class="rental-type-badge type-store">스토렌</span></td>
-            <td><span class="rental-title">DJI 매빅 3 프로 드론 최저가 대여</span></td>
-            <td>E2025185</td>
-            <td>DJI 매빅 3 프로</td>
-            <td>U18753</td>
-            <td>U62314</td>
-            <td>2025-04-12</td>
-            <td>2025-04-14</td>
-            <td>2025-04-03</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-04</td>
-          </tr>
-
-          <tr>
-            <td>8523</td>
-            <td><span class="rental-type-badge type-store">스토렌</span></td>
-            <td><span class="rental-title">아이패드 프로 12.9인치 5세대 상태 최상</span></td>
-            <td>E2024897</td>
-            <td>아이패드 프로 12.9</td>
-            <td>U18753</td>
-            <td>U75432</td>
-            <td>2025-04-05</td>
-            <td>2025-04-12</td>
-            <td>2025-03-31</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-01</td>
-          </tr>
+          <!-- 스토렌현황 데이터 행 -->
+          <!--스토렌ID, "장비_코드", "스토렌_제목", "스토렌매칭신청자코드", "렌탈_시작일", "렌탈_종료일", "매칭신청일", "승인여부", "승인_일자"-->
+          <c:forEach var="storen" items="${getList}">
+            <tr>
+             <td>${storen.storenId}</td>
+             <td>${storen.equipCode}</td>
+             <td>${storen.storenTitle}</td>
+             <td>${storen.storenMatchingReq}</td>
+             <td>${storen.rentalStart}</td>
+             <td>${storen.rentalEnd}</td>
+             <td>${storen.matchingStart}</td>
+             <td>${storen.approveStatus}</td>
+             <td>${storen.approveDate}</td>
+            </tr>
+          </c:forEach>
         </table>
       </div>
 
@@ -441,64 +269,30 @@
           <tr>
             <!-- 테이블 헤더 - 각 열의 제목 -->
             <th class="col-rental-id">렌탈ID</th>
-            <th class="col-rental-type">렌탈타입</th>
+            <th class="col-equip-code">장비코드</th>
             <th class="col-rental-title">렌탈제목</th>
-            <th class="col-equipment-code">장비코드</th>
-            <th class="col-equipment-name">장비명</th>
-            <th class="col-owner-code">소유자코드</th>
-            <th class="col-applicant-code">신청자코드</th>
-            <th class="col-rental-start">렌탈_시작일</th>
-            <th class="col-rental-end">렌탈_종료일</th>
-            <th class="col-application-date">매칭신청일</th>
-            <th class="col-matching-status">매칭상태</th>
-            <th class="col-approval-date">승인_일자</th>
+            <th class="col-rental-required-code">렌탈신청자코드</th>
+            <th class="col-rental-start">렌탈시작일</th>
+            <th class="col-rental-end">렌탈종료일</th>
+            <th class="col-matching-start">매칭신청일</th>
+            <th class="col-approve-status">승인여부</th>
+            <th class="col-approve-start">승인일자</th>
           </tr>
 
           <!-- 매칭현황 데이터 행 - 일반렌탈만 표시 -->
+          <c:forEach var="rental" items="${getLists}">
           <tr>
-            <td>8531</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">캐논 24-70mm F2.8 L II USM 줌렌즈 단기대여</span></td>
-            <td>E2025308</td>
-            <td>캐논 24-70mm</td>
-            <td>U34509</td>
-            <td>U29876</td>
-            <td>2025-04-08</td>
-            <td>2025-04-20</td>
-            <td>2025-04-04</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-05</td>
+            <td>${rental.rentalId}</td>
+            <td>${rental.equipCode}</td>
+            <td>${rental.rentalTitle}</td>
+            <td>${rental.rentalMatchingReq}</td>
+            <td>${rental.rentalStart}</td>
+            <td>${rental.rentalEnd}</td>
+            <td>${rental.matchingStart}</td>
+            <td>${rental.approveStatus}</td>
+            <td>${rental.approveDate}</td>
           </tr>
-
-          <tr>
-            <td>8526</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">맥북 프로 16인치 M3 맥스 주말대여</span></td>
-            <td>E2025097</td>
-            <td>맥북 프로 16인치</td>
-            <td>U44812</td>
-            <td>U31578</td>
-            <td>2025-04-13</td>
-            <td>2025-04-14</td>
-            <td>2025-04-02</td>
-            <td><span class="status-badge status-pending">승인대기</span></td>
-            <td>-</td>
-          </tr>
-
-          <tr>
-            <td>8525</td>
-            <td><span class="rental-type-badge type-regular">일반렌탈</span></td>
-            <td><span class="rental-title">삼성 Z 폴드5 스마트폰 단기 대여</span></td>
-            <td>E2024975</td>
-            <td>삼성 Z 폴드5</td>
-            <td>U52189</td>
-            <td>U28763</td>
-            <td>2025-04-06</td>
-            <td>2025-04-09</td>
-            <td>2025-04-01</td>
-            <td><span class="status-badge status-approved">승인완료</span></td>
-            <td>2025-04-02</td>
-          </tr>
+          </c:forEach>
         </table>
       </div>
 
@@ -546,6 +340,11 @@
       // 렌탈 타입 탭 기능 구현
       document.addEventListener('DOMContentLoaded', function() {
         const tabs = document.querySelectorAll('.rental-tab');
+
+        // 페이지 로드 시 첫 번째 탭(스토렌)을 기본으로 활성화
+        const defaultTab = document.querySelector('[data-tab="store-rentals"]');
+        defaultTab.classList.add('active');
+        document.getElementById('store-rentals').classList.add('active');
 
         tabs.forEach(tab => {
           tab.addEventListener('click', function() {

@@ -5,28 +5,35 @@
 
 <mapper namespace="com.team.mvc.Interface.IAdminDAO">
 
-    <!-- 로그인: ADMIN_ID + ADMIN_PW -->
+    <!-- 로그인 처리용 -->
     <select id="getAdminByIdAndPw" parameterType="com.team.mvc.DTO.AdminDTO" resultType="com.team.mvc.DTO.AdminDTO">
+        SELECT * FROM ADMINS
+        WHERE ADMIN_ID = #{adminId}
+          AND ADMIN_PW = #{adminPw}
+    </select>
+
+    <!-- 관리자 ID로 단일 조회 -->
+    <select id="getAdminById" parameterType="String" resultType="com.team.mvc.DTO.AdminDTO">
         SELECT
-        ADMIN_ID AS adminId,
-        ADMIN_PW AS adminPw,
-        ADMIN_TEL,
-        USER_CODE
+            ADMIN_ID AS adminId,
+            ADMIN_PW AS adminPw,
+            ADMIN_TEL AS adminTel,
+            USER_CODE AS userCode,
+            CREATED_DATE AS createdDate
         FROM ADMINS
         WHERE ADMIN_ID = #{adminId}
-        AND ADMIN_PW = #{adminPw}
     </select>
+
 
     <!-- 관리자 등록 -->
     <insert id="insertAdmin" parameterType="com.team.mvc.DTO.AdminDTO">
-        INSERT INTO ADMINS (
-            ADMIN_ID,
-            ADMIN_PW,
-            ADMIN_TEL,
-            USER_CODE
-        )
+        INSERT INTO ADMINS (ADMIN_ID, USER_CODE, ADMIN_PW, ADMIN_TEL, CREATED_DATE)
         VALUES (
-                   #{adminId}, #{adminPw}, #{adminTel}, #{userCode}
+                   #{adminId},
+                   #{userCode},
+                   #{adminPw},
+                   #{adminTel},
+                   SYSDATE
                )
     </insert>
 
@@ -35,8 +42,8 @@
         SELECT USER_CODE_SEQ.NEXTVAL FROM DUAL
     </select>
 
-    <!-- ID 중복 확인 -->
-    <select id="getAdminCountById" parameterType="java.lang.String" resultType="int">
+    <!-- 중복 ID 확인 -->
+    <select id="getAdminCountById" parameterType="String" resultType="int">
         SELECT COUNT(*) FROM ADMINS WHERE ADMIN_ID = #{adminId}
     </select>
 

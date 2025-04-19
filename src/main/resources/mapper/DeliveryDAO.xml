@@ -23,8 +23,8 @@
         SELECT "배송종류", "발송인", "수취인"
              , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
              , "장비명", "운송사이름", "운송장번호"
-             , "배송시작일", "배송종료일"
-             , "검수결과처리일", "검수결과처리유형"
+             , TO_CHAR("배송시작일", 'YYYY-MM-DD') AS "배송시작일", TO_CHAR("배송종료일", 'YYYY-MM-DD') AS "배송종료일"
+             , TO_CHAR("검수결과처리일", 'YYYY-MM-DD') AS "검수결과처리일", "검수결과처리유형"
         FROM VW_DELIVERY_MANAGEMENT
         WHERE "발송인" = #{user_code} OR "수취인" = #{user_code}
     </select>
@@ -32,10 +32,10 @@
     <!-- 회원코드로 보관 배송내역만 조회 -->
     <select id="listStorageByUserCode" resultType="com.team.mvc.DTO.DeliveryDTO" resultMap="deliveryResultMap">
         SELECT "배송종류", "발송인", "수취인"
-                     , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
-                     , "장비명", "운송사이름", "운송장번호"
-                     , "배송시작일", "배송종료일"
-                     , "검수결과처리일", "검수결과처리유형"
+             , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
+             , "장비명", "운송사이름", "운송장번호"
+             , TO_CHAR("배송시작일", 'YYYY-MM-DD') AS "배송시작일", TO_CHAR("배송종료일", 'YYYY-MM-DD') AS "배송종료일"
+             , TO_CHAR("검수결과처리일", 'YYYY-MM-DD') AS "검수결과처리일", "검수결과처리유형"
         FROM VW_DELIVERY_MANAGEMENT
         WHERE ("배송종류" = '보관_최초입고' OR "배송종류" = '보관_최종반환')
           AND ("발송인" = #{user_code} OR "수취인" = #{user_code})
@@ -46,8 +46,8 @@
         SELECT "배송종류", "발송인", "수취인"
              , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
              , "장비명", "운송사이름", "운송장번호"
-             , "배송시작일", "배송종료일"
-             , "검수결과처리일", "검수결과처리유형"
+             , TO_CHAR("배송시작일", 'YYYY-MM-DD') AS "배송시작일", TO_CHAR("배송종료일", 'YYYY-MM-DD') AS "배송종료일"
+             , TO_CHAR("검수결과처리일", 'YYYY-MM-DD') AS "검수결과처리일", "검수결과처리유형"
         FROM VW_DELIVERY_MANAGEMENT
         WHERE ("배송종류" = '스토렌_최초입고' OR "배송종류" = '스토렌_최종반환'
                    OR "배송종류" = '스토렌_매칭발송' OR "배송종류" = '스토렌_매칭반납')
@@ -58,8 +58,8 @@
         SELECT "배송종류", "발송인", "수취인"
              , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
              , "장비명", "운송사이름", "운송장번호"
-             , "배송시작일", "배송종료일"
-             , "검수결과처리일", "검수결과처리유형"
+             , TO_CHAR("배송시작일", 'YYYY-MM-DD') AS "배송시작일", TO_CHAR("배송종료일", 'YYYY-MM-DD') AS "배송종료일"
+             , TO_CHAR("검수결과처리일", 'YYYY-MM-DD') AS "검수결과처리일", "검수결과처리유형"
         FROM VW_DELIVERY_MANAGEMENT
         WHERE ("배송종류" = '스토렌_매칭발송' OR "배송종류" = '스토렌_매칭반납')
           AND ("발송인" = #{user_code} OR "수취인" = #{user_code})
@@ -70,11 +70,22 @@
         SELECT "배송종류", "발송인", "수취인"
              , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
              , "장비명", "운송사이름", "운송장번호"
-             , "배송시작일", "배송종료일"
-             , "검수결과처리일", "검수결과처리유형"
+             , TO_CHAR("배송시작일", 'YYYY-MM-DD') AS "배송시작일", TO_CHAR("배송종료일", 'YYYY-MM-DD') AS "배송종료일"
+             , TO_CHAR("검수결과처리일", 'YYYY-MM-DD') AS "검수결과처리일", "검수결과처리유형"
         FROM VW_DELIVERY_MANAGEMENT
         WHERE ("배송종류" = '렌탈_발송' OR "배송종류" = '렌탈_반납')
           AND ("발송인" = #{user_code} OR "수취인" = #{user_code})
+    </select>
+
+    <!-- 배송 ID로 내용 조회 -->
+    <select id="getDeliveryById" resultMap="deliveryResultMap">
+        SELECT "배송종류", "발송인", "수취인"
+             , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
+             , "장비명", "운송사이름", "운송장번호"
+             , "배송시작일", "배송종료일"
+             , "검수결과처리일", "검수결과처리유형"
+        FROM VW_DELIVERY_MANAGEMENT
+        WHERE "배송ID" = #{delivery_id}
     </select>
 
 </mapper>

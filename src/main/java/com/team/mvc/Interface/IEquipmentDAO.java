@@ -6,14 +6,14 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface IEquipmentDAO {
 
     int insertEquipCode(EquipmentDTO dto);
 
-
-    List<String> listEquipNamesByBrand(@Param("brandId") int brandId);
+    List<Map<String, Object>> listEquipNamesByBrand(@Param("brandId") int brandId);
 
     // 장비명 ID 조회
     Integer getEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);
@@ -23,6 +23,15 @@ public interface IEquipmentDAO {
     // 회원코드로 장비 리스트 조회 (해당 회원이 가진 일반 장비 리스트)
     ArrayList<EquipmentDTO> listByUserCode(int user_code);
 
+    Integer searchCategoryId(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
+
+
+    // 전체 장비 리스트 조회
+    List<EquipmentDTO> listEquip();
+
     // 장비명id로 장비명 검색
     String getEquipNameById(int equip_name_id);
+
+    // 장비코드로 장비정보 가져오기
+    EquipmentDTO getEquipmentByEquipCode(int equip_code);
 }

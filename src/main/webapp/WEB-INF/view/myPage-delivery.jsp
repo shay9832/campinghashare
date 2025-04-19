@@ -43,6 +43,91 @@
             color: var(--color-white);
             background-color: var(--color-maple);
         }
+
+        /* 테이블 너무 긴 장비명 줄이기 */
+        .custom-table .title-cell {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* 테이블 행에서 마우스 커서 디폴트 (클릭 불가) */
+        .table-container tr.table-row {
+            cursor: default;
+        }
+        /* 테이블 장비명 열만 왼쪽 정렬 */
+        .custom-table tbody td:nth-child(3) {
+            text-align: left; !important;
+        }
+        /* 버튼 안 보이는 문제 해결 위한 css 추가 */
+        /* 조회 열 명시적 표시 */
+        .custom-table th:nth-child(9),
+        .custom-table td:nth-child(9) {
+            display: table-cell !important;
+            visibility: visible !important;
+            width: auto !important;
+        }
+
+        /* 테이블 열 너비 조정 */
+        .custom-table {
+            width: 100%;
+            table-layout: fixed; /* 고정 레이아웃 사용 */
+        }
+
+        /* ID 열 - 좁게 */
+        .custom-table th:nth-child(1),
+        .custom-table td:nth-child(1) {
+            width: 8%;
+        }
+
+        /* 배송 유형 */
+        .custom-table th:nth-child(2),
+        .custom-table td:nth-child(2) {
+            width: 8%;
+        }
+
+        /* 물품명 - 가장 넓게 */
+        .custom-table th:nth-child(3),
+        .custom-table td:nth-child(3) {
+            width: 20%;
+        }
+
+        /* 발송인, 수취인 */
+        .custom-table th:nth-child(4),
+        .custom-table td:nth-child(4),
+        .custom-table th:nth-child(5),
+        .custom-table td:nth-child(5) {
+            width: 8%;
+        }
+
+        /* 배송 상태 */
+        .custom-table th:nth-child(6),
+        .custom-table td:nth-child(6) {
+            width: 10%;
+        }
+
+        /* 배송 시작일, 종료일 */
+        .custom-table th:nth-child(7),
+        .custom-table td:nth-child(7),
+        .custom-table th:nth-child(8),
+        .custom-table td:nth-child(8) {
+            width: 10%;
+        }
+
+        /* 조회 버튼 열 - 좁게 */
+        .custom-table th:nth-child(9),
+        .custom-table td:nth-child(9) {
+            width: 8%;
+        }
+
+        /* 테이블 셀 내용 처리 */
+        .custom-table td,
+        .custom-table th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 8px;
+        }
     </style>
 </head>
 <body>
@@ -289,13 +374,13 @@
 <script type="text/javascript">
     // 페이지 로딩 시 실행
     $(document).ready(function() {
-        // 데이터 로드 상태 추적
-        let loadedData = {
-            'storage': false,
-            'storen-owner': false,
-            'storen-user': true, // 초기 페이지 로드 시 이미 로드됨
-            'rental': false
-        };
+        // // 데이터 로드 상태 추적
+        // let loadedData = {
+        //     'storage': false,
+        //     'storen-owner': false,
+        //     'storen-user': true, // 초기 페이지 로드 시 이미 로드됨
+        //     'rental': false
+        // };
 
         // 현재 활성화된 스토렌 서브탭
         let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
@@ -317,6 +402,9 @@
                 $('#storen-content .tab-link').removeClass('active');
                 $('#storen-owner').addClass('active');
                 currentStorenSubTab = 'owner';
+                // 강제로 데이터 로드 (캐시 무시)
+                //const dataKey = 'storen-' + currentStorenSubTab;
+                //loadedData[dataKey] = false; // 캐시 상태 재설정
                 loadStorenData(currentStorenSubTab);
             } else if (tabId === 'rental') {
                 loadRentalData();
@@ -341,8 +429,8 @@
             $(this).addClass('active');
 
             // 강제로 데이터 로드 (캐시 무시)
-            const dataKey = 'storen-' + currentStorenSubTab;
-            loadedData[dataKey] = false; // 캐시 상태 재설정
+            //const dataKey = 'storen-' + currentStorenSubTab;
+            //loadedData[dataKey] = false; // 캐시 상태 재설정
 
             // 데이터 로드
             loadStorenData(currentStorenSubTab);
@@ -353,15 +441,15 @@
             // 기본값 설정으로 오류 방지
             subTabType = subTabType || 'owner';
 
-            const dataKey = 'storen-' + subTabType;
+            //const dataKey = 'storen-' + subTabType;
 
-            console.log("dataKey = " + dataKey); // 디버깅용
-            console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
+            //console.log("dataKey = " + dataKey); // 디버깅용
+            //console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
 
             // 이미 로드된 데이터라면 다시 요청하지 않음
-            if (loadedData[dataKey]) {
-                return;
-            }
+            //if (loadedData[dataKey]) {
+            //    return;
+            //}
 
             // 로딩 표시
             $('#storen-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
@@ -376,7 +464,7 @@
                 dataType: 'json',
                 success: function(data) {
                     // 데이터 로드 상태 업데이트
-                    loadedData[dataKey] = true;
+                    //loadedData[dataKey] = true;
 
                     // 테이블 내용 업데이트
                     updateTableContent('#storen-content', data);
@@ -399,9 +487,9 @@
             const dataKey = 'rental';
 
             // 이미 로드된 데이터라면 다시 요청하지 않음
-            if (loadedData[dataKey]) {
-                return;
-            }
+            //if (loadedData[dataKey]) {
+            //    return;
+            //}
 
             // 로딩 표시
             $('#rental-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
@@ -416,7 +504,7 @@
                 dataType: 'json',
                 success: function(data) {
                     // 데이터 로드 상태 업데이트
-                    loadedData[dataKey] = true;
+                    //loadedData[dataKey] = true;
 
                     // 테이블 내용 업데이트
                     updateTableContent('#rental-content', data);
@@ -439,9 +527,9 @@
             const dataKey = 'storage';
 
             // 이미 로드된 데이터라면 다시 요청하지 않음
-            if (loadedData[dataKey]) {
-                return;
-            }
+            //if (loadedData[dataKey]) {
+            //    return;
+            //}
 
             // 로딩 표시
             $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
@@ -456,7 +544,7 @@
                 dataType: 'json',
                 success: function(data) {
                     // 데이터 로드 상태 업데이트
-                    loadedData[dataKey] = true;
+                    //loadedData[dataKey] = true;
 
                     // 테이블 내용 업데이트
                     updateTableContent('#storage-content', data);
