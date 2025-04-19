@@ -1,0 +1,437 @@
+    /* ===== 기본 설정 ===== */
+    body {
+        margin: 0; /* 바깥 여백 제거 */
+        padding: 0; /* 안쪽 여백 제거 */
+        font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 - 한글 지원이 좋은 폰트 사용 */
+        background-color: #f8f9fa; /* 페이지 배경색 - 연한 회색 */
+        color: #333; /* 기본 텍스트 색상 */
+    }
+
+    /* ===== 헤더 영역 ===== */
+    #header {
+        height: 60px; /* 헤더 높이 */
+        background-color: #3f861d; /* 헤더 배경색 - 녹색 사용 */
+        color: white; /* 헤더 텍스트 색상 */
+        width: 100%; /* 전체 너비 사용 */
+        padding: 10px; /* 내부 여백 */
+        box-sizing: border-box; /* 패딩 포함 크기 계산 */
+        display: flex; /* 플렉스 레이아웃 사용 */
+        align-items: center; /* 세로 중앙 정렬 */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 헤더 하단 그림자 효과 */
+    }
+
+    #header h1 {
+        margin: 0; /* 제목 기본 여백 제거 */
+        font-size: 24px; /* 제목 글자 크기 */
+    }
+
+    /* ===== 메인 컨테이너 ===== */
+    #container {
+        display: flex; /* 플렉스 레이아웃으로 메뉴와 콘텐츠 영역 수평 배치 */
+        min-height: calc(100vh - 60px); /* 헤더 제외한 전체 높이 */
+    }
+
+    /* 왼쪽 메뉴 영역 스타일링 */
+    #leftMenu {
+        padding: 30px; /* 내부 여백 */
+        border-right: 1px solid #ccc; /* 오른쪽에 경계선 추가 */
+        min-width: 150px; /* 메뉴 영역 너비 고정 */
+        background: #ffffff; /* 메뉴 배경색 (연한 회색) */
+        box-shadow: 2px 0 5px rgba(0,0,0,0.05); /* 오른쪽에 그림자 효과 */
+    }
+
+    /* 메뉴 버튼의 기본 스타일 - 하위 메뉴를 가진 버튼 */
+    .menu-button {
+        display: block; /* 블록 레벨 요소로 설정 (가로 전체 차지) */
+        width: 100%; /* 부모 컨테이너의 너비 100% 차지 */
+        padding: 12px 15px; /* 내부 여백 (위아래 12px, 좌우 15px) */
+        margin-bottom: 15px; /* 하단 여백 */
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+        background-color: white; /* 버튼 배경색 */
+        border: 1px solid #ddd; /* 테두리 설정 */
+        border-radius: 4px; /* 둥근 모서리 설정 */
+        cursor: pointer; /* 마우스 오버 시 손가락 커서 표시 */
+        transition: all 0.3s ease; /* 모든 변화에 0.3초 애니메이션 적용 */
+        position: relative; /* 상대적 위치 설정 (화살표 배치를 위함) */
+        font-weight: 500; /*글자 굵기*/
+    }
+
+    /* 메뉴 버튼 호버 효과 */
+    .menu-button:hover {
+        background: #ebf5e3; /* 호버 시 배경색 변경 - 연한 녹색 */
+        border-left: 4px solid #3f861d; /* 왼쪽에 강조 테두리 추가 */
+    }
+
+    /* 메뉴 버튼 화살표 아이콘 */
+    .menu-button::after {
+        content: "▼"; /* 화살표 문자 */
+        position: absolute; /* 절대 위치 설정 */
+        right: 15px; /* 오른쪽 여백 */
+        top: 50%; /* 세로 중앙 배치 */
+        transform: translateY(-50%); /* 정확한 세로 중앙 정렬 */
+        font-size: 12px; /* 화살표 크기 */
+        transition: transform 0.3s ease; /* 회전 애니메이션 */
+    }
+
+    /* 활성화된 메뉴 버튼의 화살표 회전 */
+    .menu-button.active::after {
+        transform: translateY(-50%) rotate(180deg); /* 화살표 180도 회전 */
+    }
+
+    /* 하위 메뉴 컨테이너 */
+    .submenu {
+        max-height: 0; /* 초기에는 보이지 않도록 높이 0 설정 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        transition: max-height 0.3s ease; /* 높이 변화에 애니메이션 */
+        margin-bottom: 10px; /* 하단 여백 */
+        margin-top: -5px; /* 상단 여백 조정 */
+    }
+
+    /* 하위 메뉴 항목 (링크) */
+    .submenu a {
+        display: block; /* 블록 요소로 설정 */
+        padding: 10px 10px 10px 25px; /* 내부 여백 - 왼쪽 여백 더 넓게 */
+        text-decoration: none; /* 링크 밑줄 제거 */
+        color: #555; /* 텍스트 색상 */
+        border-left: 1px solid #e0e0e0; /* 왼쪽 테두리 */
+        margin-left: 10px; /* 왼쪽 여백 */
+        transition: all 0.2s ease; /* 변화에 애니메이션 */
+        font-size: 14px; /* 글자 크기 */
+    }
+
+    /* 하위 메뉴 항목 호버 효과 */
+    .submenu a:hover {
+        background-color: #f1f8e9; /* 호버 시 배경색 - 연한 녹색 */
+        color: #3f861d; /* 호버 시 텍스트 색상 - 녹색 */
+        border-left: 2px solid #3f861d; /* 왼쪽에 강조 테두리 */
+    }
+
+    /* 하위메뉴 버튼 스타일 수정 */
+    .submenu .submenu-btn {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 10px 10px 10px 25px;
+        color: #555;
+        border-left: 1px solid #e0e0e0;
+        margin-left: 10px;
+        transition: all 0.2s ease;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .submenu .submenu-btn:hover {
+        background-color: #f1f8e9;
+        color: #3f861d;
+        border-left: 2px solid #3f861d;
+    }
+
+    /* ===== 콘텐츠 영역 ===== */
+    #content {
+        flex-grow: 1; /* 남은 공간 모두 차지 */
+        padding: 20px; /* 내부 여백 */
+        background-color: #ffffff; /* 배경색 */
+        overflow: auto; /* 콘텐츠가 넘치면 스크롤 */
+        box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* 내부 그림자 효과 */
+    }
+
+    /* 콘텐츠 헤더 */
+    .content-header {
+        border-bottom: 2px solid #3f861d; /* 하단 경계선 - 녹색 */
+        padding-bottom: 10px; /* 하단 여백 */
+        margin-bottom: 20px; /* 하단 외부 여백 */
+    }
+
+    .content-header h2 {
+        color: #333; /* 텍스트 색상 */
+        margin: 0; /* 여백 제거 */
+        font-size: 22px; /* 글자 크기 */
+    }
+
+    /* ===== 검색 영역 ===== */
+    .content-search-info {
+        display: flex; /* 플렉스 레이아웃 */
+        align-items: center; /* 세로 중앙 정렬 */
+        background-color: #f8f9fa; /* 배경색 - 연한 회색 */
+        padding: 15px; /* 내부 여백 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        margin-bottom: 20px; /* 하단 여백 */
+        flex-wrap: wrap; /* 필요시 여러 줄로 나누기 */
+        gap: 10px; /* 항목 간 간격 */
+    }
+
+    .content-search-info span {
+        margin-right: 10px; /* 오른쪽 여백 */
+        font-weight: 500; /* 글자 굵기 */
+    }
+
+    /* 검색 입력 요소들 공통 스타일 */
+    .content-search-info select,
+    .content-search-date input,
+    .content-search-bar input {
+        padding: 8px 12px; /* 내부 여백 */
+        border: 1px solid #ddd; /* 테두리 */
+        border-radius: 4px; /* 모서리 둥글게 */
+        margin-right: 10px; /* 오른쪽 여백 */
+    }
+
+    /* 날짜 검색 영역 */
+    .content-search-date {
+        display: flex; /* 플렉스 레이아웃 */
+        align-items: center; /* 세로 중앙 정렬 */
+    }
+
+    .content-search-date span {
+        margin: 0 10px; /* 좌우 여백 */
+    }
+
+    /* 검색 버튼 */
+    .content-search-btn input {
+        background-color: #3f861d; /* 배경색 - 녹색 */
+        color: white; /* 텍스트 색상 */
+        border: none; /* 테두리 제거 */
+        padding: 8px 15px; /* 내부 여백 */
+        border-radius: 4px; /* 모서리 둥글게 */
+        cursor: pointer; /* 마우스 커서 포인터로 변경 */
+        transition: background-color 0.3s; /* 배경색 변화에 애니메이션 */
+    }
+
+    /* 검색 버튼 호버 효과 */
+    .content-search-btn input:hover {
+        background-color: #346e18; /* 호버 시 배경색 - 더 진한 녹색 */
+    }
+
+    /* ===== 렌탈 타입 탭 메뉴 ===== */
+    .rental-type-tabs {
+        display: flex;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .rental-tab {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-bottom: none;
+        border-radius: 5px 5px 0 0;
+        margin-right: 5px;
+        cursor: pointer;
+        position: relative;
+        bottom: -1px;
+    }
+
+    .rental-tab.active {
+        background: white;
+        border-bottom: 1px solid white;
+        color: #3f861d;
+        font-weight: 600;
+    }
+
+    .rental-tab:hover:not(.active) {
+        background-color: #ebf5e3;
+    }
+
+    /* ===== 통계 요약 영역 ===== */
+    .matching-summary {
+        display: flex; /* 플렉스 레이아웃 */
+        margin-bottom: 20px; /* 하단 여백 */
+        gap: 15px; /* 요소 간 간격 */
+    }
+
+    /* 통계 박스 공통 스타일 */
+    .summary-box {
+        flex: 1; /* 동일한 너비로 공간 차지 */
+        background-color: #f8f9fa; /* 배경색 - 연한 회색 */
+        padding: 15px; /* 내부 여백 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    }
+
+    /* 통계 박스 테두리 색상 구분 */
+    .total-matches {
+        border-left: 4px solid #3f861d; /* 전체 매칭 - 녹색 */
+    }
+
+    .pending-matches {
+        border-left: 4px solid #e74c3c; /* 승인대기 - 빨간색 */
+    }
+
+    .approved-matches {
+        border-left: 4px solid #3498db; /* 승인완료 - 파란색 */
+    }
+
+    .current-rentals {
+        border-left: 4px solid #f39c12; /* 현재 렌탈중 - 주황색 */
+    }
+
+    /* ===== 테이블 스타일 ===== */
+    .matching-table {
+        overflow-x: auto; /* 가로 스크롤 허용 - 모바일 대응 */
+        margin-right: 10px; /* 오른쪽 여백 */
+        border: 1px solid #e0e0e0; /* 테두리 */
+        border-radius: 5px; /* 모서리 둥글게 */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    }
+
+    .matching-table table {
+        width: 100%; /* 테이블 전체 너비 */
+        border-collapse: collapse; /* 테두리 합치기 */
+        min-width: 1200px; /* 최소 너비 설정 - 가로 스크롤 발생 임계값 */
+        table-layout: fixed; /* 고정 테이블 레이아웃 사용 - 열 너비 고정 */
+    }
+
+    /* 테이블 헤더 셀 */
+    .matching-table th {
+        background-color: #f1f8e9; /* 배경색 - 연한 녹색 */
+        padding: 12px 15px; /* 내부 여백 */
+        text-align: left; /* 텍스트 왼쪽 정렬 */
+        border-bottom: 2px solid #3f861d; /* 하단 테두리 - 녹색 */
+        color: #333; /* 텍스트 색상 */
+        font-weight: 500; /* 글자 굵기 */
+        white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    }
+
+    /* 테이블 데이터 셀 */
+    .matching-table td {
+        padding: 10px 15px; /* 내부 여백 */
+        border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */
+        white-space: nowrap; /* 텍스트 줄바꿈 방지 - 한 줄로 표시 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        text-overflow: ellipsis; /* 넘치는 텍스트 ... 처리 */
+    }
+
+    /* 테이블 행 호버 효과 */
+    .matching-table tr:hover {
+        background-color: #f5f5f5; /* 호버 시 배경색 - 연한 회색 */
+    }
+
+    /* 각 열의 너비 설정 */
+    .col-storen-id { width: 60px; } /* 스토렌ID */
+    .col-equip-code { width: 80px; } /* 장비코드 */
+    .col-storen-title { width: 150px; } /* 스토렌제목 */
+    .col-storen-required-code { width: 80px; } /* 매친신청자코드 */
+    .col-rental-start { width: 100px; } /* 렌탈시작일 */
+    .col-rental-end { width: 80px; } /* 렌탈종료일 */
+    .col-matching-start { width: 80px; } /* 매칭신청일 */
+    .col-approve-status { width: 80px; } /* 승인상태 */
+    .col-approve-start { width: 80px; } /* 승인시작일 */
+    .col-rental-id { width: 80px; } /* 매칭신청일 */
+    .col-rental-type { width: 80px; } /* 매칭신청 상태 */
+    .col-rental-title { width: 80px; } /* 승인 일자 */
+
+
+    /* 텍스트 말줄임표 처리를 위한 스타일 */
+    .rental-title {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    /* 매칭 상태 배지 스타일 */
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .status-pending { background-color: #f1c40f; color: #000; } /* 승인대기 - 노란색 */
+    .status-approved { background-color: #2ecc71; color: #fff; } /* 승인완료 - 녹색 */
+
+    /* 렌탈 타입 배지 스타일 */
+    .rental-type-badge {
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .type-store { background-color: #9b59b6; color: #fff; } /* 스토렌 - 보라색 */
+    .type-regular { background-color: #3498db; color: #fff; } /* 일반렌탈 - 파란색 */
+
+    /* ===== 커스텀 스크롤바 ===== */
+    .matching-table::-webkit-scrollbar {
+        width: 10px; /* 세로 스크롤바 너비 */
+        height: 10px; /* 가로 스크롤바 높이 */
+    }
+
+    .matching-table::-webkit-scrollbar-track {
+        background: #f1f1f1; /* 스크롤바 트랙 배경색 */
+        border-radius: 10px; /* 모서리 둥글게 */
+    }
+
+    .matching-table::-webkit-scrollbar-thumb {
+        background: #3f861d; /* 스크롤바 색상 - 녹색 */
+        border-radius: 10px; /* 모서리 둥글게 */
+    }
+
+    .matching-table::-webkit-scrollbar-thumb:hover {
+        background: #346e18; /* 호버 시 스크롤바 색상 - 더 진한 녹색 */
+    }
+
+    /* ===== 페이지네이션 스타일 ===== */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 30px 0;
+        user-select: none;
+    }
+
+    .page-numbers {
+        display: flex;
+        margin: 0 10px;
+    }
+
+    .page-btn {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #555;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 8px 12px;
+        margin: 0 3px;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+    }
+
+    .page-btn:hover {
+        background-color: #f1f8e9;
+        border-color: #3f861d;
+        color: #3f861d;
+    }
+
+    .page-btn.active {
+        background-color: #3f861d;
+        border-color: #3f861d;
+        color: white;
+        font-weight: 500;
+    }
+
+    .first-page, .last-page, .prev-page, .next-page {
+        font-weight: bold;
+    }
+
+    /* 페이지 버튼 비활성화 스타일 */
+    .page-btn:disabled {
+        background-color: #f5f5f5;
+        border-color: #eee;
+        color: #bbb;
+        cursor: not-allowed;
+    }
+
+    /* 콘텐츠 영역 */
+    .content-area {
+        display: none;
+    }
+
+    .content-area.active {
+        display: block;
+    }
