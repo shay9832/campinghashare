@@ -303,6 +303,15 @@
                         </div>
                     </div>
 
+<%--                    <!-- 글쓰기 버튼 - 오른쪽 -->--%>
+<%--                    <div style="flex: 1; display: flex; justify-content: flex-end;">--%>
+<%--                        <c:if test="${sessionScope.user_grade eq 1}">--%>
+<%--                            <button class="btn btn-primary" onclick="goToWrite()">--%>
+<%--                                <i class="fa-solid fa-pen"></i> 글쓰기--%>
+<%--                            </button>--%>
+<%--                        </c:if>--%>
+<%--                    </div>--%>
+
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
                         <c:if test="${not empty adminId}">
