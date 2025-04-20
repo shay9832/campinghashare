@@ -66,4 +66,10 @@ public interface IStorenDAO {
 
     // 해당 유저의 다중 상태별 필터링한 스토렌 목록 조회
     List<StorenDTO> listByUserCodeMultiStatus(@Param("userCode") int userCode, @Param("statuses") String[] statuses);
+
+
+    // 해당 유저의 스토렌 위시리스트(찜 목록) 조회
+    List<StorenDTO> listMyWishByUserCode(@Param("userCode") int userCode);
+    // 해당 유저의 찜 삭제
+    int deleteMyWishByUserCodeStorenId(@Param("userCode") int userCode, @Param("storenId") int storenId);
 }

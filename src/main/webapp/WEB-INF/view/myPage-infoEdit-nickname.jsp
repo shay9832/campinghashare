@@ -16,6 +16,109 @@
   <!-- 제이쿼리 사용 CDN 방식 -->
   <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 </head>
+<style>
+  .register-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .register-title {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-primary);
+    font-size: var(--font-lg);
+    font-weight: var(--font-bold);
+  }
+
+  .register-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+  }
+
+  .form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+  }
+
+  .input-group {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
+  .required-field {
+    color: var(--color-coral);
+  }
+
+  .form-error {
+    font-size: var(--font-xxs);
+    color: var(--color-error);
+    margin-top: var(--spacing-xs);
+    display: none;
+  }
+
+  .form-success {
+    font-size: var(--font-xxs);
+    color: var(--color-success);
+    margin-top: var(--spacing-xs);
+    display: none;
+  }
+
+  .verify-btn {
+    padding: 10px 15px;
+    background-color: var(--color-gray-200);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xs);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .verify-btn:hover {
+    background-color: var(--color-gray-300);
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-xl);
+  }
+
+  @media (max-width: 768px) {
+    .register-container {
+      padding: var(--spacing-md);
+      margin: 20px 15px;
+    }
+
+    .input-group {
+      flex-direction: column;
+    }
+
+    .verify-btn {
+      width: 100%;
+    }
+  }
+</style>
 <body>
 
 <!-- 헤더 인클루드 (JSP 방식) -->
@@ -84,20 +187,22 @@
 
   <!-- 마이페이지 메인 콘텐츠 -->
   <div class="mypage-main-content">
+    <div class="page-header">
+      <h2 class="page-title">회원 정보 수정 - 닉네임 변경</h2>
+    </div>
     <!-- 닉네임 변경 -->
-    <div id="nickname-change-view" class="content-box">
-      <h3 class="content-box-title mb-4">회원 정보 수정 - 닉네임 변경</h3>
-
+    <div id="nickname-change-view" class="register-container">
       <div class="form-group">
-        <label class="form-label">새 닉네임</label>
-        <div class="input-container">
-          <input type="text" class="form-control" id="nickname-input" placeholder="페레로로쉐" value="">
+        <label class="form-label">새 닉네임 <span class="required-field">*</span></label>
+        <div class="input-group">
+          <input type="text" name="nickname" class="form-input" required placeholder="한글로만 2글자 이상~8글자 이하">
+          <button type="button" class="verify-btn" id="nicknameCheck">중복확인</button>
         </div>
-        <div class="form-text text-muted">한글로만 2글자 이상~8글자 이하 / <span class=" text-danger">사용가능 / 사용불가</span></div>
       </div>
 
-      <div class="button-container mt-5">
-        <button class="btn btn-primary" id="complete-nickname-btn">수정</button>
+      <div class="button-container">
+        <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/mypage-infoedit.action'">이전</button>
+        <button type="submit" class="btn btn-primary">다음</button>
       </div>
     </div>
   </div>

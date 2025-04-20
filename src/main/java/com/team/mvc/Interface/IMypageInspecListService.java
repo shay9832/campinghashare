@@ -12,4 +12,7 @@ public interface IMypageInspecListService {
     List<MypageInspecListDTO> listStorenReturnInspec(int user_code);
     // 보관 입고검수목록만 불러주는 메소드
     List<MypageInspecListDTO> listStorageStoreInspec(int user_code);
+
+    //id로 스토렌 검색
+    List<MypageInspecListDTO> getInspecByStorenId(int userCode, int storenId);
 }

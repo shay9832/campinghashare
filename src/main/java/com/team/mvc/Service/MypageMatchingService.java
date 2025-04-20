@@ -178,4 +178,20 @@ public class MypageMatchingService implements IMypageMatchingService {
             return false;
         }
     }
+
+    // MypageMatchingService.java에 추가
+    @Override
+    public StorenDTO getMatchingByStorenId(int userCode, int storenId) {
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+
+        // storenId로 스토렌 정보 조회
+        StorenDTO storen = storenDAO.getStorenByStorenId(storenId);
+
+        //equipmentList를 장비 코드로 쉽게 검색할 수 있는 Map으로 변환
+        EquipmentDTO equipment = equipDao.getEquipmentByEquipCode(storen.getEquip_code());
+        storen.setEquipmentDTO(equipment);
+
+        return storen;
+    }
 }

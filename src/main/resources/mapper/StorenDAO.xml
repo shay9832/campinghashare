@@ -60,7 +60,7 @@
     </resultMap>
 
     <!-- 전체 스토렌 장비 리스트 조회   -->
-    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -74,7 +74,7 @@
     </select>
 
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
-    <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -256,7 +256,7 @@
     </select>
 
     <!-- 스토렌 장비 검색 -->
-    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -325,4 +325,23 @@
         ORDER BY CREATED_DATE DESC
     </select>
 
+
+    <!-- 해당 유저의 스토렌 위시리스트(찜 목록) 조회 -->
+    <select id="listMyWishByUserCode" resultMap="VWStorenResultMap">
+        SELECT VWS.STOREN_ID, VWS.EQUIP_CODE, VWS.STOREN_TITLE,
+               VWS.DAILY_RENT_PRICE, VWS.RENTAL_START_DATE, VWS.RENTAL_END_DATE,
+               VWS.MATCHING_REQUEST_COUNT, VWS.MATCHING_STATUS
+        FROM WISHLIST W
+                 JOIN VW_STOREN VWS
+                      ON W.STOREN_ID = VWS.STOREN_ID
+        WHERE W.USER_CODE = #{userCode}
+        ORDER BY W.CREATED_DATE DESC
+    </select>
+
+    <!-- 해당 유저의 찜 삭제(스토렌id를 통해) -->
+    <delete id="deleteMyWishByUserCodeStorenId">
+        DELETE
+        FROM WISHLIST
+        WHERE USER_CODE=#{userCode} AND STOREN_ID=#{storenId}
+    </delete>
 </mapper>

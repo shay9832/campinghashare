@@ -1,7 +1,9 @@
 package com.team.mvc.Service;
 
+import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.EquipmentDTO;
 import com.team.mvc.DTO.StorenDTO;
+import com.team.mvc.Interface.IAttachmentDAO;
 import com.team.mvc.Interface.IEquipmentDAO;
 import com.team.mvc.Interface.IRentalSearchService;
 import com.team.mvc.Interface.IStorenDAO;
@@ -23,6 +25,7 @@ public class RentalSearchService implements IRentalSearchService {
     public List<StorenDTO> listStoren() {
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
         IEquipmentDAO equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         List<StorenDTO> storenList = storenDAO.listStoren();
         List<EquipmentDTO> equipList = equipDAO.listEquip();
@@ -33,7 +36,14 @@ public class RentalSearchService implements IRentalSearchService {
 
         for (StorenDTO dto : storenList) {
             EquipmentDTO equip = equipmentMap.get(dto.getEquip_code());
-            dto.setEquipmentDTO(equip);
+            if (equip != null) {
+                // 첨부파일 가져오기
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+                if (!attachments.isEmpty()) {
+                    equip.setAttachments(attachments);
+                }
+                dto.setEquipmentDTO(equip);
+            }
         }
 
         // 중복 제거 (STOREN_ID 기준)
@@ -51,6 +61,7 @@ public class RentalSearchService implements IRentalSearchService {
     public List<StorenDTO> searchStorenKeyword(String searchKeyword) {
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
         IEquipmentDAO equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         List<StorenDTO> storenList = storenDAO.searchStorenKeyword(searchKeyword);
         List<EquipmentDTO> equipList = equipDAO.listEquip();
@@ -61,7 +72,15 @@ public class RentalSearchService implements IRentalSearchService {
 
         for (StorenDTO dto : storenList) {
             EquipmentDTO equip = equipmentMap.get(dto.getEquip_code());
-            dto.setEquipmentDTO(equip);
+            if (equip != null) {
+                // 첨부파일 가져오기
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+                if (!attachments.isEmpty()) {
+                    equip.setAttachments(attachments);
+                }
+                dto.setEquipmentDTO(equip);
+            }
+
         }
 
         // 중복 제거 (STOREN_ID 기준)

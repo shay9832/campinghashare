@@ -137,4 +137,15 @@ public class MypageDeliveryService implements IMypageDeliveryService {
         }
         return list;
     }
+    //id로 스토렌 검색
+    @Override
+    public List<DeliveryDTO> getDeliveryByStorenId(int userCode, int storenId) {
+        IDeliveryDAO deliveryDao = sqlSession.getMapper(IDeliveryDAO.class);
+        List<DeliveryDTO> list = deliveryDao.getDeliveryByStorenId(userCode, storenId);
+        for (DeliveryDTO delivery : list) {
+            delivery.setStatus(determineDeliveryStatus(delivery.getStart_date(), delivery.getEnd_date()));
+            delivery.setStatusClass(getStatusClass(delivery.getStart_date(), delivery.getEnd_date()));
+        }
+        return list;
+    }
 }
