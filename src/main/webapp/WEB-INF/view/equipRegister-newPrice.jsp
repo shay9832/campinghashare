@@ -91,7 +91,6 @@
         function handleFileSelect(files) {
             console.log("Processing files:", files.length);
             // 기존 미리보기를 비우지 않음 ($('#photosContainer').empty() 제거)
-
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
                 if (!file.type.match('image.*')) {
@@ -144,9 +143,7 @@
             // 원래 주석처리된 함수이지만, ready 함수에서 호출되므로 빈 함수로 구현
         }
 
-        /**
-         * 페이지 로드 시 실행될 초기화 함수
-         */
+        // 페이지 로드 시 실행될 초기화 함수
         function initializeEquipmentForm() {
             setupEquipNameSearch();
 
@@ -162,9 +159,7 @@
             });
         }
 
-        /**
-         * 장비명 검색 및 드롭다운 기능 설정
-         */
+        //장비명 검색 및 드롭다운 기능 설정
         function setupEquipNameSearch() {
             try {
                 // 브랜드명 가져오기
@@ -231,10 +226,7 @@
             }
         }
 
-        /**
-         * 브랜드 ID에 따라 장비명 목록을 가져와 드롭다운에 표시하는 함수
-         * @param {string} brandId - 선택된 브랜드 ID
-         */
+        //브랜드 ID에 따라 장비명 목록을 가져와 드롭다운에 표시하는 함수
         function fetchEquipNames(brandId) {
             // 기존 드롭다운 요소 초기화
             $("#equipNameDropdown").remove();
@@ -264,10 +256,7 @@
             });
         }
 
-        /**
-         * 검색어에 따라 장비명 드롭다운 목록을 업데이트하는 함수
-         * @param {string} searchTerm - 검색어
-         */
+        // 검색어에 따라 장비명 드롭다운 목록을 업데이트하는 함수
         function updateEquipNameDropdown(searchTerm) {
             if (!window.equipNameData) {
                 return;

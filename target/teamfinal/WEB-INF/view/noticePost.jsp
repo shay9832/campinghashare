@@ -778,7 +778,7 @@
 <!-- 디버깅용 정보 (테스트용) -->
 <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
     게시글 번호: ${post.postId}, 게시글 작성자: ${post.userCode},
-    로그인 사용자: ${sessionScope.user_code}, 사용자 등급: ${sessionScope.user_grade},
+    로그인 사용자: ${sessionScope.userCode}, 사용자 등급: ${sessionScope.user_grade},
     관리자 여부: ${sessionScope.user_grade eq 1 ? '관리자' : '일반 사용자'}
 </div>
 

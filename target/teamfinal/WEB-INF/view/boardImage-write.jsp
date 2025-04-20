@@ -19,7 +19,6 @@
         .image-upload-btn {
             width: 120px;
             height: 120px;
-            background-color: #e9f2ff;
             border: 2px dashed var(--color-maple-light);
             border-radius: var(--radius-md);
             display: flex;
@@ -207,7 +206,8 @@
                 </div>
 
                 <div class="content-box p-5">
-                    <form id="boardWriteForm" method="POST" enctype="multipart/form-data" action="${isUpdate ? 'api/post/update.action' : 'boardimage-write.action'}">
+                    <form id="boardWriteForm" method="POST" enctype="multipart/form-data"
+                          action="${isUpdate ? 'api/image/update.action' : 'boardimage-write.action'}">
                         <!-- 수정 모드일 경우 postId 필드 추가 -->
                         <c:if test="${isUpdate}">
                             <input type="hidden" name="postId" value="${post.postId}"/>
@@ -236,7 +236,6 @@
                             <label class="form-label">제목</label>
                             <input type="text" class="form-control" name="postTitle" id="title"
                                    value="${isUpdate ? post.postTitle : ''}" placeholder="제목을 작성하세요." required/>
-                            <div class="charCounter" id="titleCounter">0/100자</div>
                         </div>
 
                         <div class="upload-instruction">
@@ -254,8 +253,9 @@
                                 <c:if test="${isUpdate && not empty post.attachments}">
                                     <c:forEach var="attachment" items="${post.attachments}">
                                         <div class="image-preview">
-                                            <img src="${pageContext.request.contextPath}${attachment.attachmentPath}" alt="${attachment.attachmentName}">
-                                            <div class="remove-btn" data-id="${attachment.attachmentId}">
+                                            <img src="${pageContext.request.contextPath}${attachment.attachmentPath}"
+                                                 alt="${attachment.attachmentName}">
+                                            <div class="remove-btn" data-id="${attachment.attachmentPostId}">
                                                 <i class="fa-solid fa-times"></i>
                                             </div>
                                         </div>
@@ -270,8 +270,11 @@
                         <input type="hidden" name="postContent" value="이미지 게시글">
 
                         <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-secondary" onclick="location.href='boardimage.action'">취소</button>
-                            <button type="button" class="btn btn-primary" id="submitBtn">${isUpdate ? '수정하기' : '등록하기'}</button>
+                            <button type="button" class="btn btn-secondary" onclick="location.href='boardimage.action'">
+                                취소
+                            </button>
+                            <button type="button" class="btn btn-primary"
+                                    id="submitBtn">${isUpdate ? '수정하기' : '등록하기'}</button>
                         </div>
                     </form>
                 </div>
@@ -292,6 +295,16 @@
     </div>
 </div>
 
+<div id="custom-success-modal"
+     style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); z-index: 10000; min-width: 300px; text-align: center; display: none;">
+    <div id="custom-success-header">
+        <h5>${isUpdate ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
+    </div>
+    <div id="custom-success-footer" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+        <button type="button" class="btn btn-primary" id="okBtn">확인</button>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
@@ -303,12 +316,12 @@
         const imagePreviewArea = document.querySelector('.image-preview-area');
         const uploadBtn = document.querySelector('.image-upload-btn');
         const fileCount = document.getElementById('fileCount');
-        const title = document.getElementById('title');
-        const titleCounter = document.getElementById('titleCounter');
         const submitBtn = document.getElementById('submitBtn');
+        const successModal = document.getElementById('custom-success-modal');
         const customModalOverlay = document.getElementById('custom-modal-overlay');
         const customModal = document.getElementById('custom-modal');
         const cancelBtn = document.getElementById('cancelBtn');
+        const okBtn = document.getElementById('okBtn');
         const confirmBtn = document.getElementById('confirmBtn');
 
         console.log("요소 참조:", {
@@ -319,17 +332,14 @@
             confirmBtn: confirmBtn
         });
 
-        // 제목 글자수 카운터 초기화 및 이벤트 등록
-        updateCharCounter(title, titleCounter, 100);
-        title.addEventListener('input', function() {
-            updateCharCounter(title, titleCounter, 100);
-        });
-
         // 이미지 업로드 처리
         fileInput.addEventListener('change', function () {
             const files = this.files;
-            let fileCountText = files.length > 0 ? `선택된 파일: ${files.length}개` : '선택된 파일 없음';
-            fileCount.textContent = fileCountText;
+            if (this.files.length > 0) {
+                fileCount.textContent = '선택된 파일: ' + this.files.length + '개';
+            } else {
+                fileCount.textContent = '선택된 파일 없음';
+            }
 
             // 이미지 갯수 체크 (기존 이미지 + 새 이미지 <= 10)
             const existingImages = document.querySelectorAll('.image-preview').length;
@@ -351,13 +361,6 @@
                 }
             }
 
-            // 기존 미리보기 초기화 (플러스 버튼 제외)
-            const previews = document.querySelectorAll('.image-preview');
-            previews.forEach(preview => {
-                if (!preview.querySelector('.remove-btn[data-id]')) {
-                    preview.remove();
-                }
-            });
 
             // 새로운 미리보기 생성
             for (let i = 0; i < files.length; i++) {
@@ -440,10 +443,20 @@
             closeModal();
         });
 
+        // 성공 모달의 확인 버튼 클릭 시 고독한 캠핑방 목록으로 이동
+        if (okBtn) {
+            okBtn.addEventListener('click', function () {
+                console.log("확인 버튼(성공 모달) 클릭됨"); // 디버깅용
+                if (modalOverlay) modalOverlay.style.display = 'none';
+                if (successModal) successModal.style.display = 'none';
+                window.location.href = 'boardimage.action';
+            });
+        }
+
         // 기존 이미지 삭제 버튼 이벤트
         const existingRemoveBtns = document.querySelectorAll('.remove-btn[data-id]');
         existingRemoveBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 const attachmentId = this.getAttribute('data-id');
                 const preview = this.closest('.image-preview');
 
@@ -464,21 +477,6 @@
             console.log("모달 닫기 함수 호출됨");
             customModalOverlay.style.display = 'none';
             customModal.style.display = 'none';
-        }
-
-        function updateCharCounter(inputElement, counterElement, maxLength) {
-            const currentLength = inputElement.value.length;
-            counterElement.textContent = currentLength + '/' + maxLength + '자';
-
-            // 최대 길이 초과 시 경고 스타일 적용
-            if (currentLength > maxLength) {
-                counterElement.style.color = 'var(--color-error)';
-                // 초과된 텍스트 잘라내기
-                inputElement.value = inputElement.value.substring(0, maxLength);
-                counterElement.textContent = maxLength + '/' + maxLength + '자';
-            } else {
-                counterElement.style.color = 'var(--text-secondary)';
-            }
         }
     });
 </script>
