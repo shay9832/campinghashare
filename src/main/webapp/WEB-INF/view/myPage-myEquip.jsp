@@ -717,7 +717,7 @@
                 e.preventDefault();
                 e.stopPropagation();
                 const id = $(this).closest("tr").find("input[name='id']").val();
-                window.location.href = "mypage-matchinglist.action?id=" + id;
+                window.location.href = "mypage-matchinglist.action?id=" + id + "&activeTab=storen&storenTabType=owner";
             });
 
             // 삭제 버튼 클릭 시 모달 표시

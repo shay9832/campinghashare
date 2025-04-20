@@ -21,6 +21,7 @@ public class SearchMatchingRequestService implements ISearchMatchingRequestServi
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
         IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         // 거래id로 스토렌 가져오기
         StorenDTO storenDto = storenDAO.getStorenByStorenId(transactionId);
@@ -28,7 +29,14 @@ public class SearchMatchingRequestService implements ISearchMatchingRequestServi
         EquipmentDTO equipmentDto = equipDao.getEquipmentByEquipCode(storenDto.getEquip_code());
 
         // 스토렌에 장비 정보 넣어주기
-        storenDto.setEquipmentDTO(equipmentDto);
+        if (equipmentDto != null) {
+            // 첨부파일 가져오기
+            List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipmentDto.getEquip_code());
+            if (!attachments.isEmpty()) {
+                equipmentDto.setAttachments(attachments);
+            }
+            storenDto.setEquipmentDTO(equipmentDto);
+        }
 
         System.out.println("OWNER userCode : " + equipmentDto.getUser_code());
 

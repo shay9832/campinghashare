@@ -110,4 +110,18 @@
         VALUES(ADDRESS_LOG_SEQ.NEXTVAL, #{userCode}, #{zipCode}, #{address1}, #{address2}, SYSDATE)
     </insert>
 
+    <!-- 유저코드로 유저id 가져오기 -->
+    <select id="getUserIdByUserCode">
+        SELECT USER_ID
+        FROM USERS
+        WHERE USER_CODE=#{userCode}
+    </select>
+
+    <!-- 유저코드로 유저비밀번호 가져오기 -->
+    <select id="getUserPwByUserCode">
+        SELECT USER_PW
+        FROM USERS
+        WHERE USER_CODE=#{userCode}
+    </select>
+
 </mapper>

@@ -39,4 +39,9 @@ public interface IUserDAO {
 
     // 해당 유저의 주소 신규 등록
     int insertAddress(@Param("userCode") int userCode, @Param("zipCode") String zipCode, @Param("address1") String address1, @Param("address2") String address2);
+
+    // 유저코드로 유저id 가져오기
+    String getUserIdByUserCode(@Param("userCode") int userCode);
+    // 유저코드로 유저비밀번호 가져오기
+    String getUserPwByUserCode(@Param("userCode") int userCode);
 }

@@ -16,6 +16,109 @@
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 </head>
+<style>
+    .register-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: var(--bg-primary);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .register-title {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+        color: var(--text-primary);
+        font-size: var(--font-lg);
+        font-weight: var(--font-bold);
+    }
+
+    .register-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: var(--font-sm);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-weight: var(--font-medium);
+        color: var(--text-primary);
+        font-size: var(--font-sm);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-sm);
+    }
+
+    .input-group {
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+
+    .required-field {
+        color: var(--color-coral);
+    }
+
+    .form-error {
+        font-size: var(--font-xxs);
+        color: var(--color-error);
+        margin-top: var(--spacing-xs);
+        display: none;
+    }
+
+    .form-success {
+        font-size: var(--font-xxs);
+        color: var(--color-success);
+        margin-top: var(--spacing-xs);
+        display: none;
+    }
+
+    .verify-btn {
+        padding: 10px 15px;
+        background-color: var(--color-gray-200);
+        border: 1px solid var(--border-medium);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-xs);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .verify-btn:hover {
+        background-color: var(--color-gray-300);
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: var(--spacing-xl);
+    }
+
+    @media (max-width: 768px) {
+        .register-container {
+            padding: var(--spacing-md);
+            margin: 20px 15px;
+        }
+
+        .input-group {
+            flex-direction: column;
+        }
+
+        .verify-btn {
+            width: 100%;
+        }
+    }
+</style>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
@@ -83,52 +186,58 @@
 
     <!-- 마이페이지 메인 콘텐츠 -->
     <div class="mypage-main-content">
+        <div class="page-header">
+            <h2 class="page-title">회원 정보 수정 - 이메일 변경</h2>
+        </div>
+
         <!-- 이메일 변경 -->
-        <div id="email-change-view" class="content-box">
-            <h3 class="content-box-title mb-4">회원 정보 수정 - 이메일 변경</h3>
-
+        <div class="register-container">
             <div class="form-group">
-                <label class="form-label">새 이메일</label>
-                <div class="input-container">
-                    <input type="email" class="form-control" id="email-input" placeholder="예) abc1234@test.com" value="">
+                <label class="form-label">새 이메일  <span class="required-field">*</span></label>
+                <div class="input-group">
+                    <label for="email-input"></label><input type="email" class="form-input" id="email-input" placeholder="예) abc1234@test.com" value="">
+                    <button type="button" class="verify-btn" id="email-verify-btn">인증번호 받기</button>
                 </div>
+                <p class="form-error" id="nicknameError">사용 불가한 이메일입니다.</p>
+                <p class="form-success" id="nicknameSuccess">사용 가능한 이메일입니다.</p>
             </div>
 
-            <div class="form-group mt-3">
-                <div class="input-container">
-                    <button class="btn btn-secondary w-100" id="verification-btn">인증번호 받기</button>
+            <div class="form-group mt-4" id="verification-area" style="display: block;">
+                <div class="d-flex justify-content-between" style="flex-wrap: nowrap;">
+                    <label class="form-label text-secondary">인증번호 입력</label>
+                    <div class="text-right mt-1">
+                        <button class="btn-text" id="resend-btn">재발송</button>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group mt-4" id="verification-area" style="display: none;">
-                <label class="form-label">인증번호 입력</label>
-                <div class="input-container d-flex">
-                    <input type="text" class="form-control" id="verification-code" placeholder="1234">
-                    <button class="btn btn-primary ml-2" id="verify-btn">확인</button>
+                <div class="input-group justify-content-center" style="flex-direction:row;">
+                    <input type="text" class="form-input" id="verification-code" placeholder="1234"
+                    style="width:80%;">
+                    <button class="btn btn-primary ml-2" style="width:20%;" id="verify-btn">확인</button>
                 </div>
                 <div class="form-text text-error" id="verification-error" style="display: none;">인증번호가 다릅니다.</div>
-                <div class="text-right mt-1">
-                    <button class="btn-text" id="resend-btn">재발송</button>
-                </div>
-            </div>
 
-            <div class="form-group mt-4">
-                <div class="form-switch">
-                    <label class="form-check">
-                        <span>이메일 수신동의</span>
-                        <div class="toggle-container ml-3">
-                            <input type="checkbox" id="email-subscribe" class="toggle-input" checked>
-                            <label for="email-subscribe" class="toggle-label">
-                                <span class="toggle-on">ON</span>
-                                <span class="toggle-off">OFF</span>
+                <div class="input-group mt-4" style="display: flex; justify-content: space-between; align-items: flex-start; flex-direction: row;">
+                    <label class="form-label text-secondary">이메일 수신동의</label>
+                    <form style="display: flex;">
+                        <div>
+                            <label class="mr-3">
+                                <input type="radio" name="emailConsent" value="yes"> 예 (수신 동의)
                             </label>
                         </div>
-                    </label>
+                        <div>
+                            <label>
+                                <input type="radio" name="emailConsent" value="no"> 아니요 (수신 거부)
+                            </label>
+                        </div>
+                    </form>
                 </div>
             </div>
 
-            <div class="button-container mt-4">
-                <button class="btn btn-primary" id="complete-email-btn">수정</button>
+
+
+            <div class="button-container">
+                <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/mypage-main.action'">이전</button>
+                <button type="submit" class="btn btn-primary" id="confirm-email-btn">다음</button>
             </div>
         </div>
     </div>

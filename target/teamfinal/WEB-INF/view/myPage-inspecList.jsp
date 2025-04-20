@@ -240,7 +240,7 @@
 
             <!-- 거래 ID 검색 -->
             <div class="search-container">
-                <input type="text" id="search-service-id" placeholder="거래 ID를 입력하세요">
+                <input type="text" id="search-service-id" placeholder="거래 ID를 입력하세요" value="${not empty storenId ? storenId : ''}">
                 <button type="button" class="search-button" id="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
@@ -249,7 +249,7 @@
             <!-- 스토렌 탭 콘텐츠 -->
             <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
                 <!-- 입고/반납 필터 -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <div class="table-actions align-items-center flex-wrap mb-3">
                     <!-- 탭 필터 -->
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="tab-nav">
@@ -380,12 +380,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 <script>
     $(document).ready(function () {
-        // 데이터 로드 상태 추적
-        // let loadedData = {
-        //     'storage': false,
-        //     'storen-return': false,
-        //     'storen-store': true, // 초기 페이지 로드 시 이미 로드됨
-        // };
+        // 페이지 로딩 시 검색창에 값이 있으면 자동 검색 실행
+        const initialSearchValue = $('#search-service-id').val().trim();
+        console.log('초기 검색값:', initialSearchValue);
+        if(initialSearchValue !== '') {
+            // 약간의 지연 후 검색 실행 (DOM이 완전히 로드된 후)
+            setTimeout(function() {
+                performSearch();
+            }, 300);
+        }
 
         // 현재 활성화된 스토렌 서브탭
         let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
@@ -429,175 +432,25 @@
             $('#storen-content .tab-link').removeClass('active');
             $(this).addClass('active');
 
-
-            // 데이터 로드 (캐시 상태 판단은 loadStorenData 내부에서)
+            // 데이터 로드
             loadStorenData(currentStorenSubTab);
         });
 
-        // 스토렌 데이터 로드 함수
-        function loadStorenData(subTabType) {
-            // 기본값 설정으로 오류 방지
-            subTabType = subTabType || 'store';
-
-            // const dataKey = 'storen-' + subTabType;
-            //
-            // console.log("dataKey = " + dataKey); // 디버깅용
-            // console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
-
-            // 이미 로드된 데이터라면 다시 요청하지 않음
-            //if (loadedData[dataKey]) {
-            //    return;
-            //}
-
-            // 로딩 표시
-            $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
-
-            // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/inspec/storen/' + subTabType;
-
-            // AJAX 요청
-            $.ajax({
-                url: apiUrl,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    // 데이터 로드 상태 업데이트
-                    //loadedData[dataKey] = true;
-
-                    // 테이블 내용 업데이트
-                    updateTableContent('#storen-content', data);
-
-                    // 검색 필터 다시 적용
-                    if ($('#search-service-id').val().trim() !== '') {
-                        performSearch();
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('데이터 로드 실패: ' + error);
-                    $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
-                }
-            });
-        }
-
-        // 보관 데이터 로드 함수
-        function loadStorageData() {
-
-            const dataKey = 'storage';
-
-            // 이미 로드된 데이터라면 다시 요청하지 않음
-            //if (loadedData[dataKey]) {
-            //    return;
-            //}
-
-            // 로딩 표시
-            $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
-
-            // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/inspec/storage';
-
-            // AJAX 요청
-            $.ajax({
-                url: apiUrl,
-                type: 'GET',
-                dataType: 'json',
-                success: function (data) {
-                    // 데이터 로드 상태 업데이트
-                    //loadedData[dataKey] = true;
-
-                    // 테이블 내용 업데이트
-                    updateTableContent('#storage-content', data);
-
-                    // 검색 필터 다시 적용
-                    if ($('#search-service-id').val().trim() !== '') {
-                        performSearch();
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('데이터 로드 실패: ' + error);
-                    $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
-                }
-            });
-        }
-
-        // 테이블 내용 업데이트 함수
-        function updateTableContent(contentSelector, inspeclist) {
-            console.log("updateTableContent 호출됨, 선택자:", contentSelector, "데이터:", inspeclist);
-            const tbody = $(contentSelector + ' .table-container tbody');
-            tbody.empty();
-
-            if (!inspeclist || inspeclist.length === 0) {
-                tbody.html('<tr><td colspan="11" class="text-center">데이터가 없습니다.</td></tr>');
-                return;
-            }
-
-            // 데이터 행 추가
-            inspeclist.forEach(function (inspec) {
-                // 검수 타입 문자열 '_' 구분자로 잘라내기 - 안전하게 처리
-                let InspecType = inspec.inspec_type || '';
-                if (InspecType && InspecType.includes('_')) {
-                    InspecType = InspecType.split('_')[1];
-                }
-
-                // 값이 없는 경우 기본값 사용
-                const equip_grade = inspec.equip_grade || 'N/A';
-                // 등급 클래스 설정 (N/A를 NA로 변환)
-                let equip_grade_class = equip_grade === "N/A" ? "NA" : equip_grade;
-
-                // 검수 완료 여부 확인 (서비스 계층에서 확인한 방식과 동일하게)
-                const inspecStatus = inspec.inspec_status || '';
-                const isInspectionCompleted = !(inspecStatus.includes('대기') || equip_grade === 'N/A');
-                console.log(isInspectionCompleted);
-
-                // 서비스 계층의 처리를 무시하지 않으면서 프론트엔드에서 추가 보호
-                const resultActionType = (inspec.inspec_result_action_type && inspec.inspec_result_action_type !== 'null')
-                    ? inspec.inspec_result_action_type
-                    : '검수 대기중';
-
-                const completedDate = (inspec.completed_date && inspec.completed_date !== 'null')
-                    ? inspec.completed_date
-                    : '검수 전';
-
-                // 버튼 상태
-                const buttonDisabled = !isInspectionCompleted ? 'disabled' : '';
-                console.log(buttonDisabled);
-                // 행 HTML 생성
-                const row =
-                    '<tr class="table-row" data-id="' + inspec.service_id + '">' +
-                    '<td>' + inspec.service_id + '</td>' +
-                    '<td>' + (inspec.delivery_id || '-') + '</td>' +
-                    '<td>' + inspec.equip_code + '</td>' +
-                    '<td>' + InspecType + '</td>' +
-                    '<td class="title-cell delivery-name" title="' + inspec.equip_name + '">' + inspec.equip_name + '</td>' +
-                    '<td>' + inspec.majorCategory + ' > ' + inspec.middleCategory + '</td>' +
-                    '<td>' + inspec.inspec_status + '</td>' +
-                    '<td>' +
-                    '<span class="grade-badge grade-' + equip_grade_class + '">' +
-                    equip_grade +
-                    '</span>' +
-                    '</td>' +
-                    '<td>' + resultActionType + '</td>' +
-                    '<td>' + completedDate + '</td>' +
-                    '<td>' +
-                    '<button type="button" class="btn-sm btn-track-external" ' +
-                    'data-id="' + inspec.service_id + '" ' + buttonDisabled + '>자세히..</button>' +
-                    '</td>' +
-                    '</tr>';
-
-                tbody.append(row);
-            });
-        }
-
-
-        // 검색 기능
+        // 검색 기능 활성화
         $('#btn-search').on('click', function () {
             performSearch();
         });
 
-        // 엔터 키 검색
+        // 엔터 키 검색 활성화
         $('#search-service-id').on('keypress', function (e) {
             if (e.which === 13) {
                 performSearch();
             }
+        });
+
+        // 필터 해제 버튼 클릭 이벤트
+        $(document).on('click', '.btn-clear-filter', function() {
+            clearFilters();
         });
 
         // 상세 버튼 클릭 이벤트
@@ -608,52 +461,242 @@
         });
     });
 
-    // 검색 실행 함수
-    function performSearch() {
-        const searchValue = $('#search-service-id').val().trim().toLowerCase();
+    //필터 초기화 함수
+    function clearFilters() {
+        // 필터 상태 제거
+        $('.filter-notice').remove();
 
-        if (searchValue === '') {
-            // 검색어가 없으면 모든 행 표시
-            $('.table-row').show();
-            // empty-state 제거
-            $('.empty-state').remove();
+        // 원래 데이터 다시 로드
+        loadStorenData('store');
+    }
+
+    // 스토렌 데이터 로드 함수
+    function loadStorenData(subTabType) {
+        // 기본값 설정으로 오류 방지
+        subTabType = subTabType || 'store';
+
+        // 로딩 표시
+        $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
+
+        // API 엔드포인트 결정
+        const apiUrl = '${pageContext.request.contextPath}/api/inspec/storen/' + subTabType;
+
+        // AJAX 요청
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 테이블 내용 업데이트
+                updateTableContent('#storen-content', data);
+
+                // 검색 필터 다시 적용
+                if ($('#search-service-id').val().trim() !== '') {
+                    performSearch();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('데이터 로드 실패: ' + error);
+                $('#storen-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+            }
+        });
+    }
+
+    // 보관 데이터 로드 함수
+    function loadStorageData() {
+        // 로딩 표시
+        $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center">로딩 중...</td></tr>');
+
+        // API 엔드포인트 결정
+        const apiUrl = '${pageContext.request.contextPath}/api/inspec/storage';
+
+        // AJAX 요청
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                // 테이블 내용 업데이트
+                updateTableContent('#storage-content', data);
+
+                // 검색 필터 다시 적용
+                if ($('#search-service-id').val().trim() !== '') {
+                    performSearch();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('데이터 로드 실패: ' + error);
+                $('#storage-content .table-container tbody').html('<tr><td colspan="11" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+            }
+        });
+    }
+
+    // 테이블 내용 업데이트 함수
+    function updateTableContent(contentSelector, inspeclist) {
+        console.log("updateTableContent 호출됨, 선택자:", contentSelector, "데이터:", inspeclist);
+        const tbody = $(contentSelector + ' .table-container tbody');
+        tbody.empty();
+
+        if (!inspeclist || inspeclist.length === 0) {
+            tbody.html('<tr><td colspan="11" class="text-center">데이터가 없습니다.</td></tr>');
             return;
         }
 
-        // 모든 활성 탭의 행을 검색
-        const activeTab = $('.tab.active').data('tab');
-        const rows = $('#' + activeTab + '-content .table-row');
-        let foundMatch = false;
-
-        rows.each(function () {
-            const rowData = $(this).text().toLowerCase();
-            const equipmentCode = $(this).find('td:eq(0)').text().toLowerCase();
-            const equipmentName = $(this).find('td:eq(4)').text().toLowerCase();
-
-            // 검색 조건 확인
-            if (equipmentCode.includes(searchValue) || equipmentName.includes(searchValue) || rowData.includes(searchValue)) {
-                $(this).show();
-                foundMatch = true;
-            } else {
-                $(this).hide();
+        // 데이터 행 추가
+        inspeclist.forEach(function (inspec) {
+            // 검수 타입 문자열 '_' 구분자로 잘라내기 - 안전하게 처리
+            let InspecType = inspec.inspec_type || '';
+            if (InspecType && InspecType.includes('_')) {
+                InspecType = InspecType.split('_')[1];
             }
+
+            // 값이 없는 경우 기본값 사용
+            const equip_grade = inspec.equip_grade || 'N/A';
+            // 등급 클래스 설정 (N/A를 NA로 변환)
+            let equip_grade_class = equip_grade === "N/A" ? "NA" : equip_grade;
+
+            // 검수 완료 여부 확인 (서비스 계층에서 확인한 방식과 동일하게)
+            const inspecStatus = inspec.inspec_status || '';
+            const isInspectionCompleted = !(inspecStatus.includes('대기') || equip_grade === 'N/A');
+            console.log(isInspectionCompleted);
+
+            // 서비스 계층의 처리를 무시하지 않으면서 프론트엔드에서 추가 보호
+            const resultActionType = (inspec.inspec_result_action_type && inspec.inspec_result_action_type !== 'null')
+                ? inspec.inspec_result_action_type
+                : '검수 대기중';
+
+            const completedDate = (inspec.completed_date && inspec.completed_date !== 'null')
+                ? inspec.completed_date
+                : '검수 전';
+
+            // 버튼 상태
+            const buttonDisabled = !isInspectionCompleted ? 'disabled' : '';
+            console.log(buttonDisabled);
+
+            // 행 HTML 생성
+            const row =
+                '<tr class="table-row" data-id="' + inspec.service_id + '">' +
+                '<td>' + inspec.service_id + '</td>' +
+                '<td>' + (inspec.delivery_id || '-') + '</td>' +
+                '<td>' + inspec.equip_code + '</td>' +
+                '<td>' + InspecType + '</td>' +
+                '<td class="title-cell delivery-name" title="' + inspec.equip_name + '">' + inspec.equip_name + '</td>' +
+                '<td>' + inspec.majorCategory + ' > ' + inspec.middleCategory + '</td>' +
+                '<td>' + inspec.inspec_status + '</td>' +
+                '<td>' +
+                '<span class="grade-badge grade-' + equip_grade_class + '">' +
+                equip_grade +
+                '</span>' +
+                '</td>' +
+                '<td>' + resultActionType + '</td>' +
+                '<td>' + completedDate + '</td>' +
+                '<td>' +
+                '<button type="button" class="btn-sm btn-track-external" ' +
+                'data-id="' + inspec.service_id + '" ' + buttonDisabled + '>자세히..</button>' +
+                '</td>' +
+                '</tr>';
+
+            tbody.append(row);
         });
+    }
 
-        // 검색 결과가 없는 경우 처리
-        if (!foundMatch) {
-            // 이미 empty-state가 있는지 확인
-            if ($('#' + activeTab + '-content .empty-state').length === 0) {
-                $('#' + activeTab + '-content .table-container').after(`
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <p>검색 결과가 없습니다</p>
-                        <div class="hint">다른 검색어로 다시 시도해보세요.</div>
-                    </div>
-                `);
-            }
+    // 검색 실행 함수
+    function performSearch() {
+        const searchValue = $('#search-service-id').val().trim();
+
+        // 검색어가 숫자(ID)인 경우 API 호출, 그 외에는 기존 클라이언트 검색 수행
+        if(searchValue !== '' && !isNaN(searchValue)) {
+            // ID로 검색하는 경우
+            const storenId = parseInt(searchValue);
+
+            // 로딩 표시
+            const activeTab = $('.tab.active').data('tab');
+            $('#' + activeTab + '-content .table-container tbody').html(
+                '<tr><td colspan="11" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 검색 중...</td></tr>'
+            );
+
+            // API 호출
+            $.ajax({
+                url: '/api/inspec/search',
+                type: 'GET',
+                data: {
+                    id: storenId
+                },
+                dataType: 'json',
+                success: function(data) {
+
+                    // 필터 알림 추가
+                    if ($('.filter-notice').length > 0) {
+                        $('.filter-notice').remove();
+                    }
+
+                    $('#storen-content .table-actions').after(
+                        '<div class="filter-notice">' +
+                        '<span>"스토렌 ID : ' + storenId + '" 검색 결과 (' + data.length + '개)</span>' +
+                        '<button class="btn-sm btn-clear-filter">모든 검수 결과 보기</button>' +
+                        '</div>'
+                    );
+
+                    if(data.length === 0) {
+                        // 검색 결과가 없는 경우
+                        $('#' + activeTab + '-content .table-container tbody').html(
+                            '<tr><td colspan="11" class="text-center py-4">검색 결과가 없습니다.</td></tr>'
+                        );
+                    } else {
+                        // 결과 표시 - 직접 테이블 업데이트 호출
+                        updateTableContent('#' + activeTab + '-content', data);
+                    }
+
+                    // 검색 완료 후 검색창 비우기
+                    $('#search-service-id').val('');
+                },
+                error: function(xhr, status, error) {
+                    console.error('검색 실패: ' + error);
+                    $('#' + activeTab + '-content .table-container tbody').html(
+                        '<tr><td colspan="11" class="text-center text-danger">검색 중 오류가 발생했습니다.</td></tr>'
+                    );
+                }
+            });
         } else {
-            // 검색 결과가 있으면 empty-state 제거
-            $('#' + activeTab + '-content .empty-state').remove();
+            // 기존 클라이언트 사이드 검색 수행 (텍스트 검색)
+            const activeTab = $('.tab.active').data('tab');
+            const rows = $('#' + activeTab + '-content .table-row');
+            let foundMatch = false;
+
+            if(searchValue === '') {
+                // 검색어가 없으면 모든 행 표시
+                rows.show();
+                // empty-state 제거
+                $('.empty-state').remove();
+                return;
+            }
+
+            rows.each(function() {
+                const rowData = $(this).text().toLowerCase();
+
+                // 검색 조건 확인 (텍스트 포함 여부)
+                if(rowData.includes(searchValue.toLowerCase())) {
+                    $(this).show();
+                    foundMatch = true;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // 검색 결과가 없는 경우 메시지 표시
+            if(!foundMatch) {
+                if($('#' + activeTab + '-content .empty-state').length === 0) {
+                    $('#' + activeTab + '-content .table-container').after(
+                        '<div class="empty-state">' +
+                        '<i class="fas fa-search"></i>' +
+                        '<p>검색 결과가 없습니다</p>' +
+                        '<div class="hint">다른 검색어로 다시 시도해보세요.</div>' +
+                        '</div>'
+                    );
+                }
+            } else {
+                $('#' + activeTab + '-content .empty-state').remove();
+            }
         }
     }
 </script>

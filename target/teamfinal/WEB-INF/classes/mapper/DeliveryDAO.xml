@@ -88,4 +88,15 @@
         WHERE "배송ID" = #{delivery_id}
     </select>
 
+    <!-- 스토렌 ID로 내용 조회 -->
+    <select id="getDeliveryByStorenId" resultMap="deliveryResultMap">
+        SELECT "배송종류", "발송인", "수취인"
+             , "스토렌ID", "보관ID", "렌탈매칭완료ID", "렌탈ID", "배송ID"
+             , "장비명", "운송사이름", "운송장번호"
+             , "배송시작일", "배송종료일"
+             , "검수결과처리일", "검수결과처리유형"
+        FROM VW_DELIVERY_MANAGEMENT
+        WHERE "스토렌ID" = #{storenId} AND ("발송인" = #{userCode} OR "수취인" = #{userCode})
+    </select>
+
 </mapper>
