@@ -6,10 +6,7 @@ import com.team.mvc.Interface.IReplyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +22,13 @@ public class ReplyController {
     @PostMapping("/add.action")
     public ResponseEntity<Map<String, Object>> addReply(
             @RequestBody ReplyDTO replyDTO,
+            @ModelAttribute("userCode") Integer userCode,
+            @ModelAttribute("adminId") String adminId,
             HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // 세션에서 로그인한 사용자 정보 가져오기
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
             // 로그인 체크
             if (userCode == null) {
                 response.put("success", false);
@@ -66,14 +62,13 @@ public class ReplyController {
     @PostMapping("/delete.action")
     public ResponseEntity<Map<String, Object>> deleteReply(
             @RequestBody Map<String, Object> requestData,
+            @ModelAttribute("userCode") Integer userCode,
+            @ModelAttribute("adminId") String adminId,
             HttpSession session) {
 
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // 세션에서 로그인한 사용자 정보 가져오기
-            Integer userCode = (Integer) session.getAttribute("user_code");
-
             // 로그인 체크
             if (userCode == null) {
                 response.put("success", false);

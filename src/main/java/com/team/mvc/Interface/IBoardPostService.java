@@ -69,6 +69,9 @@ public interface IBoardPostService {
     // 첨부파일 추가
     int insertAttachment(AttachmentDTO dto);
 
+    // 첨부파일 제거
+    int deleteAttachment(int attachmentId);
+
     // 북마크 여부 확인
     boolean checkBookmark(BoardPostDTO dto);
 

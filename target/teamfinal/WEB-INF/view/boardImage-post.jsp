@@ -30,7 +30,12 @@
             border-bottom: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* 위에 정렬 */
+        }
+
+        .post-actions-right {
+            display: flex;
+            gap: 10px;
         }
 
         .post-title {
@@ -48,44 +53,85 @@
             gap: var(--spacing-md);
         }
 
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .post-author img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         .post-body {
             padding: var(--spacing-lg);
             line-height: 1.6;
             min-height: 200px;
         }
 
+        .post-body p {
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* 게시글 이미지 갤러리 개선 스타일 */
         .post-images {
             display: flex;
-            gap: var(--spacing-sm);
-            margin: var(--spacing-lg) 0;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+            align-items: center;
         }
 
         .post-image {
-            width: 120px;
-            height: 120px;
+            width: 90%;
+            max-width: 800px;
+            height: auto;
             border: 1px solid var(--border-medium);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-md);
             overflow: hidden;
             cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-image:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .post-image img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+            height: auto;
+            object-fit: contain;
+            display: block;
         }
-
-        .post-image:hover img {
-            transform: scale(1.05);
-        }
-
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: var(--spacing-md);
             padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between; /* 양쪽 끝으로 정렬 */
+            align-items: center;
+            width: 100%;
+        }
+
+        .like-area {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px; /* 버튼 사이 간격 */
+            margin-top: 0 !important;
         }
 
         /* 심플 카드 스타일 */
@@ -417,7 +463,7 @@
             gap: var(--spacing-sm);
         }
 
-        .comment-btn, .delete-btn, .update-btn, .report-btn {
+        .comment-btn, .delete-btn, .update-btn, .report-btn, .delete-post-btn {
             background: transparent;
             border: none;
             color: var(--text-secondary);
@@ -427,7 +473,7 @@
             transition: all 0.2s ease;
         }
 
-        .comment-btn:hover, .delete-btn:hover, .update-btn:hover, .report-btn:hover {
+        .comment-btn:hover, .delete-btn:hover, .update-btn:hover, .report-btn:hover, .delete-post-btn:hover {
             color: var(--color-maple);
         }
 
@@ -534,6 +580,14 @@
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 
+<!-- 디버깅용 정보 (테스트 후 제거) -->
+<c:if test="${not empty sessionScope.userCode}">
+    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
+        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.userCode},
+        일치 여부: ${post.userCode == sessionScope.userCode}
+    </div>
+</c:if>
+
 <div class="page-wrapper">
     <div class="container" style="max-width: 1500px; padding: 0 15px;">
         <div class="main-content d-flex gap-4 my-5">
@@ -569,14 +623,6 @@
                     <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1></a>
                 </div>
 
-                <!-- 디버깅용 정보 (테스트 후 제거) -->
-                <c:if test="${not empty sessionScope.user_code}">
-                    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-                        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.user_code},
-                        일치 여부: ${post.userCode == sessionScope.user_code}
-                    </div>
-                </c:if>
-
                 <!-- 게시글 영역 -->
                 <div class="post-container">
                     <div class="post-header">
@@ -598,15 +644,12 @@
                                 <button class="update-btn"
                                         onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정
                                 </button>
-                                <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
+                                <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
                             </c:if>
                         </div>
                     </div>
 
                     <div class="post-body">
-                        <!-- 게시글 내용 -->
-                        ${fn:replace(post.postContent, cn, br)}
-
                         <!-- 이미지 첨부파일 표시 -->
                         <div class="post-images">
                             <c:if test="${not empty post.attachments}">
@@ -677,7 +720,7 @@
                                                 <div class="comment-actions">
                                                     <button class="comment-btn">답글</button>
                                                     <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                    <c:if test="${reply.userCode eq sessionScope.user_code}">
+                                                    <c:if test="${reply.userCode eq sessionScope.userCode}">
                                                         <button class="delete-btn" data-id="${reply.replyId}">
                                                             삭제
                                                         </button>
@@ -730,7 +773,7 @@
                                                             <div class="comment-actions">
                                                                 <button class="comment-btn">답글</button>
                                                                 <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                                <c:if test="${childReply.userCode eq sessionScope.user_code}">
+                                                                <c:if test="${childReply.userCode eq sessionScope.userCode}">
                                                                     <button class="delete-btn"
                                                                             data-id="${childReply.replyId}">삭제
                                                                     </button>
@@ -781,9 +824,9 @@
                     </div>
                 </div>
 
-                <!-- 관련 게시글 목록 -->
+                <!-- 게시글 목록 -->
                 <div class="posts-grid">
-                    <c:forEach var="recentPost" items="${recentPosts}">
+                    <c:forEach var="recentPost" items="${postList}">
                         <a href="boardimage-post.action?postId=${recentPost.postId}" class="simple-card">
                             <div class="simple-card-image">
                                 <c:choose>
@@ -1218,6 +1261,28 @@
         });
     }
 
+    // 댓글 삭제 이벤트 처리
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            const replyId = this.getAttribute('data-id');
+
+            // AJAX 요청 통합 함수 사용
+            sendAjaxRequest('api/reply/delete.action', 'POST', {
+                replyId: replyId
+            }, function (data) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('댓글 삭제에 실패했습니다: ' + data.message);
+                }
+            });
+        });
+    });
+
     // 바이트 카운터 초기화 및 적용
     function initializeByteCounters() {
         // 메인 댓글 입력창에 바이트 카운터 적용
@@ -1575,7 +1640,7 @@
 
     // 글쓰기 페이지로
     function goToWrite() {
-        window.location.href = "boardfree-write.action";
+        window.location.href = "boardimage-write.action";
     }
 </script>
 </body>

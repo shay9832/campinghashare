@@ -33,14 +33,6 @@
             overflow: hidden;
         }
 
-        .post-header {
-            padding: var(--spacing-md) var(--spacing-lg);
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .post-title {
             font-size: var(--font-xl);
             font-weight: var(--font-bold);
@@ -236,7 +228,7 @@
             gap: var(--spacing-sm);
         }
 
-        .comment-btn, .delete-btn, .update-btn, .report-btn {
+        .comment-btn, .delete-btn, .update-btn, .report-btn, .delete-post-btn {
             background: transparent;
             border: none;
             color: var(--text-secondary);
@@ -246,7 +238,7 @@
             transition: all 0.2s ease;
         }
 
-        .comment-btn:hover, .delete-btn:hover, .update-btn:hover, .report-btn:hover {
+        .comment-btn:hover, .delete-btn:hover, .update-btn:hover, .report-btn:hover, .delete-post-btn:hover {
             color: var(--color-maple);
         }
 
@@ -640,10 +632,10 @@
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 <!-- 디버깅용 정보 (테스트 후 제거) -->
-<c:if test="${not empty sessionScope.user_code}">
+<c:if test="${not empty sessionScope.userCode}">
     <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.user_code},
-        일치 여부: ${post.userCode == sessionScope.user_code}
+        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.userCode},
+        일치 여부: ${post.userCode == sessionScope.userCode}
     </div>
 </c:if>
 
@@ -703,7 +695,7 @@
                                 <button class="update-btn"
                                         onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정
                                 </button>
-                                <button class="delete-btn" onclick="confirmDelete(${post.postId})">삭제</button>
+                                <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
                             </c:if>
                         </div>
                     </div>
@@ -712,23 +704,23 @@
 
 
                         <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
-                        <%--                        <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
-                        <%--                            <p>첨부파일 정보:</p>--%>
-                        <%--                            <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
-                        <%--                            <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
+<%--                                                <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+<%--                                                    <p>첨부파일 정보:</p>--%>
+<%--                                                    <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
+<%--                                                    <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
 
-                        <%--                            <c:if test="${not empty post.attachments}">--%>
-                        <%--                                <ul>--%>
-                        <%--                                    <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
-                        <%--                                        <li>--%>
-                        <%--                                            첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
-                        <%--                                            경로: ${attachment.attachmentPath},--%>
-                        <%--                                            크기: ${attachment.attachmentSize}--%>
-                        <%--                                        </li>--%>
-                        <%--                                    </c:forEach>--%>
-                        <%--                                </ul>--%>
-                        <%--                            </c:if>--%>
-                        <%--                        </div>--%>
+<%--                                                    <c:if test="${not empty post.attachments}">--%>
+<%--                                                        <ul>--%>
+<%--                                                            <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
+<%--                                                                <li>--%>
+<%--                                                                    첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
+<%--                                                                    경로: ${attachment.attachmentPath},--%>
+<%--                                                                    크기: ${attachment.attachmentSize}--%>
+<%--                                                                </li>--%>
+<%--                                                            </c:forEach>--%>
+<%--                                                        </ul>--%>
+<%--                                                    </c:if>--%>
+<%--                                                </div>--%>
 
                         <!-- 간단한 첨부파일 표시 시도 -->
                         <c:if test="${not empty post.attachments}">
@@ -798,7 +790,7 @@
                                                 <div class="comment-actions">
                                                     <button class="comment-btn">답글</button>
                                                     <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                    <c:if test="${reply.userCode eq sessionScope.user_code}">
+                                                    <c:if test="${reply.userCode eq sessionScope.userCode}">
                                                         <button class="delete-btn" data-id="${reply.replyId}">
                                                             삭제
                                                         </button>
@@ -851,7 +843,7 @@
                                                             <div class="comment-actions">
                                                                 <button class="comment-btn">답글</button>
                                                                 <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                                <c:if test="${childReply.userCode eq sessionScope.user_code}">
+                                                                <c:if test="${childReply.userCode eq sessionScope.userCode}">
                                                                     <button class="delete-btn"
                                                                             data-id="${childReply.replyId}">삭제
                                                                     </button>
@@ -1349,6 +1341,29 @@
             });
         });
     }
+
+    // 댓글 삭제 이벤트 처리
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
+                return;
+            }
+
+            const replyId = this.getAttribute('data-id');
+
+            // AJAX 요청 통합 함수 사용
+            sendAjaxRequest('api/reply/delete.action', 'POST', {
+                replyId: replyId
+            }, function (data) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('댓글 삭제에 실패했습니다: ' + data.message);
+                }
+            });
+        });
+    });
+
 
     // 바이트 카운터 초기화 및 적용
     function initializeByteCounters() {
