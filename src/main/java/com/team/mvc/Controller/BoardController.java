@@ -91,6 +91,9 @@ public class BoardController {
     @RequestMapping("/boardbest.action")
     public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
+                            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+                            @RequestParam(value = "searchType", required = false) String searchType,
+                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                             @ModelAttribute("userCode") Integer userCode,
                             @ModelAttribute("adminId") String adminId,
                             Model model) {
@@ -98,15 +101,31 @@ public class BoardController {
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
 
-        // 전체 인기글 조회
-        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(null);
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 전체 인기글 조회 (검색 조건과 정렬 조건 적용)
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
 
         // 페이징 처리
         int totalPostCount = totalHotPost.size();
         Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
 
         model.addAttribute("totalHotPost", totalHotPost);
         model.addAttribute("pagenation", pagenation);
+        model.addAttribute("sortType", sortType);
 
         return "boardBest";
     }
@@ -367,6 +386,7 @@ public class BoardController {
                                             @RequestParam(value = "size", defaultValue = "10") int size,
                                             @RequestParam(value = "searchType", required = false) String searchType,
                                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
                                             @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
                                             @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
                                             @ModelAttribute("userCode") Integer userCode,
@@ -403,6 +423,8 @@ public class BoardController {
         // 검색 조건이 담긴 DTO 생성 (공통)
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        dto.setSortType(sortType);
 
         // 검색 조건 설정 (공통)
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -446,6 +468,11 @@ public class BoardController {
 
             // 일반 게시물 목록 조회
             postList = boardPostService.listPostList(dto);
+
+            // 첨부파일 조회
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(dto.getPostId());
+            dto.setAttachments(attachments);
+
 
             // 클라이언트에서 전달받은 원본 번호 적용
             for (BoardPostDTO post : postList) {
@@ -717,6 +744,10 @@ public class BoardController {
             return "redirect:/boardfree.action";
         }
 
+        // 첨부파일 정보 가져오기 - 이 부분이 누락되었을 가능성이 높음
+        List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+        post.setAttachments(attachments); // Post 객체에 첨부파일 목록 설정
+
         // 말머리 목록 조회
         List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(7); // 자유게시판 ID
 
@@ -739,6 +770,7 @@ public class BoardController {
     @ResponseBody
     public Map<String, Object> updatePost(BoardPostDTO dto,
                                           @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+                                          @RequestParam(value = "deletedAttachmentIds", required = false) String deletedAttachmentIds,
                                           @ModelAttribute("userCode") Integer userCode,
                                           @ModelAttribute("adminId") String adminId,
                                           HttpServletRequest request,
@@ -758,6 +790,23 @@ public class BoardController {
             if (post != null) {
                 int affectedRows = boardPostService.updatePost(dto);
                 System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
+
+                // 삭제할 첨부파일 처리
+                if (deletedAttachmentIds != null && !deletedAttachmentIds.isEmpty()) {
+                    String[] attachmentIds = deletedAttachmentIds.split(",");
+                    for (String attachmentId : attachmentIds) {
+                        try {
+                            int id = Integer.parseInt(attachmentId);
+
+                            // 정수형 id를 직접 전달
+                            boardPostService.deleteAttachment(id);;
+
+                        } catch (NumberFormatException e) {
+                            System.err.println("잘못된 첨부파일 ID: " + attachmentId);
+                        }
+                    }
+                }
+
 
                 // 첨부파일 처리
                 if (uploadFiles != null && !uploadFiles.isEmpty()) {
@@ -848,7 +897,7 @@ public class BoardController {
             BoardPostDTO post = boardPostService.getPostById(dto);
 
             // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자인지 확인
-            if (post != null && post.getUserCode() == userCode) {
+            if (post != null && (post.getUserCode() == userCode || adminId != null)) {
                 // 트랜잭션으로 게시글과 댓글 함께 삭제
                 boolean deleteSuccess = boardPostService.deletePostWithReplies(dto.getPostId());
 
@@ -1010,7 +1059,7 @@ public class BoardController {
     @RequestMapping("/api/boardimage.action")
     @ResponseBody
     public Map<String, Object> boardImageApi(@RequestParam(value = "page", defaultValue = "1") int page,
-                                             @RequestParam(value = "size", defaultValue = "10") int size,
+                                             @RequestParam(value = "size", defaultValue = "9") int size,
                                              @RequestParam(value = "searchType", required = false) String searchType,
                                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                              @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
@@ -1233,7 +1282,7 @@ public class BoardController {
         }
     }
 
-    // 게시글 수정 처리를 위한 메서드 (POST)
+    // 고독한 캠핑방 수정 처리를 위한 메서드 (POST)
     @RequestMapping(value = "/api/image/update.action", method = RequestMethod.POST)
     public String updateImagePost(BoardPostDTO dto,
                                   @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
@@ -1324,6 +1373,7 @@ public class BoardController {
                          @RequestParam(value = "size", defaultValue = "10") int size,
                          @RequestParam(value = "searchType", required = false) String searchType,
                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                         @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
                          HttpSession session,
                          Model model,
                          @ModelAttribute("userCode") Integer userCode,
@@ -1331,13 +1381,12 @@ public class BoardController {
         // 게시판 ID 설정
         int boardId = 1; // 공지사항
 
-        // 전체 공지사항 조회
-        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
-        model.addAttribute("noticeList", noticeList);
-
         // 검색 조건이 담길 dto 생성
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
 
         // 검색 조건 설정
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -1354,9 +1403,86 @@ public class BoardController {
         Pagenation pagenation = new Pagenation(page, getTotalNoticeCount, size, 10);
         dto.setPagenation(pagenation);
 
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice(dto);
+        model.addAttribute("noticeList", noticeList);
+
         model.addAttribute("pagenation", pagenation);
         return "notice";
     }
+
+
+    // 공지사항 처리를 위한 API
+    @RequestMapping("/api/notice.action")
+    @ResponseBody
+    public Map<String, Object> noticeapi(@RequestParam(value = "page", defaultValue = "1") int page,
+                                         @RequestParam(value = "size", defaultValue = "10") int size,
+                                         @RequestParam(value = "searchType", required = false) String searchType,
+                                         @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                         @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+                                         @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
+                                         @ModelAttribute("userCode") Integer userCode,
+                                         @ModelAttribute("adminId") String adminId) {
+        Map<String, Object> result = new HashMap<>();
+        int boardId = 1;
+
+        // 클라이언트에서 전달받은 원본 게시글 번호 맵 파싱
+        Map<String, String> originalPostNumbers = new HashMap<>();
+        if (originalPostNumbersJson != null && !originalPostNumbersJson.isEmpty()) {
+            try {
+                // JSON 문자열을 Map으로 변환
+                ObjectMapper mapper = new ObjectMapper();
+                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {});
+            } catch (Exception e) {
+                System.err.println("Error parsing originalPostNumbers: " + e.getMessage());
+            }
+        }
+
+        // 검색 조건이 담긴 DTO 생성
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+        }
+
+        // 전체 게시물 수 조회
+        int totalPostCount = boardPostService.getTotalNoticeCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 공지사항 목록 조회 (IBoardPostService에 맞게 호출)
+        List<BoardPostDTO> noticeList;
+        noticeList = boardPostService.listTotalNotice(dto);
+
+
+        // 클라이언트에서 전달받은 원본 번호 적용
+        for (BoardPostDTO post : noticeList) {
+            String postId = String.valueOf(post.getPostId());
+            if (originalPostNumbers.containsKey(postId)) {
+                try {
+                    int originalNum = Integer.parseInt(originalPostNumbers.get(postId));
+                    post.setRowNum(originalNum);
+                } catch (NumberFormatException e) {
+                    // 숫자가 아닌 경우 무시
+                }
+            }
+        }
+
+        result.put("noticeList", noticeList);
+        result.put("pagenation", pagenation);
+        result.put("sortType", sortType);
+
+        return result;
+    }
+
+
 
 
     // 공지사항 게시글 페이지
@@ -1435,7 +1561,7 @@ public class BoardController {
         dto.setPagenation(pagenation);
 
         // 공지사항 조회
-        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice(dto);
 
         // 모델 데이터 추가
         model.addAttribute("noticeList", noticeList);
@@ -1451,19 +1577,6 @@ public class BoardController {
                               HttpSession session,
                               @ModelAttribute("userCode") Integer userCode,
                               @ModelAttribute("adminId") String adminId) {
-        // 관리자 권한 확인 (관리자만 공지사항 작성 가능)
-//        Integer userCode = (Integer) session.getAttribute("user_code");
-//        Integer userGrade = (Integer) session.getAttribute("user_grade");
-
-        // 테스트를 위해 세션에 관리자 정보 직접 설정
-//        session.setAttribute("user_code", 1);  // ADMIN1 계정의 user_code
-//        session.setAttribute("user_grade", 1); // 관리자 등급
-
-        // 관리자가 아니면 공지사항 목록으로 리다이렉트
-        // userGrade 값이 1인 경우 관리자로 가정 (실제 구현에 맞게 수정 필요)
-//        if (userGrade == null || userGrade > 1) {
-//            return "redirect:/notice.action";
-//        }
 
         // adminId 여부로 접근 제한
         if (adminId == null) {
@@ -1589,6 +1702,10 @@ public class BoardController {
             return "redirect:/notice.action";
         }
 
+        // 첨부파일 정보 가져오기
+        List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+        post.setAttachments(attachments); // Post 객체에 첨부파일 목록 설정
+
         // 공지사항 게시판의 말머리 목록 조회
         List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(1);
 
@@ -1603,83 +1720,109 @@ public class BoardController {
     // 공지사항 수정 처리를 위한 API - AdminDTO의 userCode 사용
     @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateNotice(BoardPostDTO dto,
-                                            @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
-                                            @ModelAttribute("userCode") Integer userCode,
-                                            @ModelAttribute("adminId") String adminId,
-                                            HttpServletRequest request,
-                                            HttpSession session) {
+    public Map<String, Object> updateNotice(
+            BoardPostDTO dto,
+            @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+            @RequestParam(value = "deletedAttachmentIds", required = false) String deletedAttachmentIds,
+            @ModelAttribute("userCode") Integer userCode,
+            @ModelAttribute("adminId") String adminId,
+            HttpServletRequest request) {
+
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 세션에서 로그인한 사용자 코드 가져오기
-            System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
+            // 관리자 권한 체크
+            if (adminId == null) {
+                result.put("success", false);
+                result.put("message", "관리자 권한이 필요합니다.");
+                return result;
+            }
+
+            // 사용자 코드 설정
             dto.setUserCode(userCode);
+
+            // 게시판 ID 확인 및 설정
+            if (dto.getBoardId() <= 0) {
+                dto.setBoardId(1); // 공지사항 게시판 ID
+            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
-            System.out.println("게시글 작성자 코드: " + (post != null ? post.getUserCode() : "게시글 없음"));
+            if (post == null) {
+                result.put("success", false);
+                result.put("message", "게시글이 존재하지 않습니다.");
+                return result;
+            }
 
-            // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자가 맞는지 확인
-            if (post != null) {
-                int affectedRows = boardPostService.updatePost(dto);
-                System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
+            System.out.println("게시글 수정 시작 - ID: " + dto.getPostId() + ", 제목: " + dto.getPostTitle());
 
-                // 첨부파일 처리
-                if (uploadFiles != null && !uploadFiles.isEmpty()) {
-                    // 기존 첨부파일 삭제 (또는 비활성화) 처리 - 구현 필요
-                    boardPostService.deleteAttachment(dto.getPostId());
+            // 게시글 내용 업데이트
+            int affectedRows = boardPostService.updatePost(dto);
 
-                    // 업로드 경로를 webapp/resources/uploads로 설정
-                    String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
-                    System.out.println("업로드 경로: " + uploadPath);
+            // 삭제할 첨부파일 처리
+            if (deletedAttachmentIds != null && !deletedAttachmentIds.isEmpty()) {
+                String[] attachmentIds = deletedAttachmentIds.split(",");
+                for (String attachmentId : attachmentIds) {
+                    try {
+                        int id = Integer.parseInt(attachmentId);
 
-                    // 디렉토리가 없으면 생성
-                    File directory = new File(uploadPath);
-                    if (!directory.exists()) {
-                        directory.mkdirs();
-                    }
+                        // 정수형 id를 직접 전달
+                        boardPostService.deleteAttachment(id);;
 
-                    // 각 파일 처리
-                    for (int i = 0; i < uploadFiles.size(); i++) {
-                        MultipartFile file = uploadFiles.get(i);
-
-                        if (!file.isEmpty()) {
-                            // 파일명 중복 방지를 위한 uuid 추가
-                            String originalFileName = file.getOriginalFilename();
-                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                            String savedFileName = UUID.randomUUID().toString() + extension;
-
-                            // 파일 저장 경로 설정
-                            File savedFile = new File(directory, savedFileName);
-
-                            // 파일 저장
-                            file.transferTo(savedFile);
-
-                            // DB에 첨부파일 정보 저장
-                            AttachmentDTO attachmentDTO = new AttachmentDTO();
-                            attachmentDTO.setPostId(dto.getPostId());
-                            attachmentDTO.setAttachmentName(originalFileName);
-                            attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
-                            attachmentDTO.setAttachmentSize((int) file.getSize());
-                            attachmentDTO.setAttachmentOrder(i + 1);
-
-                            boardPostService.insertAttachment(attachmentDTO);
-                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("잘못된 첨부파일 ID: " + attachmentId);
                     }
                 }
+            }
 
-                if (affectedRows > 0) {
-                    result.put("success", true);
-                    result.put("message", "게시글이 수정되었습니다.");
-                    result.put("postId", dto.getPostId());
-                } else {
-                    result.put("success", false);
-                    result.put("message", "게시글 수정에 실패했습니다.");
+            // 새로운 첨부파일 처리
+            if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                // 업로드 경로 설정
+                String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+
+                // 디렉토리가 없으면 생성
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
                 }
+
+                // 각 파일 처리
+                for (int i = 0; i < uploadFiles.size(); i++) {
+                    MultipartFile file = uploadFiles.get(i);
+
+                    if (!file.isEmpty()) {
+                        // 파일명 중복 방지를 위한 UUID 추가
+                        String originalFileName = file.getOriginalFilename();
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String savedFileName = UUID.randomUUID().toString() + extension;
+
+                        // 파일 저장 경로 설정
+                        File savedFile = new File(directory, savedFileName);
+
+                        // 파일 저장
+                        file.transferTo(savedFile);
+
+                        // DB에 첨부파일 정보 저장
+                        AttachmentDTO attachmentDTO = new AttachmentDTO();
+                        attachmentDTO.setPostId(dto.getPostId());
+                        attachmentDTO.setAttachmentName(originalFileName);
+                        attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName);
+                        attachmentDTO.setAttachmentSize((int) file.getSize());
+                        attachmentDTO.setAttachmentOrder(i + 1);
+
+                        boardPostService.insertAttachment(attachmentDTO);
+                        System.out.println("새 첨부파일 추가: " + originalFileName);
+                    }
+                }
+            }
+
+            if (affectedRows > 0) {
+                result.put("success", true);
+                result.put("message", "게시글이 수정되었습니다.");
+                result.put("postId", dto.getPostId());
             } else {
                 result.put("success", false);
-                result.put("message", "게시글이 존재하지 않거나 수정 권한이 없습니다.");
+                result.put("message", "게시글 수정에 실패했습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
