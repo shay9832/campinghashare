@@ -26,7 +26,10 @@ public class AdminCreateCouponController {
 
         IAdminCreateCouponDAO dao = sqlSession.getMapper(IAdminCreateCouponDAO.class);
 
+
         dto.setCouponName(couponName);
+        dto.setCouponDiscount(couponDiscount);
+        dto.setCouponMonth(couponMonth);
 
 
 

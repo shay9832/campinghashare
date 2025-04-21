@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IAdminUserReportDAO">
+    <resultMap id="userReport" type="com.team.mvc.DTO.AdminUserReportDTO">
+        <result property="post_report_id" column="신고접수ID"/>
+        <result property="nickname1" column="신고자닉네임"/>
+        <result property="nickname2" column="피신고자닉네임"/>
+        <result property="post_id" column="분류"/>
+        <result property="report_type_name" column="신고유형"/>
+        <result property="report_content" column="신고내용"/>
+        <result property="report_date" column="신고일"/>
+        <result property="admin_id" column="관리자ID"/>
+        <result property="process_status" column="처리상태"/>
+        <result property="completed_date" column="처리일"/>
+    </resultMap>
+
+
+    <select id="getList" resultMap="userReport">
+        SELECT "신고접수ID", "신고자닉네임", "피신고자닉네임", "분류", "신고유형", "신고내용", "신고일", "관리자ID", "처리상태", "처리일"
+        FROM VW_REPORT_MANAGEMENT
+    </select>
+</mapper>
