@@ -2,14 +2,13 @@ package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class MypageController {
@@ -25,6 +24,10 @@ public class MypageController {
     private IMypageMatchingService matchingService;
     @Autowired
     private IMypageRentEquipService mypageRentEquipService;
+    @Autowired
+    private IMypageWishlistService wishlistService;
+    @Autowired
+    private IMypageInfoEditService infoEditService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -35,12 +38,25 @@ public class MypageController {
     // 마이페이지-패스워드 체크
     @RequestMapping(value="/mypage-infoedit-passwordcheck.action")
     public String mypagePasswordCheck(@ModelAttribute("userCode") Integer userCode, Model model) {
+        String userId = infoEditService.getUserIdByUserCode(userCode);
+        model.addAttribute("userId", userId);
         return "myPage-infoEdit-passwordCheck";
+    }
+
+    // 마이페이지-패스워드 체크-패스워드 일치여부 판단
+    @PostMapping("/mypage-password-check.action")
+    @ResponseBody
+    public String checkPassword(@ModelAttribute("userCode") Integer userCode
+                                            , @RequestParam("password") String password) {
+        System.out.println("입력한 비밀번호: " + password);
+        return infoEditService.checkPassword(userCode, password) ? "success" : "fail";
     }
 
     // 마이페이지-회원 정보 수정
     @RequestMapping(value="/mypage-infoedit.action")
     public String mypageInfoEdit(@ModelAttribute("userCode") Integer userCode, Model model) {
+        UserDTO user = infoEditService.getUserInfoByUserCode(userCode);
+        model.addAttribute("user", user);
         return "myPage-infoEdit";
     }
 
@@ -84,33 +100,6 @@ public class MypageController {
         return "myPage-point";
     }
 
-    // 마이페이지-내가 소유한 장비
-//    @RequestMapping(value="/mypage-myequip.action")
-//    public String mypageMyEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
-//        MyEquipDTO data = myEquipService.listMyEquip(userCode);
-//
-//        System.out.println("로그인한 userCode: " + userCode);
-//
-//        System.out.println("=== MypageController : mypageMyEquip() : START ===");
-//
-//        System.out.println("EquipList size: " + data.getEquipList().size()); // 콘솔 출력
-//        System.out.println("StorenMap size: " + data.getStorenMap().size()); // 콘솔 출력
-//        System.out.println("firstStorenList size: " + data.getFirstStorenList().size()); // 콘솔 출력
-//
-//        if (!data.getFirstStorenList().isEmpty()) {
-//            System.out.println("firstStorenList start_date : " + data.getFirstStorenList().getFirst().getRental_start_date());
-//        } else {
-//            System.out.println("firstStorenList is empty.");
-//        }
-//
-//        model.addAttribute("equipList", data.getEquipList());
-//        model.addAttribute("storenMap", data.getStorenMap());
-//        model.addAttribute("firstStorenList", data.getFirstStorenList());
-//        //rentalList, storageList도 받아와야함
-//
-//        System.out.println("=== MypageController : mypageMyEquip() : END ===");
-//        return "myPage-myEquip";
-//    }
 
     // 마이페이지-내가 소유한 장비(첫 요청 시)
     @RequestMapping(value="/mypage-myequip.action")
@@ -132,23 +121,57 @@ public class MypageController {
         return "myPage-myEquip";
     }
 
+    // 마이페이지-내가 소유한 장비 - 일반 탭
     @RequestMapping(value="/api/myequipment/general", produces="application/json")
     @ResponseBody
     public List<EquipmentDTO> getMypageMyGeneral(@ModelAttribute("userCode") Integer userCode) {
         return myEquipService.listMyGeneral(userCode);
     }
 
-    // 마이페이지-내가 소유한 장비(스토렌)
+    // 마이페이지-내가 소유한 장비 - 스토렌 탭
     @RequestMapping(value="/api/myequipment/storen", produces="application/json")
     @ResponseBody
     public List<StorenDTO> getMypageMyStoren(@ModelAttribute("userCode") Integer userCode) {
+        System.out.println("Storen-userCode : " + userCode);
         return myEquipService.listMyStoren(userCode);
+    }
+
+    // 마이페이지-내가 소유한 장비 - 스토렌 탭 - 상세
+    @RequestMapping(value="/api/myequipment/storen/details", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> getMypageMyStorenDetails(@ModelAttribute("userCode") Integer userCode
+                                                    , @RequestParam("equipCode") Integer equipCode) {
+        return myEquipService.listMyStorenDetail(userCode, equipCode);
+    }
+
+    // 마이페이지-화살표 : 상태별 스토렌 조회
+    @GetMapping("/api/myequipment/storen/filter")
+    @ResponseBody
+    public List<StorenDTO> getStorenByStatus(@ModelAttribute("userCode") Integer userCode
+                                                     , @RequestParam("status") String status) {
+        // 서비스 메소드 호출하여 여러 상태로 필터링된 스토렌 목록 가져오기
+        return myEquipService.listMyStorenByStatus(userCode, status);
+    }
+
+    // 마이페이지-긴급 확인 필요 : 상태별 스토렌 탭 조회(추후 통합 탭 조회로 수정 예정)
+    @GetMapping("/api/myequipment/emergency-filter")
+    @ResponseBody
+    public List<StorenDTO> getStorenByMultipleStatus(@ModelAttribute("userCode") Integer userCode,
+                                                       @RequestParam("keyword") String keyword,
+                                                       @RequestParam("statuses") String statusesParam) {
+        // 쉼표로 구분된 상태 문자열을 배열로 변환
+        String[] statuses = statusesParam.split(",");
+        System.out.println("Received statuses: " + Arrays.toString(statuses)); // 로그 추가
+
+        // 서비스 메소드 호출하여 즉시 확인 필요 항목 가져오기
+        return myEquipService.listMyStorenByStatus(userCode, keyword, statuses);
     }
 
 
     // 마이페이지-검수 결과 조회
     @RequestMapping(value="/mypage-inspecList.action")
-    public String mypageInspecList(@ModelAttribute("userCode") Integer userCode, Model model) {
+    public String mypageInspecList(@ModelAttribute("userCode") Integer userCode, Model model
+                                    , @RequestParam(value="id", required=false) Integer id) {
 
         System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : START ===");
 
@@ -157,6 +180,7 @@ public class MypageController {
         model.addAttribute("inspecList", storenStoreInspec);
         model.addAttribute("activeTab", "storen"); // 초기 탭 지정
         model.addAttribute("storenTabType", "store"); // 초기 서브탭 지정
+        model.addAttribute("storenId", id);
 
         System.out.println("storenStoreInspec size : " + storenStoreInspec.size());
         System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : END ===");
@@ -189,10 +213,19 @@ public class MypageController {
         return inspecListService.listStorenReturnInspec(userCode);
     }
 
+    // 검수 검색 API
+    @RequestMapping(value="/api/inspec/search", produces="application/json")
+    @ResponseBody
+    public List<MypageInspecListDTO> searchInspec(@ModelAttribute("userCode") Integer userCode,
+                                                  @RequestParam("id") Integer storenId) {
+        return inspecListService.getInspecByStorenId(userCode, storenId);
+    }
+
     // 마이페이지-배송 조회/내역
     // 처음에는 스토렌 사용자 배송내역 로드
     @RequestMapping(value="/mypage-delivery.action")
-    public String mypageDelivery(@ModelAttribute("userCode") Integer userCode, Model model) {
+    public String mypageDelivery(@ModelAttribute("userCode") Integer userCode, Model model
+                                , @RequestParam(value="id", required=false) Integer id) {
 
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : START ===");
 
@@ -201,6 +234,7 @@ public class MypageController {
         model.addAttribute("deliveryList", storenOwnerDeliveries);
         model.addAttribute("activeTab", "storen"); // 초기 탭 지정
         model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+        model.addAttribute("storenId", id);
 
         System.out.println("deliveryList size : " + storenOwnerDeliveries.size());
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
@@ -240,21 +274,43 @@ public class MypageController {
         return deliveryService.getRentalDeliveries(userCode);
     }
 
+    // 배송 검색 API
+    @RequestMapping(value="/api/delivery/search", produces="application/json")
+    @ResponseBody
+    public List<DeliveryDTO> searchDelivery(@ModelAttribute("userCode") Integer userCode,
+                                            @RequestParam("id") Integer storenId) {
+        return deliveryService.getDeliveryByStorenId(userCode, storenId);
+    }
+
     // 마이페이지-매칭 조회/내역
     @RequestMapping(value="/mypage-matchinglist.action")
-    public String mypageMatchingList(@ModelAttribute("userCode") Integer userCode, Model model) {
+    public String mypageMatchingList(@ModelAttribute("userCode") Integer userCode, Model model
+                                    , @RequestParam(value="id", required=false) Integer id
+                                    , @RequestParam(value="activeTab", required=false) String activeTab
+                                    , @RequestParam(value="storenTabType", required=false) String storenTabType) {
 
         System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : START ===");
+        StorenDTO storenSearch = new StorenDTO();
+        if (id != null) {
+            // 특정 스토렌id 검색으로 매칭 페이지에 들어왔다면
+            storenSearch = matchingService.getMatchingByStorenId(userCode, id);
+            model.addAttribute("storenId", id);
+            model.addAttribute("activeTab", activeTab);
+            model.addAttribute("storenTabType", storenTabType);
+            model.addAttribute("storenSearch", storenSearch);
+        }
+        else {
+            // 초기에는 스토렌 소유자의 매칭 신청이 들어온 내역만 로드
+            List<StorenDTO> storenOwnerList = matchingService.listStroenOwnerTab(userCode);
+            model.addAttribute("MatchingList", storenOwnerList);
+            model.addAttribute("activeTab", "storen"); // 초기 탭 지정
+            model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+            model.addAttribute("userCode", userCode);
+            model.addAttribute("storenId", id);
 
-        // 초기에는 스토렌 소유자의 매칭 신청이 들어온 내역만 로드
-        List<StorenDTO> storenOwnerList = matchingService.listStroenOwnerTab(userCode);
-        model.addAttribute("MatchingList", storenOwnerList);
-        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
-        model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
-        model.addAttribute("userCode", userCode);
-
-        System.out.println("deliveryList size : " + storenOwnerList.size());
-        System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : END ===");
+            System.out.println("deliveryList size : " + storenOwnerList.size());
+            System.out.println("=== MypageController : mypageMatchingList() - AJAX - STOREN Owner : END ===");
+        }
 
         return "myPage-matchingList";
     }
@@ -348,6 +404,14 @@ public class MypageController {
         return result;
     }
 
+    // 매칭 검색 API
+    @RequestMapping(value="/api/matching/search", produces="application/json")
+    @ResponseBody
+    public StorenDTO searchMatching(@ModelAttribute("userCode") Integer userCode,
+                                          @RequestParam("id") Integer storenId) {
+        return matchingService.getMatchingByStorenId(userCode, storenId);
+    }
+
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")
     public String mypageRentEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
@@ -369,8 +433,48 @@ public class MypageController {
     // 마이페이지-찜
     @RequestMapping(value="/mypage-wishlist.action")
     public String mypageWishlist(@ModelAttribute("userCode") Integer userCode, Model model) {
+        List<StorenDTO> storenList = wishlistService.listMyWishStoren(userCode);
+        model.addAttribute("storenList", storenList);
+        model.addAttribute("activeTab", "storen");
         return "myPage-wishlist";
     }
+
+    // 마이페이지-찜 AJAX 요청 처리(스토렌 탭)
+    @RequestMapping(value="/api/wish/storen", produces="application/json")
+    @ResponseBody
+    public List<StorenDTO> mypageWishlistStoren(@ModelAttribute("userCode") Integer userCode){
+
+        System.out.println("userCode: " + userCode);
+
+        return wishlistService.listMyWishStoren(userCode);
+    }
+
+    @RequestMapping(value="/api/wish/delete", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> deleteWish(@ModelAttribute("userCode") Integer userCode
+                                          , @RequestParam("id") Integer id
+                                          , @RequestParam("type") String type) {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 매칭 승인 요청 저장
+            boolean success = wishlistService.deleteMyWishStoren(userCode, id, type);
+
+            if (success) {
+                result.put("success", true);
+                result.put("message", "찜이 삭제되었습니다.");
+            } else {
+                result.put("success", false);
+                result.put("message", "찜이 삭제되지 않았습니다.");
+            }
+
+        } catch(Exception e){
+            result.put("success", false);
+            result.put("message", "오류가 발생했습니다: " + e.getMessage());
+        }
+        return result;
+    }
+
 
     // 마이페이지-나의 캠핑일지
     @RequestMapping(value="/mypage-diary.action")

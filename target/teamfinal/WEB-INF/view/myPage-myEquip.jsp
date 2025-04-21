@@ -193,7 +193,7 @@
                         <div class="item-count">${emergencyMap["보관비 결제 대기"]}</div>
                     </a>
                     <a href="#" class="urgent-item">
-                        <div class="item-label">검수 결과 확인</div>
+                        <div class="item-label">검수 결과 확인(입고/반환)</div>
                         <div class="item-count">${emergencyMap["검수 결과 확인"]}</div>
                     </a>
                     <a href="#" class="urgent-item">
@@ -226,7 +226,7 @@
                                             <%-- 아무것도 하지 않음(continue처럼) --%>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="#" class="arrow-step ${cssClass}">
+                                            <a href="#" class="arrow-step ${cssClass}" data-status="${status.key}">
                                                 <span class="arrow-badge">${status.value}</span>
                                                 <span class="arrow-label">${status.key}</span>
                                                 <div class="arrow-chevron"></div>
@@ -358,10 +358,10 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="checkbox-col" style="width:5%; !important"></th>
+                            <th class="checkbox-col" style="min-width:0;"></th>
                             <th style="width:30%; !important">장비 이미지</th>
                             <th style="width:40%; !important">일반 장비 정보</th>
-                            <th style="width:15%; !important">신청</th>
+                            <th style="width:20%; !important">신청</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -386,7 +386,7 @@
                                             </td>
                                             <td>
                                                 <div class="product-image">
-                                                    <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                                                    <img src="${equip.attachments.get(0).attachmentPath}" alt="상품 이미지">
                                                 </div>
                                             </td>
                                             <td>
@@ -432,108 +432,14 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="checkbox-col" style="width:1%; !important"></th>
-                            <th style="width:20%; !important">장비 이미지</th>
-                            <th style="width:35%; !important">일반 장비 정보</th>
-                            <th style="width:35%; !important">스토렌 정보</th>
-                            <th style="width:35%; !important">처리</th>
+                            <th class="checkbox-col" style="min-width:0px;"></th>
+                            <th style="width:15%; !important">장비 이미지</th>
+                            <th style="width:30%; !important">일반 장비 정보</th>
+                            <th style="width:30%; !important">스토렌 정보</th>
+                            <th style="width:25%; !important">처리</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <%--                       <c:choose>
-                                                   //소유한 스토렌이 하나도 없다면
-                            <c:when test="${empty firstStorenList || firstStorenList.size() == 0}">
-                                <tr>
-                                    <td colspan="5" class="text-center py-5">
-                                        <div class="empty-state">
-                                            <i class="fas fa-store-alt mb-3" style="font-size: 2rem; color: #ccc;"></i>
-                                            <p class="mb-1">스토렌으로 등록된 장비가 없습니다.</p>
-                                            <p class="small text-muted">장비를 스토렌으로 등록하면 간편하게 장비를 맡기고 수익창출을 할 수 있습니다.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach var="storen" items="${firstStorenList}">
-                                    <tr class="table-row matching-row rental-header" data-id="${storen.equip_code}" data-expanded="false">
-                                        <td class="checkbox-col">
-                                            <input type="checkbox" class="my-form-check-input storen-checkbox">
-                                        </td>
-                                        <td>
-                                            <div class="product-image">
-                                                <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="equipment-info-container">
-                                                <div class="equipment-code">장비 코드 : ${storen.equip_code}</div>
-                                                <a href="#" class="equipment-name">${storen.equipmentDTO.equip_name}</a>
-                                                <div class="equipment-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</div>
-                                                <div class="equipment-brand">${storen.equipmentDTO.brand}</div>
-                                                <div class="equipment-date">${storen.equipmentDTO.created_date}</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="equipment-info-container">
-                                                <input type="hidden" name="id" value="${storen.storen_id}">
-                                                <div class="equipment-code">스토렌ID : ${storen.storen_id}</div>
-                                                <a href="storenmatching-request.action?storen_id=${storen.storen_id}" class="equipment-name">${storen.storen_title}</a>
-                                                <div class="equipment-category">${storen.store_month} 개월 보관</div>
-                                                <div class="equipment-date">스토렌등록 : ${storen.created_date}</div>
-                                                <div class="equipment-date">보관시작일 : ${storen.inspec_completed_date != null ? storen.inspec_completed_date : '정보 없음'}</div>
-                                                <div class="equipment-date">보관종료일 : ${storen.final_return_date != null ? storen.final_return_date : '정보 없음'}</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="button-group-vertical">
-                                                <button class="btn-sm btn-inspection">검수 결과 확인</button>
-                                                <button class="btn-sm btn-shipping">배송 내역 조회</button>
-                                                <button class="btn-sm btn-pay">보관비   결제</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr class="matching-details" data-parent="${storen.equip_code}" style="display: none;">
-                                        <td colspan="5">
-                                            <div class="content-box-sm matching-details-container">
-                                                <h6 class="content-box-title details-title">스토렌 상품글 목록</h6>
-                                                <div class="details-info">
-                                                    <p>스토렌 상품글은 보관기한 내 자동으로 생성됩니다.</p>
-                                                </div>
-                                                <table class="details-table">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>스토렌ID</th>
-                                                        <th>스토렌제목</th>
-                                                        <th>렌탈가능일</th>
-                                                        <th>일일렌탈가격</th>
-                                                        <th>생성일</th>
-                                                        <th>액션</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <c:forEach var="sub" items="${storenMap[storen.equip_code]}">
-                                                    <tr>
-                                                        <td>
-                                                            <input type="hidden" name="id" value="${storen.storen_id}">
-                                                            <a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_id}</a>
-                                                        </td>
-                                                        <td class="text-left"><a href="storenmatching-request.action?storen_id=${sub.storen_id}" class="user-link">${sub.storen_title}</a></td>
-                                                        <td>${sub.rental_start_date} ~ ${sub.rental_end_date}</td>
-                                                        <td><span class="trust-score high">${sub.daily_rent_price} 원</span></td>
-                                                        <td>${sub.created_date}</td>
-                                                        <td>
-                                                            <button type="button" class="btn-sm btn-approve" data-rental="${storen.storen_id}">매칭신청확인</button>
-                                                        </td>
-                                                    </tr>
-                                                    </c:forEach>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>--%>
                         </tbody>
                     </table>
                 </div>
@@ -693,28 +599,175 @@
 
 <script>
     $(function() {
-        // 탭 전환 이벤트 ========= ======================================================================================
+        // 전역 변수 및 초기화=============================================================================================
         // URL에서 탭 정보 가져오기
         const urlParams = new URLSearchParams(window.location.search);
-        let tabFromUrl = urlParams.get('tab');
+        let activeMainTab = urlParams.get('tab') || "general"; // URL 파라미터 또는 기본값
 
-        // 메인 탭 초기화
-        let activeMainTab = tabFromUrl || "general"; // URL 파라미터 또는 기본값
+        // 초기화 즉시 실행
+        initializePage();
 
-        // 탭 전환 시 이전 데이터 정리 함수
-        function clearPreviousData() {
-            // 모든 확장된 행 닫기
-            $('.rental-header').removeClass('active').attr('data-expanded', 'false');
-            // 모든 상세 행 제거
-            $('.matching-details').remove();
+        // 페이지 초기화 및 이벤트 바인딩 함수===============================================================================
+        //페이지 초기화 함수 - 초기 이벤트 바인딩 및 설정
+        function initializePage() {
+            // 이벤트 바인딩
+            bindTabEvents();
+            bindCheckboxEvents();
+            bindButtonEvents();
+            bindSearchEvents();
 
+            // 현재 탭의 데이터 로드
+            loadEquipmentData(activeMainTab);
         }
 
-        // 탭 전환 기능
-        $('.tab').on('click', function() {
-            alert($(this).data('tab') + "을 눌렀습니다~");
-            const tabId = $(this).data('tab');
+        //탭 전환 이벤트 바인딩
+        function bindTabEvents() {
+            // 탭 클릭 이벤트
+            $('.tab').on('click', function() {
+                handleTabChange($(this).data('tab'));
+            });
 
+            // 화살표 상태 필터 버튼 클릭 이벤트
+            $(document).on('click', '.arrow-step', function(e) {
+                e.preventDefault();
+                handleStatusFilter($(this));
+            });
+
+            // 필터 해제 버튼 클릭 이벤트
+            $(document).on('click', '.btn-clear-filter', function() {
+                clearFilters();
+            });
+        }
+
+        //체크박스 관련 이벤트 바인딩
+        function bindCheckboxEvents() {
+            // 전체 선택 체크박스 이벤트
+            $('#select-all-general').on('change', function() {
+                $('#general-content .equip-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            $('#select-all-storen').on('change', function() {
+                $('#storen-content .storen-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            $('#select-all-rental').on('change', function() {
+                $('#rental-content .rental-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            $('#select-all-storage').on('change', function() {
+                $('#storage-content .storage-checkbox').prop('checked', $(this).prop('checked'));
+            });
+
+            // 개별 체크박스 변경 시 전체 선택 체크박스 업데이트
+            $('#general-content').on('change', '.equip-checkbox', function() {
+                updateSelectAllCheckbox('general');
+            });
+
+            $('#storen-content').on('change', '.storen-checkbox', function() {
+                updateSelectAllCheckbox('storen');
+            });
+
+            $('#rental-content').on('change', '.rental-checkbox', function() {
+                updateSelectAllCheckbox('rental');
+            });
+
+            $('#storage-content').on('change', '.storage-checkbox', function() {
+                updateSelectAllCheckbox('storage');
+            });
+        }
+
+        //버튼 이벤트 바인딩
+        function bindButtonEvents() {
+            // 일반 장비 탭 버튼(스토렌 신청/렌탈 신청/보관 신청)
+            $(document).on('click', '.btn-storen', function(e) {
+                e.preventDefault();
+                const equipCode = $(this).closest("tr").find("input[name='equip_code']").val();
+                window.location.href = "storenRegister-storage-info.action?equip_code=" + equipCode;
+            });
+
+            $(document).on('click', '.btn-rental', function(e) {
+                e.preventDefault();
+                const equipCode = $(this).closest("tr").find("input[name='equip_code']").val();
+                window.location.href = "rentalRegister-info.jsp?equip_code=" + equipCode;
+            });
+
+            $(document).on('click', '.btn-storage', function(e) {
+                e.preventDefault();
+                const equipCode = $(this).closest("tr").find("input[name='equip_code']").val();
+                window.location.href = "storageRegister-storage-info.jsp?equip_code=" + equipCode;
+            });
+
+            // 스토렌 탭 버튼(보관비 결제 필요/배송 내역 조회/검수 결과 확인)
+            $(document).on('click', '.btn-inspection, .btn-shipping, .btn-pay', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = $(this).closest("tr").find("input[name='id']").val();
+
+                if($(this).hasClass('btn-inspection')) {
+                    window.location.href = "mypage-inspecList.action?id=" + id;
+                } else if($(this).hasClass('btn-shipping')) {
+                    window.location.href = "mypage-delivery.action?id=" + id;
+                } else if($(this).hasClass('btn-pay')) {
+                    window.location.href = "storenregister-storage-pay.action?id=" + id;
+                }
+            });
+
+            // 스토렌 확장 테이블 버튼(매칭신청확인)
+            $(document).on('click', '.btn-approve', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = $(this).closest("tr").find("input[name='id']").val();
+                window.location.href = "mypage-matchinglist.action?id=" + id + "&activeTab=storen&storenTabType=owner";
+            });
+
+            // 삭제 버튼 클릭 시 모달 표시
+            $('.btn-delete').on('click', function() {
+                const tabId = $(this).attr('id').split('-').pop();
+                const selectedCount = $('.' + tabId + '-checkbox:checked').length;
+
+                if (selectedCount === 0) {
+                    alert('삭제할 장비를 선택해주세요.');
+                    return;
+                }
+
+                $('#deleteConfirmModal').modal('show');
+                $('#deleteConfirmModal').data('tab-id', tabId);
+            });
+
+            // 삭제 확인 버튼 클릭
+            $('#confirmDelete').on('click', function() {
+                const tabId = $('#deleteConfirmModal').data('tab-id');
+
+                // 실제 삭제 로직 구현 (AJAX 호출 등)
+                console.log(tabId + ' 탭에서 선택된 항목 삭제');
+
+                // 체크된 행 삭제 (서버 요청 후 성공 시 수행해야 함)
+                $('.' + tabId + '-checkbox:checked').closest('tr').remove();
+
+                // 전체 선택 체크박스 해제
+                $('#select-all-' + tabId).prop('checked', false);
+
+                // 모달 닫기
+                $('#deleteConfirmModal').modal('hide');
+            });
+        }
+
+        //검색 이벤트 바인딩
+        function bindSearchEvents() {
+            $('#btn-search-equip').on('click', function() {
+                performSearch();
+            });
+
+            $('#search-equip').on('keypress', function(e) {
+                if(e.which === 13) {
+                    performSearch();
+                }
+            });
+        }
+
+        // 탭 관리 및 데이터 로드 함수======================================================================================
+        //탭 변경 처리 함수
+        function handleTabChange(tabId) {
             // 현재 활성화된 탭이면 아무것도 하지 않음
             if(activeMainTab === tabId) return;
 
@@ -723,203 +776,693 @@
 
             // 탭 활성화
             $('.tab').removeClass('active');
-            $(this).addClass('active');
+            $('.tab[data-tab="' + tabId + '"]').addClass('active');
 
-            // 콘텐츠 활성화 - 모든 콘텐츠 숨기고 선택된 것만 표시
+            // 콘텐츠 활성화
             $('.tab-content').hide();
             $('#' + tabId + '-content').show();
 
             // 메인 탭 상태 저장
             activeMainTab = tabId;
 
-            // 열려있는 모든 세부 행 닫기
-            $('.matching-details').hide();
-            $('.rental-header').removeClass('active').attr('data-expanded', 'false');
-
-            // 탭 전환 시 데이터 다시 로드
+            // 데이터 로드
             loadEquipmentData(activeMainTab);
+        }
+
+        //이전 탭 데이터 정리 함수
+        function clearPreviousData() {
+            // 모든 확장된 행 닫기
+            $('.rental-header').removeClass('active').attr('data-expanded', 'false');
+            // 모든 상세 행 제거
+            $('.matching-details').remove();
+        }
+
+        //장비 데이터 로드 함수
+        //@param {string} mainTab - 로드할 데이터의 탭 ID
+        function loadEquipmentData(mainTab) {
+            // 로딩 표시 활성화
+            showLoading();
+
+            let apiUrl = '';
+            let colSpan = '5';
+
+            // targetTable 초기화
+            let targetTable;
+
+            // 메인 탭에 따라 API URL 결정
+            if (mainTab === 'general') {
+                apiUrl = '/api/myequipment/general';
+                colSpan = '4';
+                targetTable = $('#general-content tbody');
+            } else if (mainTab === 'storen') {
+                apiUrl = '/api/myequipment/storen';
+                targetTable = $('#storen-content tbody');
+            } else if (mainTab === 'rental') {
+                apiUrl = '/api/myequipment/rental';
+                targetTable = $('#rental-content tbody');
+            } else { // 보관 탭
+                apiUrl = '/api/myequipment/storage';
+                targetTable = $('#storage-content tbody');
+            }
+
+            console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab);
+
+            // 로딩 인디케이터 표시
+            targetTable.html('<tr><td colspan="' + colSpan + '" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 장비 데이터를 불러오는 중...</td></tr>');
+
+            // AJAX 요청
+            $.ajax({
+                url: apiUrl,
+                type: 'GET',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    console.log("데이터 로드 성공:", data.length, "건");
+                    if (data.length > 0) {
+                        console.log("데이터 구조:", JSON.stringify(data[0]));
+
+                        // equipmentDTO가 없는 데이터 확인
+                        const missingEquipDTOs = data.filter(item => !item.equipmentDTO);
+                        console.log("equipmentDTO가 없는 항목:", missingEquipDTOs.length, "건");
+                        if (missingEquipDTOs.length > 0) {
+                            console.log("첫 번째 문제 항목:", missingEquipDTOs[0]);
+                        }
+                    }
+
+                    hideLoading();
+
+                    if (data.length === 0) {
+                        showEmptyState(mainTab, targetTable);
+                        return;
+                    }
+
+                    // 메인 탭의 정보 렌더링
+                    renderData(data, targetTable);
+                },
+                error: function (xhr, status, error) {
+                    console.error("데이터 로드 실패:", error);
+                    hideLoading();
+
+                    showErrorState(targetTable, colSpan);
+                }
+            });
+        }
+
+        //비어있는 상태 표시 함수
+        //@param {string} mainTab - 현재 탭
+        //@param {jQuery} targetTable - 대상 테이블
+        function showEmptyState(mainTab, targetTable) {
+            let type = '';
+            let icon = '';
+            let text = '';
+
+            if (mainTab === 'general') {
+                type = '일반';
+                icon = 'fas fa-box-open mb-3';
+                text = '캠핑 장비를 등록하고 스토렌, 렌탈, 보관 서비스를 이용해보세요.';
+            } else if (mainTab === 'storen') {
+                type = '스토렌';
+                icon = 'fas fa-store-alt mb-3';
+                text = '장비를 스토렌으로 등록하면 간편하게 장비를 맡기고 수익창출을 할 수 있습니다.';
+            } else if (mainTab === 'rental') {
+                type = '렌탈';
+                icon = 'fas fa-exchange-alt mb-3';
+                text = '장비를 렌탈로 등록하면 직접 다른 사용자에게 대여할 수 있습니다.';
+            } else {
+                type = '보관';
+                icon = 'fas fa-warehouse mb-3';
+                text = '캠핑 시즌이 아닐 때는 장비를 안전하게 보관해보세요.';
+            }
+
+            const emptyHTML = '<tr>' +
+                '<td colspan="5" class="text-center py-5">' +
+                '<div class="empty-state">' +
+                '<i class="' + icon + '" style="font-size: 2rem; color: #ccc;"></i>' +
+                '<p class="mb-1">소유한 ' + type + ' 장비가 없습니다.</p>' +
+                '<p class="small text-muted">' + text + '</p>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+
+            targetTable.html(emptyHTML);
+        }
+
+        //에러 상태 표시 함수
+        //@param {jQuery} targetTable - 대상 테이블
+        //@param {string} colSpan - 병합할 칼럼 수
+        function showErrorState(targetTable, colSpan) {
+            targetTable.html('<tr>' +
+                '<td colspan="' + colSpan + '" class="text-center py-4">' +
+                '<div class="alert alert-danger" role="alert">' +
+                '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
+                '</div>' +
+                '</td>' +
+                '</tr>');
+        }
+
+
+        // 데이터 렌더링 및 필터링 함수======================================================================================
+        //테이블 데이터 렌더링 함수
+        //@param {Array} data - 렌더링할 데이터
+        //@param {jQuery} targetTable - 대상 테이블
+        function renderData(data, targetTable) {
+            let html = '';
+            const activeTab = $('.tab.active').data('tab');
+            const formatter = new Intl.NumberFormat('ko-KR');   //금액 천 단위로 표시할 숫자 포맷터
+
+            data.forEach(function(item) {
+                if (activeTab === 'general') {
+                    html += renderGeneralRow(item, formatter);
+                } else if (activeTab === 'storen') {
+                    html += renderStorenRow(item, formatter);
+                }
+                // 다른 탭 렌더링 추가 예정
+            });
+
+            targetTable.html(html);
+
+            // 이벤트 핸들러 다시 바인딩
+            if(activeTab === 'storen') {
+                bindStorenButtonEvents();
+            }
+        }
+
+        //일반 장비 행 렌더링 함수
+        //@param {Object} item - 장비 데이터
+        //@param {Intl.NumberFormat} formatter - 숫자 포맷터
+        //@returns {string} HTML 문자열
+        function renderGeneralRow(item, formatter) {
+            var imgSrc = (item.attachments && item.attachments.length > 0) ?
+                item.attachments[0].attachmentPath : 'images/product-placeholder.jpg';
+
+            return '<tr class="table-row">' +
+                '<td class="checkbox-col">' +
+                '<input type="checkbox" class="my-form-check-input equip-checkbox">' +
+                '</td>' +
+                '<td>' +
+                '<div class="product-image">' +
+                '<img src="' + imgSrc + '" alt="상품 이미지">' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<div class="equipment-info-container">' +
+                '<input type="hidden" name="equip_code" value="' + item.equip_code + '">' +
+                '<div class="equipment-info-text">장비코드 : ' + item.equip_code + '</div>' +
+                '<a href="#" class="equipment-name">' + item.equip_name + '</a>' +
+                '<div class="equipment-info-text">' + item.majorCategory + ' > ' + item.middleCategory + '</div>' +
+                '<div class="equipment-info-text">' + item.brand + '</div>' +
+                '<div class="equipment-info-text"> 신품가 : ' + formatter.format(parseInt(item.original_price)) + '원</div>' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<div class="button-group-vertical">' +
+                '<button class="btn-sm btn-storen">스토렌 신청</button>' +
+                '<button class="btn-sm btn-rental">렌탈 신청</button>' +
+                '<button class="btn-sm btn-storage">보관 신청</button>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+        }
+
+        //스토렌 장비 행 렌더링 함수
+        //@param {Object} item - 장비 데이터
+        //@param {Intl.NumberFormat} formatter - 숫자 포맷터
+        //@returns {string} HTML 문자열
+        function renderStorenRow(item, formatter) {
+            // 버튼 리스트 생성
+            var buttonList = generateButtonList(item.status);
+
+            // 장비 정보 추출
+            var equipInfo = extractEquipmentInfo(item, formatter);
+
+            // 상태 클래스 가져오기
+            var statusClass = getStatusBadgeClass(item.status);
+
+            return '<tr class="table-row matching-row rental-header" data-id="' + item.equip_code + '" data-expanded="false">' +
+                '<td class="checkbox-col">' +
+                '<input type="checkbox" class="my-form-check-input storen-checkbox">' +
+                '</td>' +
+                '<td>' +
+                '<div class="product-image">' +
+                '<img src="' + equipInfo.imgSrc + '" alt="상품 이미지">' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<div class="equipment-info-container">' +
+                '<div class="equipment-info-text">장비 코드 : ' + item.equip_code + '</div>' +
+                '<a href="#" class="equipment-name">' + equipInfo.name + '</a>' +
+                '<div class="equipment-info-text">' + equipInfo.category + '</div>' +
+                '<div class="equipment-info-text">' + equipInfo.brand + '</div>' +
+                '<div class="equipment-info-text">' + equipInfo.createdDate + '</div>' +
+                '<div class="equipment-info-text">신품가 : ' + equipInfo.price + '원</div>' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<div class="equipment-info-container">' +
+                '<input type="hidden" name="id" value="' + item.storen_id + '">' +
+                '<div class="equipment-info-text">스토렌ID : ' + item.storen_id + '</div>' +
+                '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
+                '<div class="equipment-info-text">' + (item.store_month || '0') + '개월 보관</div>' +
+                '<div class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</div>' +
+                '<div class="equipment-info-text">보관시작일 : ' + (item.inspec_completed_date || '검수 중') + '</div>' +
+                '<div class="equipment-info-text">보관종료일 : ' + (item.final_return_date || '정보 없음') + '</div>' +
+                '</div>' +
+                '</td>' +
+                '<td>' +
+                '<div class="button-group-vertical">' + buttonList + '</div>' +
+                '</td>' +
+                '</tr>';
+        }
+
+        //장비 정보 추출 함수
+        //@param {Object} item - 장비 데이터
+        //@param {Intl.NumberFormat} formatter - 숫자 포맷터
+        //@returns {Object} 추출된 장비 정보
+        function extractEquipmentInfo(item, formatter) {
+            var name = '이름 없음';
+            var category = '';
+            var brand = '';
+            var createdDate = '';
+            var price = '0';
+            var imgSrc = 'images/product-placeholder.jpg';
+
+            // equipmentDTO가 존재하는 경우에만 값을 읽음
+            if (item.equipmentDTO) {
+                name = item.equipmentDTO.equip_name || '이름 없음';
+
+                var majorCategory = item.equipmentDTO.majorCategory || '';
+                var middleCategory = item.equipmentDTO.middleCategory || '';
+                category = majorCategory + (middleCategory ? ' > ' + middleCategory : '');
+
+                brand = item.equipmentDTO.brand || '';
+                createdDate = item.equipmentDTO.created_date || '';
+                price = formatter.format(parseInt(item.equipmentDTO.original_price || 0));
+
+                // 이미지 경로 가져오기 시도
+                if (item.equipmentDTO.attachments && item.equipmentDTO.attachments.length > 0) {
+                    imgSrc = item.equipmentDTO.attachments[0].attachmentPath;
+                }
+            }
+
+            return {
+                name: name,
+                category: category,
+                brand: brand,
+                createdDate: createdDate,
+                price: price,
+                imgSrc: imgSrc
+            };
+        }
+
+        //상태에 따른 버튼 리스트 생성 함수
+        //@param {string} status - 장비 상태
+        //@returns {string} 버튼 HTML 문자열
+        function generateButtonList(status) {
+            if (status === '보관비 결제 대기') {
+                return '<button class="btn-sm btn-pay">보관비 결제필요</button>' +
+                    '<button class="btn-sm btn-shipping" disabled="disabled">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>';
+            } else if (status === '배송대기' || status === '배송 중') {
+                return '<button class="btn-sm btn-pay" disabled="disabled">보관비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>';
+            } else {
+                return '<button class="btn-sm btn-pay" disabled="disabled">보관비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection">검수 결과 확인</button>';
+            }
+        }
+
+        //스토렌 탭 버튼 이벤트 바인딩 함수
+        function bindStorenButtonEvents() {
+            $('#storen-content .btn-inspection, #storen-content .btn-shipping, #storen-content .btn-pay').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var id = $(this).closest("tr").find("input[name='id']").val();
+
+                if($(this).hasClass('btn-inspection')) {
+                    window.location.href = "mypage-inspecList.action?id=" + id;
+                } else if($(this).hasClass('btn-shipping')) {
+                    window.location.href = "mypage-delivery.action?id=" + id;
+                } else if($(this).hasClass('btn-pay')) {
+                    window.location.href = "storenregister-storage-pay.action?id=" + id;
+                }
+            });
+        }
+
+        //화살표 상태별 필터링 처리 함수
+        //@param {jQuery} filterButton - 필터 버튼 요소
+        function handleStatusFilter(filterButton) {
+            var statusFilter = filterButton.data('status');
+
+            // UI 표시 업데이트
+            $('.arrow-step').removeClass('filtering');
+            filterButton.addClass('filtering');
+
+            // 스토렌 탭으로 전환
+            $('.tab[data-tab="storen"]').click();
+
+            // AJAX 요청으로 필터링된 데이터 가져오기
+            $.ajax({
+                url: '/api/myequipment/storen/filter',
+                type: 'GET',
+                data: {
+                    status: statusFilter
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    showLoading();
+                },
+                success: function(data) {
+                    handleFilteredData(data, statusFilter);
+                },
+                error: function(xhr, status, error) {
+                    console.error("필터링 데이터 로드 실패:", error);
+                    showFilterError();
+                },
+                complete: function() {
+                    hideLoading();
+                }
+            });
+        }
+
+        //필터링된 데이터 처리 함수
+        //@param {Array} data - 필터링된 데이터
+        //@param {string} statusFilter - 적용된 필터
+        function handleFilteredData(data, statusFilter) {
+            var targetTable = $('#storen-content tbody');
+
+            // 필터 알림 추가
+            if ($('.filter-notice').length > 0) {
+                $('.filter-notice').remove();
+            }
+
+            $('#storen-content .table-actions').after(
+                '<div class="filter-notice">' +
+                '<span>"' + statusFilter + '" 상태인 스토렌만 표시 중 (' + data.length + '개)</span>' +
+                '<button class="btn-sm btn-clear-filter">모든 스토렌 보기</button>' +
+                '</div>'
+            );
+
+            if (data.length === 0) {
+                targetTable.html(
+                    '<tr>' +
+                    '<td colspan="5" class="text-center py-5">' +
+                    '<div class="empty-state">' +
+                    '<i class="fas fa-filter mb-3" style="font-size: 2rem; color: #ccc;"></i>' +
+                    '<p class="mb-1">"' + statusFilter + '" 상태인 스토렌이 없습니다.</p>' +
+                    '<button class="btn-sm btn-clear-filter mt-2">모든 스토렌 보기</button>' +
+                    '</div>' +
+                    '</td>' +
+                    '</tr>'
+                );
+            } else {
+                // 필터링된 데이터 렌더링
+                renderFilteredData(data, targetTable);
+            }
+        }
+
+        //필터링된 데이터 렌더링 함수
+        //@param {Array} data - 필터링된 데이터
+        //@param {jQuery} targetTable - 대상 테이블
+        function renderFilteredData(data, targetTable) {
+            var html = '';
+            var formatter = new Intl.NumberFormat('ko-KR');
+
+            data.forEach(function(item) {
+                // 버튼 리스트 생성
+                var buttonList = generateButtonList(item.status);
+
+                // 장비 정보 추출
+                var equipInfo = extractEquipmentInfo(item, formatter);
+
+                // 상태 클래스 가져오기
+                var statusClass = getStatusBadgeClass(item.status);
+
+                // HTML 행 생성
+                html += '<tr class="table-row matching-row rental-header" data-id="' + item.equip_code + '" data-expanded="false">' +
+                    '<td class="checkbox-col">' +
+                    '<input type="checkbox" class="my-form-check-input storen-checkbox">' +
+                    '</td>' +
+                    '<td>' +
+                    '<div class="product-image">' +
+                    '<img src="' + equipInfo.imgSrc + '" alt="상품 이미지">' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<div class="equipment-info-container">' +
+                    '<div class="equipment-info-text">장비 코드 : ' + item.equip_code + '</div>' +
+                    '<a href="#" class="equipment-name">' + equipInfo.name + '</a>' +
+                    '<div class="equipment-info-text">' + equipInfo.category + '</div>' +
+                    '<div class="equipment-info-text">' + equipInfo.brand + '</div>' +
+                    '<div class="equipment-info-text">' + equipInfo.createdDate + '</div>' +
+                    '<div class="equipment-info-text">신품가 : ' + equipInfo.price + '원</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<div class="equipment-info-container">' +
+                    '<input type="hidden" name="id" value="' + item.storen_id + '">' +
+                    '<div class="equipment-info-text">스토렌ID : ' + item.storen_id + '</div>' +
+                    '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
+                    '<div class="equipment-info-text">' + (item.store_month || '0') + '개월 보관</div>' +
+                    '<div class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</div>' +
+                    '<div class="equipment-info-text">보관시작일 : ' + (item.inspec_completed_date || '검수 중') + '</div>' +
+                    '<div class="equipment-info-text">보관종료일 : ' + (item.final_return_date || '정보 없음') + '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<div class="button-group-vertical">' + buttonList + '</div>' +
+                    '</td>' +
+                    '</tr>';
+            });
+
+            targetTable.html(html);
+
+            // 이벤트 핸들러 재바인딩
+            bindStorenButtonEvents();
+        }
+
+        //필터 오류 표시 함수
+        function showFilterError() {
+            var targetTable = $('#storen-content tbody');
+            targetTable.html(
+                '<tr>' +
+                '<td colspan="5" class="text-center py-4">' +
+                '<div class="alert alert-danger" role="alert">' +
+                '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
+                '</div>' +
+                '</td>' +
+                '</tr>'
+            );
+        }
+
+        //필터 초기화 함수
+        function clearFilters() {
+            // 필터 상태 제거
+            $('.arrow-step').removeClass('filtering');
+            $('.filter-notice').remove();
+
+            // 원래 데이터 다시 로드
+            loadEquipmentData('storen');
+        }
+
+        // 확장 테이블 관련 함수============================================================================================
+
+        //확장 테이블 클릭 이벤트 핸들러 설정
+        $(document).on('click', '.rental-header', function() {
+            toggleExpansionRow($(this));
         });
 
-        // ================================================================================================ 탭 전환 이벤트
-
-        // 확장 테이블 보이고 닫기==========================================================================================
-        // 스토렌 행 클릭 이벤트 (세부 정보 토글)
-        $(document).on('click', '.rental-header', function() {
-            const rentalId = $(this).data('id');
-            const isExpanded = $(this).attr('data-expanded') === 'true';
+        //테이블 행 확장/축소 토글 함수
+        //@param {jQuery} row - 대상 행
+        function toggleExpansionRow(row) {
+            var rentalId = row.data('id');
+            var isExpanded = row.attr('data-expanded') === 'true';
 
             // 현재 열려 있는 다른 세부 행 닫기
-            $('.rental-header').not(this).removeClass('active').attr('data-expanded', 'false');
-            $('.matching-details').not(`[data-parent="` + rentalId + `"]`).hide();
+            $('.rental-header').not(row).removeClass('active').attr('data-expanded', 'false');
+            $('.matching-details').not('[data-parent="' + rentalId + '"]').hide();
 
             // 현재 행 토글
             if (isExpanded) {
-                $(this).removeClass('active').attr('data-expanded', 'false');
-                $(`.matching-details[data-parent="` + rentalId + `"]`).hide();
+                row.removeClass('active').attr('data-expanded', 'false');
+                $('.matching-details[data-parent="' + rentalId + '"]').hide();
             } else {
-                $(this).addClass('active').attr('data-expanded', 'true');
-                $(`.matching-details[data-parent="` + rentalId + `"]`).show();
+                row.addClass('active').attr('data-expanded', 'true');
 
                 // 상세 정보가 이미 로드되어 있는지 확인
-                if ($(`.matching-details[data-parent="` + rentalId + `"]`).length === 0) {
-                    // 상세 정보 로드 (AJAX)
-                    loadUserMatchingDetails(rentalId);  // 사용자용 상세 정보
+                if ($('.matching-details[data-parent="' + rentalId + '"]').length === 0) {
+                    loadUserMatchingDetails(rentalId);
                 } else {
-                    $(`.matching-details[data-parent="` + rentalId + `"]`).show();
+                    $('.matching-details[data-parent="' + rentalId + '"]').show();
                 }
             }
-        });
+        }
 
-        // ==========================================================================================확장 테이블 보이고 닫기
+        //스토렌 상세 정보 로드 함수
+        //@param {number} equipCode - 장비 코드
+        function loadUserMatchingDetails(equipCode) {
+            // 로딩 표시 추가
+            var loadingRow = '<tr class="matching-details" data-parent="' + equipCode + '">' +
+                '<td colspan="5">' +
+                '<div class="text-center py-4">' +
+                '<i class="fas fa-spinner fa-spin me-2"></i> 상세 정보를 불러오는 중...' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
 
-        // 전체 선택 체크박스 기능
-        $('#select-all-general').on('change', function() {
-            $('#general-content .equip-checkbox').prop('checked', $(this).prop('checked'));
-        });
+            // 로딩 표시를 클릭한 행 바로 아래에 추가
+            $('.rental-header[data-id="' + equipCode + '"]').after(loadingRow);
 
-        $('#select-all-storen').on('change', function() {
-            $('#storen-content .storen-checkbox').prop('checked', $(this).prop('checked'));
-        });
+            // AJAX 요청으로 상세 정보 가져오기
+            $.ajax({
+                url: '/api/myequipment/storen/details',
+                type: 'GET',
+                data: {
+                    equipCode: equipCode
+                },
+                dataType: 'json',
+                success: function(data) {
+                    renderMatchingDetails(equipCode, data);
+                },
+                error: function(xhr, status, error) {
+                    showMatchingDetailsError(equipCode, error);
+                }
+            });
+        }
 
-        $('#select-all-rental').on('change', function() {
-            $('#rental-content .rental-checkbox').prop('checked', $(this).prop('checked'));
-        });
+        //스토렌 상세 정보 렌더링 함수
+        //@param {number} equipCode - 장비 코드
+        //@param {Array} data - 상세 정보 데이터
+        function renderMatchingDetails(equipCode, data) {
+            // 로딩 행 제거
+            $('.matching-details[data-parent="' + equipCode + '"]').remove();
 
-        $('#select-all-storage').on('change', function() {
-            $('#storage-content .storage-checkbox').prop('checked', $(this).prop('checked'));
-        });
+            // 상세 정보 행 만들기
+            var detailsHtml = '<tr class="matching-details" data-parent="' + equipCode + '" style="display: table-row;">' +
+                '<td colspan="5">' +
+                '<div class="content-box-sm matching-details-container">' +
+                '<h6 class="content-box-title details-title">스토렌 상품글 목록</h6>' +
+                '<div class="details-info">' +
+                '<p>스토렌 상품글은 보관기한 내 자동으로 생성됩니다.</p>' +
+                '</div>' +
+                '<table class="details-table">' +
+                '<thead>' +
+                '<tr>' +
+                '<th>스토렌ID</th>' +
+                '<th>스토렌제목</th>' +
+                '<th>렌탈가능일</th>' +
+                '<th>일일렌탈가격</th>' +
+                '<th>생성일</th>' +
+                '<th>액션</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody>';
 
-        // 개별 체크박스 변경 시 전체 선택 체크박스 업데이트
-        $('#general-content').on('change', '.equip-checkbox', function() {
-            const allChecked = $('#general-content .equip-checkbox:checked').length === $('#general-content .equip-checkbox').length;
-            $('#select-all-general').prop('checked', allChecked);
-        });
-
-        $('#storen-content').on('change', '.storen-checkbox', function() {
-            const allChecked = $('#storen-content .storen-checkbox:checked').length === $('#storen-content .storen-checkbox').length;
-            $('#select-all-storen').prop('checked', allChecked);
-        });
-
-        $('#rental-content').on('change', '.rental-checkbox', function() {
-            const allChecked = $('#rental-content .rental-checkbox:checked').length === $('#rental-content .rental-checkbox').length;
-            $('#select-all-rental').prop('checked', allChecked);
-        });
-
-        $('#storage-content').on('change', '.storage-checkbox', function() {
-            const allChecked = $('#storage-content .storage-checkbox:checked').length === $('#storage-content .storage-checkbox').length;
-            $('#select-all-storage').prop('checked', allChecked);
-        });
-
-        // 삭제 버튼 클릭 시 모달 표시
-        $('.btn-delete').on('click', function() {
-            const tabId = $(this).attr('id').split('-').pop();
-            const selectedCount = $(`.${tabId}-checkbox:checked`).length;
-
-            if (selectedCount === 0) {
-                alert('삭제할 장비를 선택해주세요.');
-                return;
+            // 데이터가 있는 경우에만 행 추가
+            if (data && data.length > 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    detailsHtml += '<tr>' +
+                        '<td>' +
+                        '<input type="hidden" name="id" value="' + item.storen_id + '">' +
+                        '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_id + '</a>' +
+                        '</td>' +
+                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_title + '</a></td>' +
+                        '<td>' + item.rental_start_date + ' ~ ' + item.rental_end_date + '</td>' +
+                        '<td><span class="trust-score high">' + item.daily_rent_price + ' 원</span></td>' +
+                        '<td>' + item.created_date + '</td>' +
+                        '<td>' +
+                        '<button type="button" class="btn-sm btn-approve" data-rental="' + item.storen_id + '">매칭신청확인</button>' +
+                        '</td>' +
+                        '</tr>';
+                }
+            } else {
+                // 데이터가 없는 경우 메시지 표시
+                detailsHtml += '<tr><td colspan="6" class="text-center py-3">등록된 스토렌 상품글이 없습니다.</td></tr>';
             }
 
-            // 선택된 항목이 있을 경우 모달 표시
-            $('#deleteConfirmModal').modal('show');
+            detailsHtml += '</tbody>' +
+                '</table>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
 
-            // 현재 탭 ID를 모달에 저장
-            $('#deleteConfirmModal').data('tab-id', tabId);
-        });
+            // 생성한 행을 클릭한 행 바로 아래에 추가
+            $('.rental-header[data-id="' + equipCode + '"]').after(detailsHtml);
 
-        // 삭제 확인 버튼 클릭 시
-        $('#confirmDelete').on('click', function() {
-            const tabId = $('#deleteConfirmModal').data('tab-id');
+            // 이벤트 바인딩
+            $('.btn-approve').on('click', function(e) {
+                e.preventDefault();
+                var id = $(this).closest("tr").find("input[name='id']").val();
+                window.location.href = "mypage-matchinglist.action?id=" + id;
+            });
+        }
 
-            // 여기서 실제 삭제 로직 구현 (AJAX 호출 등)
-            console.log(`${tabId} 탭에서 선택된 항목 삭제`);
+        //매칭 상세 정보 오류 표시 함수
+        //@param {number} equipCode - 장비 코드
+        //@param {string} error - 오류 메시지
+        function showMatchingDetailsError(equipCode, error) {
+            $('.matching-details[data-parent="' + equipCode + '"]').html(
+                '<td colspan="5">' +
+                '<div class="alert alert-danger m-3" role="alert">' +
+                '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
+                '</div>' +
+                '</td>'
+            );
+            console.error("상세 정보 로드 실패:", error);
+        }
 
-            // 예시: 체크된 행 삭제 (실제로는 서버 요청 후 성공 시 수행해야 함)
-            $(`.${tabId}-checkbox:checked`).closest('tr').remove();
-
-            // 전체 선택 체크박스 해제
-            $(`#select-all-${tabId}`).prop('checked', false);
-
-            // 모달 닫기
-            $('#deleteConfirmModal').modal('hide');
-        });
-
-
-        // 각 탭에서 버튼 클릭 이벤트 ======================================================================================
-        // 일반 장비 탭---------------------------------------------------------------------------------------------------
-        // 스토렌 신청 버튼 클릭 이벤트
-        $(".btn-storen").click(function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
-            // 스토렌 신청 페이지로 이동
-            window.location.href = "storenRegister-storage-info.action?equip_code=" + equip_code;
-        });
-
-        // 렌탈 신청 버튼 클릭 이벤트
-        $(".btn-rental").click(function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
-            // 렌탈 신청 페이지로 이동
-            window.location.href = "rentalRegister-info.jsp?equip_code=" + equip_code;
-        });
-
-        // 보관 신청 버튼 클릭 이벤트
-        $(".btn-storage").click(function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var equip_code = $(this).closest("tr").find("input[name='equip_code']").val();
-            // 보관 신청 페이지로 이동
-            window.location.href = "storageRegister-storage-info.jsp?equip_code=" + equip_code;
-        });
-
-        // 스토렌 & 렌탈 & 보관--------------------------------------------------------------------------------------------
-        // 검수 결과 확인 버튼 클릭 이벤트
-        $('.btn-inspection').on('click', function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 검수 조회/내역 페이지로 이동
-            window.location.href = "mypage-inspecList.action?id=" + id;
-        });
-
-        // 배송 확인 버튼 클릭 이벤트
-        $('.btn-shipping').on('click', function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 배송 조회/내역 페이지로 이동
-            window.location.href = "mypage-delivery.action?id=" + id;
-        });
-        
-        // 결제 버튼 클릭 이벤트
-        $('.btn-pay').on('click', function (e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 결제 페이지로 이동
-            window.location.href = "storenregister-storage-pay.action?id=" + id;
-        });
-
-        // 스토렌 확장 테이블----------------------------------------------------------------------------------------------
-        $('.btn-approve').on('click', function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 매칭 조회/내역 페이지로 이동
-            window.location.href = "mypage-matchinglist.action?id=" + id;
-        });
-
-        // 검색 기능
-        $('#btn-search-equip').on('click', function() {
-            performSearch();
-        });
-
-        $('#search-equip').on('keypress', function(e) {
-            if(e.which === 13) {
-                performSearch();
+        // 유틸리티 함수===================================================================================================
+        //장비 상태에 따른 CSS 클래스 반환 함수
+        //@param {string} status - 장비 상태
+        //@returns {string} CSS 클래스
+        function getStatusBadgeClass(status) {
+            console.log("현재 상태:", status);
+            switch(status) {
+                case '보관비 결제 대기':
+                    return 'status-payment-waiting';
+                case '배송 대기':
+                    return 'status-shipping-waiting';
+                case '배송 중':
+                    return 'status-shipping';
+                case '검수 중':
+                    return 'status-inspection';
+                case '보관 중':
+                    return 'status-storage';
+                case '강제 반환':
+                    return 'status-forced-return';
+                case '승인 대기':
+                    return 'status-approval-waiting';
+                case '결제 대기':
+                    return 'status-waiting-payment';
+                case '렌탈 중':
+                    return 'status-rental';
+                case '반납 중':
+                    return 'status-returning';
+                case '거래 완료':
+                    return 'status-completed';
+                case '최종 반환':
+                    return 'status-final-return';
+                case '상태 불명':
+                default:
+                    console.log("매칭되는 상태 클래스 없음:", status);
+                    return 'status-unknown';
             }
-        });
+        }
 
-        //======================================================================================= 각 탭에서 버튼 클릭 이벤트
+        //전체 선택 체크박스 상태 업데이트 함수
+        //@param {string} tabId - 탭 ID
+        function updateSelectAllCheckbox(tabId) {
+            var allChecked = $('#' + tabId + '-content .' + tabId + '-checkbox:checked').length ===
+                $('#' + tabId + '-content .' + tabId + '-checkbox').length;
+            $('#select-all-' + tabId).prop('checked', allChecked);
+        }
 
-        // 검색 실행 함수
+        //검색 실행 함수
         function performSearch() {
-            const searchValue = $('#search-equip').val().trim().toLowerCase();
+            var searchValue = $('#search-equip').val().trim().toLowerCase();
 
             if(searchValue === '') {
                 // 검색어가 없으면 모든 행 표시
@@ -928,11 +1471,11 @@
             }
 
             // 현재 활성화된 탭의 행만 검색
-            const activeTab = $('.tab.active').data('tab');
-            const rows = $(`#${activeTab}-content .table-row`);
+            var activeTab = $('.tab.active').data('tab');
+            var rows = $('#' + activeTab + '-content .table-row');
 
             rows.each(function() {
-                const rowData = $(this).text().toLowerCase();
+                var rowData = $(this).text().toLowerCase();
 
                 // 텍스트에 검색어가 포함된 행만 표시
                 if(rowData.includes(searchValue)) {
@@ -943,195 +1486,106 @@
             });
 
             // 검색 결과가 없는 경우 처리
-            const visibleRows = $(`#${activeTab}-content .table-row:visible`);
+            handleEmptySearchResult(activeTab);
+        }
+
+        //빈 검색 결과 처리 함수
+        //@param {string} activeTab - 활성 탭 ID
+        function handleEmptySearchResult(activeTab) {
+            var visibleRows = $('#' + activeTab + '-content .table-row:visible');
             if(visibleRows.length === 0) {
                 // 이미 empty-state가 있는지 확인
-                if($(`#${activeTab}-content .empty-state`).length === 0) {
-                    $(`#${activeTab}-content .custom-table`).after(`
-                        <div class="empty-state">
-                            <i class="fas fa-search"></i>
-                            <p>검색 결과가 없습니다</p>
-                            <div class="hint">다른 검색어로 다시 시도해보세요.</div>
-                        </div>
-                    `);
+                if($('#' + activeTab + '-content .empty-state').length === 0) {
+                    $('#' + activeTab + '-content .custom-table').after(
+                        '<div class="empty-state">' +
+                        '<i class="fas fa-search"></i>' +
+                        '<p>검색 결과가 없습니다</p>' +
+                        '<div class="hint">다른 검색어로 다시 시도해보세요.</div>' +
+                        '</div>'
+                    );
                 }
             } else {
                 // 검색 결과가 있으면 empty-state 제거
-                $(`#${activeTab}-content .empty-state`).remove();
+                $('#' + activeTab + '-content .empty-state').remove();
             }
         }
-    });//$(document).ready(function() { ... });
 
-
-    function loadEquipmentData(mainTab) {
-        // 로딩 표시 활성화
-        showLoading();
-
-        let apiUrl = '';
-        let colSpan = '5';
-
-        // targetTable 초기화를 위한 변수
-        let targetTable;
-
-        // 메인 탭과 서브 탭에 따라 API URL 결정
-        if (mainTab === 'general') { // 일반 장비 탭
-            apiUrl = '/api/myequipment/general';
-            colSpan = '4';
-            targetTable = $('#general-content tbody'); // 일반 장비 탭의 tbody
-        } else if (mainTab === 'storen') { // 스토렌 탭
-            apiUrl = '/api/myequipment/storen';
-            targetTable = $('#storen-content tbody'); // 스토렌 탭의 tbody
-        } else if (mainTab === 'rental') {
-            apiUrl = '/api/myequipment/rental';
-            targetTable = $('#rental-content tbody'); // 렌탈 탭의 tbody
-        } else { // 보관 탭
-            apiUrl = '/api/myequipment/storage';
-            targetTable = $('#storage-content tbody'); // 보관 탭의 tbody
-        }
-
-        console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab);
-
-        // 로딩 인디케이터 표시
-        targetTable.html('<tr><td colspan="' + colSpan + '" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 장비 데이터를 불러오는 중...</td></tr>');
-
-        // AJAX 요청
-        $.ajax({
-            url: apiUrl,
-            type: 'GET',
-            dataType: 'json',
-            cache: false, // 캐시 사용 안 함
-            success: function (data) {
-                console.log("데이터 로드 성공:", data.length, "건");
-                console.log("데이터 구조:", JSON.stringify(data[0])); // 첫 번째 항목의 구조 확인
-                // 로딩 표시 비활성화
-                hideLoading();
-
-                if (data.length === 0) {
-                    // 데이터가 없는 경우
-                    let type, icon, text = '';
-                    if (mainTab === 'general') {
-                        type = '일반';
-                        icon = 'fas fa-box-open mb-3';
-                        text = '캠핑 장비를 등록하고 스토렌, 렌탈, 보관 서비스를 이용해보세요.';
-                    } else if (mainTab === 'storen') {
-                        type = '스토렌';
-                        icon = 'fas fa-store-alt mb-3';
-                        text = '장비를 스토렌으로 등록하면 간편하게 장비를 맡기고 수익창출을 할 수 있습니다.';
-                    } else if (mainTab === 'rental') {
-                        type = '렌탈';
-                        icon = 'fas fa-exchange-alt mb-3';
-                        text = '장비를 렌탈로 등록하면 직접 다른 사용자에게 대여할 수 있습니다.';
-                    } else {
-                        type = '보관';
-                        icon = 'fas fa-warehouse mb-3';
-                        text = '캠핑 시즌이 아닐 때는 장비를 안전하게 보관해보세요.';
-                    }
-                    return;
-                }
-                // 메인 탭의 정보 렌더링
-                renderData(data, targetTable);
-            },
-            error: function (xhr, status, error) {
-                console.error("데이터 로드 실패:", error);
-                hideLoading();
-
-                // 에러 메시지 표시
-                targetTable.html(
-                    '<tr>' +
-                    '<td colspan="' + colSpan + '" class="text-center py-4">' +
-                    '<div class="alert alert-danger" role="alert">' +
-                    '<i class="fas fa-exclamation-circle me-2"></i> 데이터를 불러오는 중 오류가 발생했습니다.' +
-                    '</div>' +
-                    '</td>' +
-                    '</tr>');
-            }
-        });
-    }
-
-    // 메인 탭의 테이블 데이터 렌더링 함수
-    function renderData(data, targetTable) {
-        let html = '';
-
-        data.forEach(function(item) {
-            // 상태 클래스 결정
-            let buttonList = '';
-            if (item.status === '보관비 결제 대기') {
-                buttonList = `
-                    <button class="btn-sm btn-pay">보관비 결제</button>
-                    <button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>
-                    <button class="btn-sm btn-shipping" disabled="disabled">배송 내역 조회</button>
-                `;
-            } else if (item.status === '배송대기') {
-                buttonList = `
-                    <button class="btn-sm btn-pay" disabled="disabled">보관비 결제</button>
-                    <button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>
-                    <button class="btn-sm btn-shipping">배송 내역 조회</button>
-                `;
-            } else
-                buttonList = `
-                    <button class="btn-sm btn-pay" disabled="disabled">보관비 결제</button>
-                    <button class="btn-sm btn-inspection">검수 결과 확인</button>
-                    <button class="btn-sm btn-shipping">배송 내역 조회</button>
-                `;
-
-            // 아이콘 클래스 결정
-            let matchingCountClass = '';
-            if (item.matching_request_count > 1) {
-                matchingCountClass = 'fas fa-user-friends';
-            } else {matchingCountClass = 'fas fa-user';}
-
-            html +=
-                `<tr class="table-row matching-row rental-header" data-id="` + item.equip_code + `" data-expanded="false">
-                    <td class="checkbox-col">
-                        <input type="checkbox" class="my-form-check-input storen-checkbox">
-                    </td>
-                    <td>
-                        <div class="product-image">
-                            <img src="images/product-placeholder.jpg" alt="상품 이미지">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="equipment-info-container">
-                            <div class="equipment-code">장비 코드 : ` + item.equip_code + `</div>
-                            <a href="#" class="equipment-name">` + item.equipmentDTO.equip_name + `</a>
-                            <div class="equipment-category">` + item.equipmentDTO.majorCategory + ` > ` + item.equipmentDTO.middleCategory + `</div>
-                            <div class="equipment-brand">` + item.equipmentDTO.brand + `</div>
-                            <div class="equipment-date">` + item.equipmentDTO.created_date + `</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="equipment-info-container">
-                            <input type="hidden" name="id" value=` + item.storen_id + `">
-                            <div class="equipment-code">스토렌ID : ` + item.storen_id + `</div>
-                            <a href="storenmatching-request.action?storen_id=` + item.storen_id + `" class="equipment-name">` + item.storen_title + `</a>
-                            <div class="equipment-category">` + item.store_month + `개월 보관</div>
-                            <div class="equipment-date">스토렌등록 : ` + item.created_date + `</div>
-                            <div class="equipment-date">보관시작일 : ` + item.inspec_completed_date != null ? item.inspec_completed_date : '검수 중' + `</div>
-                            <div class="equipment-date">보관종료일 : ` + item.final_return_date != null ? item.final_return_data : '검수 중' + `</div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="button-group-vertical">` +
-                            buttonList +
-                        `</div>
-                    </td>
-                </tr>`;
-        });
-        targetTable.html(html);
-    }
-
-
-
-        // 로딩 표시 함수
-        function showLoading()
-        {
+        //로딩 표시 함수
+        function showLoading() {
             $('.loading-overlay').show();
         }
 
-        // 로딩 숨김 함수
+        //로딩 숨김 함수
         function hideLoading() {
             $('.loading-overlay').hide();
         }
+
+        // 즉시 확인 필요(Urgent) 기능=====================================================================================
+        //즉시 확인 필요 버튼 클릭 이벤트 핸들러
+        $(document).on('click', '.urgent-item', function(e) {
+            e.preventDefault();
+            handleUrgentFilter($(this));
+        });
+
+        //즉시 확인 필요 필터 처리 함수
+        //@param {jQuery} button - 클릭된 버튼
+        function handleUrgentFilter(button) {
+            var itemLabel = button.find('.item-label').text().trim();
+            var statusFilters = [];
+
+            // 각 버튼별 상태 매핑
+            switch (true) {
+                case itemLabel.includes('보관비 결제 대기'):
+                    statusFilters.push('보관비 결제 대기');
+                    break;
+                case itemLabel.includes('검수 결과 확인'):
+                    statusFilters.push('보관 중');
+                    statusFilters.push('강제 반환');
+                    break;
+                case itemLabel.includes('매칭 승인 대기'):
+                    statusFilters.push('승인 대기');
+                    break;
+                case itemLabel.includes('문제 상황 발생'):
+                    statusFilters.push('상태 불명');
+                    break;
+                default:
+                    console.log('알 수 없는 버튼:', itemLabel);
+                    return;
+            }
+
+            // UI 표시 업데이트
+            $('.arrow-step, .urgent-item').removeClass('filtering');
+            button.addClass('filtering');
+
+            // 스토렌 탭으로 전환
+            $('.tab[data-tab="storen"]').click();
+
+            // AJAX 요청으로 필터링된 데이터 가져오기
+            $.ajax({
+                url: '/api/myequipment/emergency-filter',
+                type: 'GET',
+                data: {
+                    keyword: statusFilters,
+                    statuses: statusFilters.join(',') // 쉼표로 구분된 상태 목록
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    showLoading();
+                },
+                success: function(data) {
+                    // 필터링된 데이터 렌더링
+                    handleFilteredData(data, itemLabel);
+                },
+                error: function(xhr, status, error) {
+                    console.error("필터링 데이터 로드 실패:", error);
+                    showFilterError();
+                },
+                complete: function() {
+                    hideLoading();
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>

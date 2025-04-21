@@ -1,11 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%
-    // 테스트를 위한 임시 관리자 정보 설정
-    session.setAttribute("user_code", 1);  // 관리자 계정 코드
-    session.setAttribute("user_grade", 1); // 관리자 등급 (1: 관리자)
-%>
-
 <html>
 <head>
     <title>공지사항</title>
@@ -156,88 +150,6 @@
                                 <td class="p-3 text-center">${noticeList.recommendCount}</td>
                             </tr>
                         </c:forEach>
-                        <!-- 공지사항 목록 -->
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">14</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-25</td>--%>
-<%--                            <td class="p-3 text-center">876</td>--%>
-<%--                            <td class="p-3 text-center">28</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">13</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-25</td>--%>
-<%--                            <td class="p-3 text-center">987</td>--%>
-<%--                            <td class="p-3 text-center">45</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">12</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-10</td>--%>
-<%--                            <td class="p-3 text-center">1,245</td>--%>
-<%--                            <td class="p-3 text-center">32</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">11</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑하쉐어 포인트 적립 시스템 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-28</td>--%>
-<%--                            <td class="p-3 text-center">954</td>--%>
-<%--                            <td class="p-3 text-center">67</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">10</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag update">업데이트</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">모바일 앱 베타 버전 출시 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-20</td>--%>
-<%--                            <td class="p-3 text-center">1,678</td>--%>
-<%--                            <td class="p-3 text-center">189</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">9</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑하쉐어 커뮤니티 이용 규칙 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-15</td>--%>
-<%--                            <td class="p-3 text-center">2,345</td>--%>
-<%--                            <td class="p-3 text-center">89</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">8</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">겨울 캠핑 안전 수칙 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-01-10</td>--%>
-<%--                            <td class="p-3 text-center">1,456</td>--%>
-<%--                            <td class="p-3 text-center">178</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">7</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag update">업데이트</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">사이트 리뉴얼 안내 및 피드백 요청</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-01-05</td>--%>
-<%--                            <td class="p-3 text-center">1,789</td>--%>
-<%--                            <td class="p-3 text-center">156</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">6</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">2024년 커뮤니티 운영 결산</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2024-12-31</td>--%>
-<%--                            <td class="p-3 text-center">1,543</td>--%>
-<%--                            <td class="p-3 text-center">134</td>--%>
-<%--                        </tr>--%>
                         </tbody>
                     </table>
                 </div>

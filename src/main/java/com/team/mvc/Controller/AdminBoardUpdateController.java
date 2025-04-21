@@ -19,6 +19,10 @@ public class AdminBoardUpdateController {
     public String adminBoardUpdate(@ModelAttribute("adminId") String adminId, Model model) {
 
         IAdminBoardUpdateDAO dao = sqlSession.getMapper(IAdminBoardUpdateDAO.class);
+
+        model.addAttribute("Board",dao.getBoardList());
+        model.addAttribute("Label",dao.getLabelList());
+
         return "admin-boardUpdate";
     }
 }

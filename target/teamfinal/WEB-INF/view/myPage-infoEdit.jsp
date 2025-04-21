@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -15,6 +17,111 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+
+    <style>
+        .register-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--bg-primary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .register-title {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+            font-size: var(--font-lg);
+            font-weight: var(--font-bold);
+        }
+
+        .register-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: var(--font-sm);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: var(--font-medium);
+            color: var(--text-primary);
+            font-size: var(--font-sm);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-sm);
+        }
+
+        .input-group {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .required-field {
+            color: var(--color-coral);
+        }
+
+        .form-error {
+            font-size: var(--font-xxs);
+            color: var(--color-error);
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+
+        .form-success {
+            font-size: var(--font-xxs);
+            color: var(--color-success);
+            margin-top: var(--spacing-xs);
+            display: none;
+        }
+
+        .verify-btn {
+            padding: 10px 15px;
+            background-color: var(--color-gray-200);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xs);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .verify-btn:hover {
+            background-color: var(--color-gray-300);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: var(--spacing-md);
+                margin: 20px 15px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .verify-btn {
+                width: 100%;
+            }
+        }
+
+    </style>
 </head>
 <body>
 
@@ -84,52 +191,70 @@
 
     <!-- 마이페이지 메인 콘텐츠 -->
     <div class="mypage-main-content">
-        <!-- 회원 정보 수정 화면 (이미지 4) -->
-            <div id="edit-profile-view" class="content-box">
-                <h3 class="content-box-title mb-4">회원 정보</h3>
+        <!-- 회원 정보 수정 화면 -->
+            <div id="edit-profile-view" class="register-container">
+                <h2 class="register-title">회원정보</h2>
 
-                <div class="form-row">
-                    <div class="form-label">이름</div>
-                    <div class="form-input">유진이</div>
-                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <label class="form-label">이름</label>
+                        <div class="input-group">
+                            <input type="text" class="form-input" value="${user.userName}" readonly>
+                        </div>
+                    </div>
 
-                <div class="form-row">
-                    <div class="form-label">아이디</div>
-                    <div class="form-input">abc1234</div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-label">휴대폰번호</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>010-0000-0000</div>
-                        <button class="btn btn-outline-primary ml-3">인증 변경</button>
+                    <div class="form-row">
+                        <label class="form-label">전화번호</label>
+                        <div class="input-group justify-content-center" style="flex-direction:row;">
+                            <input type="text" class="form-input" value="${user.userTel}" readonly
+                            style="width:80%;">
+                            <button class="verify-btn" style="width:20%;">인증 변경</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-label">이메일</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>abc1234@test.com</div>
-                        <span class="text-success ml-2">이메일 수신동의 OK</span>
-                        <button class="btn btn-primary ml-auto" id="edit-email-btn">수정</button>
+                <hr class="my-7" />
+
+                <div class="form-group">
+                    <div class="form-row">
+                        <div style="flex-direction: row;">
+                        <label class="form-label">이메일</label>
+                            <c:choose>
+                                <c:when test="${user.emailConsent = '동의'}">
+                                    <span class="text-success ml-auto mr-auto">이메일수신 OK</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="text-danger ml-auto mr-auto">이메일수신 NO</span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <div class="input-group justify-content-center" style="flex-direction:row;">
+                            <input type="text" class="form-input" value="${user.userEmail}" readonly
+                                style="width:80%;">
+                            <button class="btn btn-primary ml-auto" id="edit-email-btn">수정</button>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div style="flex-direction: row;">
+                            <label class="form-label">닉네임</label>
+                            <span class="text-muted ml-auto mr-auto">수정횟수 1/5</span>
+                        </div>
+                        <div class="input-group justify-content-center" style="flex-direction:row;">
+                            <input type="text" class="form-input" value="${user.nickname}" readonly
+                                   style="width:80%;">
+                            <button class="btn btn-primary ml-auto" id="edit-nickname-btn">수정</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-label">닉네임</div>
-                    <div class="form-input d-flex align-items-center">
-                        <div>가나초콜릿</div>
-                        <span class="text-muted ml-2">수정횟수 1/5</span>
-                        <button class="btn btn-primary ml-auto" id="edit-nickname-btn">수정</button>
-                    </div>
-                </div>
+                <hr class="my-7" />
 
                 <div class="form-row mt-5">
                     <button class="btn btn-block btn-outline-primary" id="change-password-btn">비밀번호 변경</button>
                 </div>
 
                 <div class="form-row mt-3">
-                    <button class="btn btn-block btn-outline-primary">주소 변경</button>
+                    <button class="btn btn-block btn-outline-primary" id="change-address-btn">주소 변경</button>
                 </div>
             </div>
         </div>
@@ -147,7 +272,7 @@
 
         // 이메일 수정 버튼 클릭
         $("#edit-email-btn").click(function() {
-            window.location.href = 'myPage-infoedit-email.action';
+            window.location.href = 'mypage-infoedit-email.action';
         });
 
         // 비밀번호 변경 버튼 클릭

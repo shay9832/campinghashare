@@ -7,5 +7,6 @@ import java.util.List;
 public interface IAdminBoardUpdateDAO {
 
     /*select*/
-    List<AdminBoardUpdateDTO> getList();
+    List<AdminBoardUpdateDTO> getBoardList();
+    List<AdminBoardUpdateDTO> getLabelList();
 }

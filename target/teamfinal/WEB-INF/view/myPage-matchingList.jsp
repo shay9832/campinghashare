@@ -335,7 +335,7 @@
 
       <!-- 거래ID 또는 장비명 검색 -->
       <div class="search-container">
-        <input type="text" id="search-matching" placeholder="거래ID 또는 장비명 검색">
+        <input type="text" id="search-matching" placeholder="거래ID 또는 장비명 검색" value="${not empty storenId ? storenId : ''}">
         <button type="button" class="search-button" id="btn-search">
           <i class="fas fa-search"></i>
         </button>
@@ -344,7 +344,7 @@
       <!-- 스토렌 탭 컨텐츠 -->
       <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
         <!-- 소유자/사용자 필터 -->
-        <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+        <div class="table-actions align-items-center flex-wrap mb-3">
           <!-- 탭 필터 -->
           <div class="d-flex flex-wrap align-items-center">
             <div class="tab-nav">
@@ -521,6 +521,7 @@
 <script type="text/javascript">
   // 페이지 로딩 시 실행
   $(document).ready(function() {
+
     // URL에서 탭 정보 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     let tabFromUrl = urlParams.get('tab');
@@ -529,6 +530,15 @@
     // 메인 탭 초기화 (스토렌/렌탈)
     let activeMainTab = tabFromUrl || "storen"; // URL 파라미터 또는 기본값
     let activeSubTab = subTabFromUrl || "owner"; // URL 파라미터 또는 기본값
+
+    // 페이지 로딩 시 검색창에 값이 있으면 자동 검색 실행
+    const initialSearchValue = $('#search-matching').val().trim();
+    if(initialSearchValue !== '') {
+      // 약간의 지연 후 검색 실행 (DOM이 완전히 로드된 후)
+      setTimeout(function() {
+        performSearch();
+      }, 300);
+    }
 
     // 탭 전환 시 이전 데이터 정리 함수
     function clearPreviousData() {
@@ -565,7 +575,7 @@
 
       // 콘텐츠 활성화
       $('.tab-content').removeClass('active');
-      $(`#` + tabId + `-content`).addClass('active');
+      $('#' + tabId + '-content').addClass('active');
 
       // 메인 탭 상태 저장
       activeMainTab = tabId;
@@ -580,7 +590,6 @@
       }
       // 탭 전환 시 데이터 다시 로드
       loadMatchingData(activeMainTab, activeSubTab);
-
     });
 
     // 서브 탭 전환 이벤트 (소유자/사용자)
@@ -604,23 +613,22 @@
       loadMatchingData(activeMainTab, activeSubTab);
     });
 
-    // // 검색 기능
-    // $('#btn-search').on('click', function() {
-    //   performSearch();
-    // });
-    //
-    // // 엔터 키 검색
-    // $('#search-matching').on('keypress', function(e) {
-    //   if(e.which === 13) {
-    //     performSearch();
-    //   }
-    // });
-    //
-    // // 정렬 옵션 변경 이벤트
-    // $('.sort-select, .date-filter select').on('change', function() {
-    //   loadMatchingData(activeMainTab, activeSubTab);
-    // });
+    // 검색 기능 활성화
+    $('#btn-search').on('click', function() {
+      performSearch();
+    });
 
+    // 엔터 키 검색 활성화
+    $('#search-matching').on('keypress', function(e) {
+      if(e.which === 13) {
+        performSearch();
+      }
+    });
+
+    // 필터 해제 버튼 클릭 이벤트
+    $(document).on('click', '.btn-clear-filter', function() {
+      clearFilters();
+    });
 
     // 소유자/사용자 탭의 렌탈 행 클릭 이벤트 (세부 정보 토글)
     $(document).on('click', '.rental-header', function() {
@@ -629,17 +637,17 @@
 
       // 현재 열려 있는 다른 세부 행 닫기
       $('.rental-header').not(this).removeClass('active').attr('data-expanded', 'false');
-      $('.matching-details').not(`[data-parent="` + rentalId + `"]`).hide();
+      $('.matching-details').not('[data-parent="' + rentalId + '"]').hide();
 
       // 현재 행 토글
       if (isExpanded) {
         $(this).removeClass('active').attr('data-expanded', 'false');
-        $(`.matching-details[data-parent="` + rentalId + `"]`).hide();
+        $('.matching-details[data-parent="' + rentalId + '"]').hide();
       } else {
         $(this).addClass('active').attr('data-expanded', 'true');
 
         // 상세 정보가 이미 로드되어 있는지 확인
-        if ($(`.matching-details[data-parent="` + rentalId + `"]`).length === 0) {
+        if ($('.matching-details[data-parent="' + rentalId + '"]').length === 0) {
           // 상세 정보 로드 (AJAX)
           if (activeSubTab === 'owner') {
             loadMatchingDetails(rentalId);  // 소유자용 상세 정보
@@ -648,7 +656,7 @@
             loadUserMatchingDetails(rentalId);  // 사용자용 상세 정보
           }
         } else {
-          $(`.matching-details[data-parent="` + rentalId + `"]`).show();
+          $('.matching-details[data-parent="' + rentalId + '"]').show();
         }
       }
     });
@@ -692,8 +700,61 @@
         approveMatchingWithRefresh(selectedRentalId, selectedRequestId);
       }
     });
-  });//$(document).ready(function() { ... });
 
+    // 결제 버튼 클릭 이벤트
+    $(document).on('click', '.pay-now-btn', function(e) {
+      e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
+
+      const rentalId = $(this).data('rental');
+      const userCode = $(this).data('user');
+      const rentalType = $(this).data('type');
+      // 결제 페이지로 이동
+      window.location.href = 'storenmatching-rental-pay.action?rentalId=' + rentalId + '&userCode=' + userCode + '&type=' + rentalType;
+    });
+
+    // 매칭 신청 취소 버튼 클릭 이벤트
+    $(document).on('click', '.cancel-request-btn', function(e) {
+      e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
+
+      const rentalId = $(this).data('rental');
+      const requestId = $(this).data('request');
+
+      if (confirm('정말로 매칭 신청을 취소하시겠습니까?')) {
+        // 매칭 신청 취소 AJAX 요청
+        $.ajax({
+          url: '/api/matching/cancel',
+          type: 'POST',
+          data: {
+            transactionId: rentalId,
+            requestId: requestId
+          },
+          dataType: 'json',
+          success: function(response) {
+            if (response.success) {
+              alert('매칭 신청이 취소되었습니다.');
+              // 현재 페이지 새로고침
+              window.location.reload();
+            } else {
+              alert('매칭 신청 취소 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("매칭 신청 취소 실패:", error);
+            alert('매칭 신청 취소 중 오류가 발생했습니다.');
+          }
+        });
+      }
+    });
+  });
+
+  //필터 초기화 함수
+  function clearFilters() {
+    // 필터 상태 제거
+    $('.filter-notice').remove();
+
+    // 원래 데이터 다시 로드
+    loadMatchingData('storen', 'owner');
+  }
 
   // 매칭 데이터 로드 함수
   function loadMatchingData(mainTab, subTab) {
@@ -750,17 +811,15 @@
                   '<div class="empty-state">' +
                   '<i class="fas fa-search"></i>' +
                   '<p>매칭 내역이 없습니다</p>' +
-                  '<div class="hint">다른 탭을 선택하거나 매칭을 신청을 기다려주세요.</div>' +
+                  '<div class="hint">다른 탭을 선택하거나 매칭 신청을 기다려주세요.</div>' +
                   '</div>' +
                   '</td>' +
                   '</tr>');
           return;
         }
 
-        // 스토렌 소유자 탭인 경우
+        // 데이터 렌더링
         renderData(data, targetTable);
-
-        // 추가 탭 렌더링 케이스...(렌탈도 추후 추가)
       },
       error: function(xhr, status, error) {
         console.error("데이터 로드 실패:", error);
@@ -797,7 +856,9 @@
       let matchingCountClass = '';
       if (item.matching_request_count > 1) {
         matchingCountClass = 'fas fa-user-friends';
-      } else {matchingCountClass = 'fas fa-user';}
+      } else {
+        matchingCountClass = 'fas fa-user';
+      }
 
       html +=
               '<tr class="table-row matching-row rental-header" data-id="' + item.storen_id + '" data-expanded="false">' +
@@ -826,18 +887,18 @@
 
     // 로딩 인디케이터 표시
     const row = $('.rental-header[data-id="' + rentalId + '"]');
-    const newDetailRow = $(`
-        <tr class="matching-details" data-parent="` + rentalId + `">
-            <td colspan="8">
-                <div class="content-box-sm matching-details-container">
-                    <h6 class="content-box-title details-title">매칭 신청자 목록</h6>
-                    <div class="details-info">
-                        <p><i class="fas fa-spinner fa-spin me-2"></i> 신청자 정보를 불러오는 중...</p>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    `);
+    const newDetailRow = $(
+            '<tr class="matching-details" data-parent="' + rentalId + '">' +
+            '<td colspan="8">' +
+            '<div class="content-box-sm matching-details-container">' +
+            '<h6 class="content-box-title details-title">매칭 신청자 목록</h6>' +
+            '<div class="details-info">' +
+            '<p><i class="fas fa-spinner fa-spin me-2"></i> 신청자 정보를 불러오는 중...</p>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>'
+    );
 
     // 새로운 상세 행 추가
     row.after(newDetailRow);
@@ -867,12 +928,12 @@
 
         // 에러 메시지 표시
         const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-        detailContainer.html(`
-            <h6 class="content-box-title details-title">오류 발생</h6>
-            <div class="details-info">
-                <p><i class="fas fa-exclamation-circle me-2"></i> 상세 정보를 불러오는 중 오류가 발생했습니다.</p>
-            </div>
-        `);
+        detailContainer.html(
+                '<h6 class="content-box-title details-title">오류 발생</h6>' +
+                '<div class="details-info">' +
+                '<p><i class="fas fa-exclamation-circle me-2"></i> 상세 정보를 불러오는 중 오류가 발생했습니다.</p>' +
+                '</div>'
+        );
       }
     });
   }
@@ -881,12 +942,12 @@
   function renderCompletedMatchingDetails(rentalId, data) {
     if (data.length === 0) {
       const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(`
-            <h6 class="content-box-title details-title">매칭 완료 정보</h6>
-            <div class="details-info matched">
-                <p><i class="fas fa-info-circle"></i> 매칭 정보를 찾을 수 없습니다.</p>
-            </div>
-        `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 완료 정보</h6>' +
+              '<div class="details-info matched">' +
+              '<p><i class="fas fa-info-circle"></i> 매칭 정보를 찾을 수 없습니다.</p>' +
+              '</div>'
+      );
       return;
     }
 
@@ -899,43 +960,44 @@
     if (matchedUser.payment_date !== null && matchedUser.payment_date !== ""){
       payment_date = matchedUser.payment_date;
     }
-    detailContainer.html(`
-            <h6 class="content-box-title details-title">매칭 완료 정보</h6>
-                <div class="details-info matched">
-                    <p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=` + matchedUser.user_code + '" class="user-link">' + matchedUser.user_nickname + '</a> 님과 매칭되었습니다. (결제일: ' + payment_date + ')</p>' +
-            '</div>');
+    detailContainer.html(
+            '<h6 class="content-box-title details-title">매칭 완료 정보</h6>' +
+            '<div class="details-info matched">' +
+            '<p><i class="fas fa-check-circle"></i> 이 렌탈은 <a href="user-profile.action?id=' + matchedUser.user_code + '" class="user-link">' + matchedUser.user_nickname + '</a> 님과 매칭되었습니다. (결제일: ' + payment_date + ')</p>' +
+            '</div>'
+    );
   }
 
   // 선택 대기 중인 상세 정보 렌더링 함수
   function renderPendingMatchingDetails(rentalId, data) {
     if (data.length === 0) {
       const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 신청자 목록</h6>
-      <div class="details-info">
-        <p><i class="fas fa-info-circle"></i> 아직 매칭 신청이 없습니다.</p>
-      </div>
-    `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 신청자 목록</h6>' +
+              '<div class="details-info">' +
+              '<p><i class="fas fa-info-circle"></i> 아직 매칭 신청이 없습니다.</p>' +
+              '</div>'
+      );
       return;
     }
 
     // 컨테이너 시작 HTML
-    let detailHtml = `
-        <h6 class="content-box-title details-title">매칭 신청자 목록</h6>
-        <div class="details-info">
-            <p>아래 신청자 중 한 명을 선택하면 나머지 신청은 자동으로 취소됩니다.</p>
-        </div>
-        <table class="details-table">
-            <thead>
-                <tr>
-                    <th>신청자</th>
-                    <th>신청일</th>
-                    <th>신뢰도</th>
-                    <th>대여 이력</th>
-                    <th>액션</th>
-                </tr>
-            </thead>
-            <tbody>`;
+    let detailHtml =
+            '<h6 class="content-box-title details-title">매칭 신청자 목록</h6>' +
+            '<div class="details-info">' +
+            '<p>아래 신청자 중 한 명을 선택하면 나머지 신청은 자동으로 취소됩니다.</p>' +
+            '</div>' +
+            '<table class="details-table">' +
+            '<thead>' +
+            '<tr>' +
+            '<th>신청자</th>' +
+            '<th>신청일</th>' +
+            '<th>신뢰도</th>' +
+            '<th>대여 이력</th>' +
+            '<th>액션</th>' +
+            '</tr>' +
+            '</thead>' +
+            '<tbody>';
 
     // 각 신청자에 대한 행 추가
     data.forEach(function(applicant) {
@@ -947,26 +1009,23 @@
         trustClass = 'medium';
       }
 
-      detailHtml += `
-        <tr>
-            <td>
-                <a href="user-profile.action?id=` + applicant.user_code + '" class="user-link">' + applicant.user_nickname + '</a>' +
-              `</td>
-        <!--        <td class="text-left">신청 메시지가 여기에 표시됩니다.</td>-->
-             <td>` + applicant.requested_date + '</td>' +
+      detailHtml +=
+              '<tr>' +
+              '<td>' +
+              '<a href="user-profile.action?id=' + applicant.user_code + '" class="user-link">' + applicant.user_nickname + '</a>' +
+              '</td>' +
+              '<!--<td class="text-left">신청 메시지가 여기에 표시됩니다.</td>-->' +
+              '<td>' + applicant.requested_date + '</td>' +
               '<td><span class="trust-score ' + trustClass + '">' + applicant.trust + '%</span></td>' +
               '<td>' + applicant.rental_history + '회</td>' +
-              `<td>
-                    <button type="button" class="btn-sm btn-approve" data-rental="` + rentalId + '" data-request="' + applicant.matching_req_id + `">선택</button>
-            </td>
-        </tr>
-        `;
+              '<td>' +
+              '<button type="button" class="btn-sm btn-approve" data-rental="' + rentalId + '" data-request="' + applicant.matching_req_id + '">선택</button>' +
+              '</td>' +
+              '</tr>';
     });
 
     // 테이블 종료
-    detailHtml += `
-                    </tbody>
-                </table>`;
+    detailHtml += '</tbody></table>';
 
     // 컨테이너 업데이트
     const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
@@ -1019,18 +1078,18 @@
 
     // 로딩 인디케이터 표시
     const row = $('.rental-header[data-id="' + rentalId + '"]');
-    const newDetailRow = $(`
-        <tr class="matching-details" data-parent="` + rentalId + `">
-            <td colspan="8">
-                <div class="content-box-sm matching-details-container">
-                    <h6 class="content-box-title details-title">매칭 정보</h6>
-                    <div class="details-info">
-                        <p><i class="fas fa-spinner fa-spin me-2"></i> 매칭 정보를 불러오는 중...</p>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    `);
+    const newDetailRow = $(
+            '<tr class="matching-details" data-parent="' + rentalId + '">' +
+            '<td colspan="8">' +
+            '<div class="content-box-sm matching-details-container">' +
+            '<h6 class="content-box-title details-title">매칭 정보</h6>' +
+            '<div class="details-info">' +
+            '<p><i class="fas fa-spinner fa-spin me-2"></i> 매칭 정보를 불러오는 중...</p>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>'
+    );
 
     // 새로운 상세 행 추가
     row.after(newDetailRow);
@@ -1059,25 +1118,26 @@
 
         // 에러 메시지 표시
         const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-        detailContainer.html(`
-            <h6 class="content-box-title details-title">오류 발생</h6>
-            <div class="details-info">
-                <p><i class="fas fa-exclamation-circle me-2"></i> 상세 정보를 불러오는 중 오류가 발생했습니다.</p>
-            </div>
-        `);
+        detailContainer.html(
+                '<h6 class="content-box-title details-title">오류 발생</h6>' +
+                '<div class="details-info">' +
+                '<p><i class="fas fa-exclamation-circle me-2"></i> 상세 정보를 불러오는 중 오류가 발생했습니다.</p>' +
+                '</div>'
+        );
       }
     });
   }
+
   // 매칭 완료된 상세 정보 렌더링 함수(사용자용)
   function renderUserCompletedMatchingDetails(rentalId, data) {
     if (data.length === 0) {
       const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 완료 정보</h6>
-      <div class="details-info matched">
-        <p><i class="fas fa-info-circle"></i> 매칭 정보를 찾을 수 없습니다.</p>
-      </div>
-    `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 완료 정보</h6>' +
+              '<div class="details-info matched">' +
+              '<p><i class="fas fa-info-circle"></i> 매칭 정보를 찾을 수 없습니다.</p>' +
+              '</div>'
+      );
       return;
     }
 
@@ -1094,59 +1154,59 @@
       let paymentStatus = '';
       if (matchedUser.payment_status !== "결제대기") {
         // 이미 결제된 경우
-        paymentStatus = `
-        <div class="alert alert-success mt-3" role="alert">
-          <i class="fas fa-check-circle me-2"></i> 결제가 완료되었습니다. (결제일: ` + matchedUser.payment_date + `)
-        </div>
-      `;
+        paymentStatus =
+                '<div class="alert alert-success mt-3" role="alert">' +
+                '<i class="fas fa-check-circle me-2"></i> 결제가 완료되었습니다. (결제일: ' + matchedUser.payment_date + ')' +
+                '</div>';
       } else {
         // 아직 결제가 필요한 경우
-        paymentStatus = `
-        <div class="alert alert-warning mt-3" role="alert">
-          <i class="fas fa-exclamation-triangle me-2"></i> 아직 결제가 완료되지 않았습니다.
-        </div>
-        <button type="button" class="btn btn-success mt-2 pay-now-btn" data-rental="` + rentalId + `" data-user="` + matchedUser.user_code + `" data-type="storen">
-          <i class="fas fa-credit-card me-1"></i> 지금 결제하기
-        </button>
-      `;
+        paymentStatus =
+                '<div class="alert alert-warning mt-3" role="alert">' +
+                '<i class="fas fa-exclamation-triangle me-2"></i> 아직 결제가 완료되지 않았습니다.' +
+                '</div>' +
+                '<button type="button" class="btn btn-success mt-2 pay-now-btn" data-rental="' + rentalId + '" data-user="' + matchedUser.user_code + '" data-type="storen">' +
+                '<i class="fas fa-credit-card me-1"></i> 지금 결제하기' +
+                '</button>';
       }
 
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 완료 정보</h6>
-      <div class="details-info matched">
-        <p><i class="fas fa-check-circle me-2"></i> 축하합니다! 당신의 매칭 신청이 승인되었습니다.</p>
-        <div class="text-left">
-          <p><strong>렌탈 기간:</strong> ` + matchedUser.rental_start_date + ` ~ ` + matchedUser.rental_end_date + `</p>
-          <p><strong>렌탈 금액:</strong> ` + matchedUser.rental_pay.toLocaleString() + `원 (` + matchedUser.rental_duration + `일)</p>
-        </div>
-      </div>`
-              + paymentStatus);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 완료 정보</h6>' +
+              '<div class="details-info matched">' +
+              '<p><i class="fas fa-check-circle me-2"></i> 축하합니다! 당신의 매칭 신청이 승인되었습니다.</p>' +
+              '<div class="text-left">' +
+              '<p><strong>렌탈 기간:</strong> ' + matchedUser.rental_start_date + ' ~ ' + matchedUser.rental_end_date + '</p>' +
+              '<p><strong>렌탈 금액:</strong> ' + matchedUser.rental_pay.toLocaleString() + '원 (' + matchedUser.rental_duration + '일)</p>' +
+              '</div>' +
+              '</div>' +
+              paymentStatus
+      );
     } else {
       // 다른 사용자가 매칭된 경우
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 정보</h6>
-      <div class="details-info">
-        <p><i class="fas fa-exclamation-circle me-2"></i> 죄송합니다. 당신의 매칭 신청이 승인되지 않았습니다.</p>
-        <p>이 장비는 다른 사용자와 매칭이 완료되었습니다.</p>
-      </div>
-      <div class="text-center mt-3">
-        <a href="storen-list.action" class="btn btn-outline-secondary">
-          <i class="fas fa-search me-1"></i> 다른 장비 찾아보기
-        </a>
-      </div>
-    `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 정보</h6>' +
+              '<div class="details-info">' +
+              '<p><i class="fas fa-exclamation-circle me-2"></i> 죄송합니다. 당신의 매칭 신청이 승인되지 않았습니다.</p>' +
+              '<p>이 장비는 다른 사용자와 매칭이 완료되었습니다.</p>' +
+              '</div>' +
+              '<div class="text-center mt-3">' +
+              '<a href="storen-list.action" class="btn btn-outline-secondary">' +
+              '<i class="fas fa-search me-1"></i> 다른 장비 찾아보기' +
+              '</a>' +
+              '</div>'
+      );
     }
   }
+
   // 선택 대기 중인 상세 정보 렌더링 함수(사용자용)
   function renderUserPendingMatchingDetails(rentalId, data) {
     if (data.length === 0) {
       const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 신청 정보</h6>
-      <div class="details-info">
-        <p><i class="fas fa-info-circle"></i> 매칭 신청 정보를 찾을 수 없습니다.</p>
-      </div>
-    `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 신청 정보</h6>' +
+              '<div class="details-info">' +
+              '<p><i class="fas fa-info-circle"></i> 매칭 신청 정보를 찾을 수 없습니다.</p>' +
+              '</div>'
+      );
       return;
     }
 
@@ -1165,80 +1225,35 @@
     // 내 신청 정보가 없는 경우
     if (!myRequestInfo) {
       const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-      detailContainer.html(`
-      <h6 class="content-box-title details-title">매칭 신청 정보</h6>
-      <div class="details-info">
-        <p><i class="fas fa-exclamation-circle"></i> 현재 로그인한 계정으로 신청한 내역을 찾을 수 없습니다.</p>
-      </div>
-    `);
+      detailContainer.html(
+              '<h6 class="content-box-title details-title">매칭 신청 정보</h6>' +
+              '<div class="details-info">' +
+              '<p><i class="fas fa-exclamation-circle"></i> 현재 로그인한 계정으로 신청한 내역을 찾을 수 없습니다.</p>' +
+              '</div>'
+      );
       return;
     }
 
     // 컨테이너 업데이트
     const detailContainer = $('.matching-details[data-parent="' + rentalId + '"] .content-box-sm');
-    detailContainer.html(`
-        <h6 class="content-box-title details-title">매칭 신청 정보</h6>
-        <div class="details-info">
-            <p><i class="fas fa-clock me-2"></i> 소유자의 매칭 승인을 기다리고 있습니다.</p>
-            <div class="text-left">
-              <p><strong>신청일:</strong> ` + myRequestInfo.requested_date +`</p>
-              <p><strong>렌탈 기간:</strong> ` + myRequestInfo.rental_start_date + ` ~ ` + myRequestInfo.rental_end_date + ` (` + myRequestInfo.rental_duration + `일)</p>
-              <p><strong>예상 렌탈 금액:</strong> ` + myRequestInfo.rental_pay.toLocaleString() + `원</p>
-            </div>
-        </div>
-        <div class="alert alert-info mt-3" role="alert">
-            <i class="fas fa-info-circle me-2"></i> 소유자가 당신의 신청을 승인하면 알림을 보내드립니다.
-        </div>
-        <button type="button" class="btn btn-outline-danger mt-2 cancel-request-btn" data-rental="` + rentalId + `" data-request="` + myRequestInfo.matching_req_id + `">
-            <i class="fas fa-times me-1"></i> 매칭 신청 취소하기
-        </button>
-    `);
+    detailContainer.html(
+            '<h6 class="content-box-title details-title">매칭 신청 정보</h6>' +
+            '<div class="details-info">' +
+            '<p><i class="fas fa-clock me-2"></i> 소유자의 매칭 승인을 기다리고 있습니다.</p>' +
+            '<div class="text-left">' +
+            '<p><strong>신청일:</strong> ' + myRequestInfo.requested_date + '</p>' +
+            '<p><strong>렌탈 기간:</strong> ' + myRequestInfo.rental_start_date + ' ~ ' + myRequestInfo.rental_end_date + ' (' + myRequestInfo.rental_duration + '일)</p>' +
+            '<p><strong>예상 렌탈 금액:</strong> ' + myRequestInfo.rental_pay.toLocaleString() + '원</p>' +
+            '</div>' +
+            '</div>' +
+            '<div class="alert alert-info mt-3" role="alert">' +
+            '<i class="fas fa-info-circle me-2"></i> 소유자가 당신의 신청을 승인하면 알림을 보내드립니다.' +
+            '</div>' +
+            '<button type="button" class="btn btn-outline-danger mt-2 cancel-request-btn" data-rental="' + rentalId + '" data-request="' + myRequestInfo.matching_req_id + '">' +
+            '<i class="fas fa-times me-1"></i> 매칭 신청 취소하기' +
+            '</button>'
+    );
   }
-
-  // 결제 버튼 클릭 이벤트
-  $(document).on('click', '.pay-now-btn', function(e) {
-    e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
-
-    const rentalId = $(this).data('rental');
-    const userCode = $(this).data('user');
-    const rentalType = $(this).data('type');
-    // 결제 페이지로 이동
-    window.location.href = `storenmatching-rental-pay.action?rentalId=` + rentalId + `&userCode=` + userCode + `&type=` + rentalType;
-  });
-
-  // 매칭 신청 취소 버튼 클릭 이벤트
-  $(document).on('click', '.cancel-request-btn', function(e) {
-    e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
-
-    const rentalId = $(this).data('rental');
-    const requestId = $(this).data('request');
-
-    if (confirm('정말로 매칭 신청을 취소하시겠습니까?')) {
-      // 매칭 신청 취소 AJAX 요청
-      $.ajax({
-        url: '/api/matching/cancel',
-        type: 'POST',
-        data: {
-          transactionId: rentalId,
-          requestId: requestId
-        },
-        dataType: 'json',
-        success: function(response) {
-          if (response.success) {
-            alert('매칭 신청이 취소되었습니다.');
-            // 현재 페이지 새로고침
-            window.location.reload();
-          } else {
-            alert('매칭 신청 취소 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error("매칭 신청 취소 실패:", error);
-          alert('매칭 신청 취소 중 오류가 발생했습니다.');
-        }
-      });
-    }
-  });
 
   // 로딩 표시 함수
   function showLoading() {
@@ -1251,108 +1266,139 @@
   }
 
   // 검색 실행 함수
-  <%--function performSearch() {--%>
-  <%--  const searchValue = $('#search-matching').val().trim().toLowerCase();--%>
+  function performSearch() {
+    const searchValue = $('#search-matching').val().trim();
 
-  <%--  if(searchValue === '') {--%>
-  <%--    // 검색어가 없으면 모든 행 표시--%>
-  <%--    $('.rental-header, .table-row').show();--%>
-  <%--    // 열려있는 세부 행 유지--%>
-  <%--    $('.rental-header[data-expanded="true"]').each(function() {--%>
-  <%--      const rentalId = $(this).data('id');--%>
-  <%--      $(`.matching-details[data-parent="${rentalId}"]`).show();--%>
-  <%--    });--%>
-  <%--    // empty-state 제거--%>
-  <%--    $('.empty-state').remove();--%>
-  <%--    return;--%>
-  <%--  }--%>
+    // 검색어가 숫자(ID)인 경우 API 호출, 그 외에는 기존 클라이언트 검색 수행
+    if(searchValue !== '' && !isNaN(searchValue)) {
+      // ID로 검색하는 경우
+      const storenId = parseInt(searchValue);
 
-  <%--  // 모든 활성 탭의 행을 검색--%>
-  <%--  const activeTab = $('.tab.active').data('tab');--%>
+      // 로딩 표시
+      showLoading();
 
-  <%--  if (activeTab === 'owner') {--%>
-  <%--    // 소유자 탭의 경우 렌탈 헤더 행을 검색--%>
-  <%--    const rows = $('#owner-content .rental-header');--%>
-  <%--    let foundMatch = false;--%>
+      const activeMainTab = $('.tab.active').data('tab');
 
-  <%--    rows.each(function() {--%>
-  <%--      const rowData = $(this).text().toLowerCase();--%>
-  <%--      const rentalId = $(this).find('td:eq(0)').text().toLowerCase();--%>
-  <%--      const rentalTitle = $(this).find('.rental-title').text().toLowerCase();--%>
-  <%--      const equipmentCode = $(this).find('td:eq(2)').text().toLowerCase();--%>
-  <%--      const equipmentName = $(this).find('td:eq(3)').text().toLowerCase();--%>
+      // 현재 활성화된 탭 확인
+      const targetTable = activeMainTab === 'storen' ?
+              $('#storen-content .matching-table tbody') :
+              $('#rental-content .matching-table tbody');
 
-  <%--      // 검색 조건 확인--%>
-  <%--      if(rentalId.includes(searchValue) ||--%>
-  <%--              rentalTitle.includes(searchValue) ||--%>
-  <%--              equipmentCode.includes(searchValue) ||--%>
-  <%--              equipmentName.includes(searchValue) ||--%>
-  <%--              rowData.includes(searchValue)) {--%>
-  <%--        $(this).show();--%>
-  <%--        const rentalId = $(this).data('id');--%>
-  <%--        // 이미 확장된 행만 표시--%>
-  <%--        if($(this).attr('data-expanded') === 'true') {--%>
-  <%--          $(`.matching-details[data-parent="${rentalId}"]`).show();--%>
-  <%--        }--%>
-  <%--        foundMatch = true;--%>
-  <%--      } else {--%>
-  <%--        $(this).hide();--%>
-  <%--        const rentalId = $(this).data('id');--%>
-  <%--        $(`.matching-details[data-parent="${rentalId}"]`).hide();--%>
-  <%--      }--%>
-  <%--    });--%>
+      targetTable.html('<tr><td colspan="8" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 검색 중...</td></tr>');
 
-  <%--    // 검색 결과가 없는 경우 처리--%>
-  <%--    handleEmptySearchResults(foundMatch, activeTab);--%>
+      // API 호출
+      $.ajax({
+        url: '/api/matching/search',
+        type: 'GET',
+        data: {
+          id: storenId
+        },
+        dataType: 'json',
+        success: function(data) {
+          hideLoading();
 
-  <%--  } else {--%>
-  <%--    // 사용자 탭의 경우 일반 행을 검색--%>
-  <%--    const rows = $('#user-content .table-row');--%>
-  <%--    let foundMatch = false;--%>
+          // 필터 알림 추가
+          if ($('.filter-notice').length > 0) {
+            $('.filter-notice').remove();
+          }
 
-  <%--    rows.each(function() {--%>
-  <%--      const rowData = $(this).text().toLowerCase();--%>
-  <%--      const rentalId = $(this).find('td:eq(0)').text().toLowerCase();--%>
-  <%--      const rentalTitle = $(this).find('.rental-title').text().toLowerCase();--%>
-  <%--      const equipmentCode = $(this).find('td:eq(2)').text().toLowerCase();--%>
-  <%--      const equipmentName = $(this).find('td:eq(3)').text().toLowerCase();--%>
+          $('#storen-content .table-actions').after(
+                  '<div class="filter-notice">' +
+                  '<span>"스토렌 ID : ' + storenId + '" 검색 결과 (' + data.length + '개)</span>' +
+                  '<button class="btn-sm btn-clear-filter">모든 매칭 내역 보기</button>' +
+                  '</div>'
+          );
 
-  <%--      // 검색 조건 확인--%>
-  <%--      if(rentalId.includes(searchValue) ||--%>
-  <%--              rentalTitle.includes(searchValue) ||--%>
-  <%--              equipmentCode.includes(searchValue) ||--%>
-  <%--              equipmentName.includes(searchValue) ||--%>
-  <%--              rowData.includes(searchValue)) {--%>
-  <%--        $(this).show();--%>
-  <%--        foundMatch = true;--%>
-  <%--      } else {--%>
-  <%--        $(this).hide();--%>
-  <%--      }--%>
-  <%--    });--%>
+          if(data.length === 0) {
+            // 검색 결과가 없는 경우
+            targetTable.html(
+                    '<tr><td colspan="8" class="text-center py-4">검색 결과가 없습니다.</td></tr>'
+            );
+          } else {
+            // 중요: data가 배열이 아닌 경우 배열로 변환
+            const dataArray = Array.isArray(data) ? data : [data];
+            // 결과 표시 - renderData 함수 직접 호출
+            renderData(dataArray, targetTable);
+          }
 
-  <%--    // 검색 결과가 없는 경우 처리--%>
-  <%--    handleEmptySearchResults(foundMatch, activeTab);--%>
-  <%--  }--%>
-  <%--}--%>
+          // 검색 완료 후 검색창 비우기
+          $('#search-matching').val('');
+        },
+        error: function(xhr, status, error) {
+          console.error('검색 실패: ' + error);
+          hideLoading();
 
-  <%--// 검색 결과가 없는 경우 처리 함수--%>
-  <%--function handleEmptySearchResults(foundMatch, activeTab) {--%>
-  <%--  if(!foundMatch) {--%>
-  <%--    // 이미 empty-state가 있는지 확인--%>
-  <%--    if($(`#${activeTab}-content .empty-state`).length === 0) {--%>
-  <%--      $(`#${activeTab}-content .table-container`).after(`--%>
-  <%--                  <div class="empty-state">--%>
-  <%--                      <i class="fas fa-search"></i>--%>
-  <%--                      <p>검색 결과가 없습니다</p>--%>
-  <%--                      <div class="hint">다른 검색어로 다시 시도해보세요.</div>--%>
-  <%--                  </div>--%>
-  <%--              `);--%>
-  <%--    }--%>
-  <%--  } else {--%>
-  <%--    // 검색 결과가 있으면 empty-state 제거--%>
-  <%--    $(`#${activeTab}-content .empty-state`).remove();--%>
-  <%--  }--%>
-  <%--}--%>
+          targetTable.html(
+                  '<tr><td colspan="8" class="text-center text-danger">검색 중 오류가 발생했습니다.</td></tr>'
+          );
+        }
+      });
+    } else {
+      // 기존 클라이언트 사이드 검색 수행 (텍스트 검색)
+      if(searchValue === '') {
+        // 검색어가 없으면 모든 행 표시
+        $('.rental-header, .table-row').show();
+        // 열려있는 세부 행 유지
+        $('.rental-header[data-expanded="true"]').each(function() {
+          const rentalId = $(this).data('id');
+          $('.matching-details[data-parent="' + rentalId + '"]').show();
+        });
+        // empty-state 제거
+        $('.empty-state').remove();
+        return;
+      }
+
+      // 모든 활성 탭의 행을 검색
+      const rows = activeMainTab === 'storen' ?
+              $('#storen-content .matching-row') :
+              $('#rental-content .matching-row');
+      let foundMatch = false;
+
+      rows.each(function() {
+        const rowData = $(this).text().toLowerCase();
+
+        // 검색 조건 확인 (텍스트 포함 여부)
+        if(rowData.includes(searchValue.toLowerCase())) {
+          $(this).show();
+
+          // 이미 확장된 행이면 상세 정보도 표시
+          if($(this).hasClass('rental-header') && $(this).attr('data-expanded') === 'true') {
+            const rentalId = $(this).data('id');
+            $('.matching-details[data-parent="' + rentalId + '"]').show();
+          }
+
+          foundMatch = true;
+        } else {
+          $(this).hide();
+
+          // 상세 정보 행도 숨김
+          if($(this).hasClass('rental-header')) {
+            const rentalId = $(this).data('id');
+            $('.matching-details[data-parent="' + rentalId + '"]').hide();
+          }
+        }
+      });
+
+      // 검색 결과가 없는 경우 메시지 표시
+      if(!foundMatch) {
+        const targetContent = activeMainTab === 'storen' ?
+                '#storen-content' :
+                '#rental-content';
+
+        if($(targetContent + ' .empty-state').length === 0) {
+          $(targetContent + ' .matching-table-container').after(
+                  '<div class="empty-state">' +
+                  '<i class="fas fa-search"></i>' +
+                  '<p>검색 결과가 없습니다</p>' +
+                  '<div class="hint">다른 검색어로 다시 시도해보세요.</div>' +
+                  '</div>'
+          );
+        }
+      } else {
+        $('.empty-state').remove();
+      }
+    }
+  }
 </script>
 </body>
 </html>

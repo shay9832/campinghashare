@@ -1,17 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ include file="checkLogin.jsp" %>
 <%
     // 줄바꿈
     pageContext.setAttribute("br", "<br/>");
     pageContext.setAttribute("cn", "\n");
 %>
-<%
-    // 테스트를 위한 임시 관리자 정보 설정
-    session.setAttribute("user_code", 1);  // 관리자 계정 코드
-    session.setAttribute("user_grade", 1); // 관리자 등급 (1: 관리자)
-%>
+
 
 <html>
 <head>
@@ -783,7 +778,7 @@
 <!-- 디버깅용 정보 (테스트용) -->
 <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
     게시글 번호: ${post.postId}, 게시글 작성자: ${post.userCode},
-    로그인 사용자: ${sessionScope.user_code}, 사용자 등급: ${sessionScope.user_grade},
+    로그인 사용자: ${sessionScope.userCode}, 사용자 등급: ${sessionScope.user_grade},
     관리자 여부: ${sessionScope.user_grade eq 1 ? '관리자' : '일반 사용자'}
 </div>
 
@@ -810,7 +805,7 @@
                             </div>
                         </div>
                         <div class="post-actions-right">
-                            <c:if test="${sessionScope.user_grade eq 1}">
+                            <c:if test="${not empty sessionScope.loginAdmin}">
                                 <button class="update-btn"
                                         onclick="location.href='notice-update.action?postId=${post.postId}'">수정
                                 </button>
@@ -997,7 +992,7 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-                        <c:if test="${sessionScope.user_grade eq 1}">
+                        <c:if test="${not empty adminId}">
                             <button class="btn btn-primary" onclick="goToWrite()">
                                 <i class="fa-solid fa-pen"></i> 글쓰기
                             </button>

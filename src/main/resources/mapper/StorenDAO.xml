@@ -24,8 +24,43 @@
         </association>
     </resultMap>
 
+
+    <resultMap id="VWStorenResultMap" type="com.team.mvc.DTO.StorenDTO">
+
+        <!-- 기본 정보 -->
+        <id property="storen_id" column="STOREN_ID" />
+        <result property="equip_code" column="EQUIP_CODE" />
+        <result property="user_code" column="USER_CODE" />
+        <result property="size_id" column="SIZE_ID" />
+        <result property="store_month" column="STORE_MONTH"/>
+        <result property="storen_title" column="STOREN_TITLE" />
+        <result property="storen_content" column="STOREN_CONTENT" />
+        <result property="daily_rent_price" column="DAILY_RENT_PRICE" />
+        <result property="created_date" column="CREATED_DATE" />
+        <result property="daily_storage_fee" column="DAILY_STORAGE_FEE" />
+
+        <!-- 사이즈 정보 -->
+        <result property="equip_size_name" column="EQUIP_SIZE_NAME" />
+        <result property="required_space" column="REQUIRED_SPACE" />
+
+        <!-- 날짜 정보 -->
+        <result property="inspec_completed_date" column="INSPEC_COMPLETED_DATE" />
+        <result property="rental_start_date" column="RENTAL_START_DATE" />
+        <result property="rental_end_date" column="RENTAL_END_DATE" />
+        <result property="final_return_date" column="FINAL_RETURN_DATE" />
+
+        <!-- 매칭 관련 -->
+        <result property="matching_request_count" column="MATCHING_REQUEST_COUNT" />
+        <result property="matching_status" column="MATCHING_STATUS" />
+
+        <!-- 장비 등급/상태 -->
+        <result property="equip_grade" column="EQUIP_GRADE" />
+        <result property="status" column="STATUS" />
+
+    </resultMap>
+
     <!-- 전체 스토렌 장비 리스트 조회   -->
-    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -39,7 +74,7 @@
     </select>
 
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
-    <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -53,10 +88,11 @@
              , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code}
+        ORDER BY CREATED_DATE DESC
     </select>
 
     <!-- 유저 코드와 장비 코드로 스토렌 장비 정보 조회 -->
-    <select id="listByUserCodeEquipCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listByUserCodeEquipCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -70,10 +106,11 @@
              , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
+        ORDER BY CREATED_DATE DESC
     </select>
 
-    <!-- 처음 스토렌 신청했을 때의 스토렌 정보 가져오기-->
-    <select id="getStorenByEquipCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <!-- 해당 장비코드의 가장 최근 스토렌 정보 가져오기-->
+    <select id="getStorenByEquipCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT *
         FROM (
                  SELECT STOREN_ID, EQUIP_CODE, USER_CODE
@@ -89,7 +126,7 @@
                      , EQUIP_GRADE, STATUS
                  FROM VW_STOREN
                  WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
-                 ORDER BY CREATED_DATE ASC
+                 ORDER BY CREATED_DATE DESC
              )
         WHERE ROWNUM = 1
     </select>
@@ -163,7 +200,7 @@
     </select>
 
     <!-- 매칭 신청 수가 1 이상인 스토렌 리스트 가져오기 -->
-    <select id="listMatchingStorenByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listMatchingStorenByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -177,10 +214,11 @@
              , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND MATCHING_REQUEST_COUNT > 0
+        ORDER BY STOREN_ID DESC
     </select>
 
     <!-- 내가 매칭 신청한 스토렌 리스트 가져오기 -->
-    <select id="listMyStorenApplicationsByUserCode" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="listMyStorenApplicationsByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -201,7 +239,7 @@
     </select>
 
     <!-- 스토렌id로 특정 스토렌 정보 가져오기 -->
-    <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -218,7 +256,7 @@
     </select>
 
     <!-- 스토렌 장비 검색 -->
-    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO">
+    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -266,6 +304,44 @@
             USER_CODE = #{userCode}
     </select>
 
+    <!-- 해당 유저의 상태별 필터링한 스토렌 목록 조회 -->
+    <select id="listByUserCodeStatus" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
+        SELECT *
+        FROM VW_STOREN
+        WHERE USER_CODE = #{userCode}
+          AND STATUS = #{status}
+        ORDER BY CREATED_DATE DESC
+    </select>
+
+    <!-- 해당 유저의 다중 상태별 필터링한 스토렌 목록 조회 -->
+    <select id="listByUserCodeMultiStatus" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
+        SELECT *
+        FROM VW_STOREN
+        WHERE USER_CODE = #{userCode}
+        AND STATUS IN
+        <foreach item="status" collection="statuses" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+        ORDER BY CREATED_DATE DESC
+    </select>
 
 
+    <!-- 해당 유저의 스토렌 위시리스트(찜 목록) 조회 -->
+    <select id="listMyWishByUserCode" resultMap="VWStorenResultMap">
+        SELECT VWS.STOREN_ID, VWS.EQUIP_CODE, VWS.STOREN_TITLE,
+               VWS.DAILY_RENT_PRICE, VWS.RENTAL_START_DATE, VWS.RENTAL_END_DATE,
+               VWS.MATCHING_REQUEST_COUNT, VWS.MATCHING_STATUS
+        FROM WISHLIST W
+                 JOIN VW_STOREN VWS
+                      ON W.STOREN_ID = VWS.STOREN_ID
+        WHERE W.USER_CODE = #{userCode}
+        ORDER BY W.CREATED_DATE DESC
+    </select>
+
+    <!-- 해당 유저의 찜 삭제(스토렌id를 통해) -->
+    <delete id="deleteMyWishByUserCodeStorenId">
+        DELETE
+        FROM WISHLIST
+        WHERE USER_CODE=#{userCode} AND STOREN_ID=#{storenId}
+    </delete>
 </mapper>
