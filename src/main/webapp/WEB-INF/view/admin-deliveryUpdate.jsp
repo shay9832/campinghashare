@@ -245,7 +245,8 @@
                                             data-sender="${shipping.senderId}"
                                             data-storen="${shipping.storenId}"
                                             data-storage="${shipping.storageId}"
-                                            data-equipment="${shipping.equipmentName}">
+                                            data-equipment="${shipping.equipmentName}"
+                                            data-pay-id="${shipping.payId}">
                                         배송 시작
                                     </button>
                                 </td>
@@ -707,7 +708,6 @@
                 <div class="modal-body">
                     <form id="shipping-start-form" method="post" action="${pageContext.request.contextPath}/admin-deliveryUpdate.action">
                         <input type="hidden" id="start-shipping-type" name="deliveryType">
-                        <input type="hidden" name="payId" value="${shipping.payId}">
 
                         <div class="form-group">
                             <label for="start-sender-id">발송인 ID</label>
@@ -725,6 +725,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="delivery-pay-id">결제 ID</label>
+                            <input type="text" id="start-pay-id" name="payId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="start-equipment-name">장비명</label>
                             <input type="text" id="start-equipment-name" name="equipmentName" class="form-control" readonly>
                         </div>
@@ -733,6 +738,7 @@
                             <label for="delivery-start-date">배송 시작일</label>
                             <input type="date" id="delivery-start-date" name="newDeliveryStartDate" class="form-control" required>
                         </div>
+
 
                         <div class="form-group">
                             <label for="start-courier">택배사</label>
@@ -1089,12 +1095,14 @@
             const storenId = this.getAttribute('data-storen');
             const storageId = this.getAttribute('data-storage');
             const equipmentName = this.getAttribute('data-equipment');
+            const payId = this.getAttribute('data-pay-id');
 
             // 모달 필드 초기화
             document.getElementById('start-sender-id').value = senderId;
             document.getElementById('start-storen-id').value = storenId || '';
             document.getElementById('start-storage-id').value = storageId || '';
             document.getElementById('start-equipment-name').value = equipmentName;
+            document.getElementById('start-pay-id').value = payId || '';
 
             // 배송 유형 결정 (스토렌ID가 있으면 스토렌_최초입고, 보관ID가 있으면 보관_최초입고)
             let deliveryType = '';
