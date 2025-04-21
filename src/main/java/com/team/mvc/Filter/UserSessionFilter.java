@@ -4,7 +4,7 @@ import java.io.*;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class UserSessionFilter implements Filter {
 
@@ -14,25 +14,42 @@ public class UserSessionFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        HttpSession session = httpRequest.getSession(false);
+
+        // 응답 인코딩 설정
+        httpRequest.setCharacterEncoding("UTF-8");
+        httpResponse.setCharacterEncoding("UTF-8");
 
         String uri = httpRequest.getRequestURI();
         String ctx = httpRequest.getContextPath();
+        String uriLower = uri.toLowerCase();
 
-        // 로그인 없이 접근 가능한 경로 정리 (정적 리소스 + 공용 페이지 + admin 전용)
-        boolean isExcluded = uri.startsWith(ctx + "/resources/") ||
-                uri.startsWith(ctx + "/favicon.ico") ||
-                uri.startsWith(ctx + "/login-user") ||
-                uri.startsWith(ctx + "/logout") ||
-                uri.startsWith(ctx + "/sitemap.action") ||
-                uri.startsWith(ctx + "/registeruser-") ||
-                uri.startsWith(ctx + "/idcheck.action") ||
-                uri.startsWith(ctx + "/nicknamecheck.action") ||
-                uri.startsWith(ctx + "/error") ||
-                uri.startsWith(ctx + "/admin") ||
-                uri.startsWith(ctx + "/admin-") ||
-                uri.equals(ctx + "/") ||
-                uri.equals(ctx + "/main.action");
+        // 디버깅용 로그
+        System.out.println("=== UserSessionFilter ===");
+        System.out.println("Request URI: " + uri);
+        System.out.println("Context Path: " + ctx);
+
+        // 로그인 없이 접근 가능한 경로 정리
+        boolean isExcluded = uriLower.startsWith(ctx + "/resources/") ||
+                uriLower.startsWith(ctx + "/favicon.ico") ||
+                uriLower.startsWith(ctx + "/login-user") ||
+                uriLower.startsWith(ctx + "/logout") ||
+                uriLower.startsWith(ctx + "/sitemap.action") ||
+                uriLower.startsWith(ctx + "/registeruser-tel.action") ||
+                uriLower.startsWith(ctx + "/registeruser-tel-verify.action") ||
+                uriLower.startsWith(ctx + "/user-exists-check.action") ||
+                uriLower.startsWith(ctx + "/registeruser-id.action") ||
+                uriLower.startsWith(ctx + "/user-idcheck.action") ||
+                uriLower.startsWith(ctx + "/user-nicknamecheck.action") ||
+                uriLower.startsWith(ctx + "/insertuser.action") ||  // 회원가입 처리 URL
+                uriLower.startsWith(ctx + "/boardmain.action") ||
+                uriLower.startsWith(ctx + "/error") ||
+                uriLower.startsWith(ctx + "/admin") ||
+                uriLower.startsWith(ctx + "/admin-") ||
+                uriLower.equals(ctx + "/") ||
+                uriLower.equals(ctx + "/main.action");
+
+        // 세션 체크
+        HttpSession session = httpRequest.getSession(false);
 
         if (!isExcluded &&
                 (session == null ||
@@ -40,7 +57,11 @@ public class UserSessionFilter implements Filter {
 
             if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpResponse.getWriter().write("{\"error\":\"로그인이 필요합니다.\"}");
+                httpResponse.setContentType("application/json;charset=UTF-8");
+
+                PrintWriter writer = httpResponse.getWriter();
+                writer.write("{\"error\":\"로그인이 필요합니다.\"}");
+                writer.flush();
                 return;
             } else {
                 httpResponse.sendRedirect(ctx + "/login-user.action");
@@ -48,6 +69,8 @@ public class UserSessionFilter implements Filter {
             }
         }
 
+        // 필터 통과
         chain.doFilter(request, response);
     }
+
 }
