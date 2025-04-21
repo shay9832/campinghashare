@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,16 +26,25 @@ public class SearchMatchingRequestService implements ISearchMatchingRequestServi
 
         // 거래id로 스토렌 가져오기
         StorenDTO storenDto = storenDAO.getStorenByStorenId(transactionId);
+
+        System.out.println("storenDto.title = " + storenDto.getStoren_title());
+
         // 스토렌의 장비코드로 장비 정보 가져오기
         EquipmentDTO equipmentDto = equipDao.getEquipmentByEquipCode(storenDto.getEquip_code());
+
+        System.out.println("equipmentDTO.name = " + equipmentDto.getEquip_name());
 
         // 스토렌에 장비 정보 넣어주기
         if (equipmentDto != null) {
             // 첨부파일 가져오기
             List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipmentDto.getEquip_code());
-            if (!attachments.isEmpty()) {
-                equipmentDto.setAttachments(attachments);
+
+            // 항상 비어있더라도 빈 리스트로 초기화 (null이 아니게)
+            if (attachments == null) {
+                attachments = new ArrayList<>();
             }
+
+            equipmentDto.setAttachments(attachments);
             storenDto.setEquipmentDTO(equipmentDto);
         }
 
