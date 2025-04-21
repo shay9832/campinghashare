@@ -18,6 +18,9 @@
         <result property="zipCode" column="ZIPCODE"></result>
         <result property="address1" column="ADDRESS1"></result>
         <result property="address2" column="ADDRESS2"></result>
+        <result property="userGrade" column="USER_GRADE"></result>
+        <result property="nicknameChange" column="ALLOWED_NICKNAME_CHANGE"></result>
+        <result property="totalProfit" column="TOTAL_PROFIT"></result>
     </resultMap>
 
     <!-- 로그인 쿼리 -->
