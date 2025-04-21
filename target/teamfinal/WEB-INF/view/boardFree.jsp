@@ -191,10 +191,15 @@
                 }
             });
 
+            $('select[name="sortType"]').change(function() {
+                loadPosts(1, isHotMode);
+            });
+
             // 페이지 로드 함수 업데이트
             function loadPosts(page, hotOnly) {
                 var searchType = $('select[name="searchType"]').val();
                 var searchKeyword = $('input[name="searchKeyword"]').val();
+                var sortType = $('select[name="sortType"]').val();
 
                 $.ajax({
                     url: '/api/boardfree.action',
@@ -205,7 +210,8 @@
                         searchType: searchType,
                         searchKeyword: searchKeyword,
                         hotOnly: hotOnly,
-                        originalPostNumbers: JSON.stringify(originalPostNumbers) // 원본 번호 전달
+                        sortType: sortType,
+                        originalPostNumbers: JSON.stringify(originalPostNumbers)
                     },
                     dataType: 'json',
                     success: function(response) {
@@ -427,11 +433,10 @@
                 <!-- 정렬 및 필터 옵션 -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="d-flex align-items-center">
-                        <select class="form-control-sm">
-                            <option>정렬</option>
-                            <option>최신순</option>
-                            <option>조회순</option>
-                            <option>추천순</option>
+                        <select name="sortType" class="form-control-sm">
+                            <option value="recent">최신순</option>
+                            <option value="views">조회순</option>
+                            <option value="recommends">추천순</option>
                         </select>
 
                         <div style="display: flex; margin-left: 20px;">
