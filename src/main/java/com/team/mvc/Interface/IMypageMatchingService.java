@@ -30,4 +30,7 @@ public interface IMypageMatchingService {
     //스토렌 매칭신청 취소
     Boolean cancleMatchingRequest(int transaction_id, int request_id);
 
+    //id로 스토렌 검색
+    StorenDTO getMatchingByStorenId(int userCode, int storenId);
+
 }

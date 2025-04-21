@@ -4,6 +4,7 @@ public class UserDTO {
     private Integer userCode;
     private String userId;
     private String password;
+    private Integer signupTypeId;
     private String userName;
     private String nickname;
     private String userTel;
@@ -66,12 +67,21 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "userId='" + userId + '\'' +
+                "userCode=" + userCode +
+                ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
                 ", userName='" + userName + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", userTel='" + userTel + '\'' +
-                ", userCode=" + userCode +
+                ", userEmail='" + userEmail + '\'' +
+                ", emailConsent='" + emailConsent + '\'' +
+                ", totalPoint=" + totalPoint +
+                ", totalTrust=" + totalTrust +
+                ", zipCode='" + zipCode + '\'' +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", adminId='" + adminId + '\'' +
+                ", admin=" + admin +
                 '}';
     }
 
@@ -146,4 +156,8 @@ public class UserDTO {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
+
+    public Integer getSignupTypeId() { return signupTypeId; }
+
+    public void setSignupTypeId(Integer signupTypeId) { this.signupTypeId = signupTypeId; }
 }

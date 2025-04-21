@@ -16,6 +16,109 @@
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 </head>
+<style>
+    .register-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: var(--bg-primary);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .register-title {
+        text-align: center;
+        margin-bottom: var(--spacing-xl);
+        color: var(--text-primary);
+        font-size: var(--font-lg);
+        font-weight: var(--font-bold);
+    }
+
+    .register-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: var(--font-sm);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        font-weight: var(--font-medium);
+        color: var(--text-primary);
+        font-size: var(--font-sm);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--border-medium);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-sm);
+    }
+
+    .input-group {
+        display: flex;
+        gap: var(--spacing-xs);
+    }
+
+    .required-field {
+        color: var(--color-coral);
+    }
+
+    .form-error {
+        font-size: var(--font-xxs);
+        color: var(--color-error);
+        margin-top: var(--spacing-xs);
+        display: none;
+    }
+
+    .form-success {
+        font-size: var(--font-xxs);
+        color: var(--color-success);
+        margin-top: var(--spacing-xs);
+        display: none;
+    }
+
+    .verify-btn {
+        padding: 10px 15px;
+        background-color: var(--color-gray-200);
+        border: 1px solid var(--border-medium);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-xs);
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .verify-btn:hover {
+        background-color: var(--color-gray-300);
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: var(--spacing-xl);
+    }
+
+    @media (max-width: 768px) {
+        .register-container {
+            padding: var(--spacing-md);
+            margin: 20px 15px;
+        }
+
+        .input-group {
+            flex-direction: column;
+        }
+
+        .verify-btn {
+            width: 100%;
+        }
+    }
+</style>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
@@ -86,25 +189,26 @@
     <div class="mypage-main-content">
         <div class="page-header">
             <h2 class="page-title">회원 정보 수정 - 비밀번호 확인</h2>
+            <p class="page-description">회원 정보를 수정하기 위해서는 비밀번호를 입력해야 합니다.</p>
         </div>
 
         <!-- 비밀번호 확인 콘텐츠 -->
-        <div id="password-check-view" class="content-box">
-            <div class="centered-container">
-                <h3 class="mb-4 text-center">회원 정보를 수정하기 위해서는<br>비밀번호를 입력해야 합니다.</h3>
+        <div class="register-container">
+            <div class="form-group">
+                <label class="form-label">아이디</label>
+                <input type="text" class="form-input" placeholder="(현재 회원의 아이디 자동표시)" value="${userId}" readonly required>
+            </div>
 
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="(현재 회원의 아이디 자동표시 'readonly')" value="reasony" readonly>
-                </div>
+            <div class="form-group mt-3">
+                <label class="form-label">비밀번호 <span class="required-field">*</span></label>
+                <input type="password" name="password" class="form-input" id="password" required>
+                <div class="form-error" id="password-void" style="display: none;">비밀번호를 입력하세요!</div>
+                <div class="form-error" id="password-error" style="display: none;">비밀번호가 다릅니다.</div>
+            </div>
 
-                <div class="form-group mt-3">
-                    <input type="password" class="form-control" id="password-input" placeholder="password">
-                    <div class="form-text text-error" id="password-error" style="display: none;">비밀번호가 다릅니다.</div>
-                </div>
-
-                <div class="button-container mt-4">
-                    <button class="btn btn-primary w-100" id="confirm-password-btn">확인</button>
-                </div>
+            <div class="button-container">
+                <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/mypage-main.action'">이전</button>
+                <button type="submit" class="btn btn-primary" id="checkPasswordBtn">다음</button>
             </div>
         </div>
     </div>
@@ -117,23 +221,45 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        // 비밀번호 확인 버튼 클릭
-        $("#confirm-password-btn").click(function() {
-            const password = $("#password-input").val();
+        // 비밀번호 입력 필드에서 키를 입력할 때마다 실행
+        $("#password").keyup(function() {
+            $("#password-error").hide();
 
-            // 테스트를 위해 '1234'가 비밀번호라고 가정
-            if (password === '1234') {
-                // 비밀번호 일치 시 회원 정보 수정 페이지로 이동
-                window.location.href = 'myPage-infoEdit.jsp';
-            } else {
-                // 비밀번호 불일치 시 에러 메시지 표시
-                $("#password-error").show();
+            const password = $(this).val().trim();  // 입력된 비밀번호 값
+
+            if (password) {  // 비밀번호가 있으면
+                $("#password-void").hide();  // '비밀번호를 입력하세요' 메시지 숨김
+            } else {  // 비밀번호가 없으면
+                $("#password-void").show();  // '비밀번호를 입력하세요' 메시지 보임
             }
         });
 
-        // 비밀번호 입력 시 에러 메시지 숨기기
-        $("#password-input").on('input', function() {
-            $("#password-error").hide();
+        // 비밀번호 확인 버튼 클릭
+        $("#checkPasswordBtn").click(function() {
+            const password = $("#password").val().trim();
+
+            if (!password)
+            {
+                $("#password-void").show();
+                $("#password").focus();
+                return;
+            }
+
+            $.ajax({
+                url: "/mypage-password-check.action",
+                type: "POST",
+                data: { password: password },
+                success: function (result) {
+                    if (result === "success") {
+                        window.location.href = "/mypage-infoedit.action";
+                    } else {
+                        $("#password-error").show();
+                    }
+                },
+                error: function () {
+                    alert("서버 오류가 발생했습니다.");
+                }
+            });
         });
     });
 </script>

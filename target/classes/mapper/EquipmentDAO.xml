@@ -78,6 +78,7 @@
              , EQUIP_NAME_ID, EQUIP_NAME, BRAND_NAME, ORIGINAL_PRICE, CREATED_DATE
         FROM VW_EQUIPMENT
         WHERE USER_CODE = #{user_code}
+        ORDER BY CREATED_DATE DESC
     </select>
 
     <!-- 장비명id로 장비명 조회 -->

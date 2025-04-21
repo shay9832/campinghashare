@@ -256,6 +256,13 @@ public class BoardPostService implements IBoardPostService {
         return dao.insertAttachment(dto);
     }
 
+    // 첨부파일 제거
+    @Override
+    public int deleteAttachment(int attachmentId) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.deleteAttachment(attachmentId);
+    }
+
     // 북마크 여부 확인
     @Override
     public boolean checkBookmark(BoardPostDTO dto) {

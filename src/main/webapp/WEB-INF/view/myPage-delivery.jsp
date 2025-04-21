@@ -213,7 +213,7 @@
 
             <!-- 거래 ID 검색 -->
             <div class="search-container">
-                <input type="text" id="search-trade-id" placeholder="거래 ID를 입력하세요">
+                <input type="text" id="search-trade-id" placeholder="거래 ID를 입력하세요" value="${not empty storenId ? storenId : ''}">
                 <button type="button" class="search-button" id="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
@@ -222,7 +222,7 @@
             <!-- 스토렌 탭 콘텐츠 -->
             <div class="tab-content ${activeTab == 'storen' ? 'active' : ''}" id="storen-content">
                 <!-- 소유자/사용자 필터 -->
-                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                <div class="table-actions align-items-center flex-wrap mb-3">
                     <!-- 탭 필터 -->
                     <div class="d-flex flex-wrap align-items-center">
                         <div class="tab-nav">
@@ -372,15 +372,200 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script type="text/javascript">
+    // 테이블 내용 업데이트 함수 - 전역으로 정의하여 어디서든 접근 가능하도록 함
+    function updateTableContent(contentSelector, deliveries) {
+        const tbody = $(contentSelector + ' .table-container tbody');
+        tbody.empty();
+
+        if (deliveries.length === 0) {
+            tbody.html('<tr><td colspan="9" class="text-center">데이터가 없습니다.</td></tr>');
+            return;
+        }
+
+        // 데이터 행 추가
+        deliveries.forEach(function(delivery) {
+            // 발송인/수취인 처리
+            let senderText = delivery.sender === -1 ? '창고' : delivery.sender;
+            let receiverText = delivery.receiver === -1 ? '창고' : delivery.receiver;
+
+            // ID 값 결정 (스토렌/보관/렌탈)
+            let idValue = '';
+            if (contentSelector === '#storage-content') {
+                idValue = delivery.storage_id;
+            } else if (contentSelector === '#storen-content') {
+                idValue = delivery.storen_id;
+            } else if (contentSelector === '#rental-content') {
+                idValue = delivery.rental_id;
+            }
+
+            // 배송 타입 문자열 '_' 구분자로 잘라내기
+            let deliveryType = delivery.delivery_type;
+            if (deliveryType && deliveryType.includes('_')) {
+                deliveryType = deliveryType.split('_')[1];
+            }
+
+            // 행 HTML 생성
+            const row =
+                '<tr class="table-row" data-id="' + delivery.delivery_id + '">' +
+                '<td>' + idValue + '</td>' +
+                '<td>' + deliveryType + '</td>' +
+                '<td class="title-cell delivery-name">' + delivery.equip_name + '</td>' +
+                '<td>' + senderText + '</td>' +
+                '<td>' + receiverText + '</td>' +
+                '<td>' +
+                '<span class="status-badge ' + delivery.statusClass + '">' + delivery.status + '</span>' +
+                '</td>' +
+                '<td>' + (delivery.start_date || '') + '</td>' +
+                '<td>' + (delivery.end_date || '') + '</td>' +
+                '<td>' +
+                '<button type="button" class="btn-sm btn-track-external" ' +
+                'data-company="' + delivery.carrier_name + '" ' +
+                'data-tracking="' + delivery.waybill_number + '">조회</button>' +
+                '</td>' +
+                '</tr>';
+
+            tbody.append(row);
+        });
+    }
+
+
+    // 검색 실행 함수 - 전역으로 정의하여 어디서든 접근 가능하도록 함
+    function performSearch() {
+        const searchValue = $('#search-trade-id').val().trim();
+
+        // 검색어가 숫자(ID)인 경우 API 호출, 그 외에는 기존 클라이언트 검색 수행
+        if(searchValue !== '' && !isNaN(searchValue)) {
+            // ID로 검색하는 경우
+            const storenId = parseInt(searchValue);
+
+            // 로딩 표시
+            const activeTab = $('.tab.active').data('tab');
+            $('#' + activeTab + '-content .table-container tbody').html(
+                '<tr><td colspan="9" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 검색 중...</td></tr>'
+            );
+
+            // API 호출
+            $.ajax({
+                url: '/api/delivery/search',
+                type: 'GET',
+                data: {
+                    id: storenId
+                },
+                dataType: 'json',
+                success: function(data) {
+
+                    // 필터 알림 추가
+                    if ($('.filter-notice').length > 0) {
+                        $('.filter-notice').remove();
+                    }
+
+                    $('#storen-content .table-actions').after(
+                        '<div class="filter-notice">' +
+                        '<span>"스토렌 ID : ' + storenId + '" 검색 결과 (' + data.length + '개)</span>' +
+                        '<button class="btn-sm btn-clear-filter">모든 배송 내역 보기</button>' +
+                        '</div>'
+                    );
+                    if(data.length === 0) {
+                        // 검색 결과가 없는 경우
+                        $('#' + activeTab + '-content .table-container tbody').html(
+                            '<tr><td colspan="9" class="text-center py-4">검색 결과가 없습니다.</td></tr>'
+                        );
+                    } else {
+                        // 결과 표시 - 이제 전역 함수가 되어 접근 가능
+                        updateTableContent('#' + activeTab + '-content', data);
+                    }
+
+                    // 검색 완료 후 검색창 비우기
+                    $('#search-trade-id').val('');
+                },
+                error: function(xhr, status, error) {
+                    console.error('검색 실패: ' + error);
+                    $('#' + activeTab + '-content .table-container tbody').html(
+                        '<tr><td colspan="9" class="text-center text-danger">검색 중 오류가 발생했습니다.</td></tr>'
+                    );
+                }
+            });
+        } else {
+            // 기존 클라이언트 사이드 검색 수행 (텍스트 검색)
+            const activeTab = $('.tab.active').data('tab');
+            const rows = $('#' + activeTab + '-content .table-row');
+            let foundMatch = false;
+
+            if(searchValue === '') {
+                // 검색어가 없으면 모든 행 표시
+                rows.show();
+                // empty-state 제거
+                $('.empty-state').remove();
+                return;
+            }
+
+            rows.each(function() {
+                const rowData = $(this).text().toLowerCase();
+
+                // 검색 조건 확인 (텍스트 포함 여부)
+                if(rowData.includes(searchValue.toLowerCase())) {
+                    $(this).show();
+                    foundMatch = true;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // 검색 결과가 없는 경우 메시지 표시
+            if(!foundMatch) {
+                if($('#' + activeTab + '-content .empty-state').length === 0) {
+                    // 백틱 대신 문자열 연결 연산자(+) 사용
+                    $('#' + activeTab + '-content .table-container').after(
+                        '<div class="empty-state">' +
+                        '<i class="fas fa-search"></i>' +
+                        '<p>검색 결과가 없습니다</p>' +
+                        '<div class="hint">다른 검색어로 다시 시도해보세요.</div>' +
+                        '</div>'
+                    );
+                }
+            } else {
+                $('#' + activeTab + '-content .empty-state').remove();
+            }
+        }
+    }
+
+    // 외부 배송업체 사이트 열기 - 전역으로 정의
+    function openExternalTrackingPage(company, trackingNumber) {
+        let trackingUrl = '';
+
+        switch(company) {
+            case '우체국택배':
+                trackingUrl = 'https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm?sid1=' + trackingNumber;
+                break;
+            case 'CJ대한통운':
+                trackingUrl = 'https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=' + trackingNumber;
+                break;
+            case '롯데택배':
+                trackingUrl = 'https://www.lotteglogis.com/home/reservation/tracking/index?InvNo=' + trackingNumber;
+                break;
+            case '한진택배':
+                trackingUrl = 'https://www.hanjin.co.kr/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumText=' + trackingNumber;
+                break;
+            case '로젠택배':
+                trackingUrl = 'https://www.ilogen.com/m/personal/trace/' + trackingNumber;
+                break;
+            default:
+                trackingUrl = 'https://search.naver.com/search.naver?query=' + trackingNumber;
+        }
+
+        window.open(trackingUrl, '_blank');
+    }
+
     // 페이지 로딩 시 실행
     $(document).ready(function() {
-        // // 데이터 로드 상태 추적
-        // let loadedData = {
-        //     'storage': false,
-        //     'storen-owner': false,
-        //     'storen-user': true, // 초기 페이지 로드 시 이미 로드됨
-        //     'rental': false
-        // };
+        // 페이지 로딩 시 검색창에 값이 있으면 자동 검색 실행
+        const initialSearchValue = $('#search-trade-id').val().trim();
+        if(initialSearchValue !== '') {
+            // 약간의 지연을 두고 검색 실행 (DOM이 완전히 로드된 후)
+            setTimeout(function() {
+                performSearch();
+            }, 300);
+        }
 
         // 현재 활성화된 스토렌 서브탭
         let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
@@ -402,9 +587,6 @@
                 $('#storen-content .tab-link').removeClass('active');
                 $('#storen-owner').addClass('active');
                 currentStorenSubTab = 'owner';
-                // 강제로 데이터 로드 (캐시 무시)
-                //const dataKey = 'storen-' + currentStorenSubTab;
-                //loadedData[dataKey] = false; // 캐시 상태 재설정
                 loadStorenData(currentStorenSubTab);
             } else if (tabId === 'rental') {
                 loadRentalData();
@@ -428,34 +610,34 @@
             $('#storen-content .tab-link').removeClass('active');
             $(this).addClass('active');
 
-            // 강제로 데이터 로드 (캐시 무시)
-            //const dataKey = 'storen-' + currentStorenSubTab;
-            //loadedData[dataKey] = false; // 캐시 상태 재설정
-
             // 데이터 로드
             loadStorenData(currentStorenSubTab);
         });
+
+        // 필터 해제 버튼 클릭 이벤트
+        $(document).on('click', '.btn-clear-filter', function() {
+            clearFilters();
+        });
+
+        //필터 초기화 함수
+        function clearFilters() {
+            // 필터 상태 제거
+            $('.filter-notice').remove();
+
+            // 원래 데이터 다시 로드
+            loadStorenData('owner');
+        }
 
         // 스토렌 데이터 로드 함수
         function loadStorenData(subTabType) {
             // 기본값 설정으로 오류 방지
             subTabType = subTabType || 'owner';
 
-            //const dataKey = 'storen-' + subTabType;
-
-            //console.log("dataKey = " + dataKey); // 디버깅용
-            //console.log("loadedData[dataKey] = " + loadedData[dataKey]); // 디버깅용
-
-            // 이미 로드된 데이터라면 다시 요청하지 않음
-            //if (loadedData[dataKey]) {
-            //    return;
-            //}
-
             // 로딩 표시
             $('#storen-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/delivery/storen/' + subTabType;
+            const apiUrl = '/api/delivery/storen/' + subTabType;
 
             // AJAX 요청
             $.ajax({
@@ -463,10 +645,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    // 데이터 로드 상태 업데이트
-                    //loadedData[dataKey] = true;
-
-                    // 테이블 내용 업데이트
+                    // 테이블 내용 업데이트 - 이제 전역 함수를 호출
                     updateTableContent('#storen-content', data);
 
                     // 검색 필터 다시 적용
@@ -483,19 +662,11 @@
 
         // 렌탈 데이터 로드 함수
         function loadRentalData() {
-
-            const dataKey = 'rental';
-
-            // 이미 로드된 데이터라면 다시 요청하지 않음
-            //if (loadedData[dataKey]) {
-            //    return;
-            //}
-
             // 로딩 표시
             $('#rental-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/delivery/rental';
+            const apiUrl = '/api/delivery/rental';
 
             // AJAX 요청
             $.ajax({
@@ -503,10 +674,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    // 데이터 로드 상태 업데이트
-                    //loadedData[dataKey] = true;
-
-                    // 테이블 내용 업데이트
+                    // 테이블 내용 업데이트 - 이제 전역 함수를 호출
                     updateTableContent('#rental-content', data);
 
                     // 검색 필터 다시 적용
@@ -523,19 +691,11 @@
 
         // 보관 데이터 로드 함수
         function loadStorageData() {
-
-            const dataKey = 'storage';
-
-            // 이미 로드된 데이터라면 다시 요청하지 않음
-            //if (loadedData[dataKey]) {
-            //    return;
-            //}
-
             // 로딩 표시
             $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
-            const apiUrl = '${pageContext.request.contextPath}/api/delivery/storage';
+            const apiUrl = '/api/delivery/storage';
 
             // AJAX 요청
             $.ajax({
@@ -543,10 +703,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    // 데이터 로드 상태 업데이트
-                    //loadedData[dataKey] = true;
-
-                    // 테이블 내용 업데이트
+                    // 테이블 내용 업데이트 - 이제 전역 함수를 호출
                     updateTableContent('#storage-content', data);
 
                     // 검색 필터 다시 적용
@@ -561,65 +718,6 @@
             });
         }
 
-
-
-        // 테이블 내용 업데이트 함수
-        function updateTableContent(contentSelector, deliveries) {
-            const tbody = $(contentSelector + ' .table-container tbody');
-            tbody.empty();
-
-            if (deliveries.length === 0) {
-                tbody.html('<tr><td colspan="9" class="text-center">데이터가 없습니다.</td></tr>');
-                return;
-            }
-
-            // 데이터 행 추가
-            deliveries.forEach(function(delivery) {
-
-                // 발송인/수취인 처리
-                let senderText = delivery.sender === -1 ? '창고' : delivery.sender;
-                let receiverText = delivery.receiver === -1 ? '창고' : delivery.receiver;
-
-                // ID 값 결정 (스토렌/보관/렌탈)
-                let idValue = '';
-                if (contentSelector === '#storage-content') {
-                    idValue = delivery.storage_id;
-                } else if (contentSelector === '#storen-content') {
-                    idValue = delivery.storen_id;
-                } else if (contentSelector === '#rental-content') {
-                    idValue = delivery.rental_id;
-                }
-
-                // 배송 타입 문자열 '_' 구분자로 잘라내기
-                let deliveryType = delivery.delivery_type;
-                if (deliveryType && deliveryType.includes('_')) {
-                    deliveryType = deliveryType.split('_')[1];
-                }
-
-                // 행 HTML 생성
-                const row =
-                    '<tr class="table-row" data-id="' + delivery.delivery_id + '">' +
-                    '<td>' + idValue + '</td>' +
-                    '<td>' + deliveryType + '</td>' +
-                    '<td class="title-cell delivery-name">' + delivery.equip_name + '</td>' +
-                    '<td>' + senderText + '</td>' +
-                    '<td>' + receiverText + '</td>' +
-                    '<td>' +
-                    '<span class="status-badge ' + delivery.statusClass + '">' + delivery.status + '</span>' +
-                    '</td>' +
-                    '<td>' + (delivery.start_date || '') + '</td>' +
-                    '<td>' + (delivery.end_date || '') + '</td>' +
-                    '<td>' +
-                    '<button type="button" class="btn-sm btn-track-external" ' +
-                    'data-company="' + delivery.carrier_name + '" ' +
-                    'data-tracking="' + delivery.waybill_number + '">조회</button>' +
-                    '</td>' +
-                    '</tr>';
-
-                tbody.append(row);
-            });
-        }
-
         // 배송업체 사이트 버튼 이벤트
         $(document).on('click', '.btn-track-external, #modal-external-track-btn', function(e) {
             e.stopPropagation(); // 이벤트 버블링 방지
@@ -627,7 +725,6 @@
             const trackingNumber = $(this).data('tracking') || $('#modal-tracking-number').text();
             openExternalTrackingPage(company, trackingNumber);
         });
-
 
         // 검색 기능
         $('#btn-search').on('click', function() {
@@ -641,77 +738,6 @@
             }
         });
     });
-
-    // 검색 실행 함수
-    function performSearch() {
-        const searchValue = $('#search-trade-id').val().trim().toLowerCase();
-
-        if(searchValue === '') {
-            // 검색어가 없으면 모든 행 표시
-            $('.table-row').show();
-            return;
-        }
-
-        // 모든 활성 탭의 행을 검색
-        const activeTab = $('.tab.active').data('tab');
-        const rows = $(`#` + activeTab + `-content .table-row`);
-
-        rows.each(function() {
-            const rowData = $(this).text().toLowerCase();
-            const rowId = $(this).data('id').toString();
-
-            // ID를 포함하거나 텍스트에 검색어가 포함된 행만 표시
-            if(rowId.includes(searchValue) || rowData.includes(searchValue)) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        });
-
-        // 검색 결과가 없는 경우 처리
-        const visibleRows = $(`#` + activeTab + `-content .table-row:visible`);
-        if(visibleRows.length === 0) {
-            // 이미 empty-state가 있는지 확인
-            if($(`#` + activeTab + `-content .empty-state`).length === 0) {
-                $(`#` + activeTab + `-content .table-container`).after(`
-                    <div class="empty-state">
-                        <i class="fas fa-search"></i>
-                        <p>검색 결과가 없습니다</p>
-                        <div class="hint">다른 검색어로 다시 시도해보세요.</div>
-                    </div>
-                `);
-            }
-        } else {
-            // 검색 결과가 있으면 empty-state 제거
-            $(`#` + activeTab + `-content .empty-state`).remove();
-        }
-    }
-
-    // 외부 배송업체 사이트 열기
-    function openExternalTrackingPage(company, trackingNumber) {
-        let trackingUrl = '';
-
-        switch(company) {
-            case '우체국택배':trackingUrl = `https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm?sid1=${trackingNumber}`;
-                break;
-            case 'CJ대한통운':
-                trackingUrl = `https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=${trackingNumber}`;
-                break;
-            case '롯데택배':
-                trackingUrl = `https://www.lotteglogis.com/home/reservation/tracking/index?InvNo=${trackingNumber}`;
-                break;
-            case '한진택배':
-                trackingUrl = `https://www.hanjin.co.kr/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumText=${trackingNumber}`;
-                break;
-            case '로젠택배':
-                trackingUrl = `https://www.ilogen.com/m/personal/trace/${trackingNumber}`;
-                break;
-            default:
-                trackingUrl = `https://search.naver.com/search.naver?query=${trackingNumber}`;
-        }
-
-        window.open(trackingUrl, '_blank');
-    }
 </script>
 </body>
 </html>

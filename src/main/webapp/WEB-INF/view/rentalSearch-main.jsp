@@ -200,7 +200,14 @@
                             <a href="storenmatching-request.action?storenId=${storen.storen_id}">
                                 <div class="product-card">
                                     <div class="product-image">
-                                        <div class="product-placeholder"></div>
+                                        <c:choose>
+                                            <c:when test="${storen.equipmentDTO.attachments.get(0) != null && !empty storen.equipmentDTO.attachments}">
+                                                <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="product-placeholder"></div>
+                                            </c:otherwise>
+                                        </c:choose>
                                         <button class="like-button">
                                             <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
                                         </button>
