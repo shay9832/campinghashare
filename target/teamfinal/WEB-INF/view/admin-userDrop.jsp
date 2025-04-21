@@ -1,16 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:30
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%-- JSTL 태그 라이브러리 추가 --%>
+<%-- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> --%>
+<%-- <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> --%>
 <!DOCTYPE html>
-<html lang="ko"> <!-- 한국어 페이지 설정 -->
+<html lang="ko">
 <head>
-  <meta charset="UTF-8"> <!-- 문자 인코딩 UTF-8 설정 -->
-  <title>관리자 시스템 - 활동정지회원 조회</title> <!-- 브라우저 탭에 표시될 제목 -->
+  <meta charset="UTF-8">
+  <title>관리자 시스템 - 활동정지회원 조회</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-userDrop.css">
 </head>
 
@@ -143,51 +139,59 @@
 
     <!-- 검색 영역 - 회원 검색 필터링 옵션 -->
     <div class="content-search-info">
-      <span>검색유형</span>
-      <select>
-        <option>회원코드</option>
-        <option>회원이름</option>
-        <option>관리자ID</option>
-        <option>정지사유</option>
-      </select>
+      <form id="searchForm" action="${pageContext.request.contextPath}/admin-userDrop.action" method="get">
+        <span>검색유형</span>
+        <select name="searchType">
+          <option value="userCode">회원코드</option>
+          <option value="userName">회원이름</option>
+          <option value="adminId">관리자ID</option>
+          <option value="reason">정지사유</option>
+        </select>
 
-      <!-- 정지상태 선택 -->
-      <span>정지상태</span>
-      <select>
-        <option>전체</option>
-        <option>정지 중</option>
-        <option>정지해제</option>
-      </select>
+        <!-- 정지상태 선택 -->
+        <span>정지상태</span>
+        <select name="status">
+          <option value="all">전체</option>
+          <option value="suspended">정지 중</option>
+          <option value="released">정지해제</option>
+        </select>
 
-      <!-- 날짜 범위 선택 -->
-      <div class="content-search-date">
-        <input type="date">
-        <span>~</span>
-        <input type="date">
-      </div>
+        <!-- 날짜 범위 선택 -->
+        <div class="content-search-date">
+          <input type="date" name="startDate">
+          <span>~</span>
+          <input type="date" name="endDate">
+        </div>
 
-      <!-- 검색어 입력 -->
-      <div class="content-search-bar">
-        <input type="search" placeholder="검색어 입력">
-      </div>
+        <!-- 검색어 입력 -->
+        <div class="content-search-bar">
+          <input type="search" name="keyword" placeholder="검색어 입력">
+        </div>
 
-      <!-- 검색 버튼 -->
-      <div class="content-search-btn">
-        <input type="button" value="검색하기">
-      </div>
+        <!-- 검색 버튼 -->
+        <div class="content-search-btn">
+          <input type="submit" value="검색하기">
+        </div>
+      </form>
     </div>
 
     <!-- 정지 회원 정보 요약 - 주요 통계 -->
     <div class="user-count">
       <div class="user-suspended">
-        <span>정지 중 회원 : 87명</span>
+        <span>정지 중 회원 : <%-- ${suspendedCount} --%>명</span>
       </div>
       <div class="user-released">
-        <span>정지 해제 회원 : 125명</span>
+        <span>정지 해제 회원 : <%-- ${releasedCount} --%>명</span>
       </div>
       <div class="user-today">
-        <span>오늘 정지된 회원 : 5명</span>
+        <span>오늘 정지된 회원 : <%-- ${todaySuspendedCount} --%>명</span>
       </div>
+    </div>
+
+    <!-- 관리 버튼 영역 -->
+    <div class="management-buttons">
+      <button id="releaseSelectedBtn">선택 회원 정지해제</button>
+      <button id="detailViewBtn">상세 정보 보기</button>
     </div>
 
     <!-- 전체 선택 체크박스 -->
@@ -211,67 +215,50 @@
           <th class="col-status">정지상태</th>
         </tr>
 
-        <!-- 활동정지 회원 데이터 행 -->
+        <%-- 활동정지 회원 데이터 행 (JSTL 루프로 대체) --%>
+        <%-- <c:forEach var="user" items="${suspendedUsers}">
         <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>ADMIN001</td>
-          <td>admin_park</td>
-          <td>USER1234</td>
-          <td>김철수</td>
-          <td>2025-04-01</td>
-          <td>2025-04-15</td>
-          <td>커뮤니티 규정 위반(욕설/비방)</td>
-          <td><span class="status-badge status-suspended">정지 중</span></td>
+          <td class="checkbox-column"><input type="checkbox" name="selectedUsers" value="${user.userCode}"></td>
+          <td>${user.adminCode}</td>
+          <td>${user.adminId}</td>
+          <td>${user.userCode}</td>
+          <td>${user.userName}</td>
+          <td><fmt:formatDate value="${user.suspendDate}" pattern="yyyy-MM-dd" /></td>
+          <td><fmt:formatDate value="${user.releaseDate}" pattern="yyyy-MM-dd" /></td>
+          <td>${user.suspendReason}</td>
+          <td>
+            <span class="status-badge ${user.status eq 'suspended' ? 'status-suspended' : 'status-released'}">
+              ${user.status eq 'suspended' ? '정지 중' : '정지해제'}
+            </span>
+          </td>
         </tr>
+        </c:forEach> --%>
 
+        <%-- 데이터가 없을 경우 표시 --%>
+        <%-- <c:if test="${empty suspendedUsers}">
         <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>ADMIN002</td>
-          <td>admin_kim</td>
-          <td>USER2345</td>
-          <td>이영희</td>
-          <td>2025-03-20</td>
-          <td>2025-04-03</td>
-          <td>불법 거래 시도</td>
-          <td><span class="status-badge status-suspended">정지 중</span></td>
+          <td colspan="9" class="no-data">검색 결과가 없습니다.</td>
         </tr>
-
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>ADMIN001</td>
-          <td>admin_park</td>
-          <td>USER3456</td>
-          <td>박민수</td>
-          <td>2025-03-15</td>
-          <td>2025-03-25</td>
-          <td>허위 정보 등록</td>
-          <td><span class="status-badge status-released">정지중</span></td>
-        </tr>
-
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>ADMIN003</td>
-          <td>admin_lee</td>
-          <td>USER4567</td>
-          <td>정지원</td>
-          <td>2025-04-05</td>
-          <td>2025-04-12</td>
-          <td>사기 거래 행위</td>
-          <td><span class="status-badge status-suspended">정지 중</span></td>
-        </tr>
-
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>ADMIN002</td>
-          <td>admin_kim</td>
-          <td>USER5678</td>
-          <td>최하은</td>
-          <td>2025-03-10</td>
-          <td>2025-03-20</td>
-          <td>개인정보 불법 수집</td>
-          <td><span class="status-badge status-released">정지중</span></td>
-        </tr>
+        </c:if> --%>
       </table>
+    </div>
+
+    <!-- 페이지네이션 영역 -->
+    <div class="pagination">
+      <%-- 페이지네이션 컨트롤 JSTL 구현 --%>
+      <%-- <c:if test="${totalPages > 1}">
+        <ul>
+          <li><a href="?page=1&${searchParams}" class="${currentPage == 1 ? 'disabled' : ''}">처음</a></li>
+          <li><a href="?page=${currentPage - 1}&${searchParams}" class="${currentPage == 1 ? 'disabled' : ''}">이전</a></li>
+
+          <c:forEach begin="${startPage}" end="${endPage}" var="pageNum">
+            <li><a href="?page=${pageNum}&${searchParams}" class="${pageNum == currentPage ? 'active' : ''}">${pageNum}</a></li>
+          </c:forEach>
+
+          <li><a href="?page=${currentPage + 1}&${searchParams}" class="${currentPage == totalPages ? 'disabled' : ''}">다음</a></li>
+          <li><a href="?page=${totalPages}&${searchParams}" class="${currentPage == totalPages ? 'disabled' : ''}">마지막</a></li>
+        </ul>
+      </c:if> --%>
     </div>
   </div>
 </div>
@@ -279,24 +266,16 @@
 <!-- 자바스크립트 - 페이지 기능 구현 -->
 <script>
   // 드롭다운 메뉴 기능 구현
-  // 모든 메뉴 버튼 요소 선택
   const menuButtons = document.querySelectorAll('.menu-button');
 
-  // 각 메뉴 버튼에 클릭 이벤트 리스너 추가
   menuButtons.forEach(button => {
     button.addEventListener('click', function() {
-      // 클릭된 버튼에 활성화 클래스 토글 (추가/제거)
       this.classList.toggle('active');
-
-      // 버튼 다음 요소(하위메뉴) 가져오기
       const submenu = this.nextElementSibling;
 
-      // 하위메뉴 표시 상태 체크 및 변경
       if (submenu.style.maxHeight) {
-        // 열려있으면 닫기
         submenu.style.maxHeight = null;
       } else {
-        // 닫혀있으면 열기 (콘텐츠 높이만큼)
         submenu.style.maxHeight = submenu.scrollHeight + 'px';
       }
     });
@@ -306,55 +285,67 @@
   const selectAllCheckbox = document.getElementById('selectAll');
   const checkboxes = document.querySelectorAll('.user-index input[type="checkbox"]');
 
-  // 전체 선택 체크박스 이벤트 리스너
   selectAllCheckbox.addEventListener('change', function() {
-    // 모든 체크박스를 전체 선택 체크박스와 같은 상태로 설정
     checkboxes.forEach(checkbox => {
       checkbox.checked = this.checked;
     });
   });
 
-  // 개별 체크박스 상태 변화에 따른 전체 선택 체크박스 상태 업데이트
+  // 개별 체크박스 이벤트 리스너
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function() {
-      // 모든 체크박스가 선택되었는지 확인
       const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-      // 전체 선택 체크박스 상태 업데이트
       selectAllCheckbox.checked = allChecked;
     });
   });
 
-  // 정지해제 버튼 기능
-  const releaseButtons = document.querySelectorAll('.release-btn');
+  // 선택 회원 정지해제 버튼 이벤트 리스너
+  document.getElementById('releaseSelectedBtn').addEventListener('click', function() {
+    const selectedUsers = document.querySelectorAll('.user-index input[type="checkbox"]:checked');
 
-  releaseButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      // 확인 대화상자 표시
-      if (confirm('해당 회원의 활동정지를 해제하시겠습니까?')) {
-        // 버튼이 속한 행 찾기
-        const row = this.closest('tr');
+    if (selectedUsers.length === 0) {
+      alert('정지해제할 회원을 선택해주세요.');
+      return;
+    }
 
-        // 상태 셀의 배지 요소 찾기
-        const statusBadge = row.querySelector('.status-badge');
+    if (confirm('선택한 회원의 활동정지를 해제하시겠습니까?')) {
+      // 선택된 회원 코드 배열 생성
+      const userCodes = Array.from(selectedUsers).map(checkbox => {
+        return checkbox.value;
+      });
 
-        // 상태를 '정지해제'로 변경
-        statusBadge.className = 'status-badge status-released';
-        statusBadge.textContent = '정지해제';
+      // AJAX 요청 또는 폼 제출 로직 구현
+      // 예: 폼을 동적으로 생성하여 제출
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '${pageContext.request.contextPath}/admin-releaseUsers.action';
 
-        // 버튼을 '상세보기'로 변경
-        this.textContent = '상세보기';
-        this.classList.remove('release-btn');
+      // 선택된 회원 코드를 hidden input으로 추가
+      userCodes.forEach(code => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'userCodes';
+        input.value = code;
+        form.appendChild(input);
+      });
 
-        // 현재 날짜를 정지해제일자 열에 설정
-        const today = new Date();
-        const formattedDate = today.getFullYear() + '-' +
-                String(today.getMonth() + 1).padStart(2, '0') + '-' +
-                String(today.getDate()).padStart(2, '0');
+      document.body.appendChild(form);
+      form.submit();
+    }
+  });
 
-        // 정지해제일자 열 업데이트
-        row.cells[5].textContent = formattedDate;
-      }
-    });
+  // 상세 정보 보기 버튼 이벤트 리스너
+  document.getElementById('detailViewBtn').addEventListener('click', function() {
+    const selectedUsers = document.querySelectorAll('.user-index input[type="checkbox"]:checked');
+
+    if (selectedUsers.length !== 1) {
+      alert('상세 정보를 볼 회원을 하나만 선택해주세요.');
+      return;
+    }
+
+    const userCode = selectedUsers[0].value;
+    // 상세 정보 페이지로 이동
+    window.location.href = '${pageContext.request.contextPath}/admin-userDetail.action?userCode=' + userCode;
   });
 </script>
 </body>

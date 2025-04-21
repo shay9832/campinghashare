@@ -4,6 +4,7 @@ import com.team.mvc.Interface.IAdminBoardUpdateDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -13,9 +14,16 @@ public class AdminBoardUpdateController {
     private SqlSession sqlSession;
 
     @RequestMapping(value="/admin-boardUpdate.action",method = RequestMethod.GET)
-    public String adminBoardUpdate(){
+    public String adminBoardUpdate(Model model){
 
         IAdminBoardUpdateDAO dao = sqlSession.getMapper(IAdminBoardUpdateDAO.class);
+
+
+        model.addAttribute("Board",dao.getBoardList());
+        model.addAttribute("Label",dao.getLabelList());
+
+
+
         return "admin-boardUpdate";
     }
 }
