@@ -102,6 +102,41 @@
         WHERE U.USER_ID = #{userId} AND U.USER_PW = #{password}
     </select>
 
+    <select id="getFullUserInfoByUserCode" resultMap="UserInfoMap">
+        SELECT
+            U.USER_CODE,
+            U.USER_ID,
+            U.USER_PW,
+            U.USER_NAME,
+            U.USER_TEL,
+            U.USER_EMAIL,
+            U.EMAIL_CONSENT,
+            NVL(N.NICKNAME, '') AS CURRENT_NICKNAME,
+            A.ZIPCODE,
+            A.ADDRESS1,
+            A.ADDRESS2
+        FROM USERS U
+                 LEFT JOIN (
+            SELECT USER_CODE, NICKNAME
+            FROM NICKNAME_LOG
+            WHERE NICKNAME_LOG_ID IN (
+                SELECT MAX(NICKNAME_LOG_ID)
+                FROM NICKNAME_LOG
+                GROUP BY USER_CODE
+            )
+        ) N ON U.USER_CODE = N.USER_CODE
+                 LEFT JOIN (
+            SELECT *
+            FROM ADDRESS_LOG
+            WHERE (USER_CODE, LAST_UPDATED_DATE) IN (
+                SELECT USER_CODE, MAX(LAST_UPDATED_DATE)
+                FROM ADDRESS_LOG
+                GROUP BY USER_CODE
+            )
+        ) A ON U.USER_CODE = A.USER_CODE
+        WHERE U.USER_CODE = #{userCode}
+    </select>
+
     <!-- 유저코드로 유저 찾아오기 -->
     <select id="getUserByUserCode" resultType="com.team.mvc.DTO.UserDTO" resultMap="UserInfoMap">
         SELECT *
