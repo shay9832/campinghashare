@@ -3,6 +3,7 @@ package com.team.mvc.Controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.mvc.DTO.*;
+import com.team.mvc.Interface.IAdminService;
 import com.team.mvc.Interface.IBoardPostService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +22,10 @@ public class BoardController {
     @Autowired
     private IBoardPostService boardPostService;
 
-//----------------------------------------------------------------------------------------------------------------------
+    @Autowired
+    private IAdminService adminService;
+
+    //----------------------------------------------------------------------------------------------------------------------
     // 커뮤니티 메인 페이지
     @RequestMapping("/boardmain.action")
     public String boardMain(Model model,
@@ -81,14 +85,15 @@ public class BoardController {
             return "error"; // error.jsp 필요
         }
     }
-//----------------------------------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------------------------------
     // 전체 인기글 페이지
     @RequestMapping("/boardbest.action")
     public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
-                            Model model,
                             @ModelAttribute("userCode") Integer userCode,
-                            @ModelAttribute("adminId") String adminId) {
+                            @ModelAttribute("adminId") String adminId,
+                            Model model) {
         // 공지사항 조회(최대 3개)
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
@@ -106,7 +111,7 @@ public class BoardController {
         return "boardBest";
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // boardTemplate 페이지
     @RequestMapping("/board{boardName}.action")
     public String boardTemplate(@PathVariable(value = "boardName") String boardName,
@@ -119,8 +124,8 @@ public class BoardController {
                                 @ModelAttribute("adminId") String adminId) {
         // 실제 한글 보드 이름으로 변환
         String actualBoardName = boardName.equals("image") ? "고독한 캠핑방" :
-                                 boardName.equals("free") ? "자유 게시판" :
-                                 boardName;
+                boardName.equals("free") ? "자유 게시판" :
+                        boardName;
 
         // 게시판 정보 조회
         BoardDTO board = boardPostService.getBoardByName(actualBoardName);
@@ -145,7 +150,7 @@ public class BoardController {
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
 
-        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(boardId,3);
+        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(boardId, 3);
         model.addAttribute("boardHotPosts", boardHotPosts);
 
         // 검색 및 페이징 로직
@@ -186,7 +191,7 @@ public class BoardController {
                                                 @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
                                                 @ModelAttribute("userCode") Integer userCode,
                                                 @ModelAttribute("adminId") String adminId
-                                                ) {
+    ) {
 
         Map<String, Object> result = new HashMap<>();
 
@@ -196,7 +201,8 @@ public class BoardController {
             try {
                 // JSON 문자열을 Map으로 변환
                 ObjectMapper mapper = new ObjectMapper();
-                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {});
+                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {
+                });
             } catch (Exception e) {
                 System.err.println("Error parsing originalPostNumbers: " + e.getMessage());
             }
@@ -228,7 +234,7 @@ public class BoardController {
         result.put("notice", notice);
 
         // 인기글 조회 (최대 3개)
-        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(board.getBoardId(),3);
+        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(board.getBoardId(), 3);
         result.put("boardHotPosts", boardHotPosts);
 
         List<BoardPostDTO> postList;
@@ -302,16 +308,16 @@ public class BoardController {
         return result;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // 자유 게시판 페이지
     @RequestMapping("/boardfree.action")
     public String boardFree(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
                             @RequestParam(value = "searchType", required = false) String searchType,
                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                            Model model,
                             @ModelAttribute("userCode") Integer userCode,
-                            @ModelAttribute("adminId") String adminId) {
+                            @ModelAttribute("adminId") String adminId,
+                            Model model) {
 
         // 게시판 ID 설정
         int boardId = 7;    // 자유게시판 ID
@@ -321,7 +327,7 @@ public class BoardController {
         model.addAttribute("notice", notice);
 
         // 인기글 조회 (최대 3개)
-        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(7,3);
+        List<BoardPostDTO> boardHotPosts = boardPostService.listBoardHotPosts(7, 3);
         model.addAttribute("boardHotPosts", boardHotPosts);
 
 
@@ -375,7 +381,8 @@ public class BoardController {
             try {
                 // JSON 문자열을 Map으로 변환
                 ObjectMapper mapper = new ObjectMapper();
-                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {});
+                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {
+                });
             } catch (Exception e) {
                 // 예외 처리 (로그 출력 등)
                 System.err.println("Error parsing originalPostNumbers: " + e.getMessage());
@@ -467,14 +474,18 @@ public class BoardController {
                                 @RequestParam(value = "size", defaultValue = "10") int size,
                                 @RequestParam(value = "searchType", required = false) String searchType,
                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                                @RequestParam(value="postId", required=false, defaultValue="0") int postId,
-                                Model model,
+                                @RequestParam(value = "postId", required = false, defaultValue = "0") int postId,
                                 @ModelAttribute("userCode") Integer userCode,
-                                @ModelAttribute("adminId") String adminId) {
+                                @ModelAttribute("adminId") String adminId,
+                                HttpSession session,
+                                Model model) {
 
         // 게시글이 존재하는 경우
         if (postId > 0) {
-            // 게시글 정보 조회
+            // 1. 조회수 먼저 증가시킴
+            boardPostService.increaseViewCount(postId);
+
+            // 2. 게시글 정보 조회
             BoardPostDTO dto = new BoardPostDTO();
             dto.setPostId(postId);
             BoardPostDTO post = boardPostService.getPostById(dto);
@@ -498,12 +509,9 @@ public class BoardController {
                 model.addAttribute("prevPostId", prevPostId);
                 model.addAttribute("nextPostId", nextPostId);
 
-                // 연관 게시글 목록 (최근 게시글 몇 개) 조회
-                BoardPostDTO listDto = new BoardPostDTO();
-                listDto.setBoardId(7); // 자유게시판 ID
-                listDto.setPagenation(new Pagenation(1, 10, 3, 10)); // 첫 페이지, 한 페이지에 3개만 조회
-                List<BoardPostDTO> recentPosts = boardPostService.listPostList(listDto);
-                model.addAttribute("recentPosts", recentPosts);
+                // 사용자 코드와 게시글 작성자 비교 결과를 모델에 추가
+                boolean isAuthor = (userCode != null && userCode.equals(post.getUserCode()));
+                model.addAttribute("isAuthor", isAuthor);
 
                 model.addAttribute("post", post);
             } else {
@@ -583,20 +591,11 @@ public class BoardController {
     @RequestMapping(value = "/boardfree-write.action", method = RequestMethod.POST)
     public String insertPost(BoardPostDTO dto,
                              @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
-                             HttpServletRequest request,
-                             HttpSession session,
                              @ModelAttribute("userCode") Integer userCode,
-                             @ModelAttribute("adminId") String adminId) {
-//        // 현재 로그인한 회원의 user_code 가져오기
-//            Integer user_code = (Integer) session.getAttribute("user_code");
-//            if (user_code == null) {
-//                return "redirect:/userlogin.action";
-//            }
-//
-//        session.setAttribute("userCode", 2);
-//        // 세션에서 로그인 정보 확인
-//        Integer userCode = (Integer) session.getAttribute("userCode");
-//        int userCode = 2;
+                             @ModelAttribute("adminId") String adminId,
+                             HttpServletRequest request,
+                             HttpSession session) {
+
         dto.setUserCode(userCode);
 
         try {
@@ -641,7 +640,7 @@ public class BoardController {
                         System.out.println("첨부파일에 저장되는 게시글 ID: " + postId);
                         attachmentDTO.setAttachmentName(originalFileName);
                         attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
-                        attachmentDTO.setAttachmentSize((int)file.getSize());
+                        attachmentDTO.setAttachmentSize((int) file.getSize());
                         attachmentDTO.setAttachmentOrder(i + 1);
 
                         boardPostService.insertAttachment(attachmentDTO);
@@ -738,25 +737,18 @@ public class BoardController {
     // 게시글 수정 처리를 위한 api
     @RequestMapping(value = "/api/post/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updatePost(@RequestPart("post") BoardPostDTO dto,
-                                          @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments,
-                                          HttpSession session,
+    public Map<String, Object> updatePost(BoardPostDTO dto,
+                                          @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
                                           @ModelAttribute("userCode") Integer userCode,
-                                          @ModelAttribute("adminId") String adminId) {
+                                          @ModelAttribute("adminId") String adminId,
+                                          HttpServletRequest request,
+                                          HttpSession session) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-//            // 세션에서 로그인한 사용자 코드 가져오기
-//            Integer userCode = (Integer) session.getAttribute("user_code"); // userCode에서 user_code로 변경
+            // 세션에서 로그인한 사용자 코드 가져오기
             System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
             dto.setUserCode(userCode);
-
-//            // 로그인 안 된 경우 (이미 checkLogin.jsp에서 처리됨)
-//            if (userCode == null) {
-//                result.put("success", false);
-//                result.put("message", "로그인이 필요합니다.");
-//                return result;
-//            }
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
@@ -767,6 +759,50 @@ public class BoardController {
                 int affectedRows = boardPostService.updatePost(dto);
                 System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
 
+                // 첨부파일 처리
+                if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                    // 기존 첨부파일 삭제 (또는 비활성화) 처리 - 구현 필요
+                    boardPostService.deleteAttachment(dto.getPostId());
+
+                    // 업로드 경로를 webapp/resources/uploads로 설정
+                    String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+                    System.out.println("업로드 경로: " + uploadPath);
+
+                    // 디렉토리가 없으면 생성
+                    File directory = new File(uploadPath);
+                    if (!directory.exists()) {
+                        directory.mkdirs();
+                    }
+
+                    // 각 파일 처리
+                    for (int i = 0; i < uploadFiles.size(); i++) {
+                        MultipartFile file = uploadFiles.get(i);
+
+                        if (!file.isEmpty()) {
+                            // 파일명 중복 방지를 위한 uuid 추가
+                            String originalFileName = file.getOriginalFilename();
+                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                            String savedFileName = UUID.randomUUID().toString() + extension;
+
+                            // 파일 저장 경로 설정
+                            File savedFile = new File(directory, savedFileName);
+
+                            // 파일 저장
+                            file.transferTo(savedFile);
+
+                            // DB에 첨부파일 정보 저장
+                            AttachmentDTO attachmentDTO = new AttachmentDTO();
+                            attachmentDTO.setPostId(dto.getPostId());
+                            attachmentDTO.setAttachmentName(originalFileName);
+                            attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                            attachmentDTO.setAttachmentSize((int) file.getSize());
+                            attachmentDTO.setAttachmentOrder(i + 1);
+
+                            boardPostService.insertAttachment(attachmentDTO);
+                        }
+                    }
+                }
+
                 if (affectedRows > 0) {
                     result.put("success", true);
                     result.put("message", "게시글이 수정되었습니다.");
@@ -775,8 +811,7 @@ public class BoardController {
                     result.put("success", false);
                     result.put("message", "게시글 수정에 실패했습니다.");
                 }
-            }
-            else {
+            } else {
                 result.put("success", false);
                 result.put("message", "게시글이 존재하지 않거나 수정 권한이 없습니다.");
             }
@@ -837,19 +872,19 @@ public class BoardController {
         return result;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // 고독한 캠핑방 페이지
     @RequestMapping("/boardimage.action")
     public String boardImage(@RequestParam(value = "page", defaultValue = "1") int page,
                              @RequestParam(value = "size", defaultValue = "9") int size,
                              @RequestParam(value = "searchType", required = false) String searchType,
                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                             Model model,
                              @ModelAttribute("userCode") Integer userCode,
-                             @ModelAttribute("adminId") String adminId) {
+                             @ModelAttribute("adminId") String adminId,
+                             Model model) {
 
         // 게시판 ID 설정
-        int boardId = 8;    // 자유게시판 ID
+        int boardId = 10;    // 고독한 캠핑방 ID
 
         // 공지사항 조회(최대 3개)
         List<BoardPostDTO> notice = boardPostService.listNotice();
@@ -877,6 +912,12 @@ public class BoardController {
         // 일반 게시물 목록 조회
         List<BoardPostDTO> postList = boardPostService.listPostList(dto);
 
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : postList) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
+
         // 모델에 데이터 추가
         model.addAttribute("postList", postList);
         model.addAttribute("pagenation", pagenation);
@@ -887,18 +928,80 @@ public class BoardController {
 
     // 고독한 캠핑방 게시글 페이지
     @RequestMapping("boardimage-post.action")
-    public String boardImagePost(@RequestParam(value="postId", required=false, defaultValue="0") int postId,
-                                 Model model,
+    public String boardImagePost(@RequestParam(value = "page", defaultValue = "1") int page,
+                                 @RequestParam(value = "size", defaultValue = "9") int size,
+                                 @RequestParam(value = "searchType", required = false) String searchType,
+                                 @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                 @RequestParam(value = "postId", required = false, defaultValue = "0") int postId,
                                  @ModelAttribute("userCode") Integer userCode,
-                                 @ModelAttribute("adminId") String adminId) {
+                                 @ModelAttribute("adminId") String adminId,
+                                 HttpSession session,
+                                 Model model) {
+        // 게시글이 존재하는 경우
         if (postId > 0) {
+            // 1. 조회수 먼저 증가시킴
+            boardPostService.increaseViewCount(postId);
+
+            // 2. 게시글 정보 조회
             BoardPostDTO dto = new BoardPostDTO();
             dto.setPostId(postId);
             BoardPostDTO post = boardPostService.getPostById(dto);
+
             if (post != null) {
+                // 첨부파일 조회 (이미지)
+                List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+                post.setAttachments(attachments);
+
+                // 댓글 목록 조회
+                List<ReplyDTO> replies = boardPostService.getRepliesByPostId(postId);
+                model.addAttribute("replies", replies);
+
+                // 이전글, 다음글 ID 조회
+                int prevPostId = boardPostService.getPrevPostId(postId, 10); // 10은 고독한캠핑방 ID
+                int nextPostId = boardPostService.getNextPostId(postId, 10);
+                model.addAttribute("prevPostId", prevPostId);
+                model.addAttribute("nextPostId", nextPostId);
+
+                // 사용자 코드와 게시글 작성자 비교 결과를 모델에 추가
+                boolean isAuthor = (userCode != null && userCode.equals(post.getUserCode()));
+                model.addAttribute("isAuthor", isAuthor);
+
                 model.addAttribute("post", post);
+            } else {
+                // 존재하지 않는 게시글인 경우 목록으로 리다이렉트
+                return "redirect:/boardimage.action";
             }
+        } else {
+            // postId가 없거나 0인 경우 목록으로 리다이렉트
+            return "redirect:/boardimage.action";
         }
+
+        // 게시판 ID 설정
+        int boardId = 10;    // 자유게시판 ID
+
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setBoardId(boardId);
+
+        // 전체 게시물 수 조회 (일반 게시물만)
+        int totalPostCount = boardPostService.getTotalPostCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 일반 게시물 목록 조회
+        List<BoardPostDTO> postList = boardPostService.listPostList(dto);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : postList) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
+
+        // 모델에 데이터 추가
+        model.addAttribute("postList", postList);
+        model.addAttribute("pagenation", pagenation);
+
         return "boardImage-post";
     }
 
@@ -916,7 +1019,7 @@ public class BoardController {
                                              @ModelAttribute("adminId") String adminId) {
 
         Map<String, Object> result = new HashMap<>();
-        int boardId = 8;    // 고독한캠핑방 ID
+        int boardId = 10;    // 고독한캠핑방 ID
 
         // 클라이언트에서 전달받은 원본 게시글 번호 맵 파싱
         Map<String, String> originalPostNumbers = new HashMap<>();
@@ -924,7 +1027,8 @@ public class BoardController {
             try {
                 // JSON 문자열을 Map으로 변환
                 ObjectMapper mapper = new ObjectMapper();
-                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {});
+                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {
+                });
             } catch (Exception e) {
                 System.err.println("Error parsing originalPostNumbers: " + e.getMessage());
             }
@@ -998,6 +1102,12 @@ public class BoardController {
             }
         }
 
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : postList) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
+
         result.put("postList", postList);
         result.put("pagenation", pagenation);
         result.put("hotOnly", hotOnly);
@@ -1012,7 +1122,202 @@ public class BoardController {
         return "boardImage-write";
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    // 고독한 캠핑방 글 등록 처리
+    @RequestMapping(value = "/boardimage-write.action", method = RequestMethod.POST)
+    public String insertImagePost(BoardPostDTO dto,
+                                  @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+                                  @ModelAttribute("userCode") Integer userCode,
+                                  HttpServletRequest request) {
+
+        dto.setUserCode(userCode);
+
+        // 게시판 ID를 고독한캠핑방(10)으로 설정
+        dto.setBoardId(10);
+
+        try {
+            // 게시글 등록
+            int postId = boardPostService.insertPost(dto);
+
+            // 첨부파일 처리 - 이미지만 허용
+            if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                // 업로드 경로 설정
+                String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+
+                // 디렉토리가 없으면 생성
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 각 파일 처리
+                for (int i = 0; i < uploadFiles.size(); i++) {
+                    MultipartFile file = uploadFiles.get(i);
+
+                    if (!file.isEmpty()) {
+                        // 이미지 파일인지 확인
+                        if (!file.getContentType().startsWith("image/")) {
+                            continue; // 이미지 파일이 아닌 경우 스킵
+                        }
+
+                        // 파일명 중복 방지를 위한 uuid 추가
+                        String originalFileName = file.getOriginalFilename();
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String savedFileName = UUID.randomUUID().toString() + extension;
+
+                        // 파일 저장 경로 설정
+                        File savedFile = new File(directory, savedFileName);
+
+                        // 파일 저장
+                        file.transferTo(savedFile);
+
+                        // DB에 첨부파일 정보 저장
+                        AttachmentDTO attachmentDTO = new AttachmentDTO();
+                        attachmentDTO.setPostId(postId);
+                        attachmentDTO.setAttachmentName(originalFileName);
+                        attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                        attachmentDTO.setAttachmentSize((int) file.getSize());
+                        attachmentDTO.setAttachmentOrder(i + 1);
+
+                        boardPostService.insertAttachment(attachmentDTO);
+                    }
+                }
+            }
+
+            return "redirect:boardimage.action";
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 에러 발생 시 메인 페이지로 리다이렉트
+            return "redirect:boardmain.action";
+        }
+    }
+
+    // 고독한 캠핑방 게시글 수정 페이지
+    @RequestMapping("/boardimage-update.action")
+    public String boardImageUpdate(@RequestParam("postId") int postId,
+                                   @ModelAttribute("userCode") Integer userCode,
+                                   @ModelAttribute("adminId") String adminId,
+                                   Model model) {
+        System.out.println("boardImageUpdate 호출됨 - postId: " + postId + ", userCode: " + userCode + ", adminId: " + adminId);
+
+        try {
+            // 게시글 정보 조회
+            BoardPostDTO dto = new BoardPostDTO();
+            dto.setPostId(postId);
+            BoardPostDTO post = boardPostService.getPostById(dto);
+
+            if (post == null) {
+                System.out.println("게시글을 찾을 수 없음: " + postId);
+                return "redirect:/boardimage.action";
+            }
+
+            System.out.println("게시글 조회 성공 - 작성자: " + post.getUserCode());
+
+            // 첨부파일 조회
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(postId);
+            post.setAttachments(attachments);
+            System.out.println("첨부파일 조회 완료: " + (attachments != null ? attachments.size() : "없음"));
+
+            // 말머리 목록 조회
+            List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(10); // 고독한캠핑방 ID
+
+            model.addAttribute("post", post);
+            model.addAttribute("postLabels", postLabels);
+            model.addAttribute("isUpdate", true);
+
+            System.out.println("boardImage-write 뷰로 리턴");
+            return "boardImage-write";
+        } catch (Exception e) {
+            System.err.println("boardImageUpdate 메서드 오류: " + e.getMessage());
+            e.printStackTrace();
+            return "redirect:/boardimage.action";
+        }
+    }
+
+    // 게시글 수정 처리를 위한 메서드 (POST)
+    @RequestMapping(value = "/api/image/update.action", method = RequestMethod.POST)
+    public String updateImagePost(BoardPostDTO dto,
+                                  @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
+                                  @RequestParam(value = "deleteAttachments", required = false) List<String> deleteAttachments,
+                                  @ModelAttribute("userCode") Integer userCode,
+                                  HttpServletRequest request) {
+
+        try {
+            // 사용자 코드 설정
+            dto.setUserCode(userCode);
+
+            // 게시판 ID는 10 (고독한캠핑방)으로 설정
+            dto.setBoardId(10);
+
+            System.out.println("게시글 수정 시작 - ID: " + dto.getPostId() + ", 제목: " + dto.getPostTitle());
+
+            // 게시글 정보 수정
+            int result = boardPostService.updatePost(dto);
+            System.out.println("게시글 수정 결과: " + result);
+
+            // 첨부파일 삭제 처리
+            if (deleteAttachments != null && !deleteAttachments.isEmpty()) {
+                for (String attachmentPostId : deleteAttachments) {
+                    try {
+                        int id = Integer.parseInt(attachmentPostId);
+                        // 첨부파일 삭제 로직 추가
+                        boardPostService.deleteAttachment(id);
+                        System.out.println("첨부파일 삭제: " + id);
+                    } catch (NumberFormatException e) {
+                        System.err.println("잘못된 첨부파일 ID: " + attachmentPostId);
+                    }
+                }
+            }
+
+            // 새 첨부파일 처리 (기존 코드와 동일)
+            if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                // 업로드 경로 설정
+                String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+
+                // 디렉토리가 없으면 생성
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 각 파일 처리
+                for (int i = 0; i < uploadFiles.size(); i++) {
+                    MultipartFile file = uploadFiles.get(i);
+
+                    if (!file.isEmpty()) {
+                        // 파일명 중복 방지를 위한 uuid 추가
+                        String originalFileName = file.getOriginalFilename();
+                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                        String savedFileName = UUID.randomUUID().toString() + extension;
+
+                        // 파일 저장 경로 설정
+                        File savedFile = new File(directory, savedFileName);
+
+                        // 파일 저장
+                        file.transferTo(savedFile);
+
+                        // DB에 첨부파일 정보 저장
+                        AttachmentDTO attachmentDTO = new AttachmentDTO();
+                        attachmentDTO.setPostId(dto.getPostId());
+                        attachmentDTO.setAttachmentName(originalFileName);
+                        attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                        attachmentDTO.setAttachmentSize((int) file.getSize());
+                        attachmentDTO.setAttachmentOrder(i + 1);
+
+                        boardPostService.insertAttachment(attachmentDTO);
+                        System.out.println("첨부파일 추가: " + originalFileName);
+                    }
+                }
+            }
+
+            return "redirect:/boardimage-post.action?postId=" + dto.getPostId();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/boardimage.action";
+        }
+    }
+
+
+    //----------------------------------------------------------------------------------------------------------------------
     // 공지사항 페이지
     @RequestMapping("/notice.action")
     public String notice(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -1061,11 +1366,14 @@ public class BoardController {
                              @RequestParam(value = "searchType", required = false) String searchType,
                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                              @RequestParam(value = "postId", required = false, defaultValue = "0") int postId,
-                             Model model,
                              @ModelAttribute("userCode") Integer userCode,
-                             @ModelAttribute("adminId") String adminId) {
+                             @ModelAttribute("adminId") String adminId,
+                             Model model) {
         // 게시글이 존재하는 경우
         if (postId > 0) {
+
+            boardPostService.increaseViewCount(postId);
+
             // 게시글 정보 조회
             BoardPostDTO dto = new BoardPostDTO();
             dto.setPostId(postId);
@@ -1088,6 +1396,14 @@ public class BoardController {
                 model.addAttribute("prevPostId", prevPostId);
                 model.addAttribute("nextPostId", nextPostId);
 
+                // 여기서 null 체크 추가
+                boolean isAuthor = false;
+                if (userCode != null) {
+                    isAuthor = userCode.equals(post.getUserCode());
+                }
+
+                model.addAttribute("isAuthor", isAuthor);
+
                 // 게시글 목록 (최근 게시글) 조회
                 BoardPostDTO listDto = new BoardPostDTO();
                 listDto.setBoardId(1); // 공지사항
@@ -1101,8 +1417,8 @@ public class BoardController {
                 return "redirect:/notice.action";
             }
         } else {
-                // postId가 없거나 0인 경우 목록으로 리다이렉트
-                return "redirect:/notice.action";
+            // postId가 없거나 0인 경우 목록으로 리다이렉트
+            return "redirect:/notice.action";
         }
 
         // 게시판 ID 설정
@@ -1127,7 +1443,6 @@ public class BoardController {
 
         return "noticePost";
     }
-
 
 
     // 공지사항 작성 페이지
@@ -1171,37 +1486,22 @@ public class BoardController {
                                HttpSession session,
                                @ModelAttribute("userCode") Integer userCode,
                                @ModelAttribute("adminId") String adminId) {
-        // 관리자 권한 확인
-//        Integer userCode = (Integer) session.getAttribute("user_code");
-//        Integer userGrade = (Integer) session.getAttribute("user_grade");
-
-        // 관리자가 아니면 공지사항 목록으로 리다이렉트
-//        if (userGrade == null || userGrade > 1) {
-//            return "redirect:/notice.action";
-//        }
-
-        // 게시판 ID를 공지사항(1)으로 강제 설정
-//        dto.setBoardId(1);
-//        dto.setUserCode(userCode);
-
-//        // 테스트를 위해 세션에 관리자 정보 직접 설정 (없는 경우에만)
-//        if (session.getAttribute("user_code") == null) {
-//            session.setAttribute("user_code", 1);
-//            session.setAttribute("user_grade", 1);
-//        }
 
         // 관리자 권한 확인
         if (adminId == null) {
             return "redirect:/notice.action";
         }
 
-        // 게시판 ID를 공지사항(1)으로 강제 설정
+        // 게시판 ID를 공지사항(1)으로 설정
         dto.setBoardId(1);
-        dto.setUserCode(userCode); // 로그인된 userCode를 설정
+        dto.setUserCode(userCode); // 강제로 ADMIN1 계정의 user_code 설정
 
         try {
+            System.out.println("공지사항 등록 시도 - 제목: " + dto.getPostTitle() + ", userCode: " + dto.getUserCode());
+
             // 공지사항 등록
             int postId = boardPostService.insertPost(dto);
+            System.out.println("공지사항 등록 성공 - ID: " + postId);
 
             // 첨부파일 처리
             if (uploadFiles != null && !uploadFiles.isEmpty()) {
@@ -1212,8 +1512,8 @@ public class BoardController {
                 // 디렉토리가 없으면 생성
                 File directory = new File(uploadPath);
                 if (!directory.exists()) {
-                    directory.mkdirs();
-                    System.out.println("디렉토리 생성 결과: " + directory.mkdirs());
+                    boolean created = directory.mkdirs();
+                    System.out.println("디렉토리 생성 결과: " + created);
                 }
 
                 // 각 파일 처리
@@ -1231,6 +1531,7 @@ public class BoardController {
 
                         // 파일 저장
                         file.transferTo(savedFile);
+                        System.out.println("파일 저장 성공: " + savedFileName);
 
                         // DB에 첨부파일 정보 저장
                         AttachmentDTO attachmentDTO = new AttachmentDTO();
@@ -1238,20 +1539,22 @@ public class BoardController {
                         System.out.println("첨부파일에 저장되는 게시글 ID: " + postId);
                         attachmentDTO.setAttachmentName(originalFileName);
                         attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
-                        attachmentDTO.setAttachmentSize((int)file.getSize());
+                        attachmentDTO.setAttachmentSize((int) file.getSize());
                         attachmentDTO.setAttachmentOrder(i + 1);
 
                         boardPostService.insertAttachment(attachmentDTO);
+                        System.out.println("첨부파일 정보 저장 성공: " + originalFileName);
                     }
                 }
             }
 
-            // 등록 성공 시 공지사항 목록으로 리다이렉트
+            // 등록 성공 후 페이지 리다이렉트
             return "redirect:/notice.action";
         } catch (Exception e) {
             e.printStackTrace();
-            // 에러 발생 시 공지사항 목록으로 리다이렉트
-            return "redirect:/notice.action";
+            System.out.println("공지사항 등록 실패 - 오류: " + e.getMessage());
+            // 오류 발생 시 공지사항 목록으로 리다이렉트
+            return "redirect:/notice.action?error=true";
         }
     }
 
@@ -1297,55 +1600,86 @@ public class BoardController {
     }
 
 
-    // 공지사항 수정 처리를 위한 API
+    // 공지사항 수정 처리를 위한 API - AdminDTO의 userCode 사용
     @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateNotice(@RequestBody BoardPostDTO dto,
-                                            HttpSession session,
+    public Map<String, Object> updateNotice(BoardPostDTO dto,
+                                            @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
                                             @ModelAttribute("userCode") Integer userCode,
-                                            @ModelAttribute("adminId") String adminId) {
+                                            @ModelAttribute("adminId") String adminId,
+                                            HttpServletRequest request,
+                                            HttpSession session) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-//            // 관리자 권한 확인
-//            Integer userCode = (Integer) session.getAttribute("user_code");
-//            Integer userGrade = (Integer) session.getAttribute("user_grade");
-//
-//            // 관리자가 아니면 권한 없음 응답
-//            if (userGrade == null || userGrade > 1) {
-//                result.put("success", false);
-//                result.put("message", "공지사항 관리 권한이 없습니다.");
-//                return result;
-//            }
-
-            // 관리자 권한 확인
-            if (adminId == null) {
-                result.put("success", false);
-                result.put("message", "공지사항 관리 권한이 없습니다.");
-                return result;
-            }
-
-            // 게시판 ID를 공지사항(1)으로 강제 설정
-            dto.setBoardId(1);
+            // 세션에서 로그인한 사용자 코드 가져오기
+            System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
             dto.setUserCode(userCode);
 
-            // 게시글 존재 여부 확인
+            // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
+            System.out.println("게시글 작성자 코드: " + (post != null ? post.getUserCode() : "게시글 없음"));
 
+            // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자가 맞는지 확인
             if (post != null) {
                 int affectedRows = boardPostService.updatePost(dto);
+                System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
+
+                // 첨부파일 처리
+                if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                    // 기존 첨부파일 삭제 (또는 비활성화) 처리 - 구현 필요
+                    boardPostService.deleteAttachment(dto.getPostId());
+
+                    // 업로드 경로를 webapp/resources/uploads로 설정
+                    String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+                    System.out.println("업로드 경로: " + uploadPath);
+
+                    // 디렉토리가 없으면 생성
+                    File directory = new File(uploadPath);
+                    if (!directory.exists()) {
+                        directory.mkdirs();
+                    }
+
+                    // 각 파일 처리
+                    for (int i = 0; i < uploadFiles.size(); i++) {
+                        MultipartFile file = uploadFiles.get(i);
+
+                        if (!file.isEmpty()) {
+                            // 파일명 중복 방지를 위한 uuid 추가
+                            String originalFileName = file.getOriginalFilename();
+                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                            String savedFileName = UUID.randomUUID().toString() + extension;
+
+                            // 파일 저장 경로 설정
+                            File savedFile = new File(directory, savedFileName);
+
+                            // 파일 저장
+                            file.transferTo(savedFile);
+
+                            // DB에 첨부파일 정보 저장
+                            AttachmentDTO attachmentDTO = new AttachmentDTO();
+                            attachmentDTO.setPostId(dto.getPostId());
+                            attachmentDTO.setAttachmentName(originalFileName);
+                            attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                            attachmentDTO.setAttachmentSize((int) file.getSize());
+                            attachmentDTO.setAttachmentOrder(i + 1);
+
+                            boardPostService.insertAttachment(attachmentDTO);
+                        }
+                    }
+                }
 
                 if (affectedRows > 0) {
                     result.put("success", true);
-                    result.put("message", "공지사항이 수정되었습니다.");
+                    result.put("message", "게시글이 수정되었습니다.");
                     result.put("postId", dto.getPostId());
                 } else {
                     result.put("success", false);
-                    result.put("message", "공지사항 수정에 실패했습니다.");
+                    result.put("message", "게시글 수정에 실패했습니다.");
                 }
             } else {
                 result.put("success", false);
-                result.put("message", "존재하지 않는 공지사항입니다.");
+                result.put("message", "게시글이 존재하지 않거나 수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1357,7 +1691,7 @@ public class BoardController {
     }
 
 
-    // 공지사항 삭제 처리를 위한 API
+    // 공지사항 삭제 처리를 위한 API - AdminDTO의 userCode 사용
     @RequestMapping(value = "/api/notice/delete.action", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> deleteNotice(@RequestBody BoardPostDTO dto,
@@ -1367,38 +1701,19 @@ public class BoardController {
         Map<String, Object> result = new HashMap<>();
 
         try {
-//            // 세션에서 관리자 정보 가져오기
-//            Integer userGrade = (Integer) session.getAttribute("user_grade");
-//            Integer userCode = (Integer) session.getAttribute("user_code");
-//
-//            System.out.println("삭제 요청 - 관리자 등급: " + userGrade + ", 관리자 코드: " + userCode);
-
-//            // 관리자가 아니면 권한 없음 응답
-//            if (userGrade == null || userGrade > 1) {
-//                result.put("success", false);
-//                result.put("message", "공지사항 관리 권한이 없습니다.");
-//                return result;
-//            }
-
             System.out.println("삭제 요청 - 관리자 코드: " + userCode);
 
-            // 관리자 권한 확인
-            if (adminId == null) {
+            // userCode가 null인 경우 처리
+            if (userCode == null) {
                 result.put("success", false);
-                result.put("message", "공지사항 관리 권한이 없습니다.");
+                result.put("message", "로그인이 필요합니다.");
                 return result;
             }
-
-            // 삭제자 정보 기록 (추적용)
-            dto.setUserCode(userCode);
-
-            // 콘솔에 로그 출력 (실제로는 로그 테이블에 저장)
-            System.out.println("관리자(" + userCode + ")가 공지사항 ID: " + dto.getPostId() + " 삭제 시도");
 
             // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
 
-            if (post != null) {
+            if (post != null && post.getUserCode() == userCode) {
                 int affectedRows = boardPostService.deletePost(dto);
 
                 if (affectedRows > 0) {
@@ -1424,11 +1739,11 @@ public class BoardController {
         return result;
     }
 
-//----------------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------------------------------
     // 이벤트 페이지
     @RequestMapping("/event.action")
     public String event(@ModelAttribute("userCode") Integer userCode,
-                        @ModelAttribute("adminId") String adminId){
+                        @ModelAttribute("adminId") String adminId) {
         return "event";
     }
 //----------------------------------------------------------------------------------------------------------------------
@@ -1443,15 +1758,6 @@ public class BoardController {
         Map<String, Object> result = new HashMap<>();
 
         try {
-//            // 로그인 사용자 확인
-//            Integer userCode = (Integer) session.getAttribute("user_code");
-//
-//            // 테스트용 임시 코드
-//            if (userCode == null) {
-//                userCode = 2;
-//                session.setAttribute("user_code", userCode);
-//            }
-
             // 사용자 코드 설정
             dto.setUserCode(userCode);
 
@@ -1514,6 +1820,13 @@ public class BoardController {
 //                session.setAttribute("user_code", userCode);
 //            }
 
+            // userCode가 null인 경우 처리
+            if (userCode == null) {
+                result.put("success", false);
+                result.put("message", "로그인이 필요합니다.");
+                return result;
+            }
+
             // 사용자 코드 설정
             dto.setUserCode(userCode);
 
@@ -1541,7 +1854,7 @@ public class BoardController {
                                             @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
 
-        try{
+        try {
 //            // 로그인 사용자 확인
 //            Integer userCode = (Integer) session.getAttribute("user_code");
 //
@@ -1609,14 +1922,24 @@ public class BoardController {
 //                session.setAttribute("user_code", userCode);
 //            }
 
-            // 사용자 코드 설정
-            dto.setUserCode(userCode);
+            // 관리자로 로그인했지만 userCode가 없는 경우
+            if (adminId != null && userCode == null) {
+                // 관리자 정보 조회해서 userCode 가져오기
+                AdminDTO admin = adminService.getAdminById(adminId);
+                if (admin != null && admin.getUserCode() != null) {
+                    userCode = admin.getUserCode();
+                    // 세션에도 저장해두면 좋습니다
+                    session.setAttribute("userCode", userCode);
+                }
+                // 사용자 코드 설정
+                dto.setUserCode(userCode);
 
-            // 북마크 상태 확인
-            boolean isBookmarked = boardPostService.checkBookmark(dto);
+                // 북마크 상태 확인
+                boolean isBookmarked = boardPostService.checkBookmark(dto);
 
-            result.put("success", true);
-            result.put("isBookmarked", isBookmarked);
+                result.put("success", true);
+                result.put("isBookmarked", isBookmarked);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
