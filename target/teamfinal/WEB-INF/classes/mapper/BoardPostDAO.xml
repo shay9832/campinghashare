@@ -460,6 +460,13 @@
         VALUES (ATTACHMENT_POST_SEQ.nextval, #{postId}, #{attachmentName}, #{attachmentPath}, #{attachmentSize}, #{attachmentOrder}, SYSDATE)
     </insert>
 
+    <!-- 첨부파일 삭제 -->
+    <delete id="deleteAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        DELETE
+        FROM ATTACHMENT_POST
+        WHERE ATTACHMENT_POST_ID = #{attachmentPostId}
+    </delete>
+
     <!-- 북마크 추가 -->
     <insert id="insertBookmark" parameterType="com.team.mvc.DTO.BoardPostDTO">
         INSERT INTO BOOKMARK (BOOKMARK_ID, USER_CODE, POST_ID, CREATED_DATE)

@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ include file="checkLogin.jsp" %>
 <html>
 <head>
     <title>글쓰기 - 자유게시판</title>
@@ -332,6 +331,16 @@
     </div>
 </div>
 
+<div id="custom-success-modal"
+     style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); z-index: 10000; min-width: 300px; text-align: center; display: none;">
+    <div id="custom-success-header">
+        <h5>${isUpdate ? '게시글이 수정 되었습니다.' : '게시글이 등록 되었습니다.'}</h5>
+    </div>
+    <div id="custom-success-footer" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+        <button type="button" class="btn btn-primary" id="okBtn">확인</button>
+    </div>
+</div>
+
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
@@ -346,8 +355,10 @@
         const submitBtn = document.getElementById('submitBtn');
         const postForm = document.getElementById('postForm');
         const modalOverlay = document.getElementById('custom-modal-overlay');
+        const successModal = document.getElementById('custom-success-modal');
         const modal = document.getElementById('custom-modal');
         const cancelBtn = document.getElementById('cancelBtn');
+        const okBtn = document.getElementById('okBtn');
         const confirmBtn = document.getElementById('confirmBtn');
 
         // 등록하기 버튼 클릭 시 처리
@@ -392,28 +403,21 @@
                 const isUpdateMode = document.querySelector('input[name="postId"]') !== null;
 
                 if (isUpdateMode) {
-                    // 수정 모드 AJAX 처리
+                    // 수정 모드 - FormData 사용하여 multipart/form-data로 전송
                     const formData = new FormData(postForm);
-                    const jsonData = {};
-
-                    for (const [key, value] of formData.entries()) {
-                        jsonData[key] = value;
-                    }
 
                     fetch('api/post/update.action', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(jsonData)
+                        body: formData // FormData 그대로 전송 (Content-Type 헤더 자동 설정)
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                alert('게시글이 수정되었습니다.');
-                                location.href = 'boardfree-post.action?postId=' + data.postId;
+                                // 성공 모달 표시
+                                if (modalOverlay) modalOverlay.style.display = 'block';
+                                if (successModal) successModal.style.display = 'block';
                             } else {
-                                alert('게시글 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                                alert('공지사항 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
                             }
                         })
                         .catch(error => {
@@ -428,6 +432,16 @@
                 // 모달 닫기
                 modalOverlay.style.display = 'none';
                 modal.style.display = 'none';
+            });
+        }
+
+        // 성공 모달의 확인 버튼 클릭 시 자유게시판 목록으로 이동
+        if (okBtn) {
+            okBtn.addEventListener('click', function () {
+                console.log("확인 버튼(성공 모달) 클릭됨"); // 디버깅용
+                if (modalOverlay) modalOverlay.style.display = 'none';
+                if (successModal) successModal.style.display = 'none';
+                window.location.href = 'boardfree.action';
             });
         }
 

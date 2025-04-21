@@ -244,7 +244,7 @@
             window.location.href = "boardimage-write.action";
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 전역 변수로 현재 모드와 페이지 설정
             var isHotMode = ${not empty hotOnly ? 'true' : 'false'};
             var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
@@ -253,7 +253,7 @@
             var originalPostNumbers = {};
 
             // 초기 페이지 로드 시 원본 게시글 번호 저장
-            $('.board-row').each(function() {
+            $('.board-row').each(function () {
                 var postId = $(this).find('a[href^="boardimage-post.action"]').attr('href');
                 if (postId) {
                     postId = postId.split('postId=')[1];
@@ -268,7 +268,7 @@
             });
 
             // 카드 그리드에서도 원본 번호 저장
-            $('.simple-card').each(function() {
+            $('.simple-card').each(function () {
                 var href = $(this).attr('href');
                 if (href) {
                     var postId = href.split('postId=')[1];
@@ -280,7 +280,7 @@
             });
 
             // 인기글 버튼 클릭 이벤트
-            $('.filter-btn:contains("인기글")').click(function(e) {
+            $('.filter-btn:contains("인기글")').click(function (e) {
                 e.preventDefault();
                 if (!isHotMode) {
                     $(this).addClass('active');
@@ -291,7 +291,7 @@
             });
 
             // 전체 버튼 클릭 이벤트
-            $('.filter-btn:contains("전체")').click(function(e) {
+            $('.filter-btn:contains("전체")').click(function (e) {
                 e.preventDefault();
                 if (isHotMode) {
                     $(this).addClass('active');
@@ -318,7 +318,7 @@
                         originalPostNumbers: JSON.stringify(originalPostNumbers) // 원본 번호 전달
                     },
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         updateContent(response);
                         updatePagination(response.pagenation, hotOnly);
                         currentPage = page;
@@ -333,7 +333,7 @@
                         }
                         history.pushState({page: page, hotOnly: hotOnly}, '', newUrl);
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('Error loading posts:', error);
                         alert('게시글을 불러오는 중 오류가 발생했습니다.');
                     }
@@ -341,7 +341,7 @@
             }
 
             // 뒤로가기 버튼 처리
-            window.addEventListener('popstate', function(e) {
+            window.addEventListener('popstate', function (e) {
                 if (e.state) {
                     var hotOnly = e.state.hotOnly;
                     var page = e.state.page || 1;
@@ -368,7 +368,7 @@
                 var noticeHtml = '';
 
                 // 공지사항 표시
-                $.each(data.notice, function(index, notice) {
+                $.each(data.notice, function (index, notice) {
                     noticeHtml += '<tr class="board-row notice border-bottom">' +
                         '<td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>' +
                         '<td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>' +
@@ -390,20 +390,22 @@
                 // 게시글 카드 그리드 업데이트
                 var postsHtml = '';
                 if (data.postList && data.postList.length > 0) {
-                    $.each(data.postList, function(index, post) {
-                        // 원본 번호가 있으면 저장 (카드 그리드에서는 표시하지 않지만 추적용)
-                        if (originalPostNumbers[post.postId]) {
-                            // 이미 저장된 번호 사용
+                    $.each(data.postList, function (index, post) {
+                        // 원본 번호 저장 코드 (기존 코드 유지)
+
+                        // 이미지 또는 아이콘 HTML 생성
+                        var imageHtml = '';
+                        if (post.attachments && post.attachments.length > 0) {
+                            // 첨부파일이 있으면 첫번째 이미지 표시
+                            imageHtml = '<img src="' + post.attachments[0].attachmentPath + '" alt="' + post.postTitle + '" style="width: 100%; height: 100%; object-fit: cover;">';
                         } else {
-                            // 새로운 게시글이라면 원본 번호로 저장
-                            if (post.rowNum && post.rowNum !== '') {
-                                originalPostNumbers[post.postId] = post.rowNum;
-                            }
+                            // 첨부파일이 없으면 기본 아이콘 표시
+                            imageHtml = '<i class="fa-solid fa-' + getIconForLabel(post.postLabelName) + '"></i>';
                         }
 
                         postsHtml += '<a href="boardimage-post.action?postId=' + post.postId + '" class="simple-card">' +
                             '<div class="simple-card-image">' +
-                            '<i class="fa-solid fa-' + getIconForLabel(post.postLabelName) + '"></i>' +
+                            imageHtml +
                             '</div>' +
                             '<div class="simple-card-content">' +
                             '<h3 class="simple-card-title">' + post.postTitle + '</h3>' +
@@ -483,7 +485,7 @@
                 $('.d-flex.gap-1').html(html);
 
                 // 페이지 링크에 이벤트 연결
-                $('.page-link').click(function(e) {
+                $('.page-link').click(function (e) {
                     e.preventDefault();
                     var page = $(this).data('page');
                     loadPosts(page, hotOnly);
@@ -491,7 +493,7 @@
             }
 
             // 검색 폼 제출 처리
-            $('form').submit(function(e) {
+            $('form').submit(function (e) {
                 e.preventDefault();
                 loadPosts(1, isHotMode);
             });
@@ -536,7 +538,8 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1></a>
+                    <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방
+                    </h1></a>
                 </div>
 
                 <!-- 정렬 및 필터 옵션 -->
@@ -580,7 +583,8 @@
                                         class="notice-tag">공지</span></a></td>
                                 <td class="p-3 text-center"><a href="notice.action"><span
                                         class="board-category-tag notice">공지</span></a></td>
-                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
+                                <td class="p-3 title-cell"><a
+                                        href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
@@ -594,13 +598,21 @@
                 </div>
 
 
-
                 <!-- 심플 카드 형식의 게시판 -->
                 <div class="posts-grid">
                     <c:forEach var="postList" items="${postList}">
                         <a href="boardimage-post.action?postId=${postList.postId}" class="simple-card">
                             <div class="simple-card-image">
-                                <i class="fa-solid fa-mountain-sun"></i>
+                                <c:choose>
+                                    <c:when test="${not empty postList.attachments && postList.attachments.size() > 0}">
+                                        <!-- 첨부파일이 있으면 첫번째 이미지 표시 -->
+                                        <img src="${postList.attachments[0].attachmentPath}" alt="${postList.postTitle}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <!-- 첨부파일이 없으면 기본 아이콘 표시 -->
+                                        <i class="fa-solid fa-mountain-sun"></i>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                             <div class="simple-card-content">
                                 <h3 class="simple-card-title">${postList.postTitle}</h3>
@@ -621,229 +633,6 @@
                             </div>
                         </a>
                     </c:forEach>
-                    <!-- 심플 카드 2 -->
-                    <a href="boardimage-post.action?postId=2" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-map-location-dot"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼자 가기 좋은 강원도 캠핑장 TOP 5</h3>
-                            <div class="simple-card-author">산속여행자</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-30</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>612</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>93</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>31</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 3 -->
-                    <a href="boardimage-post.action?postId=3" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-campground"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼캠 1주년 기념 장비 리뷰 (사진 많음)</h3>
-                            <div class="simple-card-author">솔로캠퍼</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-29</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>432</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>76</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>23</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 4 -->
-                    <a href="boardimage-post.action?postId=4" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼캠 시 안전을 위한 체크리스트</h3>
-                            <div class="simple-card-author">안전제일</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-28</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>523</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>91</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>24</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 5 -->
-                    <a href="boardimage-post.action?postId=5" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-venus"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">여자 혼캠러를 위한 안전 팁</h3>
-                            <div class="simple-card-author">캠핑여왕</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-27</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>728</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>135</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>42</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 6 -->
-                    <a href="boardimage-post.action?postId=6" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-moon-stars"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼캠 중 찍은 밤하늘 사진</h3>
-                            <div class="simple-card-author">별빛캠퍼</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-26</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>412</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>87</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>18</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 7 -->
-                    <a href="boardimage-post.action?postId=7" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-hiking"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">처음 혼캠 도전기</h3>
-                            <div class="simple-card-author">혼캠초보</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-25</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>356</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>65</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>31</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 8 -->
-                    <a href="boardimage-post.action?postId=8" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-cubes"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼캠용 미니멀 장비 추천</h3>
-                            <div class="simple-card-author">미니멀리스트</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-24</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>478</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>93</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>27</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- 심플 카드 9 -->
-                    <a href="boardimage-post.action?postId=9" class="simple-card">
-                        <div class="simple-card-image">
-                            <i class="fa-solid fa-utensils"></i>
-                        </div>
-                        <div class="simple-card-content">
-                            <h3 class="simple-card-title">혼자서도 맛있게 먹는 캠핑 요리</h3>
-                            <div class="simple-card-author">혼캠셰프</div>
-                            <div class="simple-card-footer">
-                                <div class="simple-card-date">2025-03-23</div>
-                                <div class="simple-card-stats">
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-eye"></i>
-                                        <span>562</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-heart"></i>
-                                        <span>112</span>
-                                    </div>
-                                    <div class="simple-card-stat">
-                                        <i class="fa-solid fa-comment"></i>
-                                        <span>34</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
                 </div>
 
                 <!-- 하단 검색 및 페이지네이션 -->
@@ -877,14 +666,16 @@
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
-                                <a href="boardimage.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardimage.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-angles-left"></i>
                                 </a>
                             </c:if>
 
                             <!-- 이전 블록으로 -->
                             <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                                <a href="boardimage.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardimage.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </a>
                             </c:if>
@@ -897,14 +688,16 @@
 
                             <!-- 다음 블록으로 -->
                             <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                                <a href="boardimage.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardimage.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </a>
                             </c:if>
 
                             <!-- 마지막 페이지로 -->
                             <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                                <a href="boardimage.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                                <a href="boardimage.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                   class="btn btn-sm">
                                     <i class="fa-solid fa-angles-right"></i>
                                 </a>
                             </c:if>

@@ -106,4 +106,7 @@ public interface IBoardPostDAO {
 
     // 게시글 ID로 추천 삭제
     int deleteRecommendsByPostId(int postId);
+
+    // 첨부파일 제거
+    int deleteAttachment(int attachmentId);
 }
