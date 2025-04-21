@@ -158,6 +158,7 @@
                             <i class="fa-solid fa-heart-crack"></i>
                             <p>찜한 상품이 없습니다</p>
                             <div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>
+                            <a href="rentalsearch-main.action" class="empty-action mt-5">찜하러 가기</a>
                         </div>
                     </c:otherwise>
                 </c:choose>

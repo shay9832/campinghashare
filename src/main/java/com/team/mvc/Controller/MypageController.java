@@ -37,10 +37,19 @@ public class MypageController {
         UserDTO user = mainService.getUserDTO(userCode);
         LinkedHashMap<String, Object> myEquipMap = mainService.getMyEquipmentMap(userCode);
         LinkedHashMap<String, Object> rentEquipMap = mainService.getRentEquipmentMap(userCode);
+        Map<String, Object> postCommentMap = mainService.getPostCommentMap(userCode);
+        Map<String, Map<String, Integer>> statusMap = mainService.getMyEquipmentStatus(userCode);
+        List<StorenDTO> wishlist = mainService.getMyWishlist(userCode);
 
         model.addAttribute("user", user);
         model.addAttribute("myEquipMap", myEquipMap);
         model.addAttribute("rentEquipMap", rentEquipMap);
+        model.addAttribute("postList", postCommentMap.get("postList"));
+        model.addAttribute("commentList", postCommentMap.get("replyList"));
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
+        model.addAttribute("wishlist", wishlist);
 
         return "myPage-main";
     }

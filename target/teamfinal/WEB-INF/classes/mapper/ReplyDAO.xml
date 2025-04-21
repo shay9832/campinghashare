@@ -38,4 +38,21 @@
         FROM REPLY
         WHERE REPLY_ID = #{replyId}
     </select>
+
+
+    <!-- 회원코드로 해당 유저가 남긴 댓글 리스트(최근 등록일순으로 count건 수 조회) -->
+    <select id="listRecentReplyByUserCode" resultType="com.team.mvc.DTO.ReplyDTO">
+        SELECT *
+        FROM (SELECT REPLY_ID      as replyId,
+                     ROOT_REPLY_ID as rootReplyId,
+                     USER_CODE     as userCode,
+                     POST_ID       as postId,
+                     REPLY_CONTENT as replyContent,
+                     CREATED_DATE  as createdDate
+              FROM REPLY
+              WHERE USER_CODE = #{userCode}
+              ORDER BY CREATED_DATE DESC
+              )
+        <![CDATA[WHERE ROWNUM <= #{count}]]>
+    </select>
 </mapper>

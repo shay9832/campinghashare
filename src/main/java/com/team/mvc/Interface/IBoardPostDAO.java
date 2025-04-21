@@ -2,6 +2,7 @@ package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.*;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -106,4 +107,11 @@ public interface IBoardPostDAO {
 
     // 게시글 ID로 추천 삭제
     int deleteRecommendsByPostId(int postId);
+
+
+
+    // 유저코드로 해당 유저가 작성한 게시물 조회(최근등록순 5건까지)
+    List<BoardPostDTO> listRecentPostByUserCode(@Param("userCode") int userCode, @Param("count") int count);
+    // int타입 post_id로 BoardPostDTO 조회
+    BoardPostDTO getPostByPostId(int postId);
 }

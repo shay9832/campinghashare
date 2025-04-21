@@ -489,4 +489,24 @@
     <delete id="deleteRecommendsByPostId" parameterType="int">
         DELETE FROM RECOMMEND WHERE POST_ID = #{postId}
     </delete>
+
+
+    <!-- 유저코드로 해당 유저가 작성한 게시물 조회(최근등록순 5건까지) -->
+    <select id="listRecentPostByUserCode" resultMap="boardPostResultMap">
+        SELECT *
+        FROM (
+        SELECT *
+        FROM VW_POST_MANAGEMENT
+        WHERE USER_CODE = #{userCode}
+        ORDER BY "게시물생성일" DESC
+        )
+        <![CDATA[WHERE ROWNUM <= ${count}]]>
+    </select>
+
+    <!-- int타입 post_id로 특정 게시물 조회 -->
+    <select id="getPostByPostId" resultMap="boardPostResultMap">
+        select *
+        from vw_post_management
+        where "게시물ID" = #{postId}
+    </select>
 </mapper>
