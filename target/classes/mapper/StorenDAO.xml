@@ -69,8 +69,9 @@
              , e.TYPE
         FROM VW_STOREN s
                  INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
-        WHERE MATCHING_STATUS != '매칭완료'
-          AND EQUIP_GRADE IS NOT NULL
+        WHERE s.MATCHING_STATUS != '매칭완료'
+          AND s.EQUIP_GRADE IS NOT NULL
+          AND s.DAILY_RENT_PRICE IS NOT NULL
     </select>
 
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
@@ -255,7 +256,7 @@
         WHERE STOREN_ID = #{storen_id}
     </select>
 
-    <!-- 스토렌 장비 검색 -->
+    <!-- 스토렌 장비 검색(키워드) -->
     <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
@@ -271,6 +272,41 @@
             OR s.STOREN_TITLE LIKE '%' || #{searchKeyword} || '%')
             AND MATCHING_STATUS != '매칭완료'
             AND EQUIP_GRADE IS NOT NULL
+    </select>
+
+    <!-- 스토렌 장비 검색(키워드, 가격 범위, 날짜 범위) -->
+    <select id="searchStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
+        SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
+             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+             , s.STOREN_TITLE, s.STOREN_CONTENT
+             , s.DAILY_RENT_PRICE, s.CREATED_DATE
+             , e.TYPE
+        FROM VW_STOREN s
+                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
+        WHERE 1=1
+        <if test="searchKeyword != null and searchKeyword != ''">
+            AND (e.EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR e.CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%'
+            OR s.STOREN_TITLE LIKE '%' || #{searchKeyword} || '%')
+        </if>
+        <if test="minPrice != null">
+            <![CDATA[ AND s.daily_rent_price >= #{minPrice} ]]>
+        </if>
+        <if test="maxPrice != null">
+            <![CDATA[ AND s.daily_rent_price <= #{maxPrice} ]]>
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            <!-- 날짜 관련 필터링 조건 -->
+            <![CDATA[ AND (
+            s.rental_end_date >= TO_DATE(#{startDate}, 'YYYY-MM-DD') AND s.rental_start_date <= TO_DATE(#{endDate}, 'YYYY-MM-DD')
+            ) ]]>
+        </if>
+            AND s.MATCHING_STATUS != '매칭완료'
+            AND s.EQUIP_GRADE IS NOT NULL
+            AND s.DAILY_RENT_PRICE IS NOT NULL
+        ORDER BY s.CREATED_DATE DESC
     </select>
 
 

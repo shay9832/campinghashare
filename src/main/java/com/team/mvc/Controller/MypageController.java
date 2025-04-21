@@ -28,10 +28,20 @@ public class MypageController {
     private IMypageWishlistService wishlistService;
     @Autowired
     private IMypageInfoEditService infoEditService;
+    @Autowired
+    private IMypageMainService mainService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
     public String mypageMain(@ModelAttribute("userCode") Integer userCode, Model model) {
+        UserDTO user = mainService.getUserDTO(userCode);
+        LinkedHashMap<String, Object> myEquipMap = mainService.getMyEquipmentMap(userCode);
+        LinkedHashMap<String, Object> rentEquipMap = mainService.getRentEquipmentMap(userCode);
+
+        model.addAttribute("user", user);
+        model.addAttribute("myEquipMap", myEquipMap);
+        model.addAttribute("rentEquipMap", rentEquipMap);
+
         return "myPage-main";
     }
 

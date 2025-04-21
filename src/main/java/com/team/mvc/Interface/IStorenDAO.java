@@ -32,8 +32,11 @@ public interface IStorenDAO {
     //스토렌id로 해당 스토렌 장비 정보 가져오기
     StorenDTO getStorenByStorenId(@Param("storen_id") int storen_id);
 
-    // 스토렌 장비 검색
+    // 스토렌 장비 검색(키워드)
     List<StorenDTO> searchStorenKeyword(@Param("searchKeyword") String searchKeyword);
+
+    // 스토렌 장비 검색(키워드, 가격 범위, 날짜 범위)
+    List<StorenDTO> searchStoren(Map<String, Object> params);
 
 
     // storen_id로 렌탈 정보 조회
