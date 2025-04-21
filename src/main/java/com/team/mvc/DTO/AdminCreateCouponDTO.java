@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class AdminCreateCouponDTO {
 
-    private String adminId,couponName,couponDiscount,couponMonth;
+    private String adminId,couponName,couponMonth;
+    private int couponDiscount;
 
 
 
@@ -26,11 +27,11 @@ public class AdminCreateCouponDTO {
         this.couponName = couponName;
     }
 
-    public String getCouponDiscount() {
+    public int getCouponDiscount() {
         return couponDiscount;
     }
 
-    public void setCouponDiscount(String couponDiscount) {
+    public void setCouponDiscount(int couponDiscount) {
         this.couponDiscount = couponDiscount;
     }
 

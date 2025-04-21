@@ -532,7 +532,7 @@
                       <td><input type="radio" name="${item.inspecItemName}" value="상" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescHigh}</td>
                       <td><input type="radio" name="${item.inspecItemName}" value="중" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescMid}</td>
                       <td><input type="radio" name="${item.inspecItemName}" value="하" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescLow}</td>
-                      <td><input type="text" class="comment-input" placeholder="코멘트 입력"></td>
+                      <td><input type="text" class="comment-input" name="comment_${item.inspecItemId}" placeholder="코멘트 입력"></td>
                       <td class="score-cell">20</td>
                     </tr>
                   </c:forEach>
@@ -1021,6 +1021,8 @@
           }
         }
       }
+
+
     </script>
   </div>
 </div>

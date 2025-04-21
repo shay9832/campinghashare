@@ -159,11 +159,19 @@
     </div>
 
     <!-- 쿠폰 생성 폼 - GET 방식으로 변경 -->
-    <form id="couponForm" action="${pageContext.request.contextPath}/admin-createCoupon.action" method="get">
+    <form id="couponForm" action="${pageContext.request.contextPath}/admin-insertCoupon.action" method="get">
       <div class="coupon-form">
         <!-- 쿠폰 생성 타이틀 -->
         <div class="title-box">
           쿠폰생성
+        </div>
+
+        <!-- 관리자 ID -->
+        <div class="form-row">
+          <div class="label">관리자 ID</div>
+          <div class="input-field">
+            <input type="text" name="adminId" value="${sessionScope.adminId}" readonly>
+          </div>
         </div>
 
         <!-- 쿠폰 이름 -->
@@ -200,12 +208,12 @@
 
         <!-- 쿠폰 내용 -->
         <div class="coupon-content">
-          test
+          <textarea name="couponContent" rows="4" cols="50" placeholder="쿠폰 상세 내용 및 주의사항을 입력하세요"></textarea>
         </div>
 
         <!-- 버튼 그룹 -->
         <div class="button-group">
-          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-createCoupon.action'">취소</button>
+          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-couponList.action'">취소</button>
           <button type="submit" class="button create">생성</button>
         </div>
       </div>
@@ -246,6 +254,13 @@
     const expiryDateElement = document.getElementById('expiryDate');
     const expiryDateHidden = document.getElementById('expiryDateHidden');
     const couponForm = document.getElementById('couponForm');
+
+    // 세션 정보가 없을 경우를 대비한 관리자 ID 처리
+    const adminIdField = document.querySelector('input[name="adminId"]');
+    if (adminIdField && !adminIdField.value) {
+      console.warn('세션에서 관리자 ID를 가져오지 못했습니다.');
+      // 필요에 따라 기본값 설정 또는 경고 처리
+    }
 
     if (!validMonthsInput || !expiryDateElement || !expiryDateHidden || !couponForm) {
       console.error('필요한 DOM 요소를 찾을 수 없습니다.');
