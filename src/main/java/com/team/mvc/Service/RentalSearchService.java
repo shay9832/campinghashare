@@ -11,6 +11,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -48,6 +50,62 @@ public class RentalSearchService implements IRentalSearchService {
 
         // 중복 제거 (STOREN_ID 기준)
         return storenList.stream()
+                .collect(Collectors.toMap(
+                        StorenDTO::getStoren_id,
+                        dto -> dto,
+                        (existing, replacement) -> existing))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StorenDTO> searchStoren(String searchKeyword, int minPrice, int maxPrice, String startDate, String endDate) {
+        // dao 생성
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+        IEquipmentDAO equipmentDAO = sqlSession.getMapper(IEquipmentDAO.class);
+        
+        // dao에 넘겨줄 매개변수 맵 구성
+        Map<String, Object> params = new HashMap<>();
+        params.put("searchKeyword", searchKeyword);
+        params.put("minPrice", minPrice);
+        params.put("maxPrice", maxPrice);
+        params.put("startDate", startDate);
+        params.put("endDate", endDate);
+
+        System.out.println("검색 파라미터: " + params);
+        List<StorenDTO> results = storenDAO.searchStoren(params);
+        System.out.println("검색 결과 개수: " + results.size());
+
+        for (StorenDTO dto : results) {
+            try {
+                EquipmentDTO equip = equipmentDAO.getEquipmentByEquipCode(dto.getEquip_code());
+                if (equip != null) {
+                    // 첨부파일 가져오기
+                    List<AttachmentDTO> attachments = null;
+                    try {
+                        attachments = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+                    } catch (Exception e) {
+                        System.out.println("첨부파일 조회 오류: " + e.getMessage());
+                        attachments = new ArrayList<>();
+                    }
+
+                    // null 체크
+                    if (attachments == null) {
+                        attachments = new ArrayList<>();
+                    }
+
+                    equip.setAttachments(attachments);
+                    dto.setEquipmentDTO(equip);
+                }
+            } catch (Exception e) {
+                System.out.println("장비 정보 처리 오류: " + dto.getEquip_code() + ", " + e.getMessage());
+            }
+        }
+
+        // 중복 제거(스토렌 id 기준)
+        return results.stream()
                 .collect(Collectors.toMap(
                         StorenDTO::getStoren_id,
                         dto -> dto,
