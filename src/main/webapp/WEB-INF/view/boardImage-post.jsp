@@ -641,9 +641,9 @@
                         </div>
                         <div class="post-actions-right">
                             <c:if test="${isAuthor}">
-                                <button class="update-btn"
-                                        onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정
-                                </button>
+                                <button class="update-btn" onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정</button>
+                            </c:if>
+                            <c:if test="${isAuthor || not empty sessionScope.loginAdmin}">
                                 <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
                             </c:if>
                         </div>
@@ -720,7 +720,7 @@
                                                 <div class="comment-actions">
                                                     <button class="comment-btn">답글</button>
                                                     <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                    <c:if test="${reply.userCode eq sessionScope.userCode}">
+                                                    <c:if test="${reply.userCode eq sessionScope.userCode || not empty sessionScope.loginAdmin}">
                                                         <button class="delete-btn" data-id="${reply.replyId}">
                                                             삭제
                                                         </button>
@@ -773,7 +773,7 @@
                                                             <div class="comment-actions">
                                                                 <button class="comment-btn">답글</button>
                                                                 <!-- 자신의 댓글인 경우에만 삭제 버튼 표시 -->
-                                                                <c:if test="${childReply.userCode eq sessionScope.userCode}">
+                                                                <c:if test="${childReply.userCode eq sessionScope.userCode || not empty sessionScope.loginAdmin}">
                                                                     <button class="delete-btn"
                                                                             data-id="${childReply.replyId}">삭제
                                                                     </button>

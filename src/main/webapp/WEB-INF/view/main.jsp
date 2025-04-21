@@ -380,14 +380,25 @@
 
                 <!-- 키워드 검색 영역 -->
                 <div class="keyword-section">
-                    <div class="input-label">키워드</div>
-                    <div class="search-container">
-                        <label for="search-input" style="display:none">검색</label>
-                        <input type="text" id="search-input" placeholder="키워드 검색(브랜드명, 장비명 등)">
-                        <button type="submit" id="search-btn" class="search-icon-button">
-                            <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
-                        </button>
-                    </div>
+                    <form id="searchForm" action="rentalsearch-main.action" method="GET">
+                        <!-- 탭 유지를 위한 히든 필드 -->
+                        <input type="hidden" name="tab" value="storen">
+                        <!-- 가격 범위를 위한 히든 필드 -->
+                        <input type="hidden" name="minPrice" id="hidden-min-price" value="0">
+                        <input type="hidden" name="maxPrice" id="hidden-max-price" value="100000">
+                        <!-- 날짜 범위를 위한 히든 필드 -->
+                        <input type="hidden" name="startDate" id="hidden-start-date" value="">
+                        <input type="hidden" name="endDate" id="hidden-end-date" value="">
+
+                        <div class="input-label">키워드</div>
+                        <div class="search-container">
+                            <label for="search-input" style="display:none">검색</label>
+                            <input type="text" id="search-input" name="searchKeyword" placeholder="키워드 검색(브랜드명, 장비명 등)">
+                            <button type="submit" id="search-btn" class="search-icon-button">
+                                <i class="fa-solid fa-magnifying-glass" style="color: #2c5f2d;"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- 일일 렌탈가격 영역 -->
@@ -690,40 +701,6 @@
                 $(this).css('color', '#f2e8cf');
             }
         });
-
-        // 가격 범위 슬라이더 초기화
-        var priceSlider = document.getElementById('price-range');
-        if(priceSlider) {
-            noUiSlider.create(priceSlider, {
-                start: [0, 100000],
-                connect: true,
-                range: {
-                    'min': 0,
-                    'max': 100000
-                },
-                step: 1000,
-                format: {
-                    to: function (value) {
-                        return Math.round(value).toLocaleString();
-                    },
-                    from: function (value) {
-                        return Number(value.replace(/,/g, ''));
-                    }
-                }
-            });
-
-            // 값 업데이트
-            var minPrice = document.getElementById('min-price');
-            var maxPrice = document.getElementById('max-price');
-
-            priceSlider.noUiSlider.on('update', function (values, handle) {
-                if (handle === 0) {
-                    minPrice.textContent = values[0] + '원';
-                } else {
-                    maxPrice.textContent = values[1] + '원';
-                }
-            });
-        }
     });
 </script>
 
@@ -735,6 +712,7 @@
             $(this).addClass("active");
         });
 
+        // 캘린더 초기화 datepicker 설정
         if ($('#date-range').length && typeof $.fn.daterangepicker === 'function') {
             if (!$('#date-range').data('daterangepicker')) {
                 $('#date-range').daterangepicker({
@@ -768,6 +746,18 @@
             }
         }
 
+        // 날짜 선택 이벤트 핸들러 추가
+        $('#date-range').on('apply.daterangepicker', function(ev, picker) {
+            var startDate = picker.startDate.format('YYYY/MM/DD');
+            var endDate = picker.endDate.format('YYYY/MM/DD');
+            $(this).val(startDate + ' - ' + endDate);
+
+            // hidden 필드 업데이트
+            $('#hidden-start-date').val(picker.startDate.format('YYYY-MM-DD'));
+            $('#hidden-end-date').val(picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        // 가격 슬라이더 초기화
         var priceSlider = document.getElementById('price-range');
         if (priceSlider && typeof noUiSlider !== 'undefined') {
             if (!priceSlider.noUiSlider) {
@@ -789,28 +779,40 @@
                     }
                 });
 
-                let minPrice = document.getElementById('min-price');
-                let maxPrice = document.getElementById('max-price');
+                // 가격 표시 요소
+                var minPriceDisplay = document.getElementById('min-price');
+                var maxPriceDisplay = document.getElementById('max-price');
+
+                // 슬라이더 업데이트 이벤트
                 priceSlider.noUiSlider.on('update', function (values, handle) {
-                    if (handle === 0 && minPrice) minPrice.textContent = values[0] + '원';
-                    if (handle === 1 && maxPrice) maxPrice.textContent = values[1] + '원';
+                    // 화면에 가격 표시 업데이트
+                    if (handle === 0 && minPriceDisplay)
+                        minPriceDisplay.textContent = values[0] + '원';
+                    if (handle === 1 && maxPriceDisplay)
+                        maxPriceDisplay.textContent = values[1] + '원';
+
+                    // hidden 필드 업데이트
+                    $('#hidden-min-price').val(values[0].replace(/,/g, ''));
+                    $('#hidden-max-price').val(values[1].replace(/,/g, ''));
                 });
             }
         }
+
+        // 필터 검색을 위한 함수 정의
+        // 가격 슬라이더 값 업데이트 이벤트 핸들러
+        priceSlider.noUiSlider.on('update', function (values, handle) {
+            if (handle === 0) minPrice.textContent = values[0] + '원';
+            if (handle === 1) maxPrice.textContent = values[1] + '원';
+
+            // hidden 필드 업데이트
+            $('#hidden-min-price').val(values[0].replace(/,/g, ''));
+            $('#hidden-max-price').val(values[1].replace(/,/g, ''));
+        });
 
         $('.filter-btn').on('click', function () {
             $('.filter-btn').removeClass('active');
             $(this).addClass('active');
         });
-
-        window.applyFilter = function () {
-            Swal.fire({
-                icon: 'success',
-                title: '필터 적용 완료!',
-                text: '조건에 맞게 필터링 되었습니다.',
-                confirmButtonColor: '#2C5F2D'
-            });
-        };
 
         // 메인 배너 슬라이더
         var bannerIndex = 0;
@@ -883,6 +885,22 @@
         updateReviewPosition();
 
     });
+
+    window.applyFilter = function () {
+        // 폼 제출
+        $('#searchForm').submit();
+
+        Swal.fire({
+            icon: 'success',
+            title: '필터 적용 완료!',
+            text: '조건에 맞게 필터링 되었습니다.',
+            confirmButtonColor: '#2C5F2D'
+        });
+    };
+
+
+
+
 </script>
 </body>
 </html>

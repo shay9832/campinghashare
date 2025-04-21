@@ -20,6 +20,7 @@ public class AdminInspectListDTO {
     private String inspecGradeName;
     private int inspecGradeDeduction;
 
+    private String finalGrade;
 
 
 
@@ -185,5 +186,14 @@ public class AdminInspectListDTO {
 
     public void setInspecGradeDeduction(int inspecGradeDeduction) {
         this.inspecGradeDeduction = inspecGradeDeduction;
+    }
+
+
+    public String getFinalGrade() {
+        return finalGrade;
+    }
+
+    public void setFinalGrade(String finalGrade) {
+        this.finalGrade = finalGrade;
     }
 }

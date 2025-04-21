@@ -35,15 +35,41 @@ public class RentalSearchController {
                                    @RequestParam(value = "size", defaultValue = "100") int size,
                                    @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                    @RequestParam(value = "tab", required = false, defaultValue = "all") String tab,
+                                   @RequestParam(value = "minPrice", required = false, defaultValue = "0") int minPrice,
+                                   @RequestParam(value = "maxPrice", required = false, defaultValue = "100000") int maxPrice,
+                                   @RequestParam(value = "startDate", required = false) String startDate,
+                                   @RequestParam(value = "endDate", required = false) String endDate,
                                    Model model) {
+        // 디버깅 확인
+        System.out.println("\nsearchKeyword: " + searchKeyword);
+        System.out.println("minPrice: " + minPrice);
+        System.out.println("maxPrice: " + maxPrice);
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
+
         // 키워드 유무에 따라 적절한 메서드 호출
+//        List<StorenDTO> storenList;
+//        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+//            // 검색어가 있는 경우 검색 메서드 사용
+//            storenList = rentalSearchService.searchStorenKeyword(searchKeyword);
+//        } else {
+//            // 검색어가 없는 경우 전체 목록 조회
+//            storenList = rentalSearchService.listStoren();
+//        }
+
+        // 검색 필터링(키워드, 가격, 날짜) 유무에 따라 메소드 호출
         List<StorenDTO> storenList;
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            // 검색어가 있는 경우 검색 메서드 사용
-            storenList = rentalSearchService.searchStorenKeyword(searchKeyword);
-        } else {
-            // 검색어가 없는 경우 전체 목록 조회
+        if ((searchKeyword == null || searchKeyword.trim().isEmpty()) &&
+                (startDate == null || startDate.trim().isEmpty()) &&
+                (endDate == null || endDate.trim().isEmpty()) &&
+                minPrice == 0 && maxPrice == 100000) {
+            // 검색 필터링이 아무것도 없다면 그냥 전체 스토렌 조회(매칭완료가 아닌 상태, 검수완료하여 등급이 나온 상태)
             storenList = rentalSearchService.listStoren();
+        }
+        else {
+            // 검색 필터링이 뭐라도 있다면 검색된 스토렌 조회(매칭완료가 아닌 상태, 검수완료하여 등급이 나온 상태)
+            storenList = rentalSearchService.searchStoren(
+                    searchKeyword, minPrice, maxPrice, startDate, endDate);
         }
 
         // 탭에 따라 데이터 필터링
@@ -70,7 +96,12 @@ public class RentalSearchController {
 
         model.addAttribute("totalStorenCount", totalStorenCount);
         model.addAttribute("pagenation", pagenation);
-        model.addAttribute("searchKeyword", searchKeyword);  // 검색어 유지
+        /* 검색어 및 필터 유지 */
+        model.addAttribute("searchKeyword", searchKeyword);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return "rentalSearch-main";
     }
@@ -86,6 +117,7 @@ public class RentalSearchController {
 
 
         StorenRequestDTO storenRequest = searchMatchingRequestService.getStoren(transactionId);
+        model.addAttribute("userCode", userCode);
         model.addAttribute("storen", storenRequest.getStorenDto());
         model.addAttribute("owner", storenRequest.getUserDto());
 

@@ -22,6 +22,7 @@ public class InspecResultDTO {
 
     private String inspecType;
     private int equipCode;
+    private int totalScore;
 
     public String getStorenId() {
         return storenId;
@@ -157,5 +158,14 @@ public class InspecResultDTO {
 
     public void setEquipCode(int equipCode) {
         this.equipCode = equipCode;
+    }
+
+
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
     }
 }

@@ -29,4 +29,8 @@ public interface IMatchingRequestDAO {
 
     //결제완료한 경우에만!! 유저코드로 "스토렌" 매칭신청 정보 조회하는 메소드
     List<MatchingRequestDTO> listStorenMatchingByUserCode(@Param("userCode") int userCode);
+
+    // 유저코드로 "스토렌" 매칭신청 정보를 최근 count건만 조회하는 메소드
+    List<MatchingRequestDTO> listRecentStorenMatchingByUserCode(@Param("userCode") int userCode, @Param("count") int count);
+
 }
