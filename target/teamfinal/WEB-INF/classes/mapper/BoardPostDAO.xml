@@ -106,7 +106,12 @@
                 </choose>
             </if>
         </where>
-        ORDER BY "게시물생성일" DESC
+        ORDER BY
+        <choose>
+            <when test="sortType == 'views'">조회수 DESC</when>
+            <when test="sortType == 'recommends'">추천수 DESC</when>
+            <otherwise>게시물생성일 DESC</otherwise>
+        </choose>
         ) A
         WHERE ROWNUM &lt;= #{pagenation.endRow}
         )

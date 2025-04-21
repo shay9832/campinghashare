@@ -88,6 +88,78 @@
 
     <script>
         $(document).ready(function (){
+            // 페이지 로드 함수 업데이트
+            function loadPosts(page) {
+                var searchType = $('select[name="searchType"]').val();
+                var searchKeyword = $('input[name="searchKeyword"]').val();
+
+                $.ajax({
+                    url: '/api/notice.action',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        size: 10,
+                        searchType: searchType,
+                        searchKeyword: searchKeyword
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        updateTable(response);
+                        updatePagination(response.pagenation);
+
+                        // Update URL
+                        var newUrl = 'notice.action?page=' + page;
+                        if (searchKeyword) {
+                            newUrl += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
+                        }
+                        history.pushState({page: page}, '', newUrl);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading notices:', error);
+                        alert('공지사항을 불러오는 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+
+            // 업데이트 테이블 함수
+            function updateTable(data) {
+                var html = '';
+
+                // Check if we have notice list
+                if (data.noticeList && data.noticeList.length > 0) {
+                    $.each(data.noticeList, function(index, notice) {
+                        var categoryClass = '';
+                        if (notice.postLabelName === '중요') {
+                            categoryClass = 'important';
+                        } else if (notice.postLabelName === '공지') {
+                            categoryClass = 'notice';
+                        } else if (notice.postLabelName === '업데이트') {
+                            categoryClass = 'update';
+                        }
+
+                        html += '<tr class="board-row notice border-bottom">' +
+                            '<td class="p-3 text-center">' + (data.pagenation.totalPost - ((data.pagenation.pageNum - 1) * data.pagenation.pageSize) - index) + '</td>' +
+                            '<td class="p-3 text-center"><span class="board-category-tag ' + categoryClass + '">' + notice.postLabelName + '</span></td>' +
+                            '<td class="p-3 title-cell"><a href="noticepost.action?postId=' + notice.postId + '">' + notice.postTitle + '</a></td>' +
+                            '<td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>' +
+                            '<td class="p-3 text-center">' + notice.createdDate.substring(0, 10) + '</td>' +
+                            '<td class="p-3 text-center">' + notice.viewCount + '</td>' +
+                            '<td class="p-3 text-center">' + notice.recommendCount + '</td>' +
+                            '</tr>';
+                    });
+                } else {
+                    html += '<tr><td colspan="7" class="text-center p-3">검색 결과가 없습니다.</td></tr>';
+                }
+
+                $('tbody').html(html);
+            }
+
+
+            // 검색 폼 제출 처리
+            $('form').submit(function (e) {
+                e.preventDefault();
+                loadPosts(1);
+            });
 
         });
 
