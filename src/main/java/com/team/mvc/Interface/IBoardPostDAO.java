@@ -27,7 +27,7 @@ public interface IBoardPostDAO {
     List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
 
     // 전체 공지사항 조회
-    List<BoardPostDTO> listTotalNotice();
+    List<BoardPostDTO> listTotalNotice(BoardPostDTO dto);
 
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();

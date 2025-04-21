@@ -643,11 +643,7 @@
                             <div class="d-flex border rounded">
                                 <select name="searchType" class="form-control-sm border-0"
                                         style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
-                                    <option value="titlecontent" ${searchType == 'titlecontent' ? 'selected' : ''}>
-                                        제목+내용
-                                    </option>
                                     <option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
-                                    <option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
                                     <option value="writer" ${searchType == 'writer' ? 'selected' : ''}>작성자</option>
                                 </select>
                                 <input type="text" name="searchKeyword" value="${searchKeyword}"

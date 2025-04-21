@@ -290,7 +290,7 @@
                                         <c:when test="${post.boardName eq '자유 게시판'}">
                                             <a href="boardfree-post.action?postId=${post.postId}">${post.postTitle}</a>
                                         </c:when>
-                                        <c:when test="${post.boardName eq '고독한 캠핑장'}">
+                                        <c:when test="${post.boardName eq '고독한 캠핑방'}">
                                             <a href="boardimage-post.action?postId=${post.postId}">${post.postTitle}</a>
                                         </c:when>
                                         <c:otherwise>
@@ -309,7 +309,7 @@
                                     </c:choose>
                                     <c:if test="${not empty post.attachments}">
                                         <span class="attachment-icon">
-                                            <i class="fa-solid fa-paperclip"></i>
+                                            <i class="fa-solid fa-image"></i>
                                         </span>
                                     </c:if>
                                 </div>
@@ -428,7 +428,7 @@
                                                     </c:choose>
                                                     <c:if test="${not empty post.attachments && fn:length(post.attachments) > 0}">
                                                         <span class="attachment-icon">
-                                                            <i class="fa-solid fa-paperclip"></i>
+                                                            <i class="fa-solid fa-image"></i>
                                                         </span>
                                                     </c:if>
                                                 </div>

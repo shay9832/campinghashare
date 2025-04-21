@@ -101,7 +101,7 @@ public class ReplyController {
                 return ResponseEntity.ok(response);
             }
 
-            if (reply.getUserCode() != userCode) {
+            if (reply.getUserCode() != userCode && adminId == null) {
                 response.put("success", false);
                 response.put("message", "자신의 댓글만 삭제할 수 있습니다.");
                 return ResponseEntity.ok(response);

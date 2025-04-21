@@ -123,6 +123,11 @@
             margin-right: 5px;
         }
 
+        .attachment-icon {
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
+
         .filter-btn {
             padding: 6px 16px;
             border-radius: var(--radius-sm);
@@ -146,7 +151,7 @@
     </style>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 전역 변수로 현재 모드와 페이지 설정
             var isHotMode = ${not empty hotOnly ? 'true' : 'false'};
             var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
@@ -155,7 +160,7 @@
             var originalPostNumbers = {};
 
             // 초기 페이지 로드 시 원본 게시글 번호 저장
-            $('.board-row').each(function() {
+            $('.board-row').each(function () {
                 var postId = $(this).find('a[href^="boardfree-post.action"]').attr('href');
                 if (postId) {
                     postId = postId.split('postId=')[1];
@@ -170,7 +175,7 @@
             });
 
             // 인기글 버튼 클릭 이벤트
-            $('#hotPostsBtn').click(function(e) {
+            $('#hotPostsBtn').click(function (e) {
                 e.preventDefault();
                 if (!isHotMode) {
                     $(this).addClass('active');
@@ -181,7 +186,7 @@
             });
 
             // 전체 버튼 클릭 이벤트
-            $('#allPostsBtn').click(function(e) {
+            $('#allPostsBtn').click(function (e) {
                 e.preventDefault();
                 if (isHotMode) {
                     $(this).addClass('active');
@@ -191,7 +196,7 @@
                 }
             });
 
-            $('select[name="sortType"]').change(function() {
+            $('select[name="sortType"]').change(function () {
                 loadPosts(1, isHotMode);
             });
 
@@ -214,7 +219,7 @@
                         originalPostNumbers: JSON.stringify(originalPostNumbers)
                     },
                     dataType: 'json',
-                    success: function(response) {
+                    success: function (response) {
                         updateTable(response);
                         updatePagination(response.pagenation, hotOnly);
                         currentPage = page;
@@ -229,7 +234,7 @@
                         }
                         history.pushState({page: page, hotOnly: hotOnly}, '', newUrl);
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('Error loading posts:', error);
                         alert('게시글을 불러오는 중 오류가 발생했습니다.');
                     }
@@ -237,7 +242,7 @@
             }
 
             // 뒤로가기 버튼 처리
-            window.addEventListener('popstate', function(e) {
+            window.addEventListener('popstate', function (e) {
                 if (e.state) {
                     var hotOnly = e.state.hotOnly;
                     var page = e.state.page || 1;
@@ -263,7 +268,7 @@
                 var html = '';
 
                 // 공지사항 표시
-                $.each(data.notice, function(index, notice) {
+                $.each(data.notice, function (index, notice) {
                     html += '<tr class="board-row notice border-bottom">' +
                         '<td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>' +
                         '<td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>' +
@@ -276,7 +281,7 @@
                 });
 
                 // 상단 인기글 표시 (항상 최신 3개) - 배경색 적용
-                $.each(data.topHotPosts, function(index, post) {
+                $.each(data.topHotPosts, function (index, post) {
                     html += '<tr class="board-row hot-post border-bottom">' +
                         '<td class="p-3 text-center"><span class="hot-number">인기</span></td>' +
                         '<td class="p-3 text-center"><span class="board-category-tag ' +
@@ -291,7 +296,7 @@
 
                 // 게시글 목록 표시 (인기글 모드면 인기글만, 일반 모드면 일반 게시글)
                 if (data.postList && data.postList.length > 0) {
-                    $.each(data.postList, function(index, post) {
+                    $.each(data.postList, function (index, post) {
                         // 원본 번호가 있으면 사용, 없으면 서버에서 받은 rowNum 사용
                         var displayNumber = '';
                         if (originalPostNumbers[post.postId]) {
@@ -304,11 +309,18 @@
                             }
                         }
 
+                        // 첨부파일 아이콘 추가
+                        var attachmentIcon = '';
+                        if (post.attachments && post.attachments.length > 0) {
+                            attachmentIcon = '<span class="attachment-icon"><i class="fa-solid fa-image"></i></span>';
+                        }
+
                         html += '<tr class="board-row border-bottom">' +
                             '<td class="p-3 text-center">' + displayNumber + '</td>' +
                             '<td class="p-3 text-center"><span class="board-category-tag ' +
                             getCategoryClass(post.postLabelName) + '">' + post.postLabelName + '</span></td>' +
-                            '<td class="p-3 title-cell"><a href="boardfree-post.action?postId=' + post.postId + '">' + post.postTitle + '</a></td>' +
+                            '<td class="p-3 title-cell"><a href="boardfree-post.action?postId=' + post.postId + '">' + post.postTitle + '</a>' +
+                            attachmentIcon + '</td>' +
                             '<td class="p-3 text-center">' + post.nickName + '</td>' +
                             '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
                             '<td class="p-3 text-center">' + post.viewCount + '</td>' +
@@ -328,9 +340,7 @@
             // 카테고리 클래스 반환 함수
             function getCategoryClass(labelName) {
                 if (labelName === '묻고답하기') return 'question';
-                if (labelName === '후기') return 'review';
-                if (labelName === '잡담') return 'chat';
-                if (labelName === '아무말대잔치') return 'freeboard';
+                if (labelName === '아무말대잔치') return 'chat';
                 return '';
             }
 
@@ -371,7 +381,7 @@
                 $('.pagination').html(html);
 
                 // 페이지 링크에 이벤트 연결
-                $('.page-link').click(function(e) {
+                $('.page-link').click(function (e) {
                     e.preventDefault();
                     var page = $(this).data('page');
                     loadPosts(page, hotOnly);
@@ -379,7 +389,7 @@
             }
 
             // 검색 폼 제출 처리
-            $('form').submit(function(e) {
+            $('form').submit(function (e) {
                 e.preventDefault();
                 loadPosts(1, isHotMode);
             });
@@ -427,7 +437,8 @@
             <!-- 메인 콘텐츠 -->
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header">
-                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1>
+                    </a>
                 </div>
 
                 <!-- 정렬 및 필터 옵션 -->
@@ -470,7 +481,8 @@
                                         class="notice-tag">공지</span></a></td>
                                 <td class="p-3 text-center"><a href="notice.action"><span
                                         class="board-category-tag notice">공지</span></a></td>
-                                <td class="p-3 title-cell"><a href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
+                                <td class="p-3 title-cell"><a
+                                        href="noticepost.action?postId=${notice.postId}">${notice.postTitle}</a></td>
                                 <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>
                                 <td class="p-3 text-center">${notice.createdDate.substring(0, 10)}</td>
                                 <td class="p-3 text-center">${notice.viewCount}</td>
@@ -512,6 +524,11 @@
                                 </td>
                                 <td class="p-3 title-cell"><a
                                         href="boardfree-post.action?postId=${postList.postId}">${postList.postTitle}</a>
+                                    <c:if test="${not empty postList.attachments}">
+                                        <span class="attachment-icon">
+                                            <i class="fa-solid fa-image"></i>
+                                        </span>
+                                    </c:if>
                                 </td>
                                 <td class="p-3 text-center">${postList.nickName}</td>
                                 <td class="p-3 text-center">${postList.createdDate.substring(0, 10)}</td>
