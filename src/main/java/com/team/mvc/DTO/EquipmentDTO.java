@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EquipmentDTO {
-    private int equip_id, user_code, category_id, equip_name_id, original_price;
+    private int equip_id, user_code, category_id, equip_name_id, original_price, brandId ;
     private Integer equip_code;
     private String created_date;
 
@@ -101,6 +101,14 @@ public class EquipmentDTO {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
     }
 
     public List<AttachmentDTO> getAttachments() {

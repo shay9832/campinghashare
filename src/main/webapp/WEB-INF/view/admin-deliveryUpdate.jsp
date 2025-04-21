@@ -629,14 +629,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="new-start-date">새 배송 시작일</label>
-                            <input type="date" id="new-start-date" name="newDeliveryStartDate" class="form-control">
-                        </div>
-
-
-                        <div class="form-group">
                             <label for="end-date">배송 종료일</label>
-                            <input type="text" id="end-date" name="deliveryEndDate" class="form-control" readonly>
+                            <input type="date" id="end-date" name="deliveryEndDate" class="form-control">
                         </div>
 
                         <div class="form-group">
@@ -1009,6 +1003,39 @@
             document.getElementById('rental-start-date').value = rentalStartDate;
             document.getElementById('rental-end-date').value = rentalEndDate;
 
+            // 종료일을 수정 가능하게 변경 - 날짜 형식 변환 처리
+            const endDateInput = document.getElementById('end-date');
+            if (deliveryEndDate && deliveryEndDate.trim() !== '') {
+                // 기존 날짜 문자열을 YYYY-MM-DD 형식으로 변환
+                try {
+                    const endDate = new Date(deliveryEndDate);
+                    if (!isNaN(endDate.getTime())) {
+                        const formattedEndDate = endDate.toISOString().split('T')[0];
+                        endDateInput.value = formattedEndDate;
+                    } else {
+                        endDateInput.value = '';
+                    }
+                } catch (e) {
+                    console.warn('날짜 형식 변환 오류:', e);
+                    endDateInput.value = '';
+                }
+            } else {
+                endDateInput.value = '';
+            }
+
+        // 시작일 이후로만 종료일을 선택할 수 있도록 제한
+            if (deliveryStartDate && deliveryStartDate.trim() !== '') {
+                try {
+                    const startDate = new Date(deliveryStartDate);
+                    if (!isNaN(startDate.getTime())) {
+                        const formattedStartDate = startDate.toISOString().split('T')[0];
+                        endDateInput.min = formattedStartDate;
+                    }
+                } catch (e) {
+                    console.warn('날짜 형식 변환 오류:', e);
+                }
+            }
+
             // 셀렉트 박스 값 설정
             const courierSelect = document.getElementById('courier');
             for (let i = 0; i < courierSelect.options.length; i++) {
@@ -1043,19 +1070,7 @@
             // 기존 필드에 값 설정 (이미 readonly로 설정됨)
             document.getElementById('start-date').value = originalStartDate;
 
-            // 새 배송 시작일 필드 초기화
-            const newStartDateInput = document.getElementById('new-start-date');
-            newStartDateInput.value = originalStartDate; // 기본값으로 기존 날짜 설정
 
-            // 날짜 형식이 YYYY-MM-DD가 아닐 경우를 대비한 처리
-            try {
-                // 기존 날짜가 유효한 경우에만 최소 선택 가능 날짜 설정
-                if (originalStartDate && !isNaN(new Date(originalStartDate).getTime())) {
-                    newStartDateInput.min = originalStartDate; // 최소 선택 가능 날짜 설정
-                }
-            } catch (e) {
-                console.warn('날짜 형식 변환 오류:', e);
-            }
 
             // 모달 타이틀 설정
             document.querySelector('.modal-header h3').textContent = '배송 상세 정보';
@@ -1133,11 +1148,34 @@
         if (!document.getElementById('shipping-id').value) {
             e.preventDefault(); // 폼 기본 제출 방지
 
+            // 기본 검증
+            const deliveryId = document.getElementById('shipping-id').value;
+            const deliveryType = document.getElementById('shipping-type-hidden').value;
+
+            if (!deliveryId || !deliveryType) {
+                alert('배송 ID와 배송 유형은 필수 항목입니다.');
+                return;
+            }
+
+            // 날짜 형식 확인
+            const endDate = document.getElementById('end-date').value;
+            if (endDate && !isValidDate(endDate)) {
+                alert('유효한 배송 종료일을 입력해주세요.');
+                return;
+            }
+
             // 폼 액션 변경 후 제출
             this.action = '${pageContext.request.contextPath}/admin-deliveryUpdate.action';
             this.submit();
+
         }
     });
+
+    // 날짜 유효성 검사 함수
+    function isValidDate(dateStr) {
+        const date = new Date(dateStr);
+        return !isNaN(date.getTime());
+    }
 
     // 배송조회 버튼 클릭 이벤트
     document.getElementById('track-btn').addEventListener('click', function() {
@@ -1286,22 +1324,6 @@
         }
     }
 
-    // 새 배송 시작일 변경 이벤트 리스너
-    document.getElementById('new-start-date').addEventListener('change', function() {
-        const originalStartDate = document.getElementById('start-date').value;
-        const newStartDate = this.value;
-
-        if (originalStartDate && newStartDate) {
-            const originalDate = new Date(originalStartDate);
-            const newDate = new Date(newStartDate);
-
-            // 새 날짜가 기존 날짜보다 이전인 경우 경고
-            if (!isNaN(originalDate.getTime()) && !isNaN(newDate.getTime()) && newDate < originalDate) {
-                alert('새 배송 시작일은 기존 배송 시작일(' + originalStartDate + ')보다 이전일 수 없습니다.');
-                this.value = originalStartDate; // 값 원래대로 되돌리기
-            }
-        }
-    });
 
     // 페이지네이션 버튼 클릭 이벤트
     const paginationButtons = document.querySelectorAll('.pagination-btn');
@@ -1336,6 +1358,49 @@
 
         // 기본 날짜 설정
         setDefaultDates();
+    });
+
+    // 배송 시작시 배송종료일을 +3일로 설정하기
+    document.getElementById('shipping-start-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // 기본 폼 제출 방지
+
+        // 운송장 번호 로깅
+        const trackingNumber = document.getElementById('start-tracking').value;
+        console.log('제출할 운송장 번호:', trackingNumber);
+
+        // 운송장 번호가 비어있으면 사용자에게 알림
+        if (!trackingNumber || trackingNumber.trim() === '') {
+            const confirmSubmit = confirm('운송장 번호가 비어 있습니다. 계속 진행하시겠습니까?');
+            if (!confirmSubmit) {
+                return;
+            }
+        }
+
+        // 선택한 시작일 가져오기
+        const startDateInput = document.getElementById('delivery-start-date');
+        const startDate = new Date(startDateInput.value);
+
+        if (isNaN(startDate.getTime())) {
+            alert('유효한 배송 시작일을 선택해주세요.');
+            return;
+        }
+
+        // 종료일 계산 (시작일 + 3일)
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 3);
+
+        // YYYY-MM-DD 형식으로 포맷팅
+        const endDateFormatted = endDate.toISOString().split('T')[0];
+
+        // 종료일을 위한 숨겨진 input 생성
+        const endDateInput = document.createElement('input');
+        endDateInput.type = 'hidden';
+        endDateInput.name = 'deliveryEndDate';
+        endDateInput.value = endDateFormatted;
+        this.appendChild(endDateInput);
+
+        // 폼 제출
+        this.submit();
     });
 </script>
 </body>

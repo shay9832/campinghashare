@@ -7,4 +7,6 @@ import java.util.List;
 public interface IAdminUserReportDAO {
 
     List<AdminUserReportDTO> getList();
+
+    List<AdminUserReportDTO> getReportContent();
 }
