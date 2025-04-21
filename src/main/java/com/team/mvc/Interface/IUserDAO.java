@@ -29,6 +29,8 @@ public interface IUserDAO {
     // 닉네임 중복 여부 확인
     int getUserCountByNickname(String nickname);
 
+
+
     // 이름, 전화번호, 아이디로 사용자 존재 여부 확인
     int getUserCountByIdNameTel(@Param("userId") String userId,
                                 @Param("userName") String userName,
@@ -38,9 +40,16 @@ public interface IUserDAO {
     void updateUserPassword(@Param("userId") String userId,
                             @Param("newPassword") String newPassword);
 
+
+
     // 유저코드로 유저 정보 가져오기
     UserDTO getUserByUserCode(@Param("userCode") int userCode);
 
     // 해당 유저의 주소 신규 등록
     int insertAddress(@Param("userCode") int userCode, @Param("zipCode") String zipCode, @Param("address1") String address1, @Param("address2") String address2);
+
+    // 유저코드로 유저id 가져오기
+    String getUserIdByUserCode(@Param("userCode") int userCode);
+    // 유저코드로 유저비밀번호 가져오기
+    String getUserPwByUserCode(@Param("userCode") int userCode);
 }
