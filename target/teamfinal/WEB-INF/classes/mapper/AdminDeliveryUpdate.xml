@@ -377,16 +377,17 @@
             NULL                                 AS "검수결과처리유형",
             NULL                                 AS "렌탈시작일",
             NULL                                 AS "렌탈종료일",
-            NULL                                 AS "PAY_ID",
+            P.PAY_ID                             AS "PAY_ID",
             NULL                                 AS "PLATFORM_DELIVERY_ID",
             NULL                                 AS "PLATFORM_DELIVERY_RETURN_ID"
         FROM STOREN S
                  JOIN EQUIPMENT_REGISTRATION ER ON S.EQUIP_CODE = ER.EQUIP_CODE
                  JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+                 LEFT JOIN PAY P ON P.STOREN_ID = S.STOREN_ID
         WHERE S.STOREN_ID IS NOT NULL
           AND NOT EXISTS (
-            SELECT 1 FROM PAY P
-            WHERE P.STOREN_ID = S.STOREN_ID
+            SELECT 1 FROM PLATFORM_DELIVERY PD
+            WHERE PD.PAY_ID = P.PAY_ID
         )
 
         UNION ALL

@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IMatchingRequestDAO">
+    <resultMap id="rentalApplicantResultMap" type="com.team.mvc.DTO.MatchingRequestDTO">
+        <result property="transaction_id" column="TRANSACTION_ID"/>
+        <result property="transaction_type" column="TRANSACTION_TYPE"/>
+        <result property="user_code" column="USER_CODE"/>
+        <result property="user_nickname" column="USER_NICKNAME"/>
+        <result property="rental_start_date" column="RENTAL_START_DATE"/>
+        <result property="rental_end_date" column="RENTAL_END_DATE"/>
+        <result property="rental_duration" column="RENTAL_DURATION"/>
+        <result property="rental_pay" column="RENTAL_PAY"/>
+        <result property="trust" column="TRUST"/>
+        <result property="rental_history" column="RENTAL_HISTORY"/>
+        <result property="requested_date" column="REQUESTED_DATE"/>
+        <result property="payment_date" column="PAYMENT_DATE"/>
+        <result property="matching_req_id" column="MATCHING_REQ_ID"/>
+        <result property="payment_status" column="PAYMENT_STATUS"/>
+        <result property="matching_done_id" column="MATCHING_DONE_ID"/>
+    </resultMap>
 
     <!-- 거래 id와 거래유형으로 해당 거래 id에 매칭신청한 사용자 목록을 불러오는 메소드-->
-    <select id="listRequestByTransactionIdType" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+    <select id="listRequestByTransactionIdType" resultType="com.team.mvc.DTO.MatchingRequestDTO" resultMap="rentalApplicantResultMap">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
@@ -34,7 +51,7 @@
     </insert>
 
     <!-- 해당 스토렌id에 해당 유저가 매칭신청을 했다면 매칭 정보 반환 -->
-    <select id="getMatchingByStorenAndUser" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+    <select id="getMatchingByStorenAndUser" resultType="com.team.mvc.DTO.MatchingRequestDTO" resultMap="rentalApplicantResultMap">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
@@ -76,7 +93,7 @@
     </delete>
 
     <!-- 결제완료한 경우에만!! 매칭신청id로 매칭신청 정보 조회하는 메소드 -->
-    <select id="getMatchingRequestById" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+    <select id="getMatchingRequestById" resultType="com.team.mvc.DTO.MatchingRequestDTO" resultMap="rentalApplicantResultMap">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION
@@ -87,7 +104,7 @@
     </select>
 
     <!-- 결제완료한 경우에만!! 유저코드로 "스토렌" 매칭신청 정보 조회하는 메소드 -->
-    <select id="listStorenMatchingByUserCode" resultType="com.team.mvc.DTO.MatchingRequestDTO">
+    <select id="listStorenMatchingByUserCode" resultType="com.team.mvc.DTO.MatchingRequestDTO" resultMap="rentalApplicantResultMap">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
              , TO_CHAR(RENTAL_END_DATE, 'YYYY-MM-DD') AS RENTAL_END_DATE, RENTAL_DURATION

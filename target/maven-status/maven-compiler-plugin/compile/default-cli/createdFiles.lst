@@ -31,6 +31,7 @@ com\team\mvc\DTO\AdminUserReportDTO.class
 com\team\mvc\Interface\IUserDAO.class
 com\team\mvc\DTO\InspecResultDTO.class
 com\team\mvc\Service\MypageMyEquipService.class
+com\team\mvc\Service\MypageInfoEditService.class
 com\team\mvc\Controller\StorenController$AvgPriceInfo.class
 com\team\mvc\Controller\MypageController.class
 com\team\mvc\DTO\ReplyDTO.class
@@ -59,6 +60,8 @@ com\team\mvc\Interface\IAdminBoardUpdateDAO.class
 com\team\mvc\Interface\IAdminUserDropDAO.class
 com\team\mvc\Service\MypageRentEquipService.class
 com\team\mvc\DTO\BrandDTO.class
+com\team\mvc\Interface\IMypageInfoEditService.class
+com\team\mvc\Interface\IAdminService.class
 com\team\mvc\Controller\AdminInspectListController.class
 com\team\mvc\Interface\IAdminDAO.class
 com\team\mvc\Interface\IRegisterStorenDAO.class
@@ -109,13 +112,16 @@ com\team\mvc\Controller\BoardController$2.class
 com\team\mvc\DTO\MyRentalItemDTO.class
 com\team\mvc\Controller\AdminEventUpdateController.class
 com\team\mvc\Controller\RegisterStorenPayController.class
+com\team\mvc\Service\AdminService.class
 com\team\mvc\Controller\AdminController.class
 com\team\mvc\DTO\DeliveryDTO.class
 com\team\mvc\Filter\AdminSessionFilter.class
+com\team\mvc\Service\MypageWishlistService.class
 com\team\mvc\DTO\CouponDTO.class
 com\team\mvc\DTO\PostViewLogDTO.class
 com\team\mvc\Service\BoardPostService.class
 com\team\mvc\Interface\IAdminMainDAO.class
+com\team\mvc\Interface\IMypageWishlistService.class
 com\team\mvc\DTO\CategoryDTO.class
 com\team\mvc\DTO\MyRentEquipDTO.class
 com\team\mvc\Interface\IReplyService.class

@@ -36,9 +36,9 @@ public class AdminController {
         if (admin != null && adminPw != null && adminPw.equals(admin.getAdminPw())) {
 
             session.setAttribute("loginUser", admin);   // main.action에서도 공통 세션으로 인식되게 함
-            session.setAttribute("loginAdmin", admin); // 로그인된 관리자 객체를 세션에 저장
+            session.setAttribute("loginAdmin", admin);  // 로그인된 관리자 객체를 세션에 저장
             session.setAttribute("isAdmin", true); // 관리자인지 여부를 세션에 추가
-            session.setAttribute("userCode", admin.getUserCode()); // userCode를 세션에 저장
+            session.setAttribute("userCode", admin.getUserCode());  // userCode 전역 주입을 위해 세션에 저장
             return "redirect:/admin-main.action";  // 관리자 메인 페이지로 리다이렉트
         } else {
             redirectAttr.addFlashAttribute("loginError", "아이디 또는 비밀번호가 올바르지 않습니다.");

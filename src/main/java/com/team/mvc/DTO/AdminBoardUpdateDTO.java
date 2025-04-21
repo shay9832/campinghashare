@@ -2,16 +2,23 @@ package com.team.mvc.DTO;
 
 public class AdminBoardUpdateDTO {
 
-    private int boardId;
-    private String categoryName,manageLevel,boardName,labelId,lavelName;
+   private Integer boardId;         //게시판ID
+   private String categoryName;     //카테고리명
+   private String adminGrade;       //관리등급
+   private String boardName;        //게시판명
 
 
-    //getter setter 구성
-    public int getBoardId() {
+    private Integer labelId;
+    private String labelName;
+
+
+    //getter setter(게시판 업데이트)
+
+    public Integer getBoardId() {
         return boardId;
     }
 
-    public void setBoardId(int boardId) {
+    public void setBoardId(Integer boardId) {
         this.boardId = boardId;
     }
 
@@ -23,12 +30,12 @@ public class AdminBoardUpdateDTO {
         this.categoryName = categoryName;
     }
 
-    public String getManageLevel() {
-        return manageLevel;
+    public String getAdminGrade() {
+        return adminGrade;
     }
 
-    public void setManageLevel(String manageLevel) {
-        this.manageLevel = manageLevel;
+    public void setAdminGrade(String adminGrade) {
+        this.adminGrade = adminGrade;
     }
 
     public String getBoardName() {
@@ -39,19 +46,22 @@ public class AdminBoardUpdateDTO {
         this.boardName = boardName;
     }
 
-    public String getLabelId() {
+
+    //getter setter(말머리 업데이트)
+
+    public Integer getLabelId() {
         return labelId;
     }
 
-    public void setLabelId(String labelId) {
+    public void setLabelId(Integer labelId) {
         this.labelId = labelId;
     }
 
-    public String getLavelName() {
-        return lavelName;
+    public String getLabelName() {
+        return labelName;
     }
 
-    public void setLavelName(String lavelName) {
-        this.lavelName = lavelName;
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
     }
 }
