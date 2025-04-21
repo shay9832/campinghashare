@@ -46,16 +46,16 @@ public class AdminDeliveryUpdateDTO {
         private String waybillNumber;
 
         // 배송 시작일
-        private LocalDateTime deliveryStartDate;
+        private String deliveryStartDate;
 
         // 새로운 배송 시작일
-        private LocalDateTime newDeliveryStartDate;
+        private String newDeliveryStartDate;
 
         // 배송 종료일
-        private LocalDateTime deliveryEndDate;
+        private String deliveryEndDate;
 
         // 검수 결과 처리일
-        private LocalDateTime inspectionCompletedDate;
+        private String inspectionCompletedDate;
 
         // 검수 결과 처리 유형
         private String inspectionResultType;
@@ -171,35 +171,35 @@ public class AdminDeliveryUpdateDTO {
         this.waybillNumber = waybillNumber;
     }
 
-    public LocalDateTime getDeliveryStartDate() {
+    public String getDeliveryStartDate() {
         return deliveryStartDate;
     }
 
-    public void setDeliveryStartDate(LocalDateTime deliveryStartDate) {
+    public void setDeliveryStartDate(String deliveryStartDate) {
         this.deliveryStartDate = deliveryStartDate;
     }
 
-    public LocalDateTime getNewDeliveryStartDate() {
+    public String getNewDeliveryStartDate() {
         return newDeliveryStartDate;
     }
 
-    public void setNewDeliveryStartDate(LocalDateTime newDeliveryStartDate) {
+    public void setNewDeliveryStartDate(String newDeliveryStartDate) {
         this.newDeliveryStartDate = newDeliveryStartDate;
     }
 
-    public LocalDateTime getDeliveryEndDate() {
+    public String getDeliveryEndDate() {
         return deliveryEndDate;
     }
 
-    public void setDeliveryEndDate(LocalDateTime deliveryEndDate) {
+    public void setDeliveryEndDate(String deliveryEndDate) {
         this.deliveryEndDate = deliveryEndDate;
     }
 
-    public LocalDateTime getInspectionCompletedDate() {
+    public String getInspectionCompletedDate() {
         return inspectionCompletedDate;
     }
 
-    public void setInspectionCompletedDate(LocalDateTime inspectionCompletedDate) {
+    public void setInspectionCompletedDate(String inspectionCompletedDate) {
         this.inspectionCompletedDate = inspectionCompletedDate;
     }
 

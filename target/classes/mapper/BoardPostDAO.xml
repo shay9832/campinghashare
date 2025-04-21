@@ -106,7 +106,12 @@
                 </choose>
             </if>
         </where>
-        ORDER BY "게시물생성일" DESC
+        ORDER BY
+        <choose>
+            <when test="sortType == 'views'">게시물조회수 DESC</when>
+            <when test="sortType == 'recommends'">추천수 DESC</when>
+            <otherwise>게시물생성일 DESC</otherwise>
+        </choose>
         ) A
         WHERE ROWNUM &lt;= #{pagenation.endRow}
         )
@@ -120,7 +125,29 @@
         FROM VW_POST_MANAGEMENT
         WHERE "인기글지정여부" = 1
           AND "블라인드여부" = 0
-        ORDER BY "게시물생성일" DESC
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'titlecontent'">
+                    AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                    OR "게시물내용" LIKE '%' || #{searchKeyword} || '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortType == 'views'">"게시물조회수" DESC</when>
+            <when test="sortType == 'recommends'">"추천수" DESC</when>
+            <otherwise>"게시물생성일" DESC</otherwise>
+        </choose>
     </select>
 
 
@@ -262,12 +289,39 @@
     </select>
 
     <!-- 전체 공지사항 조회   -->
-    <select id="listTotalNotice" resultMap="boardPostResultMap">
+    <select id="listTotalNotice" resultMap="boardPostResultMap" parameterType="com.team.mvc.DTO.BoardPostDTO">
         SELECT *
         FROM VW_POST_MANAGEMENT
         WHERE "게시판이름" = '공지사항'
           AND "블라인드여부" = 0
-        ORDER BY "게시물생성일" DESC
+        <if test="postLabelId != 0">
+            AND "말머리이름" = (SELECT POST_LABEL_NAME
+            FROM POST_LABEL
+            WHERE POST_LABEL_ID = #{postLabelId})
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <choose>
+                <when test="searchType == 'title'">
+                    AND "게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'content'">
+                    AND "게시물내용" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'writer'">
+                    AND "회원닉네임" LIKE '%' || #{searchKeyword} || '%'
+                </when>
+                <when test="searchType == 'titlecontent'">
+                    AND ("게시물제목" LIKE '%' || #{searchKeyword} || '%'
+                    OR "게시물내용" LIKE '%' || #{searchKeyword} || '%')
+                </when>
+            </choose>
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortType == 'views'">게시물조회수 DESC</when>
+            <when test="sortType == 'recommends'">추천수 DESC</when>
+            <otherwise>게시물생성일 DESC</otherwise>
+        </choose>
     </select>
 
 

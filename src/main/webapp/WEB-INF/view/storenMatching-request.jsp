@@ -123,20 +123,32 @@
             <div class="left-column card">
                 <div class="main-image-container">
                     <div class="main-image">
-                        <c:if test="${not empty storen.equipmentDTO.attachments and storen.equipmentDTO.attachments[0] != null}">
-                            <img src="${storen.equipmentDTO.attachments[0].attachmentPath}" alt="상품 이미지">
-                        </c:if>
+                        <c:choose>
+                            <c:when test="${not empty storen.equipmentDTO.attachments and storen.equipmentDTO.attachments[0] != null}">
+                                <img src="${storen.equipmentDTO.attachments[0].attachmentPath}" alt="상품 이미지">
+                            </c:when>
+                            <c:otherwise>
+                                <div class="product-placeholder"></div>
+                            </c:otherwise>
+                        </c:choose>
                         <button class="image-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
                         <button class="image-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-                        <span class="image-counter">1/${fn:length(storen.equipmentDTO.attachments)}</span>
+                        <span class="image-counter">1/${storen.equipmentDTO.attachments != null ? fn:length(storen.equipmentDTO.attachments) : 0}</span>
                     </div>
                 </div>
                 <div class="thumbnail-container d-flex">
-                    <c:forEach var="item" items="${storen.equipmentDTO.attachments}" varStatus="status">
-                        <div class="thumbnail ${status.index == 0 ? 'active' : ''}" data-index="${status.index}">
-                            <img src="${item.attachmentPath}" alt="상품 이미지">
+                    <c:if test="${storen.equipmentDTO.attachments != null}">
+                        <c:forEach var="item" items="${storen.equipmentDTO.attachments}" varStatus="status">
+                            <div class="thumbnail ${status.index == 0 ? 'active' : ''}" data-index="${status.index}">
+                                <img src="${item.attachmentPath}" alt="상품 이미지">
+                            </div>
+                        </c:forEach>
+                    </c:if>
+                    <c:if test="${storen.equipmentDTO.attachments == null || empty storen.equipmentDTO.attachments}">
+                        <div class="thumbnail active" data-index="0">
+                            <div class="product-placeholder" style="width: 100%; height: 100%; object-fit: cover;"></div>
                         </div>
-                    </c:forEach>
+                    </c:if>
                 </div>
                 <div class="user-info d-flex align-items-center mb-2">
                     <span class="font-medium">${owner.nickname}</span>
@@ -282,7 +294,7 @@
     let lastValidPrice = selectedPrice !== "0원" ? selectedPrice : "0원";
 
     // 이미지 관련 설정
-    var totalImages = <%= storen.getEquipmentDTO().getAttachments().size() %>;
+    var totalImages = <%= storen.getEquipmentDTO().getAttachments() != null ? storen.getEquipmentDTO().getAttachments().size() : 0 %>;
 </script>
 
 <script type="text/javascript">
@@ -292,18 +304,30 @@
         initializeImageNavigation(); // 이미지 내비게이션 초기화
         initializeTooltips();     // 툴팁 초기화
 
-        // 현재 사용자의 매칭 상태 확인
-        checkMatchingStatus();
+        // 현재 사용자의 매칭 상태 확인(로그인한 유저일 때만)
+        var userCode = ${userCode != null ? userCode : 'null'};
+        if (userCode !== null && userCode !== 'null') {
+            checkMatchingStatus();
+        }
     });
 
     // [1] 모달 관련 초기화 함수
     function initializeModals() {
         // 매칭 신청 버튼 클릭 이벤트 - 날짜 선택 확인 후 모달 표시
         $(".match-btn:not(.disabled)").on('click', function () {
+            var userCode = ${userCode != null ? userCode : 'null'};
+
+            if (userCode === null || userCode === 'null') {
+                alert("로그인이 필요합니다.");
+                window.location.href = "login-user.action";
+                return;
+            }
+
             if ($('#date-range').val() === '') {
                 alert('렌탈 기간을 선택해주세요.');
                 return;
             }
+
             $("#matching-confirm-modal").css("display", "flex");
             $("body").css("overflow", "hidden");
         });
@@ -481,17 +505,23 @@
         // 이전 버튼 클릭 이벤트
         document.querySelector('.prev-btn').addEventListener('click', function(e) {
             e.preventDefault(); // 기본 동작 방지
-            currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
-            updateImageCounter();
-            updateThumbnailActive();
+            if (totalImages !== 0)
+            {
+                currentImageIndex = (currentImageIndex - 1 + totalImages) % totalImages;
+                updateImageCounter();
+                updateThumbnailActive();
+            }
         });
 
         // 다음 버튼 클릭 이벤트
         document.querySelector('.next-btn').addEventListener('click', function(e) {
             e.preventDefault(); // 기본 동작 방지
-            currentImageIndex = (currentImageIndex + 1) % totalImages;
-            updateImageCounter();
-            updateThumbnailActive();
+            if (totalImages !== 0)
+            {
+                currentImageIndex = (currentImageIndex + 1) % totalImages;
+                updateImageCounter();
+                updateThumbnailActive();
+            }
         });
 
         // 썸네일 클릭 이벤트

@@ -7,7 +7,7 @@ public class BoardPostDTO {
     private String  postTitle, postContent, createdDate;
 
     private int viewCount, recommendCount, replyCount, isHot, isBlinded, rowNum;
-    private String nickName, boardName, postLabelName, boardCategory;
+    private String nickName, boardName, postLabelName, boardCategory, sortType;
     private List<AttachmentDTO> attachments;
     private boolean hotOnly;
 
@@ -191,5 +191,21 @@ public class BoardPostDTO {
 
     public void setHotOnly(boolean hotOnly) {
         this.hotOnly = hotOnly;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    public int getBookmarkId() {
+        return bookmarkId;
+    }
+
+    public void setBookmarkId(int bookmarkId) {
+        this.bookmarkId = bookmarkId;
     }
 }

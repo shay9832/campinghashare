@@ -88,11 +88,26 @@ public class AdminDeliveryUpdateController {
             @RequestParam(value="deliveryId", required=false) Long deliveryId,
             @RequestParam(value="deliveryType", required=false) String deliveryType,
             @RequestParam(value="payId", required=false) Integer payId,
+            @RequestParam(value="waybillNumber", required=false) String waybillNumber,
             AdminDeliveryUpdateDTO dto,
             Model model) {
 
         try {
             IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
+
+            // 운송장 번호 로깅
+            System.out.println("요청된 운송장 번호: " + waybillNumber);
+
+            // 운송장 번호 설정
+            if (waybillNumber != null && !waybillNumber.isEmpty()) {
+                dto.setWaybillNumber(waybillNumber);
+            }
+
+            // 요청 파라미터 로깅
+                    System.out.println("요청 파라미터: deliveryId=" + deliveryId +
+                    ", deliveryType=" + deliveryType +
+                    ", deliveryEndDate=" + deliveryEndDate);
+
             // NULL 체크 및 기본값 설정
             if (deliveryId == null) {
                 // === 새 배송 생성 로직 ===
@@ -112,9 +127,9 @@ public class AdminDeliveryUpdateController {
 
                 // 시작일이 비어 있으면 현재 시간 사용
                 if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                    dto.setDeliveryStartDate(LocalDateTime.parse(newDeliveryStartDate + "T00:00:00"));
+                    dto.setDeliveryStartDate(newDeliveryStartDate + "T00:00:00");
                 } else {
-                    dto.setDeliveryStartDate(LocalDateTime.now());
+                    dto.setDeliveryStartDate(String.valueOf(LocalDateTime.now()));
                 }
 
                 // 기본값 설정
@@ -170,13 +185,13 @@ public class AdminDeliveryUpdateController {
 
             // 날짜 처리
             if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                dto.setNewDeliveryStartDate(LocalDateTime.parse(newDeliveryStartDate + "T00:00:00"));
+                dto.setNewDeliveryStartDate(newDeliveryStartDate + "T00:00:00");
             } else {
                 dto.setNewDeliveryStartDate(null); // 명시적으로 null 설정
             }
 
             if (deliveryEndDate != null && !deliveryEndDate.isEmpty()) {
-                dto.setDeliveryEndDate(LocalDateTime.parse(deliveryEndDate + "T00:00:00"));
+                dto.setDeliveryEndDate(deliveryEndDate + "T00:00:00");
             } else {
                 dto.setDeliveryEndDate(null); // 명시적으로 null 설정
             }
@@ -199,17 +214,24 @@ public class AdminDeliveryUpdateController {
     @RequestMapping(value="/admin-createDelivery.action", method=RequestMethod.POST)
     public String createDelivery(@ModelAttribute("adminId") String adminId,
             @RequestParam(value="newDeliveryStartDate", required=false) String newDeliveryStartDate,
+            @RequestParam(value="deliveryEndDate", required=false) String deliveryEndDate,
             @RequestParam(value="payId", required=false) Integer payId,
             AdminDeliveryUpdateDTO dto,
             Model model) {
         try {
             // 새 배송 시작일이 있으면 DTO에 설정
             if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                LocalDateTime startDate = LocalDateTime.parse(newDeliveryStartDate + "T00:00:00");
+                String startDate = newDeliveryStartDate + "T00:00:00";
                 dto.setDeliveryStartDate(startDate);
             } else {
                 // 기본값으로 현재 시간 설정
-                dto.setDeliveryStartDate(LocalDateTime.now());
+                dto.setDeliveryStartDate(String.valueOf(LocalDateTime.now()));
+            }
+
+            // 배송 종료일 설정
+            if (deliveryEndDate != null && !deliveryEndDate.isEmpty()) {
+                String endDate = deliveryEndDate + "T00:00:00";
+                dto.setDeliveryEndDate(endDate);
             }
 
             // Pay_id 설정

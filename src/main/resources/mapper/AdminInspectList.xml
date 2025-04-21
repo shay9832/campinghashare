@@ -17,24 +17,26 @@
             COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
             ig.INSPEC_GRADE_NAME as inspectResult,
             il.INSPEC_COMMENT as inspectComment,
+            eg.EQUIP_GRADE_NAME as finalGrade,
             CASE
                 WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
                 ELSE '검수완료'
                 END as inspectState
         FROM PLATFORM_DELIVERY pd
-            LEFT JOIN PAY p ON pd.PAY_ID = p.PAY_ID
-            LEFT JOIN EQUIPMENT_REGISTRATION e ON p.STOREN_ID = e.EQUIP_ID OR p.STORAGE_ID = e.EQUIP_ID
-            LEFT JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
-            LEFT JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
-            LEFT JOIN INSPEC_LIST il ON pd.PLATFORM_DELIVERY_ID = il.PLATFORM_DELIVERY_ID
-            LEFT JOIN INSPEC_RESULT ir ON pd.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
-            LEFT JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
-            LEFT JOIN INSPEC_ITEM i ON ci.INSPEC_ITEM_ID = i.INSPEC_ITEM_ID
-            LEFT JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
-            LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+                 LEFT JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 LEFT JOIN EQUIPMENT_REGISTRATION e ON p.STOREN_ID = e.EQUIP_ID OR p.STORAGE_ID = e.EQUIP_ID
+                 LEFT JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 LEFT JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+                 LEFT JOIN INSPEC_LIST il ON pd.PLATFORM_DELIVERY_ID = il.PLATFORM_DELIVERY_ID
+                 LEFT JOIN INSPEC_RESULT ir ON pd.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
+                 LEFT JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
+                 LEFT JOIN INSPEC_ITEM i ON ci.INSPEC_ITEM_ID = i.INSPEC_ITEM_ID
+                 LEFT JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+                 LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+                 LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
         WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL
-        /* 아래 조건 제거 */
-        AND (ir.INSPEC_RESULT_ID IS NULL OR ir.PLATFORM_DELIVERY_RETURN_ID IS NULL)
+            /* 아래 조건 제거 */
+          AND (ir.INSPEC_RESULT_ID IS NULL OR ir.PLATFORM_DELIVERY_RETURN_ID IS NULL)
         ORDER BY pd.PLATFORM_DELIVERY_ID DESC
     </select>
 
@@ -51,6 +53,7 @@
             COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
             ig.INSPEC_GRADE_NAME as inspectResult,
             il.INSPEC_COMMENT as inspectComment,
+            eg.EQUIP_GRADE_NAME as finalGrade,
             CASE
                 WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
                 ELSE '검수완료'
@@ -67,6 +70,7 @@
                  LEFT JOIN INSPEC_ITEM i ON ci.INSPEC_ITEM_ID = i.INSPEC_ITEM_ID
                  LEFT JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
                  LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+                 LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
         WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
         ORDER BY pdr.PLATFORM_DELIVERY_RETURN_ID DESC
     </select>
@@ -120,5 +124,31 @@
         SELECT PLATFORM_DELIVERY_ID
         FROM PLATFORM_DELIVERY_RETURN
         WHERE PLATFORM_DELIVERY_RETURN_ID = #{returnId}
+    </select>
+
+    <!-- 검수 결과 상세 조회 추가 -->
+    <select id="getInspectionResult" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+        ir.INSPEC_RESULT_ID as inspecResultId,
+        il.INSPEC_COMMENT as inspectComment,
+        ig.INSPEC_GRADE_NAME as inspectResult,
+        eg.EQUIP_GRADE_NAME as finalGrade
+        FROM INSPEC_RESULT ir
+        JOIN INSPEC_LIST il ON (
+        (ir.PLATFORM_DELIVERY_ID = il.PLATFORM_DELIVERY_ID AND ir.PLATFORM_DELIVERY_ID IS NOT NULL) OR
+        (ir.PLATFORM_DELIVERY_RETURN_ID = il.PLATFORM_DELIVERY_RETURN_ID AND ir.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL)
+        )
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE
+        <if test="platformDeliveryId != null">
+            ir.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+            <if test="platformDeliveryReturnId == null">
+                AND ir.PLATFORM_DELIVERY_RETURN_ID IS NULL
+            </if>
+        </if>
+        <if test="platformDeliveryReturnId != null">
+            ir.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+        </if>
     </select>
 </mapper>
