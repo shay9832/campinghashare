@@ -116,7 +116,13 @@ public class BoardController {
         }
 
         // 전체 인기글 조회 (검색 조건과 정렬 조건 적용)
-        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(null);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : totalHotPost) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
 
         // 페이징 처리
         int totalPostCount = totalHotPost.size();
@@ -371,6 +377,12 @@ public class BoardController {
 
         // 일반 게시물 목록 조회
         List<BoardPostDTO> postList = boardPostService.listPostList(dto);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : postList) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
 
         // 모델에 데이터 추가
         model.addAttribute("postList", postList);
