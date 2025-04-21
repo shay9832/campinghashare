@@ -293,24 +293,65 @@
 
 
 
-                        <div class="d-flex justify-content-between gap-2 mt-4">
-                            <div class="form-group" style="margin-bottom: 0; flex-grow: 1;">
+                        <div class="mt-4">
+                            <!-- 기존 첨부파일 영역 (수정 모드일 때만 표시) -->
+                            <c:if test="${isUpdate && not empty post.attachments}">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">기존 첨부파일</label>
+                                    <div class="existing-files">
+                                        <c:forEach var="attachment" items="${post.attachments}">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom py-2"
+                                                 id="attachment-${attachment.attachmentPostId}">
+                                                <div>
+                                                    <i class="fa-solid fa-file me-2"></i>
+                                                    <span>${attachment.attachmentName}</span>
+                                                    <small class="text-muted ms-2">(${attachment.attachmentSize / 1024}
+                                                        KB)</small>
+                                                </div>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-danger delete-attachment"
+                                                        data-attachment-id="${attachment.attachmentPostId}"
+                                                        onclick="deleteAttachment(${attachment.attachmentPostId})">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                    <!-- 삭제된 첨부파일 ID를 저장할 hidden 필드 -->
+                                    <input type="hidden" name="deletedAttachmentIds" id="deletedAttachmentIds" value="">
+                                </div>
+                            </c:if>
+
+                            <!-- 새로운 첨부파일 영역 -->
+                            <div class="form-group mb-3">
+                                <label class="form-label">새 첨부파일</label>
                                 <div class="d-flex gap-2 align-items-center">
-                                    <input type="file" class="form-control" id="fileInput" name="uploadFiles" multiple style="display:none;">
+                                    <input type="file" class="form-control" id="fileInput" name="uploadFiles" multiple
+                                           style="display:none;">
                                     <button type="button" class="btn btn-outline-primary" id="fileUploadBtn">
                                         <i class="fa-solid fa-paperclip"></i> 파일 선택
                                     </button>
                                     <span id="fileCount">선택된 파일 없음</span>
                                 </div>
-                                <!-- 파일 목록이 여기에 추가되지만, 버튼 위치에 영향을 주지 않도록 설정 -->
+                                <!-- 파일 목록이 여기에 추가됨 -->
                                 <div id="fileList" class="mt-2" style="max-height: 300px; overflow-y: auto;"></div>
                             </div>
 
-                            <!-- 버튼 영역은 그대로 유지하되, 파일 영역과 분리 -->
-                            <div class="d-flex gap-2 align-self-start">
+                            <!-- 버튼 영역은 아래에 별도로 배치 -->
+                            <div class="d-flex justify-content-end gap-2 mt-3">
                                 <button type="button" class="btn btn-secondary" onclick="history.back()">취소</button>
-                                <button type="button" id="submitBtn" class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
+                                <button type="button" id="submitBtn"
+                                        class="btn btn-primary">${isUpdate ? '수정하기' : '등록하기'}</button>
                             </div>
+
+<%--                            <c:if test="${isUpdate}">--%>
+<%--                                <div style="color:red">--%>
+<%--                                    수정 모드: ${isUpdate}<br>--%>
+<%--                                    첨부파일 있음: ${not empty post.attachments}<br>--%>
+<%--                                    첨부파일 개수: ${post.attachments.size()}<br>--%>
+<%--                                </div>--%>
+<%--                            </c:if>--%>
+
                         </div>
                     </form>
                 </div>
@@ -344,8 +385,10 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
-    // 순수 자바스크립트로 구현
-    document.addEventListener('DOMContentLoaded', function () {
+    // 전역 파일 배열 선언 - 선택된 파일들을 저장할 배열
+    let selectedFiles = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
         console.log("DOM이 로드되었습니다.");
 
         // 바이트 카운터 적용
@@ -361,9 +404,93 @@
         const okBtn = document.getElementById('okBtn');
         const confirmBtn = document.getElementById('confirmBtn');
 
+        // 파일 선택 관련 요소 참조
+        const fileUploadBtn = document.getElementById('fileUploadBtn');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const fileCount = document.getElementById('fileCount');
+
+        // 파일 업로드 버튼 클릭 시 파일 선택 창 열기
+        if (fileUploadBtn) {
+            fileUploadBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+        }
+
+        // 파일 선택 시 처리
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                // 새로 선택된 파일들을 기존 배열에 추가
+                if (this.files.length > 0) {
+                    // FileList 객체를 배열로 변환하여 추가
+                    for (let i = 0; i < this.files.length; i++) {
+                        // 중복 파일 체크 (이름과 크기로 간단하게 비교)
+                        const isDuplicate = selectedFiles.some(file =>
+                            file.name === this.files[i].name && file.size === this.files[i].size
+                        );
+
+                        if (!isDuplicate) {
+                            selectedFiles.push(this.files[i]);
+                        }
+                    }
+
+                    // 파일 목록 UI 업데이트
+                    updateFileListUI();
+                }
+
+                // input 값 초기화 (같은 파일을 다시 선택할 수 있도록)
+                this.value = '';
+            });
+        }
+
+        // 파일 목록 UI 업데이트 함수
+        function updateFileListUI() {
+            if (!fileList || !fileCount) return;
+
+            // 파일 목록 초기화
+            fileList.innerHTML = '';
+
+            if (selectedFiles.length > 0) {
+                fileCount.textContent = '선택된 파일: ' + selectedFiles.length + '개';
+
+                // 각 파일에 대한 UI 요소 추가
+                selectedFiles.forEach((file, index) => {
+                    const fileSize = (file.size / 1024).toFixed(2) + ' KB';
+
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
+                    fileItem.innerHTML =
+                        '<div>' +
+                        '<i class="fa-solid fa-file me-2"></i>' +
+                        '<span>' + file.name + '</span>' +
+                        '<small class="text-muted ms-2">(' + fileSize + ')</small>' +
+                        '</div>' +
+                        '<button type="button" class="btn btn-sm btn-outline-danger remove-file" data-index="' + index + '">' +
+                        '<i class="fa-solid fa-trash"></i>' +
+                        '</button>';
+
+                    fileList.appendChild(fileItem);
+                });
+
+                // 파일 삭제 버튼에 이벤트 리스너 추가
+                const removeButtons = document.querySelectorAll('.remove-file');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        // 해당 인덱스의 파일 제거
+                        selectedFiles.splice(index, 1);
+                        // UI 업데이트
+                        updateFileListUI();
+                    });
+                });
+            } else {
+                fileCount.textContent = '선택된 파일 없음';
+            }
+        }
+
         // 등록하기 버튼 클릭 시 처리
         if (submitBtn) {
-            submitBtn.addEventListener('click', function () {
+            submitBtn.addEventListener('click', function() {
                 console.log("등록하기 버튼이 클릭되었습니다.");
 
                 // 폼 검증
@@ -390,34 +517,61 @@
 
         // 취소 버튼 클릭 시 모달 닫기
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', function () {
+            cancelBtn.addEventListener('click', function() {
                 modalOverlay.style.display = 'none';
                 modal.style.display = 'none';
             });
         }
 
-        // 확인 버튼 클릭 시 폼 제출
+        // 확인 버튼 클릭 시 폼 제출 부분
         if (confirmBtn && postForm) {
-            confirmBtn.addEventListener('click', function () {
+            confirmBtn.addEventListener('click', function() {
                 // 수정 모드 확인
                 const isUpdateMode = document.querySelector('input[name="postId"]') !== null;
+                console.log("확인 버튼 클릭됨, 수정 모드:", isUpdateMode);
+
+                // 모달 닫기
+                modalOverlay.style.display = 'none';
+                modal.style.display = 'none';
+
+                // FormData 객체 생성
+                const formData = new FormData(postForm);
+
+                // 기존 파일 입력 필드의 값을 제거 (초기화)
+                formData.delete('uploadFiles');
+
+                // 선택된 파일들을 폼데이터에 추가
+                console.log("선택된 파일 수:", selectedFiles.length);
+                selectedFiles.forEach((file, index) => {
+                    console.log(`파일 ${index + 1} 추가:`, file.name);
+                    formData.append('uploadFiles', file);
+                });
 
                 if (isUpdateMode) {
-                    // 수정 모드 - FormData 사용하여 multipart/form-data로 전송
-                    const formData = new FormData(postForm);
+                    // 수정 모드 - AJAX로 전송
 
-                    fetch('api/post/update.action', {
+                    // API 경로 결정
+                    let apiPath = 'api/post/update.action';
+                    if (window.location.pathname.includes('notice')) {
+                        apiPath = 'api/notice/update.action';
+                    } else if (window.location.pathname.includes('image')) {
+                        apiPath = 'api/image/update.action';
+                    }
+
+                    console.log("API 경로:", apiPath);
+
+                    fetch(apiPath, {
                         method: 'POST',
-                        body: formData // FormData 그대로 전송 (Content-Type 헤더 자동 설정)
+                        body: formData
                     })
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
                                 // 성공 모달 표시
-                                if (modalOverlay) modalOverlay.style.display = 'block';
-                                if (successModal) successModal.style.display = 'block';
+                                modalOverlay.style.display = 'block';
+                                successModal.style.display = 'block';
                             } else {
-                                alert('공지사항 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                                alert('게시글 수정에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
                             }
                         })
                         .catch(error => {
@@ -425,30 +579,84 @@
                             alert('게시글 수정 중 오류가 발생했습니다.');
                         });
                 } else {
-                    // 등록 모드 - 일반 폼 제출
-                    postForm.submit();
-                }
+                    // 등록 모드 - 글쓰기
 
-                // 모달 닫기
-                modalOverlay.style.display = 'none';
-                modal.style.display = 'none';
+                    // 모든 경우에 AJAX로 처리하도록 변경
+                    const formAction = postForm.getAttribute('action');
+                    console.log("폼 액션:", formAction);
+
+                    // AJAX 요청 보내기
+                    fetch(formAction, {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => {
+                            console.log("응답 상태:", response.status);
+                            // 일반 폼 제출은 JSON이 아닐 수 있으므로 조건부 처리
+                            const contentType = response.headers.get('content-type');
+                            if (contentType && contentType.includes('application/json')) {
+                                return response.json();
+                            } else {
+                                // JSON이 아닌 응답 (예: 리다이렉트)
+                                if (response.ok) {
+                                    // 성공 - 목록 페이지로 리다이렉트
+                                    let redirectUrl = 'boardfree.action';
+                                    if (window.location.pathname.includes('notice')) {
+                                        redirectUrl = 'notice.action';
+                                    } else if (window.location.pathname.includes('image')) {
+                                        redirectUrl = 'boardimage.action';
+                                    }
+                                    window.location.href = redirectUrl;
+                                    return { success: true };
+                                } else {
+                                    return { success: false, message: '서버 응답 오류' };
+                                }
+                            }
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                if (data.postId) {
+                                    // API 응답에 postId가 있는 경우 (상세 페이지로 이동)
+                                    window.location.href = `boardfree-post.action?postId=${data.postId}`;
+                                } else {
+                                    // 이미 리다이렉트 처리되었을 수 있음
+                                    console.log("게시글 등록 성공");
+                                }
+                            } else {
+                                alert('게시글 등록에 실패했습니다: ' + (data.message || '알 수 없는 오류'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('게시글 등록 중 오류가 발생했습니다.');
+                        });
+                }
             });
         }
 
         // 성공 모달의 확인 버튼 클릭 시 자유게시판 목록으로 이동
         if (okBtn) {
-            okBtn.addEventListener('click', function () {
+            okBtn.addEventListener('click', function() {
                 console.log("확인 버튼(성공 모달) 클릭됨"); // 디버깅용
                 if (modalOverlay) modalOverlay.style.display = 'none';
                 if (successModal) successModal.style.display = 'none';
-                window.location.href = 'boardfree.action';
+
+                // 이동할 페이지 결정
+                let redirectUrl = 'boardfree.action';
+                if (window.location.pathname.includes('notice')) {
+                    redirectUrl = 'notice.action';
+                } else if (window.location.pathname.includes('image')) {
+                    redirectUrl = 'boardimage.action';
+                }
+
+                window.location.href = redirectUrl;
             });
         }
 
         // 게시판 변경 시 말머리 목록 가져오기
         const boardSelect = document.getElementById('boardId');
         if (boardSelect) {
-            boardSelect.addEventListener('change', function () {
+            boardSelect.addEventListener('change', function() {
                 const selectedBoardId = this.value;
                 if (selectedBoardId) {
                     loadHeaderTags(selectedBoardId);
@@ -486,56 +694,72 @@
                     }
                 });
         }
-    });
 
-
-    // 파일 업로드 버튼 클릭 시 파일 선택 창 열기
-    const fileUploadBtn = document.getElementById('fileUploadBtn');
-    const fileInput = document.getElementById('fileInput');
-    const fileList = document.getElementById('fileList');
-    const fileCount = document.getElementById('fileCount');
-
-    fileUploadBtn.addEventListener('click', function() {
-        fileInput.click();
-    });
-
-    // 파일 선택 시 목록 표시
-    fileInput.addEventListener('change', function() {
-        fileList.innerHTML = '';
-
-        if (this.files.length > 0) {
-            fileCount.textContent = '선택된 파일: ' + this.files.length + '개';
-
-            for (let i = 0; i < this.files.length; i++) {
-                const file = this.files[i];
-                const fileSize = (file.size / 1024).toFixed(2) + ' KB';
-
-                const fileItem = document.createElement('div');
-                fileItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
-                fileItem.innerHTML =
-                    '<div>' +
-                    '<i class="fa-solid fa-file me-2"></i>' +
-                    '<span>' + file.name + '</span>' +
-                    '<small class="text-muted ms-2">(' + fileSize + ')</small>' +
-                    '</div>';
-
-                fileList.appendChild(fileItem);
+        // 초기 파일 목록 복원 (수정 모드인 경우)
+        const existingFiles = document.querySelectorAll('.existing-files .d-flex');
+        if (existingFiles.length > 0) {
+            // 이미 선택된 파일이 있는 경우 (수정 모드), UI만 표시
+            if (fileCount) {
+                fileCount.textContent = '기존 첨부파일: ' + existingFiles.length + '개 + 새 첨부파일: ' + selectedFiles.length + '개';
             }
-        } else {
-            fileCount.textContent = '선택된 파일 없음';
         }
     });
+
+    // 전역 함수로 정의 (이벤트 핸들러 밖으로 이동)
+    function deleteAttachment(attachmentPostId) {
+        console.log("삭제 버튼 클릭됨 - 첨부파일 ID:", attachmentPostId);
+
+        // 첨부파일 요소 찾기
+        const attachmentElement = document.getElementById('attachment-' + attachmentPostId);
+
+        if (attachmentElement) {
+            // display:none 대신 요소를 DOM에서 완전히 제거
+            attachmentElement.remove(); // 또는 IE 호환을 위해: attachmentElement.parentNode.removeChild(attachmentElement);
+
+            // 삭제된 ID 목록 업데이트
+            const deletedIdsInput = document.getElementById('deletedAttachmentIds');
+            const deletedIds = deletedIdsInput.value ? deletedIdsInput.value.split(',') : [];
+
+            if (!deletedIds.includes(attachmentPostId.toString())) {
+                deletedIds.push(attachmentPostId.toString());
+                deletedIdsInput.value = deletedIds.join(',');
+            }
+
+            console.log('첨부파일 ID ' + attachmentPostId + ' 삭제됨');
+            console.log('현재 삭제된 첨부파일 목록:', deletedIdsInput.value);
+        } else {
+            console.error('첨부파일 요소를 찾을 수 없음:', 'attachment-' + attachmentPostId);
+
+            // 혹시 ID가 아닌 data 속성으로 요소를 찾아볼 수 있음
+            const alternativeElement = document.querySelector(`[data-attachment-id="${attachmentPostId}"]`);
+            if (alternativeElement) {
+                console.log('data-attachment-id로 요소 찾음');
+                alternativeElement.remove();
+
+                // 삭제된 ID 업데이트 (위와 동일)
+                const deletedIdsInput = document.getElementById('deletedAttachmentIds');
+                const deletedIds = deletedIdsInput.value ? deletedIdsInput.value.split(',') : [];
+
+                if (!deletedIds.includes(attachmentPostId.toString())) {
+                    deletedIds.push(attachmentPostId.toString());
+                    deletedIdsInput.value = deletedIds.join(',');
+                }
+
+                console.log('첨부파일 ID ' + attachmentPostId + ' 삭제됨');
+            }
+        }
+    }
 
     // 바이트 카운터 초기화 및 적용
     function initializeByteCounters() {
         console.log("바이트 카운터 초기화");
         // 메인 댓글 입력창에 바이트 카운터 적용
-        const mainContentArea = document.getElementById("contentArea");
+        const mainContentArea = document.getElementById("contentArea") || document.getElementById("postContent");
         if (mainContentArea) {
             console.log("콘텐츠 영역 발견:", mainContentArea);
             applyByteCounter(mainContentArea);
         } else {
-            console.error("contentArea 요소를 찾을 수 없습니다.");
+            console.error("contentArea 또는 postContent 요소를 찾을 수 없습니다.");
         }
     }
 
@@ -590,7 +814,7 @@
             const text = textarea.value;
             let currentBytes = calculateBytes(text);
 
-            // 1000 byte 초과 시 자르기
+            // 5000 byte 초과 시 자르기
             if (currentBytes > 5000) {
                 // 바이너리 검색 최적화
                 let start = 0;
@@ -634,8 +858,6 @@
         // 초기 카운트 표시
         updateByteCount();
     }
-
-
 </script>
 </body>
 </html>

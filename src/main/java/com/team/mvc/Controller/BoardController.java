@@ -91,6 +91,9 @@ public class BoardController {
     @RequestMapping("/boardbest.action")
     public String boardBest(@RequestParam(value = "page", defaultValue = "1") int page,
                             @RequestParam(value = "size", defaultValue = "10") int size,
+                            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+                            @RequestParam(value = "searchType", required = false) String searchType,
+                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                             @ModelAttribute("userCode") Integer userCode,
                             @ModelAttribute("adminId") String adminId,
                             Model model) {
@@ -98,15 +101,31 @@ public class BoardController {
         List<BoardPostDTO> notice = boardPostService.listNotice();
         model.addAttribute("notice", notice);
 
-        // 전체 인기글 조회
-        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(null);
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 전체 인기글 조회 (검색 조건과 정렬 조건 적용)
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
 
         // 페이징 처리
         int totalPostCount = totalHotPost.size();
         Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
 
         model.addAttribute("totalHotPost", totalHotPost);
         model.addAttribute("pagenation", pagenation);
+        model.addAttribute("sortType", sortType);
 
         return "boardBest";
     }
@@ -449,6 +468,11 @@ public class BoardController {
 
             // 일반 게시물 목록 조회
             postList = boardPostService.listPostList(dto);
+
+            // 첨부파일 조회
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(dto.getPostId());
+            dto.setAttachments(attachments);
+
 
             // 클라이언트에서 전달받은 원본 번호 적용
             for (BoardPostDTO post : postList) {
@@ -873,7 +897,7 @@ public class BoardController {
             BoardPostDTO post = boardPostService.getPostById(dto);
 
             // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자인지 확인
-            if (post != null && post.getUserCode() == userCode) {
+            if (post != null && (post.getUserCode() == userCode || adminId != null)) {
                 // 트랜잭션으로 게시글과 댓글 함께 삭제
                 boolean deleteSuccess = boardPostService.deletePostWithReplies(dto.getPostId());
 
@@ -1349,6 +1373,7 @@ public class BoardController {
                          @RequestParam(value = "size", defaultValue = "10") int size,
                          @RequestParam(value = "searchType", required = false) String searchType,
                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                         @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
                          HttpSession session,
                          Model model,
                          @ModelAttribute("userCode") Integer userCode,
@@ -1356,13 +1381,12 @@ public class BoardController {
         // 게시판 ID 설정
         int boardId = 1; // 공지사항
 
-        // 전체 공지사항 조회
-        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
-        model.addAttribute("noticeList", noticeList);
-
         // 검색 조건이 담길 dto 생성
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
 
         // 검색 조건 설정
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -1379,6 +1403,9 @@ public class BoardController {
         Pagenation pagenation = new Pagenation(page, getTotalNoticeCount, size, 10);
         dto.setPagenation(pagenation);
 
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice(dto);
+        model.addAttribute("noticeList", noticeList);
+
         model.addAttribute("pagenation", pagenation);
         return "notice";
     }
@@ -1391,14 +1418,31 @@ public class BoardController {
                                          @RequestParam(value = "size", defaultValue = "10") int size,
                                          @RequestParam(value = "searchType", required = false) String searchType,
                                          @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                         @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+                                         @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
                                          @ModelAttribute("userCode") Integer userCode,
                                          @ModelAttribute("adminId") String adminId) {
         Map<String, Object> result = new HashMap<>();
         int boardId = 1;
 
-        // 검색 조건이 담길 dto 생성
+        // 클라이언트에서 전달받은 원본 게시글 번호 맵 파싱
+        Map<String, String> originalPostNumbers = new HashMap<>();
+        if (originalPostNumbersJson != null && !originalPostNumbersJson.isEmpty()) {
+            try {
+                // JSON 문자열을 Map으로 변환
+                ObjectMapper mapper = new ObjectMapper();
+                originalPostNumbers = mapper.readValue(originalPostNumbersJson, new TypeReference<Map<String, String>>() {});
+            } catch (Exception e) {
+                System.err.println("Error parsing originalPostNumbers: " + e.getMessage());
+            }
+        }
+
+        // 검색 조건이 담긴 DTO 생성
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
 
         // 검색 조건 설정
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -1407,16 +1451,33 @@ public class BoardController {
         }
 
         // 전체 게시물 수 조회
-        int totalPostCount = boardPostService.getTotalPostCount(dto);
+        int totalPostCount = boardPostService.getTotalNoticeCount(dto);
 
         // 페이징 처리
         Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
         dto.setPagenation(pagenation);
 
-        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
+        // 공지사항 목록 조회 (IBoardPostService에 맞게 호출)
+        List<BoardPostDTO> noticeList;
+        noticeList = boardPostService.listTotalNotice(dto);
+
+
+        // 클라이언트에서 전달받은 원본 번호 적용
+        for (BoardPostDTO post : noticeList) {
+            String postId = String.valueOf(post.getPostId());
+            if (originalPostNumbers.containsKey(postId)) {
+                try {
+                    int originalNum = Integer.parseInt(originalPostNumbers.get(postId));
+                    post.setRowNum(originalNum);
+                } catch (NumberFormatException e) {
+                    // 숫자가 아닌 경우 무시
+                }
+            }
+        }
 
         result.put("noticeList", noticeList);
         result.put("pagenation", pagenation);
+        result.put("sortType", sortType);
 
         return result;
     }
@@ -1500,7 +1561,7 @@ public class BoardController {
         dto.setPagenation(pagenation);
 
         // 공지사항 조회
-        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice();
+        List<BoardPostDTO> noticeList = boardPostService.listTotalNotice(dto);
 
         // 모델 데이터 추가
         model.addAttribute("noticeList", noticeList);
