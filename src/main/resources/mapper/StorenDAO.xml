@@ -253,7 +253,7 @@
              , MATCHING_REQUEST_COUNT, MATCHING_STATUS
              , EQUIP_GRADE
         FROM VW_STOREN
-        WHERE STOREN_ID = #{storen_id}
+        <![CDATA[WHERE STOREN_ID = #{storen_id} AND ROWNUM <= 1]]>
     </select>
 
     <!-- 스토렌 장비 검색(키워드) -->

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class StorenDTO {
     private EquipmentDTO equipmentDTO;                      //일반 장비 DTO
-    private int storen_id, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
+    private int storen_id, size_id, store_month;            //스토렌id, 장비코드, 사이즈id, 보관개월수
     private Integer equip_code;
     private String storen_title, storen_content;            //스토렌 제목, 상품내용
     private Integer daily_rent_price;                       //일일 렌탈가격
@@ -33,6 +33,7 @@ public class StorenDTO {
     //-------------------------------------------------------------------------------------------------------날짜 관련 속성
     private Integer matching_request_count;                 //매칭수
     private String matching_status;                         //매칭상태
+    private MatchingRequestDTO matchingDTO;                 //매칭DTO
 
     //장비 등급 추가
     private String equip_grade;                             //장비등급이름
@@ -315,5 +316,13 @@ public class StorenDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public MatchingRequestDTO getMatchingDTO() {
+        return matchingDTO;
+    }
+
+    public void setMatchingDTO(MatchingRequestDTO matchingDTO) {
+        this.matchingDTO = matchingDTO;
     }
 }
