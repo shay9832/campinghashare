@@ -13,6 +13,16 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
+<style>
+    .filter-button-container {
+        display: flex;
+        gap: 10px; /* 버튼 사이 간격 */
+    }
+
+    .reset-button {
+        background-color: #6c757d; /* 초기화 버튼은 다른 색상으로 */
+    }
+</style>
 <body>
 
 <jsp:include page="${pageContext.request.contextPath}//WEB-INF/view/header.jsp"/>
@@ -135,6 +145,14 @@
                         <form id="searchForm" action="rentalsearch-main.action" method="GET">
                             <!-- 현재 탭 유지를 위한 히든 필드 -->
                             <input type="hidden" name="tab" value="${param.tab}">
+                            <!-- 가격 범위를 위한 히든 필드 -->
+                            <input type="hidden" name="minPrice" id="hidden-min-price" value="${minPrice}">
+                            <input type="hidden" name="maxPrice" id="hidden-max-price" value="${maxPrice}">
+                            <!-- 날짜 범위를 위한 히든 필드 -->
+                            <input type="hidden" name="startDate" id="hidden-start-date" value="${startDate}">
+                            <input type="hidden" name="endDate" id="hidden-end-date" value="${endDate}">
+
+
                             <div class="input-label">키워드</div>
                             <div class="search-container">
                                 <label for="search-input" style="display:none">검색</label>
@@ -172,6 +190,9 @@
                             <!-- 필터 적용 버튼 -->
                             <div class="filter-button-container">
                                 <button class="filter-button" onclick="applyFilter()">필터 적용</button>
+                                <button class="reset-button" onclick="resetFilter()" style="background-color:transparent; border:none;">
+                                    <i class="fa-solid fa-reply" style="color: #2c5f2d;"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -194,36 +215,46 @@
 
             <!-- 상품 리스트 -->
             <div class="product-container">
-                <ul>
-                    <c:forEach var="storen" items="${storenList}">
-                        <li>
-                            <a href="storenmatching-request.action?storenId=${storen.storen_id}">
-                                <div class="product-card">
-                                    <div class="product-image">
-                                        <c:choose>
-                                            <c:when test="${storen.equipmentDTO.attachments.get(0) != null && !empty storen.equipmentDTO.attachments}">
-                                                <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div class="product-placeholder"></div>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <button class="like-button">
-                                            <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                        </button>
+                <c:choose>
+                    <c:when test="${!empty storenList && storenList.size() > 0}">
+                        <ul>
+                        <c:forEach var="storen" items="${storenList}">
+                            <li>
+                                <a href="storenmatching-request.action?storenId=${storen.storen_id}">
+                                    <div class="product-card">
+                                        <div class="product-image">
+                                            <c:choose>
+                                                <c:when test="${!empty storen.equipmentDTO.attachments && storen.equipmentDTO.attachments.size() > 0}">
+                                                    <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="product-placeholder"></div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <button class="like-button">
+                                                <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
+                                            </button>
+                                        </div>
+                                        <div class="product-info">
+                                            <p class="product-title">${storen.storen_title}</p>
+                                            <!-- 수정된 부분: equipmentDTO 접근 방식 변경 -->
+                                            <p class="product-brand">${storen.equipmentDTO.brand}</p>
+                                            <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
+                                            <p class="product-price">${storen.daily_rent_price}원/일</p>
+                                        </div>
                                     </div>
-                                    <div class="product-info">
-                                        <p class="product-title">${storen.storen_title}</p>
-                                        <!-- 수정된 부분: equipmentDTO 접근 방식 변경 -->
-                                        <p class="product-brand">${storen.equipmentDTO.brand}</p>
-                                        <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
-                                        <p class="product-price">${storen.daily_rent_price}원/일</p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    </c:forEach>
-                </ul>
+                                </a>
+                            </li>
+                        </c:forEach>
+                        </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state d-flex flex-column justify-content-center align-items-center" style="height: 300px;">
+                            <i class="fas fa-search-minus" style="font-size: 2rem; color: #ccc;"></i>
+                            <p class="mb-1">검색 결과가 없습니다.</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <!-- 페이지네이션 -->
@@ -285,6 +316,19 @@
     $(document).ready(function () {
         // DateRangePicker 초기화
         if ($('#date-range').length && typeof $.fn.daterangepicker === 'function') {
+            // 컨트롤러에서 전달받은 날짜 값 확인
+            var startDateValue = '${startDate}';
+            var endDateValue = '${endDate}';
+
+            // 기본 날짜 설정
+            var defaultStartDate = moment();
+            var defaultEndDate = moment().add(3, 'days');
+
+            // 전달받은 날짜가 있으면 사용, 없으면 기본값
+            var startDate = startDateValue ? moment(startDateValue) : defaultStartDate;
+            var endDate = endDateValue ? moment(endDateValue) : defaultEndDate;
+
+
             $('#date-range').daterangepicker({
                 opens: 'right',
                 autoApply: true,
@@ -301,25 +345,35 @@
             });
 
             let picker = $('#date-range').data('daterangepicker');
-            picker.setStartDate(moment());
-            picker.setEndDate(moment().add(3, 'days'));
+            picker.setStartDate(startDate);
+            picker.setEndDate(endDate);
 
             $('#date-range').on('apply.daterangepicker', function (ev, picker) {
                 var startDate = picker.startDate.format('YYYY/MM/DD');
                 var endDate = picker.endDate.format('YYYY/MM/DD');
                 $(this).val(startDate + ' - ' + endDate);
+
+                // hidden 필드 업데이트
+                $('#hidden-start-date').val(picker.startDate.format('YYYY-MM-DD'));
+                $('#hidden-end-date').val(picker.endDate.format('YYYY-MM-DD'));
             });
 
-            $('#date-range').val(
-                moment().format('YYYY/MM/DD') + ' - ' + moment().add(3, 'days').format('YYYY/MM/DD')
-            );
+            $('#date-range').val(startDate.format('YYYY/MM/DD') + ' - ' + endDate.format('YYYY/MM/DD'));
+
+            // hidden 필드 초기값 설정
+            $('#hidden-start-date').val(startDate.format('YYYY-MM-DD'));
+            $('#hidden-end-date').val(endDate.format('YYYY-MM-DD'));
         }
 
         // 가격 슬라이더 초기화
         var priceSlider = document.getElementById('price-range');
         if (priceSlider && typeof noUiSlider !== 'undefined') {
+            // 컨트롤러에서 전달받은 가격 값
+            var minPriceValue = parseInt('${minPrice}') || 0;
+            var maxPriceValue = parseInt('${maxPrice}') || 100000;
+
             noUiSlider.create(priceSlider, {
-                start: [0, 100000],
+                start: [minPriceValue, maxPriceValue],
                 connect: true,
                 range: {
                     min: 0,
@@ -341,8 +395,18 @@
             priceSlider.noUiSlider.on('update', function (values, handle) {
                 if (handle === 0 && minPrice) minPrice.textContent = values[0] + '원';
                 if (handle === 1 && maxPrice) maxPrice.textContent = values[1] + '원';
+
+                // hidden 필드 업데이트
+                $('#hidden-min-price').val(values[0].replace(/,/g, ''));
+                $('#hidden-max-price').val(values[1].replace(/,/g, ''));
             });
+
+            // 초기 hidden 필드 값 설정
+            $('#hidden-min-price').val(minPriceValue);
+            $('#hidden-max-price').val(maxPriceValue);
         }
+
+
 
         // 전체/스토렌/렌탈 버튼 클릭 시 active 클래스 토글
         $('.filter-btn').on('click', function () {
@@ -363,14 +427,53 @@
             }
         });
 
-
+        // 필터 적용 버튼 클릭 시 함수
         window.applyFilter = function () {
+            // 폼 제출
+            $('#searchForm').submit();
+
             Swal.fire({
                 icon: 'success',
                 title: '필터 적용 완료!',
                 text: '조건에 맞게 필터링 되었습니다.',
                 confirmButtonColor: '#2C5F2D'
             });
+        };
+
+        // 필터 초기화 버튼 클릭 시 함수
+        window.resetFilter = function() {
+            // 검색어 초기화
+            $('#search-input').val('');
+
+            // 가격 슬라이더 초기화
+            if (document.getElementById('price-range').noUiSlider) {
+                document.getElementById('price-range').noUiSlider.set([0, 100000]);
+            }
+
+            // 날짜 초기화
+            if ($('#date-range').data('daterangepicker')) {
+                $('#date-range').data('daterangepicker').setStartDate(moment());
+                $('#date-range').data('daterangepicker').setEndDate(moment().add(3, 'days'));
+                $('#date-range').val(moment().format('YYYY/MM/DD') + ' - ' + moment().add(3, 'days').format('YYYY/MM/DD'));
+            }
+
+            // hidden 필드 초기화
+            $('#hidden-min-price').val(0);
+            $('#hidden-max-price').val(100000);
+            $('#hidden-start-date').val('');
+            $('#hidden-end-date').val('');
+
+            Swal.fire({
+                icon: 'info',
+                title: '필터 초기화 완료!',
+                text: '모든 필터가 초기화되었습니다.',
+                confirmButtonColor: '#2C5F2D'
+            });
+
+            // 페이지에 직접 접근하여 모든 필터가 기본값인 상태로 이동
+            window.location.href = 'rentalsearch-main.action?tab=' + '${param.tab}';
+
+            return false; // 폼 제출 방지
         };
 
 
