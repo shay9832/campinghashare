@@ -239,7 +239,7 @@
                         </div>
                         <div class="form-group">
                             <label for="board-category">카테고리명</label>
-                            <input type="text" id="board-category" name="category" class="form-control" placeholder="카테고리 입력" required>
+                            <input type="text" id="board-category" name="categoryName" class="form-control" placeholder="카테고리 입력" required>
                         </div>
                         <div class="form-group">
                             <label for="board-admin-level">관리등급</label>
@@ -270,7 +270,7 @@
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form id="header-form" action="${pageContext.request.contextPath}/admin-saveHeader.action" method="post">
+                    <form id="header-form" action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="post">
                         <input type="hidden" id="header-action" name="action" value="add">
                         <div class="form-group">
                             <label for="header-id">말머리 ID</label>

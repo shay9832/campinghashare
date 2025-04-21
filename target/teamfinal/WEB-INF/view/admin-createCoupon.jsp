@@ -12,12 +12,29 @@
   <meta charset="UTF-8"> <!-- 문자 인코딩 UTF-8 설정 -->
   <title>관리자 시스템 - 쿠폰 생성</title> <!-- 브라우저 탭에 표시될 제목 -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-createCoupon.css">
+  <style>
+    /* 만료일 표시 스타일 추가 */
+    .validity-info {
+      display: block;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #555;
+    }
+    #expiryDate {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
 </head>
 
 <body>
 <!-- 헤더 영역 - 페이지 상단 타이틀 -->
 <div id="header">
   <h1>관리자 시스템</h1>
+  <!-- 관리자 정보 표시 영역 추가 -->
+  <div id="admin-info">
+    <span>관리자: ${sessionScope.adminName}</span> <!-- 세션에서 관리자 이름 표시 -->
+  </div>
 </div>
 
 <!-- 메인 컨테이너 -->
@@ -141,104 +158,58 @@
       <h2>쿠폰 발급</h2>
     </div>
 
-    <!-- 쿠폰 생성 폼 -->
-    <div class="coupon-form">
-      <!-- 쿠폰 생성 타이틀 -->
-      <div class="title-box">
-        쿠폰생성
-      </div>
-
-      <!-- 쿠폰 이름 -->
-      <div class="form-row">
-        <div class="label">쿠폰이름</div>
-        <div class="input-field">
-          <input type="text" placeholder="쿠폰 이름을 입력하세요">
+    <!-- 쿠폰 생성 폼 - GET 방식으로 변경 -->
+    <form id="couponForm" action="${pageContext.request.contextPath}/admin-createCoupon.action" method="get">
+      <div class="coupon-form">
+        <!-- 쿠폰 생성 타이틀 -->
+        <div class="title-box">
+          쿠폰생성
         </div>
-      </div>
 
-      <!-- 사용기간 -->
-      <div class="form-row">
-        <div class="label">사용기간</div>
-        <div class="input-field">
-          <div class="date-group">
-            <input type="date">
-            <span>~</span>
-            <input type="date">
+        <!-- 쿠폰 이름 -->
+        <div class="form-row">
+          <div class="label">쿠폰이름</div>
+          <div class="input-field">
+            <input type="text" name="couponName" placeholder="쿠폰 이름을 입력하세요" required>
           </div>
         </div>
-      </div>
 
-      <!-- 쿠폰갯수 -->
-      <div class="form-row">
-        <div class="label">쿠폰갯수</div>
-        <div class="input-field">
-          <input type="number" min="1">
-        </div>
-      </div>
-
-      <!-- 사용조건 -->
-      <div class="form-row">
-        <div class="label">사용조건</div>
-        <div class="input-field">
-          <div class="option-group">
-            <button type="button" class="option-button active">최소 사용금액</button>
-            <button type="button" class="option-button">적용가능상품</button>
-            <button type="button" class="option-button">회원 기준</button>
+        <!-- 쿠폰 할인율 추가 -->
+        <div class="form-row">
+          <div class="label">쿠폰할인율</div>
+          <div class="input-field">
+            <input type="number" name="discountRate" min="1" max="100" placeholder="할인율을 입력하세요(%)" required>
           </div>
         </div>
-      </div>
 
-      <!-- 최소 사용금액 입력 필드 (조건별로 다른 필드가 표시됨) -->
-      <div class="form-row" id="conditionDetailField">
-        <div class="input-field">
-          <input type="number" placeholder="최소 사용금액">
-        </div>
-      </div>
-
-      <!-- 사용제한 -->
-      <div class="form-row">
-        <div class="label">사용제한</div>
-        <div class="input-field">
-          <div class="option-group">
-            <button type="button" class="option-button active">1인당 갯수</button>
-            <button type="button" class="option-button">중복제한여부</button>
+        <!-- 유효개월수로 변경 -->
+        <div class="form-row">
+          <div class="label">유효개월수</div>
+          <div class="input-field">
+            <input type="number" name="validMonths" id="validMonths" min="1" max="36" placeholder="유효 개월 수" required>
+            <div class="validity-info">만료일: <span id="expiryDate">-</span></div>
+            <!-- 계산된 만료일을 서버로 전송하기 위한 hidden 필드 -->
+            <input type="hidden" name="expiryDate" id="expiryDateHidden">
           </div>
         </div>
-      </div>
 
-      <!-- 1인당 갯수 입력 필드 -->
-      <div class="form-row" id="limitDetailField">
-        <div class="input-field">
-          <input type="number" min="1" placeholder="1인당 최대 사용 가능 개수">
+        <!-- 법적고지사항 -->
+        <div class="legal-notice">
+          법적고지사항
+        </div>
+
+        <!-- 쿠폰 내용 -->
+        <div class="coupon-content">
+          test
+        </div>
+
+        <!-- 버튼 그룹 -->
+        <div class="button-group">
+          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-createCoupon.action'">취소</button>
+          <button type="submit" class="button create">생성</button>
         </div>
       </div>
-
-      <!-- 혜택치 -->
-      <div class="form-row">
-        <div class="label">혜택치</div>
-        <div class="input-field">
-          <input type="text" placeholder="Ex) 첫구매 등..">
-        </div>
-      </div>
-
-      <!-- 법적고지사항 -->
-      <div class="legal-notice">
-        법적고지사항
-      </div>
-
-      <!-- 쿠폰 내용 -->
-      <div class="coupon-content">
-        쿠폰 상세 내용<br>
-        각종 주의사항 등을 고지<br>
-        쿠폰을 받은 회원은 이 내용을 확인할수있음!
-      </div>
-
-      <!-- 버튼 그룹 -->
-      <div class="button-group">
-        <button type="button" class="button">취소</button>
-        <button type="button" class="button create">생성</button>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
@@ -268,58 +239,71 @@
     });
   });
 
-  // 사용조건 버튼 토글
-  const conditionButtons = document.querySelectorAll('.form-row:nth-of-type(5) .option-button');
-  const conditionDetailField = document.getElementById('conditionDetailField');
+  // DOM이 완전히 로드된 후 실행
+  document.addEventListener('DOMContentLoaded', function() {
+    // 유효개월수 입력 필드와 만료일 표시 요소 가져오기
+    const validMonthsInput = document.getElementById('validMonths');
+    const expiryDateElement = document.getElementById('expiryDate');
+    const expiryDateHidden = document.getElementById('expiryDateHidden');
+    const couponForm = document.getElementById('couponForm');
 
-  conditionButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // 현재 활성화된 버튼에서 active 클래스 제거
-      document.querySelector('.form-row:nth-of-type(5) .option-button.active').classList.remove('active');
-      // 클릭한 버튼에 active 클래스 추가
-      button.classList.add('active');
+    if (!validMonthsInput || !expiryDateElement || !expiryDateHidden || !couponForm) {
+      console.error('필요한 DOM 요소를 찾을 수 없습니다.');
+      return;
+    }
 
-      // 버튼에 따라 다른 입력 필드 표시
-      if (button.textContent === '최소 사용금액') {
-        conditionDetailField.style.display = 'flex';
-        conditionDetailField.querySelector('input').type = 'number';
-        conditionDetailField.querySelector('input').placeholder = '최소 사용금액';
-      } else if (button.textContent === '적용가능상품') {
-        conditionDetailField.style.display = 'flex';
-        conditionDetailField.querySelector('input').type = 'text';
-        conditionDetailField.querySelector('input').placeholder = '상품 코드 입력';
-      } else if (button.textContent === '회원 기준') {
-        conditionDetailField.style.display = 'flex';
-        conditionDetailField.querySelector('input').type = 'text';
-        conditionDetailField.querySelector('input').placeholder = '회원 등급 선택';
+    // 유효개월수 입력 시 만료일 계산 및 표시 함수
+    function calculateExpiryDate() {
+      const months = parseInt(validMonthsInput.value);
+
+      if (months && months > 0) {
+        // 현재 날짜 기준으로 만료일 계산
+        const today = new Date();
+        const expiryDate = new Date(today);
+        expiryDate.setMonth(today.getMonth() + months);
+
+        // YYYY-MM-DD 형식으로 만료일 포맷팅
+        const year = expiryDate.getFullYear();
+        const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+        const day = String(expiryDate.getDate()).padStart(2, '0');
+
+        const formattedDate = `${year}-${month}-${day}`;
+        expiryDateElement.textContent = formattedDate;
+        // hidden 필드에도 값 설정
+        expiryDateHidden.value = formattedDate;
+
+        console.log('만료일 계산됨:', formattedDate);
+      } else {
+        expiryDateElement.textContent = '-';
+        expiryDateHidden.value = '';
+      }
+    }
+
+    // 입력 이벤트 리스너 등록
+    validMonthsInput.addEventListener('input', calculateExpiryDate);
+    validMonthsInput.addEventListener('change', calculateExpiryDate);
+
+    // 페이지 로드 시 초기값이 있으면 만료일 계산
+    if (validMonthsInput.value) {
+      calculateExpiryDate();
+    }
+
+    // 폼 제출 전 만료일이 설정되었는지 확인
+    couponForm.addEventListener('submit', function(event) {
+      if (!expiryDateHidden.value && validMonthsInput.value) {
+        // 만료일이 설정되지 않았으면 다시 계산
+        calculateExpiryDate();
+      }
+
+      // 폼 유효성 검사
+      if (!validMonthsInput.value) {
+        alert('유효 개월 수를 입력해주세요.');
+        event.preventDefault();
+        return false;
       }
     });
-  });
 
-  // 사용제한 버튼 토글
-  const limitButtons = document.querySelectorAll('.form-row:nth-of-type(7) .option-button');
-  const limitDetailField = document.getElementById('limitDetailField');
-
-  limitButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // 현재 활성화된 버튼에서 active 클래스 제거
-      document.querySelector('.form-row:nth-of-type(7) .option-button.active').classList.remove('active');
-      // 클릭한 버튼에 active 클래스 추가
-      button.classList.add('active');
-
-      // 버튼에 따라 다른 입력 필드 표시
-      if (button.textContent === '1인당 갯수') {
-        limitDetailField.style.display = 'flex';
-        limitDetailField.querySelector('input').type = 'number';
-        limitDetailField.querySelector('input').placeholder = '1인당 최대 사용 가능 개수';
-      } else if (button.textContent === '중복제한여부') {
-        limitDetailField.style.display = 'flex';
-        // 체크박스로 입력 필드 변경을 대신 표현 (실제로는 select 등 다른 컨트롤을 사용할 수 있음)
-        const input = limitDetailField.querySelector('input');
-        input.type = 'checkbox';
-        input.placeholder = '';
-      }
-    });
+    console.log('만료일 계산 스크립트가 초기화되었습니다.');
   });
 </script>
 </body>

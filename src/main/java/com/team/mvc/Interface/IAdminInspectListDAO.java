@@ -28,7 +28,8 @@ public interface IAdminInspectListDAO {
     //반환 ID에 해당하는 원래 배송 ID를 찾는 메소드
     Integer getDeliveryIdFromReturnId(Integer returnId);
 
-
+    // 추가된 메서드: 검수 결과 상세 조회
+    AdminInspectListDTO getInspectionResult(Integer platformDeliveryId, Integer platformDeliveryReturnId);
 
 
     // 검수 결과 추가 - DTO 사용

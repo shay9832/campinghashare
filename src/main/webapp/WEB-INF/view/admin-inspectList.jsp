@@ -270,6 +270,9 @@
                   <c:when test="${empty inspect.inspectResult}">
                     <span class="status-badge status-waiting">검수대기</span>
                   </c:when>
+                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                    <span class="status-badge status-return">사용자반납</span>
+                  </c:when>
                   <c:otherwise>
                     <span class="status-badge status-pass">${inspect.inspectState}</span>
                   </c:otherwise>
@@ -277,6 +280,7 @@
               </td>
             </tr>
           </c:forEach>
+          <!-- 반환검수(listr) 목록의 처리 버튼 수정 -->
           <c:forEach var="inspect" items="${listr}">
             <tr>
               <td class="checkbox-column"><input type="checkbox"></td>
@@ -289,10 +293,10 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn disabled" disabled>처리완료</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -312,6 +316,9 @@
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
                     <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                    <span class="status-badge status-return">사용자반납</span>
                   </c:when>
                   <c:otherwise>
                     <span class="status-badge status-pass">${inspect.inspectState}</span>
@@ -356,10 +363,10 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn disabled" disabled>처리완료</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -423,10 +430,10 @@
               <td>
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
-                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
+                    <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn disabled" disabled>처리완료</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -446,6 +453,9 @@
                 <c:choose>
                   <c:when test="${empty inspect.inspectResult}">
                     <span class="status-badge status-waiting">검수대기</span>
+                  </c:when>
+                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                    <span class="status-badge status-return">사용자반납</span>
                   </c:when>
                   <c:otherwise>
                     <span class="status-badge status-pass">${inspect.inspectState}</span>
@@ -574,7 +584,23 @@
 
         // 전체 선택 체크박스 초기화
         initSelectAllCheckbox();
+
+        // 모달 관련 이벤트 리스너 초기화
+        initModalListeners();
       };
+
+      // 모달 관련 이벤트 리스너 초기화
+      function initModalListeners() {
+        // 확인 버튼 클릭 이벤트
+        var cancelButton = document.querySelector('.btn-cancel');
+        if (cancelButton) {
+          cancelButton.addEventListener('click', function() {
+            // 모달 닫기
+            closeModal();
+          });
+        }
+      }
+
 
       // 메뉴 버튼 클릭 이벤트 초기화
       function initMenuButtons() {
@@ -646,12 +672,14 @@
         }
       }
 
-      // 모달 열기 함수 수정
-      function openModal(code, platformDeliveryId, inspectName, equipName, category) {
-        console.log("모달 열기:", code, platformDeliveryId, inspectName, equipName, category);
+      // 모달 열기 함수 수정 - 반환검수 대응
+      function openModal(code, deliveryId, inspectName, equipName, category, viewMode = false, inspectResult = null, inspectComment = null, finalGrade = null) {
+        console.log("모달 열기:", code, deliveryId, inspectName, equipName, category, "읽기 모드:", viewMode);
 
         // 모달 요소 가져오기
         var modal = document.getElementById('inspectionModal');
+        var form = document.getElementById('inspectionForm');
+        var modalTitle = document.querySelector('.modal-header h3');
 
         // 폼 데이터 설정
         document.getElementById('equipCode').value = code;
@@ -661,13 +689,166 @@
 
         // 검수 유형에 따라 적절한 ID 설정
         if (inspectName === '입고검수') {
-          document.getElementById('platformDeliveryId').value = platformDeliveryId;
+          document.getElementById('platformDeliveryId').value = deliveryId;
           document.getElementById('platformDeliveryReturnId').value = "";
-          document.getElementById('deliveryId').value = 'DELV-' + platformDeliveryId;
+          document.getElementById('deliveryId').value = 'DELV-' + deliveryId;
         } else if (inspectName === '스토렌반환검수') {
-          document.getElementById('platformDeliveryReturnId').value = platformDeliveryId;
-          document.getElementById('platformDeliveryId').value = "";
-          document.getElementById('deliveryId').value = 'DELV-RTN-' + platformDeliveryId;
+          document.getElementById('platformDeliveryReturnId').value = deliveryId;
+          document.getElementById('platformDeliveryId').value = ""; // 서버에서 자동으로 찾을 것임
+          document.getElementById('deliveryId').value = 'DELV-RTN-' + deliveryId;
+        }
+
+        // 나머지 코드는 동일하게 유지...
+
+        // 읽기 전용 모드 설정
+        if (viewMode) {
+          // 모달 제목 변경
+          modalTitle.textContent = "검수 결과 확인";
+
+          // CSS 클래스 추가
+          modal.querySelector('.modal-content').classList.add('view-mode');
+
+          // 폼 필드 읽기 전용으로 설정
+          var formInputs = form.querySelectorAll('input, select, textarea');
+          formInputs.forEach(function(input) {
+            input.disabled = true;
+          });
+
+          // 체크리스트 읽기 전용
+          var checkboxes = form.querySelectorAll('.grade-checkbox');
+          checkboxes.forEach(function(checkbox) {
+            checkbox.disabled = true;
+          });
+
+          // 검수 결과 정보 표시
+          if (inspectComment) {
+            document.getElementById('inspecComment').value = inspectComment;
+          }
+
+          // 저장 버튼 숨기기, 확인 버튼만 표시
+          var saveButton = document.querySelector('.btn-save');
+          var cancelButton = document.querySelector('.btn-cancel');
+
+          if (saveButton) saveButton.style.display = 'none';
+          if (cancelButton) cancelButton.textContent = '확인';
+
+          // 최종 등급 표시
+          if (finalGrade) {
+            var finalGradeElement = document.getElementById('finalGrade');
+            if (finalGradeElement) {
+              finalGradeElement.textContent = finalGrade;
+
+              // 등급에 따른 클래스 설정
+              finalGradeElement.className = 'final-grade grade-' + finalGrade.toLowerCase();
+
+              // F 등급인 경우 사용자반납 메시지 표시
+              if (finalGrade === 'F') {
+                // 기존 경고 메시지 제거
+                var existingAlert = document.getElementById('returnAlert');
+                if (existingAlert) {
+                  existingAlert.remove();
+                }
+
+                var alertDiv = document.createElement('div');
+                alertDiv.id = 'returnAlert';
+                alertDiv.className = 'return-alert';
+                alertDiv.innerHTML = '<strong>알림:</strong> F 등급으로 사용자반납 처리되었습니다.';
+
+                // 메시지 스타일 설정
+                alertDiv.style.backgroundColor = '#ffeb3b';
+                alertDiv.style.color = '#333';
+                alertDiv.style.padding = '10px';
+                alertDiv.style.margin = '10px 0';
+                alertDiv.style.borderRadius = '4px';
+                alertDiv.style.borderLeft = '5px solid #ff5722';
+
+                // 폼 상단에 메시지 추가
+                form.insertBefore(alertDiv, form.firstChild);
+              }
+            }
+          }
+
+          // 검수 등급(상/중/하) 표시
+          if (inspectResult) {
+            var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+            if (rows.length > 0) {
+              // 모든 항목에 동일한 검수 등급 적용 (간략한 표시용)
+              rows.forEach(function(row) {
+                var radios = row.querySelectorAll('input[type="radio"]');
+                radios.forEach(function(radio) {
+                  if (radio.value === inspectResult) {
+                    radio.checked = true;
+                  }
+                });
+              });
+
+              // 총점 표시 업데이트
+              var score = 0;
+              switch (inspectResult) {
+                case '상':
+                  score = 100;
+                  break;
+                case '중':
+                  score = 70;
+                  break;
+                case '하':
+                  score = 40;
+                  break;
+              }
+
+              var totalScoreElement = document.getElementById('totalScore');
+              if (totalScoreElement) {
+                totalScoreElement.textContent = score.toFixed(1);
+              }
+            }
+          }
+        } else {
+          // 수정 모드
+          modalTitle.textContent = "검수 처리";
+
+          // CSS 클래스 제거
+          modal.querySelector('.modal-content').classList.remove('view-mode');
+
+          // 폼 필드 활성화
+          var formInputs = form.querySelectorAll('input, select, textarea');
+          formInputs.forEach(function(input) {
+            // hidden 필드는 그대로 유지
+            if (input.type !== 'hidden') {
+              input.disabled = false;
+            }
+          });
+
+          // 체크박스 활성화
+          var checkboxes = form.querySelectorAll('.grade-checkbox');
+          checkboxes.forEach(function(checkbox) {
+            checkbox.disabled = false;
+          });
+
+          // 기존 경고 메시지 제거
+          var existingAlert = document.getElementById('returnAlert');
+          if (existingAlert) {
+            existingAlert.remove();
+          }
+
+          // 저장 버튼 표시, 취소 버튼 텍스트 변경
+          var saveButton = document.querySelector('.btn-save');
+          var cancelButton = document.querySelector('.btn-cancel');
+
+          if (saveButton) saveButton.style.display = '';
+          if (cancelButton) cancelButton.textContent = '취소';
+
+          // 기존 코멘트 초기화
+          var commentField = document.getElementById('inspecComment');
+          if (commentField) commentField.value = '';
+
+          // 체크박스 초기화
+          var radios = form.querySelectorAll('input[type="radio"]');
+          radios.forEach(function(radio) {
+            radio.checked = false;
+          });
+
+          // 점수 초기화
+          updateScores();
         }
 
         // 모달 표시
@@ -681,6 +862,9 @@
 
         // 폼 초기화
         document.getElementById('inspectionForm').reset();
+
+        // CSS 클래스 제거
+        modal.querySelector('.modal-content').classList.remove('view-mode');
 
         // 점수 초기화
         updateScores();
@@ -743,7 +927,7 @@
         updateFinalGrade(totalScore);
       }
 
-      // 최종 등급 업데이트 함수
+      // 최종 등급 업데이트 함수 수정
       function updateFinalGrade(totalScore) {
         var finalGradeElement = document.getElementById('finalGrade');
         if (!finalGradeElement) return;
@@ -793,6 +977,49 @@
         // 등급 ID 설정
         document.getElementById('equipGradeId').value = equipGradeId;
         document.getElementById('inspecGradeId').value = inspecGradeId;
+
+        // 최종 등급 정보를 hidden 필드에 설정
+        if (!document.getElementById('finalGradeInput')) {
+          var finalGradeInput = document.createElement('input');
+          finalGradeInput.type = 'hidden';
+          finalGradeInput.name = 'finalGrade';
+          finalGradeInput.id = 'finalGradeInput';
+          document.getElementById('inspectionForm').appendChild(finalGradeInput);
+        }
+        document.getElementById('finalGradeInput').value = grade;
+
+        // F 등급인 경우만 사용자반납 관련 안내 메시지 표시
+        if (grade === 'F') {
+          // 기존 경고 메시지 제거
+          var existingAlert = document.getElementById('returnAlert');
+          if (existingAlert) {
+            existingAlert.remove();
+          }
+
+          // 새 안내 메시지 추가
+          var alertDiv = document.createElement('div');
+          alertDiv.id = 'returnAlert';
+          alertDiv.className = 'return-alert';
+          alertDiv.innerHTML = '<strong>주의:</strong> F 등급은 사용자반납 처리 대상입니다. 저장 시 자동으로 사용자반납 처리가 진행됩니다.';
+
+          // 메시지 스타일 설정
+          alertDiv.style.backgroundColor = '#ffeb3b';
+          alertDiv.style.color = '#333';
+          alertDiv.style.padding = '10px';
+          alertDiv.style.margin = '10px 0';
+          alertDiv.style.borderRadius = '4px';
+          alertDiv.style.borderLeft = '5px solid #ff5722';
+
+          // 폼 상단에 메시지 추가
+          var form = document.getElementById('inspectionForm');
+          form.insertBefore(alertDiv, form.firstChild);
+        } else {
+          // F 등급이 아닌 경우 안내 메시지 제거
+          var existingAlert = document.getElementById('returnAlert');
+          if (existingAlert) {
+            existingAlert.remove();
+          }
+        }
       }
     </script>
   </div>
