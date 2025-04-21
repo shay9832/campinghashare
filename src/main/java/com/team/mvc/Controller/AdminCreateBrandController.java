@@ -1,25 +1,23 @@
 package com.team.mvc.Controller;
 
-import java.util.List;
-
+import com.team.mvc.DTO.BrandDTO;
+import com.team.mvc.DTO.CategoryDTO;
+import com.team.mvc.DTO.EquipmentDTO;
+import com.team.mvc.Interface.IAdminCreateBrandDAO;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.team.mvc.DTO.BrandDTO;
-import com.team.mvc.DTO.EquipmentDTO;
-import com.team.mvc.DTO.CategoryDTO;
-import com.team.mvc.Interface.IAdminCreateBrandDAO;
+import java.util.List;
 
 @Controller
 public class AdminCreateBrandController {
 
     @Autowired
-    private IAdminCreateBrandDAO adminCreateBrandDAO;
+    private SqlSession sqlSession;
 
     /**
      * 브랜드/장비명 관리 페이지 - 모든 요청 처리
@@ -35,6 +33,8 @@ public class AdminCreateBrandController {
             @RequestParam(value = "equip_name", required = false) String equipName,
             @RequestParam(value = "category_id", required = false) Integer categoryId,
             Model model, RedirectAttributes redirectAttributes) {
+
+        IAdminCreateBrandDAO adminCreateBrandDAO = sqlSession.getMapper(IAdminCreateBrandDAO.class);
 
         // POST 요청 처리 (폼 제출)
         if (formAction != null) {

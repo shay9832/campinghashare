@@ -1,11 +1,17 @@
 package com.team.mvc.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EquipmentDTO {
     private int equip_id, user_code, category_id, equip_name_id, original_price;
     private Integer equip_code;
     private String created_date;
 
     private String equip_name, majorCategory, middleCategory, brand;
+
+    // 첨부파일 추가
+    private List<AttachmentDTO> attachments;
 
     // getter/setter
 
@@ -95,5 +101,13 @@ public class EquipmentDTO {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public List<AttachmentDTO> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentDTO> attachments) {
+        this.attachments = attachments;
     }
 }

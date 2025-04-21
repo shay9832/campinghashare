@@ -17,4 +17,7 @@ public interface IMypageInspecListDAO {
     // 해당 회원의 보관 입고 검수내역 출력
     List<MypageInspecListDTO> listStorageStoreByUserCode(@Param("user_code") int user_code);
 
+    // id로 스토렌 검색
+    List<MypageInspecListDTO> getInspecByStorenId(@Param("userCode") int userCode, @Param("storenId") int storenId);
+
 }

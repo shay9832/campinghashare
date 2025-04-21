@@ -29,6 +29,8 @@ public class AdminSessionFilter implements Filter {
         String uri = httpRequest.getRequestURI();
         String ctx = httpRequest.getContextPath();
 
+        String uriLower = uri.toLowerCase();
+
         // 관리자 페이지 요청 여부 판단
         boolean isAdminPage = uri.contains("admin-") || uri.contains("/admin/");
 
@@ -36,17 +38,17 @@ public class AdminSessionFilter implements Filter {
         boolean isLoginPage = uri.contains("admin-login") || uri.contains("login-admin");
 
         // 로그인 페이지, 리소스 등 접근 제외 경로는 세션 확인 없이 진행
-        boolean isExcluded = uri.startsWith(ctx + "/resources/") ||
-                uri.startsWith(ctx + "/favicon.ico") ||
-                uri.startsWith(ctx + "/admin") ||
-                uri.startsWith(ctx + "/admin-") ||
-                uri.startsWith(ctx + "/sitemap.action") ||
-                uri.startsWith(ctx + "/registerAdmin-id.action") ||
-                uri.startsWith(ctx + "/idcheck.action") ||
-                uri.startsWith(ctx + "/nicknamecheck.action") ||
-                uri.startsWith(ctx + "/error") ||
-                uri.equals(ctx + "/") ||
-                uri.equals(ctx + "/main.action");
+        boolean isExcluded = uriLower.startsWith(ctx + "/resources/") ||
+                uriLower.startsWith(ctx + "/favicon.ico") ||
+                uriLower.startsWith(ctx + "/admin") ||
+                uriLower.startsWith(ctx + "/admin-") ||
+                uriLower.startsWith(ctx + "/sitemap.action") ||
+                uriLower.startsWith(ctx + "/registerAdmin-id.action") ||
+                uriLower.startsWith(ctx + "/idcheck.action") ||
+                uriLower.startsWith(ctx + "/nicknamecheck.action") ||
+                uriLower.startsWith(ctx + "/error") ||
+                uriLower.equals(ctx + "/") ||
+                uriLower.equals(ctx + "/main.action");
 
         // 관리자 페이지인데 adminId가 없고 예외 경로도 아니면 차단
         if (isAdminPage && !isExcluded && adminId == null) {

@@ -7,9 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class MypageInspecListService implements IMypageInspecListService {
@@ -69,5 +67,13 @@ public class MypageInspecListService implements IMypageInspecListService {
                 }
             }
         }
+    }
+    //id로 스토렌 검색
+    @Override
+    public List<MypageInspecListDTO> getInspecByStorenId(int userCode, int storenId) {
+        IMypageInspecListDAO dao = sqlSession.getMapper(IMypageInspecListDAO.class);
+        List<MypageInspecListDTO> list = dao.getInspecByStorenId(userCode, storenId);
+        processInspecList(list);
+        return list;
     }
 }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko"> <!-- 한국어 페이지 설정 -->
@@ -6,7 +7,6 @@
   <title>관리자 시스템</title> <!-- 브라우저 탭에 표시될 제목 -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-userReport.css">
 </head>
-
 <body>
 <jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
@@ -14,6 +14,7 @@
 <div id="container">
   <!-- 좌측 메뉴 영역 -->
   <div id="leftMenu">
+    <!-- (왼쪽 메뉴 부분은 변경 없음) -->
     <!-- 장비 관리 메뉴 -->
     <button class="menu-button">장비 관리</button>
     <div class="submenu">
@@ -161,13 +162,13 @@
     <!-- 신고 정보 요약 - 주요 통계 -->
     <div class="user-count">
       <div class="user-all">
-        <span>총 신고건수 : 1,234건</span>
+        <span>총 신고건수 : ${totalReportCount}건</span>
       </div>
       <div class="user-drop">
-        <span>총 게시글 신고 건수 : 45건</span>
+        <span>총 게시글 신고 건수 : ${totalPostReportCount}건</span>
       </div>
       <div class="user-new">
-        <span>총 댓글 신고 건수 : 12건</span>
+        <span>총 댓글 신고 건수 : ${totalCommentReportCount}건</span>
       </div>
     </div>
 
@@ -195,117 +196,37 @@
           <th class="col-process-date">처리일</th>
         </tr>
 
-        <!-- 신고 데이터 행 샘플 1 -->
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>10023</td>
-          <td>나무빛</td>
-          <td>파랑새</td>
-          <td><span class="category-badge category-post">게시물</span></td>
-          <td><span class="report-type-badge type-abuse">욕설/비방</span></td>
-          <td><span class="report-content">상품 문의 게시글에 불필요한 욕설을 사용하여 불쾌감을 주었습니다.</span></td>
-          <td>2025-04-05</td>
-          <td>admin01</td>
-          <td>
-            <select class="reporter-type-select" data-reporter="나무빛" data-reported="파랑새">
-              <option class="user-option" value="reporter">나무빛</option>
-              <option class="admin-option" value="reported">파랑새</option>
-            </select>
-          </td>
-          <td>
-            <div class="toggle-label">
-              <label class="toggle-switch">
-                <input type="checkbox" onchange="confirmStatusChange(this, 10023, '게시물', '욕설/비방', '상품 문의 게시글에 불필요한 욕설을 사용하여 불쾌감을 주었습니다.')">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </td>
-          <td>-</td>
-        </tr>
-
-        <!-- 신고 데이터 행 샘플 2 -->
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>10024</td>
-          <td>꽃잎</td>
-          <td>햇살</td>
-          <td><span class="category-badge category-comment">댓글</span></td>
-          <td><span class="report-type-badge type-spam">스팸</span></td>
-          <td><span class="report-content">광고성 링크를 반복적으로 게시하고 있습니다.</span></td>
-          <td>2025-04-05</td>
-          <td>admin02</td>
-          <td>
-            <select class="reporter-type-select" data-reporter="꽃잎" data-reported="햇살">
-              <option class="user-option" value="reporter">꽃잎</option>
-              <option class="admin-option" value="reported">햇살</option>
-            </select>
-          </td>
-          <td>
-            <div class="toggle-label">
-              <label class="toggle-switch">
-                <input type="checkbox" checked onchange="confirmStatusChange(this, 10024, '댓글', '스팸', '광고성 링크를 반복적으로 게시하고 있습니다.')">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </td>
-          <td>2025-04-06</td>
-        </tr>
-
-        <!-- 신고 데이터 행 샘플 3 -->
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>10025</td>
-          <td>관리자</td>
-          <td>구름이</td>
-          <td><span class="category-badge category-rental">렌탈댓글</span></td>
-          <td><span class="report-type-badge type-adult">음란물</span></td>
-          <td><span class="report-content">렌탈 문의 댓글에 불필요한 성적인 내용을 포함하고 있습니다.</span></td>
-          <td>2025-04-04</td>
-          <td>admin01</td>
-          <td>
-            <select class="reporter-type-select" data-reporter="관리자" data-reported="구름이">
-              <option class="user-option" value="reporter">관리자</option>
-              <option class="admin-option" value="reported">구름이</option>
-            </select>
-          </td>
-          <td>
-            <div class="toggle-label">
-              <label class="toggle-switch">
-                <input type="checkbox" checked onchange="confirmStatusChange(this, 10025, '렌탈댓글', '음란물', '렌탈 문의 댓글에 불필요한 성적인 내용을 포함하고 있습니다.')">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </td>
-          <td>2025-04-04</td>
-        </tr>
-
-        <!-- 신고 데이터 행 샘플 4 -->
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>10026</td>
-          <td>바람결</td>
-          <td>산들</td>
-          <td><span class="category-badge category-post">게시물</span></td>
-          <td><span class="report-type-badge type-etc">기타</span></td>
-          <td><span class="report-content">가격을 속이는 허위 정보를 올리고 있습니다.</span></td>
-          <td>2025-04-03</td>
-          <td>-</td>
-          <td>
-            <select class="reporter-type-select" data-reporter="바람결" data-reported="산들">
-              <option class="user-option" value="reporter">바람결</option>
-              <option class="admin-option" value="reported">산들</option>
-            </select>
-          </td>
-          <td>
-            <div class="toggle-label">
-              <label class="toggle-switch">
-                <input type="checkbox" onchange="confirmStatusChange(this, 10026, '게시물', '기타', '가격을 속이는 허위 정보를 올리고 있습니다.')">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </td>
-          <td>-</td>
-        </tr>
+        <%-- 신고 데이터 행 반복 시작 --%>
+        <c:forEach var="report" items="${getList}">
+          <tr>
+            <td class="checkbox-column"><input type="checkbox"></td>
+            <td>${report.post_report_id}</td>
+            <td>${report.nickname1}</td>
+            <td>${report.nickname2}</td> <%-- 피신고자 닉네임도 같은 속성 사용 (매퍼에서 중복됨) --%>
+            <td><span class="category-badge category-${report.post_id}">${report.post_id}</span></td>
+            <td><span class="report-type-badge type-${report.report_content}">${report.report_type_name}</span></td>
+            <td><span class="report-content">${report.report_content}</span></td>
+            <td>${report.report_date}</td>
+            <td>${report.admin_id}</td>
+            <td>
+              <select class="reporter-type-select" data-reporter="${report.nickname1}" data-reported="${report.nickname2}">
+                <option class="user-option" value="reporter">${report.nickname1}</option>
+                <option class="admin-option" value="reported">${report.nickname2}</option>
+              </select>
+            </td>
+            <td>
+              <div class="toggle-label">
+                <label class="toggle-switch">
+                  <input type="checkbox" ${report.process_status eq '처리완료' ? 'checked' : ''}
+                         onchange="confirmStatusChange(this, ${report.post_report_id}, '${report.post_id}', '${report.report_type_name}', '${report.report_content}')">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </td>
+            <td>${report.completed_date}</td>
+          </tr>
+        </c:forEach>
+        <%-- 신고 데이터 행 반복 끝 --%>
       </table>
     </div>
 
@@ -314,14 +235,32 @@
       <button class="page-btn first-page">&laquo;</button>
       <button class="page-btn prev-page">&lt;</button>
       <div class="page-numbers">
-        <button class="page-btn active">1</button>
-        <button class="page-btn">2</button>
-        <button class="page-btn">3</button>
-        <button class="page-btn">4</button>
-        <button class="page-btn">5</button>
+        <%-- 페이지 번호 동적 생성 --%>
+        <c:forEach begin="1" end="${totalPages}" var="pageNum">
+          <button class="page-btn ${pageNum == currentPage ? 'active' : ''}">${pageNum}</button>
+        </c:forEach>
       </div>
       <button class="page-btn next-page">&gt;</button>
       <button class="page-btn last-page">&raquo;</button>
+    </div>
+  </div>
+</div>
+
+<!-- 모달 요소를 테이블 바깥으로 이동 -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <h3>처리 상태 변경 확인</h3>
+    <p id="modalMessage">정말로 이 신고의 처리 상태를 변경하시겠습니까?</p>
+    <div class="modal-details">
+      <p><strong>신고 ID:</strong> <span id="modalReportId"></span></p>
+      <p><strong>분류:</strong> <span id="modalCategory"></span></p>
+      <p><strong>신고 유형:</strong> <span id="modalReportType"></span></p>
+      <p><strong>신고 내용:</strong> <span id="modalReportContent"></span></p>
+      <p><strong>선택된 사용자:</strong> <span id="modalSelectedPerson"></span></p>
+    </div>
+    <div class="modal-buttons">
+      <button onclick="confirmStatus()">확인</button>
+      <button onclick="cancelStatusChange()">취소</button>
     </div>
   </div>
 </div>
@@ -378,7 +317,7 @@
   let currentToggle = null;
   let currentReportId = null;
 
-  // 모달 열기
+  // 상태 변경 확인 모달 표시 함수
   function confirmStatusChange(checkbox, reportId, category, reportType, reportContent) {
     // 토글 상태 변경 전에 이전 상태 저장
     currentToggle = checkbox;
@@ -426,6 +365,7 @@
     if (currentToggle) {
       // 토글 상태 변경
       currentToggle.checked = !currentToggle.checked;
+
       // 실제 상태 업데이트 수행
       updateStatus(currentToggle);
 
@@ -439,8 +379,13 @@
     // 토글 스위치의 부모 요소 찾기
     const toggleLabel = checkbox.closest('.toggle-label');
 
-    // 상태 텍스트 요소 찾기
+    // 상태 텍스트 요소 찾기 또는 생성
     let statusText = toggleLabel.querySelector('.toggle-status');
+    if (!statusText) {
+      statusText = document.createElement('span');
+      statusText.className = 'toggle-status';
+      toggleLabel.appendChild(statusText);
+    }
 
     // 체크 상태에 따라 텍스트와 클래스 업데이트
     if (checkbox.checked) {
@@ -468,15 +413,48 @@
     }
 
     // 여기에 서버로 상태 변경을 전송하는 코드 추가 가능
+    // 예: Ajax 요청으로 서버에 상태 변경 정보 전송
     console.log('상태 변경:', checkbox.checked ? '처리완료' : '처리중', '신고 ID:', currentReportId);
+
+    // 서버에 상태 변경을 전송하는 예시 코드 (실제 구현 필요)
+    /*
+    fetch('${pageContext.request.contextPath}/updateReportStatus.action', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        reportId: currentReportId,
+        status: checkbox.checked ? '처리완료' : '처리중',
+        completedDate: checkbox.checked ? new Date().toISOString().split('T')[0] : null
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('상태 변경 성공:', data);
+    })
+    .catch(error => {
+      console.error('상태 변경 실패:', error);
+      // 실패 시 UI 원래대로 복구
+      checkbox.checked = !checkbox.checked;
+      updateStatus(checkbox);
+    });
+    */
   }
 
   // 페이지 로드 시 모든 토글 스위치 초기화
   document.addEventListener('DOMContentLoaded', function() {
     const toggles = document.querySelectorAll('.toggle-switch input');
     toggles.forEach(toggle => {
-      // 초기 상태 설정
-      updateStatus(toggle);
+      // 토글 상태에 따라 상태 텍스트 요소 추가
+      const toggleLabel = toggle.closest('.toggle-label');
+      if (!toggleLabel.querySelector('.toggle-status')) {
+        const statusText = document.createElement('span');
+        statusText.className = 'toggle-status';
+        statusText.textContent = toggle.checked ? '처리완료' : '처리중';
+        statusText.classList.add(toggle.checked ? 'resolved' : 'pending');
+        toggleLabel.appendChild(statusText);
+      }
     });
 
     // 메뉴 상태 초기화 - 활성화된 메뉴는 열린 상태로 시작
@@ -497,8 +475,8 @@
     const lastPageBtn = document.querySelector('.last-page');
 
     // 현재 페이지를 관리하는 상태 변수
-    let currentPage = 1;
-    const totalPages = 5; // 예시로 5페이지로 설정 (실제로는 데이터 기반으로 계산)
+    let currentPage = ${currentPage}; // 서버에서 전달받은 현재 페이지 번호
+    const totalPages = ${totalPages}; // 서버에서 전달받은 총 페이지 수
 
     // 페이지 버튼 클릭 이벤트
     pageButtons.forEach(button => {
@@ -510,8 +488,8 @@
         // 현재 페이지 업데이트
         currentPage = parseInt(this.textContent);
 
-        // 여기에 실제 데이터 로드 또는 페이지 변경 로직 추가
-        console.log('페이지 변경:', currentPage);
+        // 페이지 변경 URL로 이동
+        window.location.href = "${pageContext.request.contextPath}/admin-userReport.action?page=" + currentPage;
 
         // 처음/이전/다음/마지막 버튼 상태 업데이트
         updateNavigationButtons();
@@ -548,18 +526,8 @@
 
     // 특정 페이지로 이동하는 함수
     function goToPage(pageNumber) {
-      // 현재 활성화된 버튼에서 active 클래스 제거
-      document.querySelector('.page-btn.active').classList.remove('active');
-      // 새 페이지 버튼에 active 클래스 추가
-      pageButtons[pageNumber - 1].classList.add('active');
-      // 현재 페이지 업데이트
-      currentPage = pageNumber;
-
-      // 여기에 실제 데이터 로드 또는 페이지 변경 로직 추가
-      console.log('페이지 변경:', currentPage);
-
-      // 처음/이전/다음/마지막 버튼 상태 업데이트
-      updateNavigationButtons();
+      // 페이지 변경 URL로 이동
+      window.location.href = "${pageContext.request.contextPath}/admin-userReport.action?page=" + pageNumber;
     }
 
     // 네비게이션 버튼 상태 업데이트 함수

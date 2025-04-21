@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <title>login-user.jsp</title>
@@ -117,6 +119,20 @@
     </style>
 </head>
 <body>
+
+<!-- 회원가입 성공 알림 -->
+<c:if test="${not empty registerSuccess && registerSuccess == 'true'}">
+    <script>
+        alert('회원가입이 완료되었습니다. 로그인해주세요.');
+    </script>
+</c:if>
+
+<!-- 비밀번호 재설정 성공 알림 -->
+<c:if test="${not empty resetSuccess && resetSuccess == true}">
+    <script>
+        alert('비밀번호가 성공적으로 변경되었습니다. 새 비밀번호로 로그인해주세요.');
+    </script>
+</c:if>
 
 <div class="page-wrapper">
     <main class="main-content">

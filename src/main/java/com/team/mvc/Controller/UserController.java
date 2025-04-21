@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
+import java.nio.charset.StandardCharsets;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class UserController {
@@ -89,53 +91,133 @@ public class UserController {
         return "registerUser-tel";
     }
 
-    // PASS 인증 완료 → 이름/전화번호 FlashAttribute로 다음 페이지 전달
+    @RequestMapping(value = "/user-exists-check.action", method = RequestMethod.GET)
+    @ResponseBody
+    public String checkUserExists(@RequestParam("userName") String userName,
+                                  @RequestParam("userTel") String userTel) {
+
+        IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
+        int count = dao.getUserCountByNameTel(userName, userTel);  // 이름과 전화번호 중복 확인
+
+        String result = (count > 0) ? "EXISTS" : "AVAILABLE";
+
+        return result;
+    }
+
+    // PASS 인증 완료 → 이름/전화번호 세션에 저장하고 리다이렉트
     @RequestMapping(value = "/registeruser-tel-verify.action", method = RequestMethod.POST)
     public String verifyUser(@RequestParam("userName") String userName,
                              @RequestParam("userTel") String userTel,
-                             RedirectAttributes redirect) {
-        redirect.addFlashAttribute("userName", userName);
-        redirect.addFlashAttribute("userTel", userTel);
-        return "redirect:/registerUser-tel.action";
+                             HttpSession session) {
+        // 세션에 사용자 정보 저장
+        session.setAttribute("tempUserName", userName);
+        session.setAttribute("tempUserTel", userTel);
+        return "redirect:/registeruser-id.action";
     }
 
     // 회원가입 ID/Nickname 입력 페이지
     @RequestMapping(value = "/registeruser-id.action", method = RequestMethod.GET)
-    public String registerUserIdPage() {
+    public String registerUserIdPage(HttpSession session, Model model) {
+        // 세션에서 사용자 정보 가져오기
+        String userName = (String) session.getAttribute("tempUserName");
+        String userTel = (String) session.getAttribute("tempUserTel");
+
+        // 세션에 정보가 없으면 첫 단계로 리다이렉트
+        if (userName == null || userTel == null) {
+            return "redirect:/registeruser-tel.action";
+        }
+
+        model.addAttribute("userName", userName);
+        model.addAttribute("userTel", userTel);
+
         return "registerUser-id";
     }
 
     // 회원 정보 저장 처리
     @RequestMapping(value = "/insertUser.action", method = RequestMethod.POST)
-    public String insertUser(UserDTO dto) {
+    public String insertUser(UserDTO dto, HttpSession session, RedirectAttributes redirect) {
+        // 세션에서 이름과 전화번호 가져오기
+        String userName = (String) session.getAttribute("tempUserName");
+        String userTel = (String) session.getAttribute("tempUserTel");
+
+        // 세션에 정보가 없으면 첫 단계로 리다이렉트
+        if (userName == null || userTel == null) {
+            redirect.addFlashAttribute("error", "세션이 만료되었습니다. 다시 시도해주세요.");
+            return "redirect:/registeruser-tel.action";
+        }
+
+        // DTO에 세션 정보 설정
+        dto.setUserName(userName);
+        dto.setUserTel(userTel);
+
         IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
 
-        // 시퀀스를 통해 USER_CODE 채번
-        int userCode = dao.getNextUserCode();
-        dto.setUserCode(userCode);
+        try {
+            // 시퀀스를 통해 USER_CODE 채번
+            int userCode = dao.getNextUserCode();
+            dto.setUserCode(userCode);
 
-        dao.insertUser(dto);          // USERS 테이블 등록
-        dao.insertNicknameLog(dto);  // NICKNAME_LOG 테이블 등록
+            // USER_CODE 테이블에 먼저 등록
+            dao.insertUserCode(userCode);
 
-        return "redirect:/login-user.action";
+            // USERS 테이블 등록
+            dao.insertUser(dto);
+
+            // NICKNAME_LOG 테이블 등록
+            dao.insertNicknameLog(dto);
+
+            // 회원가입 완료 후 세션에서 임시 정보 제거
+            session.removeAttribute("tempUserName");
+            session.removeAttribute("tempUserTel");
+
+            // 회원가입 성공 메시지 전달 (String 타입으로 변경)
+            redirect.addFlashAttribute("registerSuccess", "true");
+
+            return "redirect:/login-user.action";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirect.addFlashAttribute("error", "회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "redirect:/registeruser-id.action";
+        }
     }
 
     // 아이디 중복 확인 (AJAX)
-    @RequestMapping(value = "/idcheck.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/user-idcheck.action", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String idCheck(@RequestParam("userId") String userId) {
-        IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        int count = dao.getUserCountById(userId);
-        return (count == 0) ? "usable" : "duplicated";
+    public String checkUserId(@RequestParam("userId") String userId, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+
+        try {
+            IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
+            int count = dao.getUserCountById(userId);
+
+            String result = (count == 0) ? "사용 가능한 아이디입니다." : "중복된 아이디입니다.";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
     }
 
     // 닉네임 중복 확인 (AJAX)
-    @RequestMapping(value = "/nicknamecheck.action", method = RequestMethod.GET)
+    @RequestMapping(value = "/user-nicknamecheck.action", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
     @ResponseBody
-    public String nicknameCheck(@RequestParam("nickname") String nickname) {
-        IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
-        int count = dao.getNicknameCount(nickname);
-        return (count == 0) ? "usable" : "duplicated";
+    public String checkNickname(@RequestParam("nickname") String nickname, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain;charset=UTF-8");
+
+        try {
+            IUserDAO dao = sqlSession.getMapper(IUserDAO.class);
+            int count = dao.getUserCountByNickname(nickname);
+
+            String result = (count == 0) ? "사용 가능한 닉네임입니다." : "중복된 닉네임입니다.";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
     }
 
     // 비밀번호 재설정 페이지
@@ -159,7 +241,7 @@ public class UserController {
             redirect.addFlashAttribute("resetSuccess", true);
             return "redirect:/login-user.action";
         } else {
-            redirect.addFlashAttribute("resetError", true);
+            redirect.addFlashAttribute("resetSuccess", "true");
             return "redirect:/login-user-passwordreset.action";
         }
     }
