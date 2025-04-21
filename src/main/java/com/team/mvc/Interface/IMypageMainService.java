@@ -3,6 +3,7 @@ package com.team.mvc.Interface;
 import com.team.mvc.DTO.StorenDTO;
 import com.team.mvc.DTO.UserDTO;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,10 @@ public interface IMypageMainService {
     UserDTO getUserDTO(int userCode);
 
     // 마이페이지 메인 중간 등록장비내역(가장 최근 등록한 3건)
-    Map<String, Object> getMyEquipmentMap(int userCode);
+    LinkedHashMap<String, Object> getMyEquipmentMap(int userCode);
 
     // 마이페이지 메인 중간 대여장비내역(가장 최근 등록한 3건)
-    Map<String, Object> getRentEquipmentMap(int userCode);
+    LinkedHashMap<String, Object> getRentEquipmentMap(int userCode);
 
     // 마이페이지 메인 중간 내가 작성한 글과 내가 작성한 댓글 구하기(가장 최근 등록한 3건씩)
     Map<String, Object> getPostCommentMap(int userCode);

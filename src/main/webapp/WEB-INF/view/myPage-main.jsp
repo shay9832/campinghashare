@@ -230,19 +230,19 @@
             <div class="user-info-section">
                 <div class="user-info-content">
                     <div class="user-details">
-                        <h3>#{user.nickname} 님</h3>
+                        <h3>${user.nickname} 님</h3>
                         <div class="user-status">
-                            <span>회원 등급: #{user.userGrade}</span>
+                            <span>회원 등급: ${user.userGrade}</span>
                             <span class="profit-info">총 수익 +${user.totalProfit}원</span>
                         </div>
                         <div class="user-stats">
                             <div class="stat-item">
                                 <span class="stat-label">포인트:</span>
-                                <span class="stat-value">#{user.totalPointtotalPoint}</span>
+                                <span class="stat-value">${user.totalPoint}</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">신뢰도:</span>
-                                <span class="stat-value">#{user.totalTrust}%</span>
+                                <span class="stat-value">${user.totalTrust}%</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">쿠폰:</span>
@@ -262,122 +262,106 @@
             <button class="tab-link" id="rentEquip-tab">
                 <i class="fa fa-shopping-cart"></i> 대여 장비 내역: 0건
             </button>
-<%--            <button class="tab-link">--%>
-<%--                <i class="fa fa-comments"></i> 1:1 문의 내역: 0건--%>
-<%--            </button>--%>
         </div>
+
 
         <div class="content-box">
             <!-- 등록 장비 내역 콘텐츠 -->
             <div class="transaction-content" id="registerEquip-content">
-        <c:choose>
-            <c:when test="${not empty myEquipMap and myEquipMap.size() > 0}"">
-            <div class="custom-table">
-                <table class="table">
-                    <tbody>
-                    <tr class="table-row">
-                        <td style="width: 20%;">
-                            <div class="product-image">
-                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                            </div>
-                        </td>
-                        <td style="width: 55%;">
-                            <div class="equipment-info-container">
-                                <input type="hidden" name="equip_code" value="EQ2024001">
-                                <a href="#" class="equipment-name">코베아 KOVEA W 4인용 거실형 텐트 패밀리 텐트</a>
-                                <div class="equipment-info-text">텐트 > 돔/리빙쉘텐트</div>
-                                <div class="equipment-info-text">코베아</div>
-                                <div class="status-badge status-storage">보관 중</div>
-                            </div>
-                        </td>
-                        <td style="width: 25%;">
-                            <div class="button-group-vertical">
-                                <button class="btn-sm btn-storen">스토렌 정보 확인</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="table-row">
-                        <td>
-                            <div class="product-image">
-                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="equipment-info-container">
-                                <input type="hidden" name="equip_code" value="EQ2024002">
-                                <a href="#" class="equipment-name">몬테라 sleeping bag 800+ 침낭</a>
-                                <div class="equipment-info-text">침낭/매트 > 침낭</div>
-                                <div class="equipment-info-text">아웃도어스</div>
-                                <div class="status-badge status-rental">대여 중</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="button-group-vertical">
-                                <button class="btn-sm btn-rental">렌탈 정보 확인</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="table-row">
-                        <td>
-                            <div class="product-image">
-                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="equipment-info-container">
-                                <input type="hidden" name="equip_code" value="EQ2024003">
-                                <a href="#" class="equipment-name">캠핑 테이블 접이식 야외 바베큐 테이블</a>
-                                <div class="equipment-info-text">테이블/체어 > 테이블</div>
-                                <div class="equipment-info-text">캠핑매니아</div>
-                                <div class="status-badge status-shipping">배송 중</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="button-group-vertical">
-                                <button class="btn-sm btn-shipping">배송 정보 확인</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="table-row">
-                        <td>
-                            <div class="product-image">
-                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="equipment-info-container">
-                                <input type="hidden" name="equip_code" value="EQ2024004">
-                                <a href="#" class="equipment-name">헬리녹스 캠핑 체어 경량 의자</a>
-                                <div class="equipment-info-text">테이블/체어 > 체어</div>
-                                <div class="equipment-info-text">아웃도어스</div>
-                                <div class="status-badge status-inspection">검수 중</div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="button-group-vertical">
-                                <button class="btn-sm btn-inspection">검수 정보 확인</button>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            </c:when>
-        </c:choose>
-        <%-- 등록 장비가 없을 때 --%>
-<%--        <div class="content-box">--%>
-<%--            <div class="transaction-content">--%>
-<%--                <p class="no-content">등록한 장비가 없습니다.</p>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-
+                <c:choose>
+                <c:when test="${not empty myEquipMap and myEquipMap.size() > 0}">
+                <div class="custom-table">
+                    <table class="table">
+                        <tbody>
+                        <c:forEach var="entry" items="${myEquipMap}">
+                            <%-- key, value를 개별 변수에 저장 --%>
+                            <c:set var="key" value="${entry.key}" />
+                            <c:set var="val" value="${entry.value}" />
+                            <c:choose>
+                                <%-- 해당 장비가 스토렌일 때 --%>
+                                <c:when test="${key == 'storen'}">
+                                    <tr class="table-row">
+                                        <td style="width: 20%;">
+                                            <div class="product-image">
+                                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
+                                            </div>
+                                        </td>
+                                        <td style="width: 55%;">
+                                            <div class="equipment-info-container">
+                                                <input type="hidden" name="storen_id" value="${val.storen_id}">
+                                                <a href="#" class="equipment-name">${val.storen_title}</a>
+                                                <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
+                                                <div class="equipment-info-text">${val.equipmentDTO.brand}</div>
+                                                <div class="status-badge status-storage">${val.status}</div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 25%;">
+                                            <div class="button-group-vertical">
+                                                <button class="btn-sm btn-storen">스토렌 정보 확인</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                                <c:when test="${key == 'general'}">
+                                    <tr class="table-row">
+                                        <td style="width: 20%;">
+                                            <div class="product-image">
+                                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
+                                            </div>
+                                        </td>
+                                        <td style="width: 55%;">
+                                            <div class="equipment-info-container">
+                                                <input type="hidden" name="equip_code" value="${val.equip_code}">
+                                                <a href="#" class="equipment-name">${val.equip_name}</a>
+                                                <div class="equipment-info-text">${val.majorCategory} > ${val.middleCategory}</div>
+                                                <div class="equipment-info-text">${val.brand}</div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 25%;">
+                                            <div class="button-group-vertical">
+                                                <button class="btn-sm btn-storen">스토렌 신청</button>
+                                                <button class="btn-sm btn-rental">렌탈 신청</button>
+                                                <button class="btn-sm btn-storage">보관 신청</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:when>
+                            </c:choose>
+<%--                        <tr class="table-row">--%>
+<%--                            <td style="width: 20%;">--%>
+<%--                                <div class="product-image">--%>
+<%--                                    <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td style="width: 55%;">--%>
+<%--                                <div class="equipment-info-container">--%>
+<%--                                    <input type="hidden" name="equip_code" value="#{myEquipMap}">--%>
+<%--                                    <a href="#" class="equipment-name">코베아 KOVEA W 4인용 거실형 텐트 패밀리 텐트</a>--%>
+<%--                                    <div class="equipment-info-text">텐트 > 돔/리빙쉘텐트</div>--%>
+<%--                                    <div class="equipment-info-text">코베아</div>--%>
+<%--                                    <div class="status-badge status-storage">보관 중</div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <td style="width: 25%;">--%>
+<%--                                <div class="button-group-vertical">--%>
+<%--                                    <button class="btn-sm btn-storen">스토렌 정보 확인</button>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+                    </c:when>
+                <c:otherwise>
+                    <%-- 등록 장비가 없을 때 --%>
+                    <p class="no-content">등록한 장비가 없습니다.</p>
+                </c:otherwise>
+                </c:choose>
                 <div class="text-right mt-3">
                     <a href="mypage-myequip.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
                 </div>
             </div>
-
-
 
             <!-- 대여 장비 내역 콘텐츠 -->
             <div class="transaction-content" id="rentEquip-content" style="display: none;">

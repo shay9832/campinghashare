@@ -24,7 +24,7 @@ public class MypageMainService implements IMypageMainService {
     }
 
     @Override
-    public Map<String, Object> getMyEquipmentMap(int userCode) {
+    public LinkedHashMap<String, Object> getMyEquipmentMap(int userCode) {
         // 최근 등록 장비 3건(일반장비+스토렌)
         // 추후 렌탈과 보관 장비 추가 필요.
 
@@ -62,7 +62,7 @@ public class MypageMainService implements IMypageMainService {
     }
 
     @Override
-    public Map<String, Object> getRentEquipmentMap(int userCode) {
+    public LinkedHashMap<String, Object> getRentEquipmentMap(int userCode) {
         //  최근 대여 장비 3건(스토렌)만 조회.
         // 추후 렌탈 장비 추가 필요. (렌탈 추가 고려해 반환형을 Map으로 설정)
 
