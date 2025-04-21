@@ -10,4 +10,7 @@ public interface IMypageDeliveryService {
     List<DeliveryDTO> getStorenOwnerDeliveries(int user_code);
     List<DeliveryDTO> getStorenUserDeliveries(int user_code);
     List<DeliveryDTO> getRentalDeliveries(int user_code);
+    //id로 스토렌 검색
+    List<DeliveryDTO> getDeliveryByStorenId(int userCode, int storenId);
+
 }

@@ -1,8 +1,10 @@
 package com.team.mvc.Service;
 
+import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.EquipmentDTO;
 import com.team.mvc.DTO.MyEquipDTO;
 import com.team.mvc.DTO.StorenDTO;
+import com.team.mvc.Interface.IAttachmentDAO;
 import com.team.mvc.Interface.IEquipmentDAO;
 import com.team.mvc.Interface.IMypageMyEquipService;
 import com.team.mvc.Interface.IStorenDAO;
@@ -27,6 +29,7 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         // 일반 장비 탭 (스토렌으로 등록되지 않은 장비만)=======================================================================
         // 사용자의 모든 장비 정보 조회
@@ -39,6 +42,14 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         List<EquipmentDTO> equipmentList = allEquipmentList.stream()
                 .filter(equip -> !storenEquipCodes.contains(equip.getEquip_code()))
                 .toList();              //중복 제거 필요x, 순서 유지 위해 toList()로 모으기
+
+        // 첨부파일(장비 사진) 넣어주기
+        for (EquipmentDTO equip : equipmentList) {
+            List<AttachmentDTO> attachmentList = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+            if (!attachmentList.isEmpty()) {
+                equip.setAttachments(attachmentList);
+            }
+        }
 
         System.out.println("== MypageMyEquip Service : listMyGeneral : END ==");
 
@@ -81,7 +92,7 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         // 즉시 확인 필요 상태 현황 만들기
         Map<String, Integer> emergencyStatus = new HashMap<>();
         emergencyStatus.put("보관비 결제 대기", storenStatus.getOrDefault("보관비 결제 대기", 0));
-        emergencyStatus.put("검수 결과 확인(입고/반환)", storenStatus.getOrDefault("보관 중", 0)
+        emergencyStatus.put("검수 결과 확인", storenStatus.getOrDefault("보관 중", 0)
                                             + storenStatus.getOrDefault("강제 반환", 0));
         emergencyStatus.put("매칭 승인 대기", storenStatus.getOrDefault("승인 대기", 0));
         emergencyStatus.put("문제 상황 발생", storenStatus.getOrDefault("상태 불명", 0));
@@ -107,24 +118,134 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         // 사용자의 모든 장비 정보 조회
         List<EquipmentDTO> allEquipmentList = equipDao.listByUserCode(userCode);
 
         // 사용자의 첫등록 스토렌 정보 리스트
-        List<StorenDTO> firstStorenList = new ArrayList<StorenDTO>();
+        List<StorenDTO> newStorenList = new ArrayList<StorenDTO>();
 
-        // 첫등록 스토렌 찾아서 넣어주기
+        // 최근등록 스토렌 찾아서 넣어주기
         for (EquipmentDTO equipmentDTO : allEquipmentList) {
-            StorenDTO firstStoren = storenDAO.getStorenByEquipCode(userCode, equipmentDTO.getEquip_code());
-            if (firstStoren != null) {
-                firstStoren.setEquipmentDTO(equipmentDTO);
-                firstStorenList.add(firstStoren);
+            System.out.println(">> 장비 조회 시도: equip_code=" + equipmentDTO.getEquip_code());
+            StorenDTO newStoren = storenDAO.getStorenByEquipCode(userCode, equipmentDTO.getEquip_code());
+
+            if (newStoren != null && newStoren.getStoren_id() > 0) {  // 스토렌 ID가 유효한 경우만 추가
+                System.out.println(">> 유효한 스토렌 정보 찾음: " + newStoren.getStoren_id());
+                // 첨부파일(장비 사진) 넣어주기
+                List<AttachmentDTO> attachmentList = attachmentDAO.listAttachmentByEquipCode(equipmentDTO.getEquip_code());
+                if (!attachmentList.isEmpty()) {
+                    equipmentDTO.setAttachments(attachmentList);
+                }
+                newStoren.setEquipmentDTO(equipmentDTO);
+                System.out.println(">> StorenDTO 확인: equip_code=" + equipmentDTO.getEquip_code()
+                        + ", storen_id=" + newStoren.getStoren_id()
+                        + ", storen_title=" + newStoren.getStoren_title()
+                        + ", created_date=" + newStoren.getCreated_date());
+                newStorenList.add(newStoren);
+            } else {
+                System.out.println(">> 해당 장비의 유효한 스토렌 정보 없음: equip_code=" + equipmentDTO.getEquip_code());
+                // 여기서 빈 스토렌 객체를 생성하거나 추가하지 않음
             }
         }
 
         System.out.println("== MypageMyEquip Service : listMyStoren : END ==");
-        return firstStorenList;
+        return newStorenList;
+    }
+
+    @Override
+    public List<StorenDTO> listMyStorenDetail(int userCode, int equipCode) {
+        System.out.println("== MypageMyEquip Service : listMyStorenDetail : START ==");
+        // dao객체 생성
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 사용자의 해당 장비코드의 모든 스토렌 정보 리스트
+        List<StorenDTO> storenList = storenDAO.listByUserCodeEquipCode(userCode, equipCode);
+
+        System.out.println("== MypageMyEquip Service : listMyStorenDetail : END ==");
+        return storenList;
+    }
+
+    @Override
+    public List<StorenDTO> listMyStorenByStatus(int userCode, String status) {
+        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
+        // dao객체 생성
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 사용자의 모든 스토렌 정보 조회 후 상태로 필터링
+        List<StorenDTO> filteredList = storenDAO.listByUserCodeStatus(userCode, status);
+
+        // 각 스토렌에 해당하는 장비 정보와 첨부파일 정보 추가
+        for (StorenDTO storen : filteredList) {
+            EquipmentDTO equipment = equipDao.getEquipmentByEquipCode(storen.getEquip_code());
+            if (equipment != null) {
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipment.getEquip_code());
+                if (!attachments.isEmpty()) {
+                    equipment.setAttachments(attachments);
+                }
+                storen.setEquipmentDTO(equipment);
+            }
+        }
+
+        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
+        return filteredList;
+    }
+
+
+    @Override
+    public List<StorenDTO> listMyStorenByStatus(int userCode, String keyword, String[] statuses) {
+        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
+        // dao객체 생성
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 최종 결과를 담을 리스트
+        List<StorenDTO> storenList = storenDAO.listByUserCodeMultiStatus(userCode, statuses);
+
+        /*
+        // 키워드에 따라 다른 처리
+        if (keyword.contains("보관비 결제 대기")) {
+            // 스토렌의 보관비 결제 대기 상태 항목 가져오기
+            storenList = storenDAO.listByUserCodeStatus(userCode, statuses[0]);
+
+        } else if (keyword.contains("검수 결과 확인")) {
+            // 스토렌의 보관 중, 강제 반환 상태 항목 가져오기
+            storenList = storenDAO.listByUserCodeStatus(userCode, "보관 중");
+            storenList.addAll(storenDAO.listByUserCodeStatus(userCode, "강제 반환"));
+
+        } else if (keyword.contains("매칭 승인 대기")) {
+            // 스토렌의 승인 대기 상태 항목 가져오기
+            storenList = storenDAO.listByUserCodeStatus(userCode, "승인 대기");
+            
+        } else if (keyword.contains("문제 상황 발생")) {
+            // 스토렌의 상태 불명 상태 항목 가져오기
+            storenList = storenDAO.listByUserCodeStatus(userCode, "상태 불명");
+        } else return storenList;
+        */
+        // 각 스토렌 항목에 장비 정보 추가하기
+        if (!storenList.isEmpty()) {
+            for (StorenDTO storen : storenList) {
+                // 장비 정보 가져오기
+                EquipmentDTO equipment = equipDao.getEquipmentByEquipCode(storen.getEquip_code());
+                if (equipment != null) {
+                    // 첨부파일 가져오기
+                    List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipment.getEquip_code());
+                    if (!attachments.isEmpty()) {
+                        equipment.setAttachments(attachments);
+                    }
+                    storen.setEquipmentDTO(equipment);
+                }
+            }
+        }
+
+        System.out.println("필터링된 결과 개수: " + storenList.size());
+        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
+        return storenList;
     }
 
     @Override

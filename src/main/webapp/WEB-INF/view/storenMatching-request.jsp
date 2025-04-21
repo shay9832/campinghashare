@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.text.NumberFormat" %>
 <%@ page import="java.util.Locale" %>
@@ -9,9 +11,6 @@
     // 장비 관련 임시 데이터
     int avgNewPrice = 2500000;
     int avgRentalPrice = 20000;
-
-    // 이미지 관련 임시 데이터
-    int totalImages = 5;
 
     // 기타 브랜드 여부 확인
     boolean isOtherBrand = "기타".equals(storen.getEquipmentDTO().getBrand());
@@ -62,13 +61,29 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/matching.css">
 
-    <!-- 매칭신청 버튼 비활성화 시, hover 액션 안 되도록 처리 -->
+
     <style>
+        /* 매칭신청 버튼 비활성화 시, hover 액션 안 되도록 처리 */
         .btn-primary.disabled:hover {
             background-color: #aaa;
             border-color: var(--btn-primary-hover-border);
             color: var(--btn-primary-text);
             pointer-events: none !important; /* hover 자체를 감지하지 않음 */
+        }
+
+        /* 메인 이미지를 컨테이너에 꽉 채우기 */
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* 썸네일 이미지도 일관되게 표시 */
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
     </style>
@@ -108,15 +123,20 @@
             <div class="left-column card">
                 <div class="main-image-container">
                     <div class="main-image">
+                        <c:if test="${not empty storen.equipmentDTO.attachments and storen.equipmentDTO.attachments[0] != null}">
+                            <img src="${storen.equipmentDTO.attachments[0].attachmentPath}" alt="상품 이미지">
+                        </c:if>
                         <button class="image-nav-btn prev-btn"><i class="fas fa-chevron-left"></i></button>
                         <button class="image-nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-                        <span class="image-counter">1/<%= totalImages %></span>
+                        <span class="image-counter">1/${fn:length(storen.equipmentDTO.attachments)}</span>
                     </div>
                 </div>
                 <div class="thumbnail-container d-flex">
-                    <% for(int i=0; i<totalImages; i++) { %>
-                    <div class="thumbnail <%= (i==0) ? "active" : "" %>" data-index="<%= i %>"></div>
-                    <% } %>
+                    <c:forEach var="item" items="${storen.equipmentDTO.attachments}" varStatus="status">
+                        <div class="thumbnail ${status.index == 0 ? 'active' : ''}" data-index="${status.index}">
+                            <img src="${item.attachmentPath}" alt="상품 이미지">
+                        </div>
+                    </c:forEach>
                 </div>
                 <div class="user-info d-flex align-items-center mb-2">
                     <span class="font-medium">${owner.nickname}</span>
@@ -262,7 +282,7 @@
     let lastValidPrice = selectedPrice !== "0원" ? selectedPrice : "0원";
 
     // 이미지 관련 설정
-    var totalImages = <%= totalImages %>;
+    var totalImages = <%= storen.getEquipmentDTO().getAttachments().size() %>;
 </script>
 
 <script type="text/javascript">
