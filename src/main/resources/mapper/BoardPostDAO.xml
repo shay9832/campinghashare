@@ -74,7 +74,7 @@
     </select>
 
     <!-- 게시판별 게시물 목록 조회 (인기글포함) -->
-    <select id="listPostList" parameterType="com.team.mvc.DTO.BoardPostDTO" resultMap="boardPostResultMap">
+    <select id="listPostList" parameterType="com.team.mvc.DTO.BoardPostDTO" resultMap="boardPostWithAttachmentsResultMap">
         SELECT *
         FROM (
         SELECT ROWNUM AS RNUM, A.*
