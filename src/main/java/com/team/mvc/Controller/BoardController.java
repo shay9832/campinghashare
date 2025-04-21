@@ -1486,24 +1486,6 @@ public class BoardController {
                                HttpSession session,
                                @ModelAttribute("userCode") Integer userCode,
                                @ModelAttribute("adminId") String adminId) {
-        // 관리자 권한 확인
-//        Integer userCode = (Integer) session.getAttribute("user_code");
-//        Integer userGrade = (Integer) session.getAttribute("user_grade");
-
-        // 관리자가 아니면 공지사항 목록으로 리다이렉트
-//        if (userGrade == null || userGrade > 1) {
-//            return "redirect:/notice.action";
-//        }
-
-        // 게시판 ID를 공지사항(1)으로 강제 설정
-//        dto.setBoardId(1);
-//        dto.setUserCode(userCode);
-
-//        // 테스트를 위해 세션에 관리자 정보 직접 설정 (없는 경우에만)
-//        if (session.getAttribute("user_code") == null) {
-//            session.setAttribute("user_code", 1);
-//            session.setAttribute("user_grade", 1);
-//        }
 
         // 관리자 권한 확인
         if (adminId == null) {
@@ -1621,41 +1603,83 @@ public class BoardController {
     // 공지사항 수정 처리를 위한 API - AdminDTO의 userCode 사용
     @RequestMapping(value = "/api/notice/update.action", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> updateNotice(@RequestBody BoardPostDTO dto,
-                                            HttpSession session,
+    public Map<String, Object> updateNotice(BoardPostDTO dto,
+                                            @RequestParam(value = "uploadFiles", required = false) List<MultipartFile> uploadFiles,
                                             @ModelAttribute("userCode") Integer userCode,
-                                            @ModelAttribute("adminId") String adminId) {
+                                            @ModelAttribute("adminId") String adminId,
+                                            HttpServletRequest request,
+                                            HttpSession session) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 관리자 권한 확인
-            if (adminId == null) {
-                result.put("success", false);
-                result.put("message", "공지사항 관리 권한이 없습니다.");
-                return result;
-            }
-
-            // 게시판 ID를 공지사항(1)으로 강제 설정
-            dto.setBoardId(1);
+            // 세션에서 로그인한 사용자 코드 가져오기
+            System.out.println("업데이트 API - 사용자 코드: " + userCode + ", 게시글 ID: " + dto.getPostId());
             dto.setUserCode(userCode);
 
-            // 게시글 존재 여부 확인
+            // 게시글 정보 조회
             BoardPostDTO post = boardPostService.getPostById(dto);
+            System.out.println("게시글 작성자 코드: " + (post != null ? post.getUserCode() : "게시글 없음"));
 
+            // 게시글이 존재하는지, 작성자가 현재 로그인한 사용자가 맞는지 확인
             if (post != null) {
                 int affectedRows = boardPostService.updatePost(dto);
+                System.out.println("업데이트 결과 - 영향 받은 행: " + affectedRows);
+
+                // 첨부파일 처리
+                if (uploadFiles != null && !uploadFiles.isEmpty()) {
+                    // 기존 첨부파일 삭제 (또는 비활성화) 처리 - 구현 필요
+                    boardPostService.deleteAttachment(dto.getPostId());
+
+                    // 업로드 경로를 webapp/resources/uploads로 설정
+                    String uploadPath = request.getServletContext().getRealPath("/resources/uploads/");
+                    System.out.println("업로드 경로: " + uploadPath);
+
+                    // 디렉토리가 없으면 생성
+                    File directory = new File(uploadPath);
+                    if (!directory.exists()) {
+                        directory.mkdirs();
+                    }
+
+                    // 각 파일 처리
+                    for (int i = 0; i < uploadFiles.size(); i++) {
+                        MultipartFile file = uploadFiles.get(i);
+
+                        if (!file.isEmpty()) {
+                            // 파일명 중복 방지를 위한 uuid 추가
+                            String originalFileName = file.getOriginalFilename();
+                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                            String savedFileName = UUID.randomUUID().toString() + extension;
+
+                            // 파일 저장 경로 설정
+                            File savedFile = new File(directory, savedFileName);
+
+                            // 파일 저장
+                            file.transferTo(savedFile);
+
+                            // DB에 첨부파일 정보 저장
+                            AttachmentDTO attachmentDTO = new AttachmentDTO();
+                            attachmentDTO.setPostId(dto.getPostId());
+                            attachmentDTO.setAttachmentName(originalFileName);
+                            attachmentDTO.setAttachmentPath("/resources/uploads/" + savedFileName); // 상대 경로로 저장
+                            attachmentDTO.setAttachmentSize((int) file.getSize());
+                            attachmentDTO.setAttachmentOrder(i + 1);
+
+                            boardPostService.insertAttachment(attachmentDTO);
+                        }
+                    }
+                }
 
                 if (affectedRows > 0) {
                     result.put("success", true);
-                    result.put("message", "공지사항이 수정되었습니다.");
+                    result.put("message", "게시글이 수정되었습니다.");
                     result.put("postId", dto.getPostId());
                 } else {
                     result.put("success", false);
-                    result.put("message", "공지사항 수정에 실패했습니다.");
+                    result.put("message", "게시글 수정에 실패했습니다.");
                 }
             } else {
                 result.put("success", false);
-                result.put("message", "존재하지 않는 공지사항입니다.");
+                result.put("message", "게시글이 존재하지 않거나 수정 권한이 없습니다.");
             }
         } catch (Exception e) {
             e.printStackTrace();

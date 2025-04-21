@@ -388,6 +388,7 @@
             });
         }
 
+
         // 확인 버튼 클릭 시 폼 제출
         if (confirmBtn && postForm) {
             confirmBtn.addEventListener('click', function () {
@@ -399,24 +400,13 @@
 
                 // 수정 모드인 경우 AJAX 처리
                 if (isUpdateMode) {
-                    // 폼 데이터 수집
+                    // FormData 생성 - 파일 업로드도 가능하도록
                     const formData = new FormData(postForm);
-                    const jsonData = {};
 
-                    // FormData를 JSON으로 변환
-                    for (const [key, value] of formData.entries()) {
-                        jsonData[key] = value;
-                    }
-
-                    console.log("AJAX 요청 데이터:", jsonData); // 디버깅용
-
-                    // AJAX 요청 보내기
+                    // Content-Type 헤더를 설정하지 않음 (multipart/form-data로 자동 설정)
                     fetch('api/notice/update.action', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(jsonData)
+                        body: formData
                     })
                         .then(response => response.json())
                         .then(data => {
