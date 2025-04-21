@@ -17,6 +17,10 @@ public class UserDTO {
     private String adminId;
     private boolean admin;
 
+    private String userGrade;               //회원 등급
+    private int nicknameChange;             //닉네임 변경 횟수
+    private int totalProfit;                //총 수익
+
     public UserDTO() {}
 
     public String getUserId() {
@@ -145,5 +149,29 @@ public class UserDTO {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getUserGrade() {
+        return userGrade;
+    }
+
+    public void setUserGrade(String userGrade) {
+        this.userGrade = userGrade;
+    }
+
+    public int getNicknameChange() {
+        return nicknameChange;
+    }
+
+    public void setNicknameChange(int nicknameChange) {
+        this.nicknameChange = nicknameChange;
+    }
+
+    public int getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(int totalProfit) {
+        this.totalProfit = totalProfit;
     }
 }
