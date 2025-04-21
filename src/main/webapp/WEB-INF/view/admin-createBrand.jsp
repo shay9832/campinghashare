@@ -166,19 +166,21 @@
                             <c:forEach var="equipment" items="${equipmentList}" varStatus="status">
                                 <tr>
                                     <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${status.count}</td>
-                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.equipmentId}</td>
-                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.equipmentName}</td>
-                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.category}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.equip_name_id}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.equip_name}</td>
+                                    <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${equipment.majorCategory}</td>
                                     <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">
                                         <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get" style="display: inline-block;">
                                             <input type="hidden" name="action" value="editEquipment">
-                                            <input type="hidden" name="equipmentId" value="${equipment.equipmentId}">
+                                            <input type="hidden" name="equip_name_id" value="${equipment.equip_name_id}">
+                                            <input type="hidden" name="brandId" value="${selectedBrand.brandId}">
                                             <button type="submit" class="option-button">수정</button>
                                         </form>
                                         <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="post" style="display: inline-block;"
                                               onsubmit="return confirm('정말로 이 장비명을 삭제하시겠습니까?');">
                                             <input type="hidden" name="formAction" value="deleteEquipment">
-                                            <input type="hidden" name="equipmentId" value="${equipment.equipmentId}">
+                                            <input type="hidden" name="equip_name_id" value="${equipment.equip_name_id}">
+                                            <input type="hidden" name="brandId" value="${selectedBrand.brandId}">
                                             <button type="submit" class="option-button">삭제</button>
                                         </form>
                                     </td>
@@ -207,7 +209,7 @@
                         <c:choose>
                             <c:when test="${not empty equipmentToEdit}">
                                 <input type="hidden" name="formAction" value="updateEquipment">
-                                <input type="hidden" name="equipmentId" value="${equipmentToEdit.equipmentId}">
+                                <input type="hidden" name="equip_name_id" value="${equipmentToEdit.equip_name_id}">
                             </c:when>
                             <c:otherwise>
                                 <input type="hidden" name="formAction" value="createEquipment">
@@ -219,29 +221,20 @@
                         <div class="form-row">
                             <div class="label">장비명</div>
                             <div class="input-field">
-                                <input type="text" name="equipmentName" placeholder="장비 이름을 입력하세요" value="${equipmentToEdit.equipmentName}" required>
+                                <input type="text" name="equip_name" placeholder="장비 이름을 입력하세요" value="${equipmentToEdit.equip_name}" required>
                             </div>
                         </div>
 
-                        <!-- 장비 설명 -->
-                        <div class="form-row">
-                            <div class="label">장비 설명</div>
-                            <div class="input-field">
-                                <textarea name="equipmentDescription" rows="4" placeholder="장비에 대한 설명을 입력하세요" style="width: 100%; padding: 10px;">${equipmentToEdit.equipmentDescription}</textarea>
-                            </div>
-                        </div>
 
                         <!-- 카테고리 -->
                         <div class="form-row">
                             <div class="label">카테고리</div>
                             <div class="input-field">
-                                <select name="category" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <select name="category_id" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                                     <option value="">카테고리를 선택하세요</option>
-                                    <option value="CAMERA" <c:if test="${equipmentToEdit.category == 'CAMERA'}">selected</c:if>>카메라</option>
-                                    <option value="LENS" <c:if test="${equipmentToEdit.category == 'LENS'}">selected</c:if>>렌즈</option>
-                                    <option value="LIGHTING" <c:if test="${equipmentToEdit.category == 'LIGHTING'}">selected</c:if>>조명</option>
-                                    <option value="AUDIO" <c:if test="${equipmentToEdit.category == 'AUDIO'}">selected</c:if>>오디오</option>
-                                    <option value="ACCESSORY" <c:if test="${equipmentToEdit.category == 'ACCESSORY'}">selected</c:if>>액세서리</option>
+                                    <c:forEach var="category" items="${categoryList}">
+                                        <option value="${category.category_id}" <c:if test="${equipmentToEdit.category_id == category.category_id}">selected</c:if>>${category.category_name}</option>
+                                    </c:forEach>
                                 </select>
                             </div>
                         </div>
