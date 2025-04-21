@@ -78,7 +78,7 @@
 
             <c:otherwise>
                 <a href="${pageContext.request.contextPath}/login-user.action">로그인</a>
-                <a href="${pageContext.request.contextPath}/registerUser-id.action">회원가입</a>
+                <a href="${pageContext.request.contextPath}/registerUser-tel.action">회원가입</a>
                 <a href="#">사이트맵</a>
             </c:otherwise>
         </c:choose>
@@ -111,7 +111,7 @@
 
                     <c:otherwise>
                         <a href="${pageContext.request.contextPath}/login-user.action">로그인</a>
-                        <a href="${pageContext.request.contextPath}/registerUser-id.action">회원가입</a>
+                        <a href="${pageContext.request.contextPath}/registeruser-tel.action">회원가입</a>
                         <a href="#">사이트맵</a>
                     </c:otherwise>
                 </c:choose>
