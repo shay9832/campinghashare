@@ -198,11 +198,11 @@
                     <label for="email-input"></label><input type="email" class="form-input" id="email-input" placeholder="예) abc1234@test.com" value="">
                     <button type="button" class="verify-btn" id="email-verify-btn">인증번호 받기</button>
                 </div>
-                <p class="form-error" id="nicknameError">사용 불가한 이메일입니다.</p>
-                <p class="form-success" id="nicknameSuccess">사용 가능한 이메일입니다.</p>
+                <p class="form-error" id="nicknameError">유효한 이메일을 입력해주세요.</p>
+                <p class="form-success" id="nicknameSuccess">유효한 이메일입니다.</p>
             </div>
 
-            <div class="form-group mt-4" id="verification-area" style="display: block;">
+            <div class="form-group mt-4" id="verification-area" style="display: none;">
                 <div class="d-flex justify-content-between" style="flex-wrap: nowrap;">
                     <label class="form-label text-secondary">인증번호 입력</label>
                     <div class="text-right mt-1">
@@ -221,7 +221,7 @@
                     <form style="display: flex;">
                         <div>
                             <label class="mr-3">
-                                <input type="radio" name="emailConsent" value="yes"> 예 (수신 동의)
+                                <input type="radio" name="emailConsent" value="yes" checked> 예 (수신 동의)
                             </label>
                         </div>
                         <div>
@@ -248,17 +248,23 @@
 
 <script>
     $(document).ready(function() {
+        $("#email-input").keyup(function () {
+            $("#nicknameError").hide();
+        });
+
         // 인증번호 받기 버튼 클릭
-        $("#verification-btn").click(function() {
-            const email = $("#email-input").val();
+        $("#email-verify-btn").click(function() {
+            const email = $("#email-input").val().trim();
 
             if (!email) {
-                alert('이메일을 입력해주세요.');
+                $("#nicknameError").show().html("이메일을 입력해주세요.");
+                $("#email-input").focus();
                 return;
             }
 
             if (!isValidEmail(email)) {
-                alert('유효한 이메일 주소를 입력해주세요.');
+                $("#nicknameError").show().html("유효한 이메일을 입력해주세요");
+                $("#email-input").focus();
                 return;
             }
 
