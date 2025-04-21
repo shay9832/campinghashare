@@ -34,7 +34,6 @@ public class AdminInspectListController {
             model.addAttribute("getEquipList", dao.getEquipList());
             model.addAttribute("equipGrades", dao.getGradeList()); // 추가: 등급 정보를 모델에 직접 포함
 
-
             return "admin-inspectList";
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,10 +129,13 @@ public class AdminInspectListController {
                     case "E":
                         equipGradeId = 5;
                         inspecGradeId = 3; // 하
+                        // E 등급은 사용자반납 대상 아님
                         break;
                     case "F":
                         equipGradeId = 6;
                         inspecGradeId = 3; // 하
+                        // F 등급인 경우 코멘트에 사용자반납 정보 추가
+                        inspecComment = inspecComment + " (등급 F로 사용자반납 대상)";
                         break;
                 }
             }
@@ -156,7 +158,14 @@ public class AdminInspectListController {
                     inspecGradeId, equipGradeId, adminId, inspecComment);
 
             // 성공 메시지 설정
-            redirectAttributes.addFlashAttribute("message", "검수 결과가 성공적으로 등록되었습니다.");
+            String successMessage = "검수 결과가 성공적으로 등록되었습니다.";
+
+            // F 등급인 경우만 메시지 변경
+            if ("F".equals(finalGrade)) {
+                successMessage = "검수 결과가 등록되었습니다. 등급 F로 사용자반납 처리되었습니다.";
+            }
+
+            redirectAttributes.addFlashAttribute("message", successMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,5 +174,4 @@ public class AdminInspectListController {
 
         return "redirect:/admin-inspectList.action";
     }
-
 }

@@ -1,7 +1,7 @@
 package com.team.mvc.DTO;
 
 public class EquipmentDTO {
-    private int equip_id, equip_code, user_code, category_id, equip_name_id, original_price;
+    private int equip_id, equip_code, user_code, category_id, equip_name_id, original_price,brandId;
     private String created_date;
 
     private String equip_name, majorCategory, middleCategory, brand;
@@ -93,5 +93,13 @@ public class EquipmentDTO {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public int getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(int brandId) {
+        this.brandId = brandId;
     }
 }

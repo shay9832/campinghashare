@@ -73,7 +73,14 @@
     <schema id="19" parent="1" name="XS$NULL">
       <ObjectId>2147483638</ObjectId>
     </schema>
-    <tablespace id="20" parent="1" name="SYSAUX">
+    <tablespace id="20" parent="1" name="SYSTEM">
+      <BlockSize>8192</BlockSize>
+      <ContentCategory>P</ContentCategory>
+      <LocalExtentManagement>1</LocalExtentManagement>
+      <Logging>1</Logging>
+      <Status>E</Status>
+    </tablespace>
+    <tablespace id="21" parent="1" name="SYSAUX">
       <AutoSegmentManagement>1</AutoSegmentManagement>
       <BlockSize>8192</BlockSize>
       <ContentCategory>P</ContentCategory>
@@ -81,25 +88,18 @@
       <Logging>1</Logging>
       <Status>E</Status>
     </tablespace>
-    <tablespace id="21" parent="1" name="SYSTEM">
-      <BlockSize>8192</BlockSize>
-      <ContentCategory>P</ContentCategory>
-      <LocalExtentManagement>1</LocalExtentManagement>
-      <Logging>1</Logging>
-      <Status>E</Status>
-    </tablespace>
-    <tablespace id="22" parent="1" name="TEMP">
-      <BlockSize>8192</BlockSize>
-      <ContentCategory>T</ContentCategory>
-      <LocalExtentManagement>1</LocalExtentManagement>
-      <Logging>0</Logging>
-      <Status>E</Status>
-    </tablespace>
-    <tablespace id="23" parent="1" name="UNDOTBS1">
+    <tablespace id="22" parent="1" name="UNDOTBS1">
       <BlockSize>8192</BlockSize>
       <ContentCategory>U</ContentCategory>
       <LocalExtentManagement>1</LocalExtentManagement>
       <Logging>1</Logging>
+      <Status>E</Status>
+    </tablespace>
+    <tablespace id="23" parent="1" name="TEMP">
+      <BlockSize>8192</BlockSize>
+      <ContentCategory>T</ContentCategory>
+      <LocalExtentManagement>1</LocalExtentManagement>
+      <Logging>0</Logging>
       <Status>E</Status>
     </tablespace>
     <tablespace id="24" parent="1" name="USERS">
@@ -34220,18 +34220,7 @@
       <TargetObjectName>_USER_COMPARISON_ROW_DIF</TargetObjectName>
       <TargetObjectParentName>SYS</TargetObjectParentName>
     </synonym>
-    <data-file id="4285" parent="20" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\SYSAUX.DBF">
-      <AutoExtensible>1</AutoExtensible>
-      <AvailabilityStatus>A</AvailabilityStatus>
-      <FileId>2</FileId>
-      <FileSize>96000</FileSize>
-      <IncrementBy>1280</IncrementBy>
-      <MaxSize>4194302</MaxSize>
-      <OnlineStatus>E</OnlineStatus>
-      <Position>2</Position>
-      <UserSize>95872</UserSize>
-    </data-file>
-    <data-file id="4286" parent="21" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\SYSTEM.DBF">
+    <data-file id="4285" parent="20" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\SYSTEM.DBF">
       <AutoExtensible>1</AutoExtensible>
       <AvailabilityStatus>A</AvailabilityStatus>
       <FileId>1</FileId>
@@ -34242,16 +34231,18 @@
       <Position>1</Position>
       <UserSize>48512</UserSize>
     </data-file>
-    <data-file id="4287" parent="22" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\TEMP.DBF">
+    <data-file id="4286" parent="21" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\SYSAUX.DBF">
       <AutoExtensible>1</AutoExtensible>
-      <FileId>1</FileId>
-      <FileSize>2560</FileSize>
-      <IncrementBy>80</IncrementBy>
+      <AvailabilityStatus>A</AvailabilityStatus>
+      <FileId>2</FileId>
+      <FileSize>96000</FileSize>
+      <IncrementBy>1280</IncrementBy>
       <MaxSize>4194302</MaxSize>
-      <Position>1</Position>
-      <UserSize>2432</UserSize>
+      <OnlineStatus>E</OnlineStatus>
+      <Position>2</Position>
+      <UserSize>95872</UserSize>
     </data-file>
-    <data-file id="4288" parent="23" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\UNDOTBS1.DBF">
+    <data-file id="4287" parent="22" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\UNDOTBS1.DBF">
       <AutoExtensible>1</AutoExtensible>
       <AvailabilityStatus>A</AvailabilityStatus>
       <FileId>3</FileId>
@@ -34261,6 +34252,15 @@
       <OnlineStatus>E</OnlineStatus>
       <Position>3</Position>
       <UserSize>48512</UserSize>
+    </data-file>
+    <data-file id="4288" parent="23" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\TEMP.DBF">
+      <AutoExtensible>1</AutoExtensible>
+      <FileId>1</FileId>
+      <FileSize>2560</FileSize>
+      <IncrementBy>80</IncrementBy>
+      <MaxSize>4194302</MaxSize>
+      <Position>1</Position>
+      <UserSize>2432</UserSize>
     </data-file>
     <data-file id="4289" parent="24" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\USERS.DBF">
       <AutoExtensible>1</AutoExtensible>
