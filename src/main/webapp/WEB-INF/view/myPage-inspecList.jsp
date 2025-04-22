@@ -331,9 +331,17 @@
                                     <td>${inspec.inspec_result_action_type}</td>
                                     <td>${inspec.completed_date}</td>
                                     <td>
-                                        <button type="button" class="btn-sm btn-track-external"
-                                                data-id="${inspec.service_id}" ${isCompleted ? '' : 'disabled'}>자세히..
-                                        </button>
+                                        <c:choose>
+                                            <c:when test="${isCompleted}">
+                                                <!-- 검수 완료 시 inspec-result.action으로 이동 -->
+                                                <a href="${pageContext.request.contextPath}/inspec-result.action?storen_id=${inspec.service_id}"
+                                                   class="btn-sm btn btn-primary">자세히</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <!-- 미완료 시 버튼 비활성화 -->
+                                                <button type="button" class="btn-sm btn-secondary" disabled>자세히</button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>

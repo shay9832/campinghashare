@@ -29,9 +29,9 @@ public class BoardPostService implements IBoardPostService {
     }
 
     @Override
-    public List<BoardPostDTO> listTotalNotice() {
+    public List<BoardPostDTO> listTotalNotice(BoardPostDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
-        return dao.listTotalNotice();
+        return dao.listTotalNotice(dto);
     }
 
     @Override
@@ -214,7 +214,7 @@ public class BoardPostService implements IBoardPostService {
         int recommendCount = currentPost.getRecommendCount();
 
         // 추천수가 50 이상인 경우에만 HOT_POST_LOG 테이블에 기록
-        if (recommendCount >= 50) {
+        if (recommendCount >= 2) {
             return dao.insertHotPostLog(dto);
         }
 
@@ -254,6 +254,13 @@ public class BoardPostService implements IBoardPostService {
     public int insertAttachment(AttachmentDTO dto) {
         IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
         return dao.insertAttachment(dto);
+    }
+
+    // 첨부파일 제거
+    @Override
+    public int deleteAttachment(int attachmentId) {
+        IBoardPostDAO dao = sqlSession.getMapper(IBoardPostDAO.class);
+        return dao.deleteAttachment(attachmentId);
     }
 
     // 북마크 여부 확인

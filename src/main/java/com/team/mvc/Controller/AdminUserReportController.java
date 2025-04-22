@@ -15,11 +15,12 @@ public class AdminUserReportController {
     @Autowired
     private SqlSession sqlSession;
 
-
     @RequestMapping(value="/admin-userReport.action",method = RequestMethod.GET)
     public String adminUserReport(@ModelAttribute("adminId") String adminId, Model model){
 
         IAdminUserReportDAO adminUserReportDAO = sqlSession.getMapper(IAdminUserReportDAO.class);
+
+        model.addAttribute("getList",adminUserReportDAO.getList());
 
         return "admin-userReport";
     }

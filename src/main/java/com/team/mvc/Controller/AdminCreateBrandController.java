@@ -2,31 +2,32 @@ package com.team.mvc.Controller;
 
 import java.util.List;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.annotation.*;
 
 import com.team.mvc.DTO.BrandDTO;
 import com.team.mvc.DTO.EquipmentDTO;
 import com.team.mvc.DTO.CategoryDTO;
-import com.team.mvc.Interface.IAdminCreateBrandDAO;
 
 @Controller
 public class AdminCreateBrandController {
 
     @Autowired
-    private IAdminCreateBrandDAO adminCreateBrandDAO;
+    private SqlSessionTemplate sqlSession;
+
+    private static final String NAMESPACE = "com.team.mvc.Interface.IAdminCreateBrandDAO.";
 
     /**
      * 브랜드/장비명 관리 페이지 - 모든 요청 처리
      */
     @RequestMapping("/admin-createBrand.action")
     public String createBrand(
-            @ModelAttribute("adminId") String adminId,
             @RequestParam(value = "action", required = false) String action,
             @RequestParam(value = "brandId", required = false) Integer brandId,
             @RequestParam(value = "equip_name_id", required = false) Integer equipNameId,
@@ -36,108 +37,140 @@ public class AdminCreateBrandController {
             @RequestParam(value = "category_id", required = false) Integer categoryId,
             Model model, RedirectAttributes redirectAttributes) {
 
-        // POST 요청 처리 (폼 제출)
-        if (formAction != null) {
-            // 브랜드 생성
-            if (formAction.equals("createBrand") && brandName != null) {
-                BrandDTO brand = new BrandDTO();
-                brand.setBrandName(brandName);
-                adminCreateBrandDAO.insertBrand(brand);
-                return "redirect:/admin-createBrand.action";
+        try {
+            // POST 요청 처리 (폼 제출)
+            if (formAction != null) {
+                return handleFormSubmission(formAction, brandId, equipNameId, brandName, equipName, categoryId, redirectAttributes);
             }
 
-            // 브랜드 수정
-            else if (formAction.equals("updateBrand") && brandId != null && brandName != null) {
-                BrandDTO brand = new BrandDTO();
-                brand.setBrandId(brandId);
-                brand.setBrandName(brandName);
-                adminCreateBrandDAO.updateBrand(brand);
-                return "redirect:/admin-createBrand.action";
-            }
+            // GET 요청 처리 (페이지 로드)
+            return handlePageLoad(action, brandId, equipNameId, model);
+        } catch (Exception e) {
+            // 에러 처리
+            redirectAttributes.addFlashAttribute("errorMessage", "처리 중 오류가 발생했습니다: " + e.getMessage());
+            return "redirect:/admin-createBrand.action";
+        }
+    }
 
-            // 브랜드 삭제
-            else if (formAction.equals("deleteBrand") && brandId != null) {
-                adminCreateBrandDAO.deleteBrand(brandId);
-                return "redirect:/admin-createBrand.action";
-            }
+    /**
+     * 폼 제출 처리 (POST 요청)
+     */
+    @Transactional
+    public String handleFormSubmission(
+            String formAction, Integer brandId, Integer equipNameId,
+            String brandName, String equipName, Integer categoryId,
+            RedirectAttributes redirectAttributes) {
 
-            // 장비명 생성
-            else if (formAction.equals("createEquipment") && brandId != null && equipName != null) {
-                EquipmentDTO equipment = new EquipmentDTO();
-                // 장비명에는 brandId 필드가 없으므로 해당 관계는 equip_name 테이블에만 있음
-                // 따라서 직접적인 설정은 불가능하며 DAO에서 처리
-                equipment.setEquip_name(equipName);
-                if (categoryId != null) {
-                    equipment.setCategory_id(categoryId);
-                }
-                adminCreateBrandDAO.insertEquipment(equipment);
-                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
-            }
-
-            // 장비명 수정
-            else if (formAction.equals("updateEquipment") && equipNameId != null && equipName != null) {
-                EquipmentDTO equipment = new EquipmentDTO();
-                equipment.setEquip_name_id(equipNameId);
-                equipment.setEquip_name(equipName);
-                if (categoryId != null) {
-                    equipment.setCategory_id(categoryId);
-                }
-                adminCreateBrandDAO.updateEquipment(equipment);
-
-                // 장비가 속한 브랜드 ID로 리다이렉트 (brandId 필드가 EquipmentDTO에 없으므로 조정 필요)
-                EquipmentDTO equipmentInfo = adminCreateBrandDAO.getEquipmentById(equipNameId);
-                // 임시로 redirectAttributes로 전달
-                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
-            }
-
-            // 장비명 삭제
-            else if (formAction.equals("deleteEquipment") && equipNameId != null) {
-                adminCreateBrandDAO.deleteEquipment(equipNameId);
-
-                // 삭제 후 해당 브랜드의 장비 목록으로 리다이렉트
-                return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
-            }
+        // 브랜드 생성
+        if ("createBrand".equals(formAction) && brandName != null) {
+            BrandDTO brand = new BrandDTO();
+            brand.setBrandName(brandName);
+            sqlSession.insert(NAMESPACE + "insertBrand", brand);
+            redirectAttributes.addFlashAttribute("successMessage", "브랜드가 성공적으로 생성되었습니다.");
+            return "redirect:/admin-createBrand.action";
         }
 
-        // GET 요청 처리 (페이지 로드)
+        // 브랜드 수정
+        else if ("updateBrand".equals(formAction) && brandId != null && brandName != null) {
+            BrandDTO brand = new BrandDTO();
+            brand.setBrandId(brandId);
+            brand.setBrandName(brandName);
+            sqlSession.update(NAMESPACE + "updateBrand", brand);
+            redirectAttributes.addFlashAttribute("successMessage", "브랜드가 성공적으로 수정되었습니다.");
+            return "redirect:/admin-createBrand.action";
+        }
+
+        // 브랜드 삭제 (연관된 장비명도 함께 삭제)
+        else if ("deleteBrand".equals(formAction) && brandId != null) {
+            // 먼저 연관된 장비명 삭제
+            try {
+                sqlSession.delete(NAMESPACE + "deleteEquipmentByBrandId", brandId);
+            } catch (Exception e) {
+                // 메서드가 없는 경우 개별 장비 삭제로 대체
+                List<EquipmentDTO> equipmentList = sqlSession.selectList(NAMESPACE + "getEquipmentListByBrandId", brandId);
+                for (EquipmentDTO equipment : equipmentList) {
+                    sqlSession.delete(NAMESPACE + "deleteEquipment", equipment.getEquip_name_id());
+                }
+            }
+
+            // 그 다음 브랜드 삭제
+            sqlSession.delete(NAMESPACE + "deleteBrand", brandId);
+            redirectAttributes.addFlashAttribute("successMessage", "브랜드와 관련 장비명이 성공적으로 삭제되었습니다.");
+            return "redirect:/admin-createBrand.action";
+        }
+
+        // 장비명 생성
+        else if ("createEquipment".equals(formAction) && brandId != null && equipName != null) {
+            EquipmentDTO equipment = new EquipmentDTO();
+            equipment.setEquip_name(equipName);
+            equipment.setBrandId(brandId);
+
+            sqlSession.insert(NAMESPACE + "insertEquipment", equipment);
+            redirectAttributes.addFlashAttribute("successMessage", "장비명이 성공적으로 생성되었습니다.");
+            return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
+        }
+
+        // 장비명 수정
+        else if ("updateEquipment".equals(formAction) && equipNameId != null && equipName != null && brandId != null) {
+            EquipmentDTO equipment = new EquipmentDTO();
+            equipment.setEquip_name_id(equipNameId);
+            equipment.setEquip_name(equipName);
+            equipment.setBrandId(brandId);
+
+            sqlSession.update(NAMESPACE + "updateEquipment", equipment);
+            redirectAttributes.addFlashAttribute("successMessage", "장비명이 성공적으로 수정되었습니다.");
+            return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
+        }
+
+        // 장비명 삭제
+        else if ("deleteEquipment".equals(formAction) && equipNameId != null && brandId != null) {
+            sqlSession.delete(NAMESPACE + "deleteEquipment", equipNameId);
+            redirectAttributes.addFlashAttribute("successMessage", "장비명이 성공적으로 삭제되었습니다.");
+            return "redirect:/admin-createBrand.action?action=selectBrand&brandId=" + brandId;
+        }
+
+        // 기본 리다이렉트
+        return "redirect:/admin-createBrand.action";
+    }
+
+    /**
+     * 페이지 로드 처리 (GET 요청)
+     */
+    private String handlePageLoad(String action, Integer brandId, Integer equipNameId, Model model) {
         // 브랜드 목록은 항상 로드
-        List<BrandDTO> brandList = adminCreateBrandDAO.getBrandList();
+        List<BrandDTO> brandList = sqlSession.selectList(NAMESPACE + "getBrandList");
         model.addAttribute("brandList", brandList);
 
         // 카테고리 목록 로드
-        List<CategoryDTO> categoryList = adminCreateBrandDAO.getCategoryList();
+        List<CategoryDTO> categoryList = sqlSession.selectList(NAMESPACE + "getCategoryList");
         model.addAttribute("categoryList", categoryList);
 
         // 특정 브랜드 선택 처리
-        if (action != null && action.equals("selectBrand") && brandId != null) {
-            BrandDTO selectedBrand = adminCreateBrandDAO.getBrandById(brandId);
+        if ("selectBrand".equals(action) && brandId != null) {
+            BrandDTO selectedBrand = sqlSession.selectOne(NAMESPACE + "getBrandById", brandId);
             model.addAttribute("selectedBrand", selectedBrand);
 
-            List<EquipmentDTO> equipmentList = adminCreateBrandDAO.getEquipmentListByBrandId(brandId);
+            List<EquipmentDTO> equipmentList = sqlSession.selectList(NAMESPACE + "getEquipmentListByBrandId", brandId);
             model.addAttribute("equipmentList", equipmentList);
         }
 
         // 브랜드 수정 처리
-        if (action != null && action.equals("editBrand") && brandId != null) {
-            BrandDTO brandToEdit = adminCreateBrandDAO.getBrandById(brandId);
+        else if ("editBrand".equals(action) && brandId != null) {
+            BrandDTO brandToEdit = sqlSession.selectOne(NAMESPACE + "getBrandById", brandId);
             model.addAttribute("brandToEdit", brandToEdit);
         }
 
         // 장비명 수정 처리
-        if (action != null && action.equals("editEquipment") && equipNameId != null) {
-            EquipmentDTO equipmentToEdit = adminCreateBrandDAO.getEquipmentById(equipNameId);
+        else if ("editEquipment".equals(action) && equipNameId != null && brandId != null) {
+            EquipmentDTO equipmentToEdit = sqlSession.selectOne(NAMESPACE + "getEquipmentById", equipNameId);
             model.addAttribute("equipmentToEdit", equipmentToEdit);
 
-            // 장비명 정보를 이용해 해당 브랜드 정보 조회
-            // 브랜드 ID는 직접 equipmentToEdit에서 가져올 수 없으므로 수정 필요
-            // 여기서는 임시로 파라미터로 전달된 brandId 사용
-            if (brandId != null) {
-                BrandDTO selectedBrand = adminCreateBrandDAO.getBrandById(brandId);
-                model.addAttribute("selectedBrand", selectedBrand);
+            // 장비가 속한 브랜드 정보 조회
+            BrandDTO selectedBrand = sqlSession.selectOne(NAMESPACE + "getBrandById", brandId);
+            model.addAttribute("selectedBrand", selectedBrand);
 
-                List<EquipmentDTO> equipmentList = adminCreateBrandDAO.getEquipmentListByBrandId(brandId);
-                model.addAttribute("equipmentList", equipmentList);
-            }
+            List<EquipmentDTO> equipmentList = sqlSession.selectList(NAMESPACE + "getEquipmentListByBrandId", brandId);
+            model.addAttribute("equipmentList", equipmentList);
         }
 
         return "admin-createBrand";

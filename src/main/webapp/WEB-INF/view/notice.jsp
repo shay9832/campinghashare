@@ -1,14 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%
-    // 테스트를 위한 임시 관리자 정보 설정
-    session.setAttribute("user_code", 1);  // 관리자 계정 코드
-    session.setAttribute("user_grade", 1); // 관리자 등급 (1: 관리자)
-%>
-
 <html>
 <head>
     <title>공지사항</title>
+
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -93,13 +90,206 @@
     </style>
 
     <script>
-        $(document).ready(function (){
+        $(document).ready(function() {
+            // 전역 변수로 현재 페이지 설정
+            var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
 
+            // 원본 게시글 번호를 저장할 객체
+            var originalPostNumbers = {};
+
+            // 초기 페이지 로드 시 원본 게시글 번호 저장
+            $('.board-row').each(function() {
+                var postId = $(this).find('a[href^="noticepost.action"]').attr('href');
+                if (postId) {
+                    postId = postId.split('postId=')[1];
+                    var rowNum = $(this).find('td:first').text().trim();
+                    if (rowNum !== '공지' && rowNum !== '중요') {
+                        // 숫자인 경우에만 저장
+                        if (!isNaN(rowNum) && rowNum !== '') {
+                            originalPostNumbers[postId] = rowNum;
+                        }
+                    }
+                }
+            });
+
+            // 정렬 셀렉트 박스의 변경 이벤트 처리
+            $('select[name="sortType"]').on('change', function() {
+                loadPosts(1);
+            });
+
+            // 페이지 로드 함수 업데이트
+            function loadPosts(page) {
+                var searchType = $('select[name="searchType"]').val();
+                var searchKeyword = $('input[name="searchKeyword"]').val();
+                var sortType = $('select[name="sortType"]').val();
+
+                console.log("로딩 페이지: " + page + ", 정렬: " + sortType + ", 검색: " + searchType + ":" + searchKeyword);
+
+                $.ajax({
+                    url: 'api/notice.action',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        size: 10,
+                        sortType: sortType,
+                        searchType: searchType,
+                        searchKeyword: searchKeyword,
+                        originalPostNumbers: JSON.stringify(originalPostNumbers)
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log("응답 성공:", response);
+                        updateTable(response);
+                        updatePagination(response.pagenation);
+                        currentPage = page;
+
+                        // URL 파라미터 업데이트 (브라우저 히스토리에 상태 저장)
+                        var newUrl = 'notice.action?page=' + page;
+                        if (searchKeyword) {
+                            newUrl += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
+                        }
+                        if (sortType && sortType !== 'recent') {
+                            newUrl += '&sortType=' + sortType;
+                        }
+                        history.pushState({page: page, sortType: sortType, searchType: searchType, searchKeyword: searchKeyword}, '', newUrl);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading notices:', error);
+                        alert('공지사항을 불러오는 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+
+            // 뒤로가기 버튼 처리
+            window.addEventListener('popstate', function(e) {
+                if (e.state) {
+                    var page = e.state.page || 1;
+                    var sortType = e.state.sortType || 'recent';
+
+                    // 정렬 셀렉트 박스 업데이트
+                    $('select[name="sortType"]').val(sortType);
+
+                    // 데이터 로드
+                    loadPosts(page);
+                }
+            });
+
+            // 업데이트 테이블 함수 수정
+            function updateTable(data) {
+                var html = '';
+
+                // 디버깅 출력 추가
+                console.log("받은 데이터:", data);
+
+                // 공지사항 표시
+                if (data.noticeList && data.noticeList.length > 0) {
+                    $.each(data.noticeList, function(index, notice) {
+                        var categoryClass = '';
+                        if (notice.postLabelName === '중요') {
+                            categoryClass = 'important';
+                        } else if (notice.postLabelName === '공지') {
+                            categoryClass = 'notice';
+                        } else if (notice.postLabelName === '업데이트') {
+                            categoryClass = 'update';
+                        }
+
+                        // 번호 계산 방식 수정
+                        var displayNumber = '';
+                        if (originalPostNumbers[notice.postId]) {
+                            displayNumber = originalPostNumbers[notice.postId];
+                        } else {
+                            displayNumber = data.pagenation.totalPost - ((data.pagenation.pageNum - 1) * data.pagenation.pageSize) - index;
+                            // 새로운 게시글이면 원본 번호로 저장
+                            if (displayNumber) {
+                                originalPostNumbers[notice.postId] = displayNumber;
+                            }
+                        }
+
+                        html += '<tr class="board-row notice border-bottom">' +
+                            '<td class="p-3 text-center">' + displayNumber + '</td>' +
+                            '<td class="p-3 text-center"><span class="board-category-tag ' + categoryClass + '">' +
+                            (notice.postLabelName || '') + '</span></td>' +
+                            '<td class="p-3 title-cell"><a href="noticepost.action?postId=' + notice.postId + '">' +
+                            notice.postTitle + '</a></td>' +
+                            '<td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>' +
+                            '<td class="p-3 text-center">' +
+                            (notice.createdDate ? notice.createdDate.substring(0, 10) : 'N/A') + '</td>' +
+                            '<td class="p-3 text-center">' + (notice.viewCount || 0) + '</td>' +
+                            '<td class="p-3 text-center">' + (notice.recommendCount || 0) + '</td>' +
+                            '</tr>';
+                    });
+                } else {
+                    html += '<tr><td colspan="7" class="text-center p-3">검색 결과가 없습니다.</td></tr>';
+                }
+
+                $('#notice-table tbody').html(html);
+            }
+
+            // 페이지네이션 업데이트 함수
+            function updatePagination(pagenation) {
+                var html = '';
+                var searchType = $('select[name="searchType"]').val();
+                var searchKeyword = $('input[name="searchKeyword"]').val();
+                var sortType = $('select[name="sortType"]').val();
+
+                // 검색 파라미터 문자열 생성
+                var searchParams = '';
+                if (searchKeyword) {
+                    searchParams += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
+                }
+
+                // 정렬 파라미터 문자열 생성
+                var sortParams = '';
+                if (sortType && sortType !== 'recent') {
+                    sortParams += '&sortType=' + sortType;
+                }
+
+                // 첫 페이지로
+                if (pagenation.pageNum > 1) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="1">' +
+                        '<i class="fa-solid fa-angles-left"></i></a>';
+                }
+
+                // 이전 블록으로
+                if (pagenation.startPage > pagenation.blockSize) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.prevPage + '">' +
+                        '<i class="fa-solid fa-chevron-left"></i></a>';
+                }
+
+                // 페이지 번호
+                for (var i = pagenation.startPage; i <= pagenation.endPage; i++) {
+                    var activeClass = (pagenation.pageNum == i) ? 'btn-primary' : '';
+                    html += '<a href="#" class="btn ' + activeClass + ' btn-sm page-link" data-page="' + i + '">' + i + '</a>';
+                }
+
+                // 다음 블록으로
+                if (pagenation.endPage < pagenation.totalPage) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.nextPage + '">' +
+                        '<i class="fa-solid fa-chevron-right"></i></a>';
+                }
+
+                // 마지막 페이지로
+                if (pagenation.pageNum < pagenation.totalPage) {
+                    html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.totalPage + '">' +
+                        '<i class="fa-solid fa-angles-right"></i></a>';
+                }
+
+                $('.pagination').html(html);
+
+                // 페이지네이션 링크 이벤트 처리
+                $('.page-link').on('click', function(e) {
+                    e.preventDefault();
+                    var page = $(this).data('page');
+                    loadPosts(page);
+                });
+            }
+
+            // 검색 폼 제출 처리
+            $('form').submit(function(e) {
+                e.preventDefault();
+                loadPosts(1);
+            });
         });
-
-        function goToWrite() {
-            window.location.href = "notice-write.action";
-        }
     </script>
 
 </head>
@@ -118,11 +308,10 @@
                 <!-- 정렬 옵션 -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="d-flex align-items-center">
-                        <select class="form-control form-control-sm mr-2">
-                            <option>정렬</option>
-                            <option>최신순</option>
-                            <option>조회순</option>
-                            <option>추천순</option>
+                        <select name="sortType" class="form-control-sm">
+                            <option value="recent" ${param.sortType == 'recent' || empty param.sortType ? 'selected' : ''}>최신순</option>
+                            <option value="views" ${param.sortType == 'views' ? 'selected' : ''}>조회순</option>
+                            <option value="recommends" ${param.sortType == 'recommends' ? 'selected' : ''}>추천순</option>
                         </select>
                     </div>
                 </div>
@@ -156,88 +345,6 @@
                                 <td class="p-3 text-center">${noticeList.recommendCount}</td>
                             </tr>
                         </c:forEach>
-                        <!-- 공지사항 목록 -->
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">14</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑 관련 허위정보 및 스팸 게시글 신고 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-25</td>--%>
-<%--                            <td class="p-3 text-center">876</td>--%>
-<%--                            <td class="p-3 text-center">28</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">13</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">커뮤니티 게시글 작성 가이드</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-25</td>--%>
-<%--                            <td class="p-3 text-center">987</td>--%>
-<%--                            <td class="p-3 text-center">45</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">12</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">혼캠족을 위한 안전 가이드라인 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-03-10</td>--%>
-<%--                            <td class="p-3 text-center">1,245</td>--%>
-<%--                            <td class="p-3 text-center">32</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">11</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑하쉐어 포인트 적립 시스템 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-28</td>--%>
-<%--                            <td class="p-3 text-center">954</td>--%>
-<%--                            <td class="p-3 text-center">67</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">10</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag update">업데이트</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">모바일 앱 베타 버전 출시 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-20</td>--%>
-<%--                            <td class="p-3 text-center">1,678</td>--%>
-<%--                            <td class="p-3 text-center">189</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">9</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">캠핑하쉐어 커뮤니티 이용 규칙 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-02-15</td>--%>
-<%--                            <td class="p-3 text-center">2,345</td>--%>
-<%--                            <td class="p-3 text-center">89</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">8</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag important">중요</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">겨울 캠핑 안전 수칙 안내</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-01-10</td>--%>
-<%--                            <td class="p-3 text-center">1,456</td>--%>
-<%--                            <td class="p-3 text-center">178</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">7</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag update">업데이트</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">사이트 리뉴얼 안내 및 피드백 요청</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2025-01-05</td>--%>
-<%--                            <td class="p-3 text-center">1,789</td>--%>
-<%--                            <td class="p-3 text-center">156</td>--%>
-<%--                        </tr>--%>
-<%--                        <tr class="board-row notice border-bottom">--%>
-<%--                            <td class="p-3 text-center">6</td>--%>
-<%--                            <td class="p-3 text-center"><span class="board-category-tag notice">공지</span></td>--%>
-<%--                            <td class="p-3 title-cell"><a href="#">2024년 커뮤니티 운영 결산</a></td>--%>
-<%--                            <td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>--%>
-<%--                            <td class="p-3 text-center">2024-12-31</td>--%>
-<%--                            <td class="p-3 text-center">1,543</td>--%>
-<%--                            <td class="p-3 text-center">134</td>--%>
-<%--                        </tr>--%>
                         </tbody>
                     </table>
                 </div>
@@ -245,7 +352,8 @@
                 <div style="display: flex; align-items: center; margin-top: 30px; width: 100%;">
                     <!-- 검색 영역 - 왼쪽 -->
                     <div style="width: 240px; position: relative; z-index: 1; flex: 1;">
-                        <form action="notice.action" method="get">
+                        <form action="notice.action" method="get" onsubmit="return false;">
+                            <input type="hidden" name="sortType" value="${param.sortType}">
                             <div class="d-flex border rounded">
                                 <select name="searchType" class="form-control-sm border-0"
                                         style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
@@ -271,7 +379,7 @@
                         <div class="d-flex gap-1 pagination">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
-                                <a href="notice.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="notice.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-left"></i>
                                 </a>
@@ -279,7 +387,7 @@
 
                             <!-- 이전 블록으로 -->
                             <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                                <a href="notice.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="notice.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </a>
@@ -287,13 +395,13 @@
 
                             <!-- 페이지 번호 -->
                             <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
-                                <a href="notice.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="notice.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
                             </c:forEach>
 
                             <!-- 다음 블록으로 -->
                             <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                                <a href="notice.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="notice.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </a>
@@ -301,7 +409,7 @@
 
                             <!-- 마지막 페이지로 -->
                             <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                                <a href="notice.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="notice.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-right"></i>
                                 </a>
@@ -311,7 +419,7 @@
 
                     <!-- 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-                        <c:if test="${sessionScope.user_grade eq 1}">
+                        <c:if test="${not empty adminId}">
                             <button class="btn btn-primary" onclick="goToWrite()">
                                 <i class="fa-solid fa-pen"></i> 글쓰기
                             </button>

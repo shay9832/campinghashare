@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -152,56 +153,32 @@
                         <th class="col-board-name">게시판명</th>
                         <th class="col-actions">관리</th>
                     </tr>
-                    <tr>
-                        <td>1001</td>
-                        <td>공지사항</td>
-                        <td><span class="admin-level-badge admin-level-3">최고관리자</span></td>
-                        <td>공지사항</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1002</td>
-                        <td>자유게시판</td>
-                        <td><span class="admin-level-badge admin-level-1">일반관리자</span></td>
-                        <td>자유롭게 대화하는 공간</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1003</td>
-                        <td>질문과답변</td>
-                        <td><span class="admin-level-badge admin-level-2">중간관리자</span></td>
-                        <td>궁금한 내용을 질문하는 곳</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1004</td>
-                        <td>장비리뷰</td>
-                        <td><span class="admin-level-badge admin-level-1">일반관리자</span></td>
-                        <td>장비 사용 후기</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1005</td>
-                        <td>거래게시판</td>
-                        <td><span class="admin-level-badge admin-level-2">중간관리자</span></td>
-                        <td>장비 거래 게시판</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-board-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-board-btn">삭제</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="board" items="${Board}">
+                        <tr>
+                            <td>${board.boardId}</td>
+                            <td>${board.categoryName}</td>
+                            <td>
+                                <span class="admin-level-badge admin-level-${board.adminGrade}">
+                                    <c:choose>
+                                        <c:when test="${board.adminGrade == '관리자+회원'}">일반관리자</c:when>
+                                        <c:when test="${board.adminGrade == '관리자'}">중간관리자</c:when>
+                                        <c:when test="${board.adminGrade == '관리자'}">최고관리자</c:when>
+                                    </c:choose>
+                                </span>
+                            </td>
+                            <td>${board.boardName}</td>
+                            <td>
+                                <button class="btn btn-primary action-btn edit-board-btn" data-id="${board.boardId}">수정</button>
+                                <button class="btn btn-danger action-btn delete-board-btn" data-id="${board.boardId}">삭제</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
+                    <c:if test="${empty Board}">
+                        <tr>
+                            <td colspan="5" class="no-data">등록된 게시판이 없습니다.</td>
+                        </tr>
+                    </c:if>
                 </table>
             </div>
         </div>
@@ -221,76 +198,24 @@
                         <th class="col-header-name">말머리명</th>
                         <th class="col-actions">관리</th>
                     </tr>
-                    <tr>
-                        <td>201</td>
-                        <td>1002</td>
-                        <td>자유게시판</td>
-                        <td>일상</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>202</td>
-                        <td>1002</td>
-                        <td>자유게시판</td>
-                        <td>유머</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>203</td>
-                        <td>1003</td>
-                        <td>질문과답변</td>
-                        <td>장비문의</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>204</td>
-                        <td>1003</td>
-                        <td>질문과답변</td>
-                        <td>사용방법</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>205</td>
-                        <td>1004</td>
-                        <td>장비리뷰</td>
-                        <td>카메라</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>206</td>
-                        <td>1004</td>
-                        <td>장비리뷰</td>
-                        <td>렌즈</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>207</td>
-                        <td>1004</td>
-                        <td>장비리뷰</td>
-                        <td>조명</td>
-                        <td>
-                            <button class="btn btn-primary action-btn edit-header-btn">수정</button>
-                            <button class="btn btn-danger action-btn delete-header-btn">삭제</button>
-                        </td>
-                    </tr>
+                    <c:forEach var="label" items="${Label}">
+                        <tr>
+                            <td>${label.labelId}</td>
+                            <td>${label.boardId}</td>
+                            <td>${label.boardName}</td>
+                            <td>${label.labelName}</td>
+                            <td>
+                                <button class="btn btn-primary action-btn edit-header-btn" data-id="${label.labelId}">수정</button>
+                                <button class="btn btn-danger action-btn delete-header-btn" data-id="${label.labelId}">삭제</button>
+                            </td>
+                        </tr>
+                    </c:forEach>
+
+                    <c:if test="${empty Label}">
+                        <tr>
+                            <td colspan="5" class="no-data">등록된 말머리가 없습니다.</td>
+                        </tr>
+                    </c:if>
                 </table>
             </div>
         </div>
@@ -303,18 +228,19 @@
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form id="board-form">
+                    <form id="board-form" action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="post">
+                        <input type="hidden" id="board-action" name="action" value="add">
                         <div class="form-group">
                             <label for="board-id">게시판 ID</label>
-                            <input type="text" id="board-id" class="form-control" placeholder="자동 생성" disabled>
+                            <input type="text" id="board-id" name="boardId" class="form-control" placeholder="자동 생성" readonly>
                         </div>
                         <div class="form-group">
                             <label for="board-category">카테고리명</label>
-                            <input type="text" id="board-category" class="form-control" placeholder="카테고리 입력" required>
+                            <input type="text" id="board-category" name="categoryName" class="form-control" placeholder="카테고리 입력" required>
                         </div>
                         <div class="form-group">
                             <label for="board-admin-level">관리등급</label>
-                            <select id="board-admin-level" class="form-control" required>
+                            <select id="board-admin-level" name="adminLevel" class="form-control" required>
                                 <option value="1">일반관리자</option>
                                 <option value="2">중간관리자</option>
                                 <option value="3">최고관리자</option>
@@ -322,7 +248,7 @@
                         </div>
                         <div class="form-group">
                             <label for="board-name">게시판명</label>
-                            <input type="text" id="board-name" class="form-control" placeholder="게시판명 입력" required>
+                            <input type="text" id="board-name" name="boardName" class="form-control" placeholder="게시판명 입력" required>
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn btn-danger" id="cancel-board-btn">취소</button>
@@ -341,24 +267,24 @@
                     <span class="close-modal">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <form id="header-form">
+                    <form id="header-form" action="${pageContext.request.contextPath}/admin-boardUpdate.action" method="post">
+                        <input type="hidden" id="header-action" name="action" value="add">
                         <div class="form-group">
                             <label for="header-id">말머리 ID</label>
-                            <input type="text" id="header-id" class="form-control" placeholder="자동 생성" disabled>
+                            <input type="text" id="header-id" name="labelId" class="form-control" placeholder="자동 생성" readonly>
                         </div>
                         <div class="form-group">
                             <label for="header-board-id">게시판 선택</label>
-                            <select id="header-board-id" class="form-control" required>
+                            <select id="header-board-id" name="boardId" class="form-control" required>
                                 <option value="">게시판 선택</option>
-                                <option value="1002">자유게시판</option>
-                                <option value="1003">질문과답변</option>
-                                <option value="1004">장비리뷰</option>
-                                <option value="1005">거래게시판</option>
+                                <c:forEach var="board" items="${boardList}">
+                                    <option value="${board.boardId}">${board.boardName}</option>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="header-name">말머리명</label>
-                            <input type="text" id="header-name" class="form-control" placeholder="말머리명 입력" required>
+                            <input type="text" id="header-name" name="labelName" class="form-control" placeholder="말머리명 입력" required>
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn btn-danger" id="cancel-header-btn">취소</button>
@@ -378,10 +304,14 @@
                 </div>
                 <div class="modal-body">
                     <p id="delete-message" style="margin-bottom: 25px; line-height: 1.5; color: #555;">정말로 삭제하시겠습니까?</p>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-primary" id="cancel-delete-btn">취소</button>
-                        <button type="button" class="btn btn-danger" id="confirm-delete-btn">삭제</button>
-                    </div>
+                    <form id="delete-form" method="post">
+                        <input type="hidden" id="delete-id" name="id">
+                        <input type="hidden" id="delete-type" name="type">
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-primary" id="cancel-delete-btn">취소</button>
+                            <button type="submit" class="btn btn-danger" id="confirm-delete-btn">삭제</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -465,176 +395,109 @@
         deleteModal.style.display = 'none';
     });
 
-    // 게시판 폼 제출 처리
-    document.getElementById('board-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // 여기에 게시판 추가/수정 처리 코드 작성
-        // 실제 환경에서는 서버로 데이터를 전송하는 AJAX 요청을 구현
-
-        // 예시: 콘솔에 데이터 출력
-        const boardId = document.getElementById('board-id').value;
-        const category = document.getElementById('board-category').value;
-        const adminLevel = document.getElementById('board-admin-level').value;
-        const boardName = document.getElementById('board-name').value;
-
-        console.log({
-            action: boardId ? '게시판 수정' : '게시판 추가',
-            boardId,
-            category,
-            adminLevel,
-            boardName
-        });
-
-        // 모달 닫기
-        boardModal.style.display = 'none';
-
-        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
-        alert(boardId ? '게시판이 성공적으로 수정되었습니다.' : '게시판이 성공적으로 추가되었습니다.');
-
-        // 페이지 새로고침 (실제 구현 시 필요한 경우)
-        // location.reload();
-    });
-
-    // 말머리 폼 제출 처리
-    document.getElementById('header-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // 여기에 말머리 추가/수정 처리 코드 작성
-        // 실제 환경에서는 서버로 데이터를 전송하는 AJAX 요청을 구현
-
-        // 예시: 콘솔에 데이터 출력
-        const headerId = document.getElementById('header-id').value;
-        const boardId = document.getElementById('header-board-id').value;
-        const headerName = document.getElementById('header-name').value;
-
-        console.log({
-            action: headerId ? '말머리 수정' : '말머리 추가',
-            headerId,
-            boardId,
-            headerName
-        });
-
-        // 모달 닫기
-        headerModal.style.display = 'none';
-
-        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
-        alert(headerId ? '말머리가 성공적으로 수정되었습니다.' : '말머리가 성공적으로 추가되었습니다.');
-
-        // 페이지 새로고침 (실제 구현 시 필요한 경우)
-        // location.reload();
-    });
-
-    // 삭제 확인 버튼 클릭 시 처리
-    document.getElementById('confirm-delete-btn').addEventListener('click', function() {
-        const type = this.getAttribute('data-type');
-        const id = this.getAttribute('data-id');
-
-        // 여기에 삭제 처리 코드 작성
-        // 실제 환경에서는 서버로 삭제 요청을 보내는 AJAX 구현
-
-        console.log({
-            action: `${type} 삭제`,
-            id
-        });
-
-        // 모달 닫기
-        deleteModal.style.display = 'none';
-
-        // 성공 메시지 표시 (실제 구현 시 AJAX 요청 성공 후 표시)
-        alert(`${type == 'board' ? '게시판' : '말머리'}이(가) 성공적으로 삭제되었습니다.`);
-
-        // 페이지 새로고침 (실제 구현 시 필요한 경우)
-        // location.reload();
-    });
-
-    // 초기화: 활성화된 메뉴의 하위 메뉴 펼치기
-    document.querySelectorAll('.menu-button.active').forEach(button => {
-        const submenu = button.nextElementSibling;
-        submenu.style.maxHeight = submenu.scrollHeight + 'px';
-    });
-
     // 게시판 추가 버튼 클릭 시 모달 표시
     document.getElementById('add-board-btn').addEventListener('click', function() {
         document.getElementById('board-modal-title').textContent = '게시판 추가';
+        document.getElementById('board-action').value = 'add';
         document.getElementById('board-form').reset();
+        document.getElementById('board-id').readOnly = true;
         boardModal.style.display = 'block';
     });
 
     // 말머리 추가 버튼 클릭 시 모달 표시
     document.getElementById('add-header-btn').addEventListener('click', function() {
         document.getElementById('header-modal-title').textContent = '말머리 추가';
+        document.getElementById('header-action').value = 'add';
         document.getElementById('header-form').reset();
+        document.getElementById('header-id').readOnly = true;
         headerModal.style.display = 'block';
     });
 
-    // 게시판 수정 버튼 클릭 시 모달 표시
-    const editBoardButtons = document.querySelectorAll('.edit-board-btn');
-    editBoardButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const boardId = row.cells[0].textContent;
-            const category = row.cells[1].textContent;
-            const adminLevel = row.querySelector('.admin-level-badge').classList.contains('admin-level-1') ? '1' :
-                row.querySelector('.admin-level-badge').classList.contains('admin-level-2') ? '2' : '3';
-            const boardName = row.cells[3].textContent;
+    // 삭제 버튼 이벤트 처리
+    function setupDeleteButtons() {
+        // 게시판 삭제 버튼
+        document.querySelectorAll('.delete-board-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const boardId = this.getAttribute('data-id');
+                const boardName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
 
-            document.getElementById('board-modal-title').textContent = '게시판 수정';
-            document.getElementById('board-id').value = boardId;
-            document.getElementById('board-category').value = category;
-            document.getElementById('board-admin-level').value = adminLevel;
-            document.getElementById('board-name').value = boardName;
-            boardModal.style.display = 'block';
+                document.getElementById('delete-modal-title').textContent = '게시판 삭제';
+                document.getElementById('delete-message').textContent =
+                    `"${boardName}" 게시판을 정말로 삭제하시겠습니까? 해당 게시판의 모든 게시글과 말머리도 함께 삭제됩니다.`;
+                document.getElementById('delete-type').value = 'board';
+                document.getElementById('delete-id').value = boardId;
+                document.getElementById('delete-form').action = '${pageContext.request.contextPath}/admin-deleteBoard.action';
+                deleteModal.style.display = 'block';
+            });
         });
-    });
 
-    // 말머리 수정 버튼 클릭 시 모달 표시
-    const editHeaderButtons = document.querySelectorAll('.edit-header-btn');
-    editHeaderButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const headerId = row.cells[0].textContent;
-            const boardId = row.cells[1].textContent;
-            const headerName = row.cells[3].textContent;
+        // 말머리 삭제 버튼
+        document.querySelectorAll('.delete-header-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const headerId = this.getAttribute('data-id');
+                const headerName = this.closest('tr').querySelector('td:nth-child(4)').textContent;
 
-            document.getElementById('header-modal-title').textContent = '말머리 수정';
-            document.getElementById('header-id').value = headerId;
-            document.getElementById('header-board-id').value = boardId;
-            document.getElementById('header-name').value = headerName;
-            headerModal.style.display = 'block';
+                document.getElementById('delete-modal-title').textContent = '말머리 삭제';
+                document.getElementById('delete-message').textContent =
+                    `"${headerName}" 말머리를 정말로 삭제하시겠습니까? 해당 말머리가 적용된 모든 게시글의 말머리가 제거됩니다.`;
+                document.getElementById('delete-type').value = 'header';
+                document.getElementById('delete-id').value = headerId;
+                document.getElementById('delete-form').action = '${pageContext.request.contextPath}/admin-deleteHeader.action';
+                deleteModal.style.display = 'block';
+            });
         });
-    });
+    }
 
-    // 게시판 삭제 버튼 클릭 시 확인 모달 표시
-    const deleteBoardButtons = document.querySelectorAll('.delete-board-btn');
-    deleteBoardButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const boardId = row.cells[0].textContent;
-            const boardName = row.cells[3].textContent;
+    // 수정 버튼 이벤트 처리
+    function setupEditButtons() {
+        // 게시판 수정 버튼
+        document.querySelectorAll('.edit-board-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const boardId = this.getAttribute('data-id');
+                const row = this.closest('tr');
+                const category = row.querySelector('td:nth-child(2)').textContent;
+                const adminLevel = row.querySelector('.admin-level-badge').classList[1].split('-')[2];
+                const boardName = row.querySelector('td:nth-child(4)').textContent;
 
-            document.getElementById('delete-modal-title').textContent = '게시판 삭제';
-            document.getElementById('delete-message').textContent = `"${boardName}" 게시판을 정말로 삭제하시겠습니까? 해당 게시판의 모든 게시글과 말머리도 함께 삭제됩니다.`;
-            document.getElementById('confirm-delete-btn').setAttribute('data-type', 'board');
-            document.getElementById('confirm-delete-btn').setAttribute('data-id', boardId);
-            deleteModal.style.display = 'block';
+                document.getElementById('board-modal-title').textContent = '게시판 수정';
+                document.getElementById('board-action').value = 'edit';
+                document.getElementById('board-id').value = boardId;
+                document.getElementById('board-category').value = category;
+                document.getElementById('board-admin-level').value = adminLevel;
+                document.getElementById('board-name').value = boardName;
+                boardModal.style.display = 'block';
+            });
         });
-    });
 
-    // 말머리 삭제 버튼 클릭 시 확인 모달 표시
-    const deleteHeaderButtons = document.querySelectorAll('.delete-header-btn');
-    deleteHeaderButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const headerId = row.cells[0].textContent;
-            const headerName = row.cells[3].textContent;
+        // 말머리 수정 버튼
+        document.querySelectorAll('.edit-header-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const labelId = this.getAttribute('data-id');
+                const row = this.closest('tr');
+                const boardId = row.querySelector('td:nth-child(2)').textContent;
+                const labelName = row.querySelector('td:nth-child(4)').textContent;
 
-            document.getElementById('delete-modal-title').textContent = '말머리 삭제';
-            document.getElementById('delete-message').textContent = `"${headerName}" 말머리를 정말로 삭제하시겠습니까? 해당 말머리가 적용된 모든 게시글의 말머리가 제거됩니다.`;
-            document.getElementById('confirm-delete-btn').setAttribute('data-type', 'header');
-            document.getElementById('confirm-delete-btn').setAttribute('data-id', headerId);
-            deleteModal.style.display = 'block';
+                document.getElementById('header-modal-title').textContent = '말머리 수정';
+                document.getElementById('header-action').value = 'edit';
+                document.getElementById('header-id').value = labelId;
+                document.getElementById('header-board-id').value = boardId;
+                document.getElementById('header-name').value = labelName;
+                headerModal.style.display = 'block';
+            });
         });
+    }
+
+    // 페이지 로드 시 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+        // 초기화: 활성화된 메뉴의 하위 메뉴 펼치기
+        document.querySelectorAll('.menu-button.active').forEach(button => {
+            const submenu = button.nextElementSibling;
+            submenu.style.maxHeight = submenu.scrollHeight + 'px';
+        });
+
+        // 수정, 삭제 버튼 이벤트 설정
+        setupEditButtons();
+        setupDeleteButtons();
     });
 </script>
 </body>

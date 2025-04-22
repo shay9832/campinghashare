@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ include file="checkLogin.jsp" %>
 <html>
 <head>
     <title>BEST 게시판</title>
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         /* 테이블에만 적용되는 스타일 */
         #boardfree-table th,
@@ -51,7 +51,7 @@
             color: #0066cc;
         }
 
-        .board-category-tag.solocamping {
+        .board-category-tag.camping {
             background-color: #ffebee;
             color: #d32f2f;
         }
@@ -146,11 +146,10 @@
                 <!-- 정렬 옵션 -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="d-flex align-items-center">
-                        <select class="form-control form-control-sm mr-2">
-                            <option>정렬</option>
-                            <option>최신순</option>
-                            <option>조회순</option>
-                            <option>추천순</option>
+                        <select name="sortType" class="form-control-sm">
+                            <option value="recent">최신순</option>
+                            <option value="views">조회순</option>
+                            <option value="recommends">추천순</option>
                         </select>
                     </div>
                 </div>
@@ -194,15 +193,15 @@
                                 <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                                 <td class="p-3 text-center">
                                     <a href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree.action' :
-                                               totalHotPost.boardName == '고독한 캐핑방' ? 'boardimage.action' : 'boardmain.action'}">
+                                               totalHotPost.boardName == '고독한 캠핑방' ? 'boardimage.action' : 'boardmain.action'}">
                                         <span class="board-category-tag ${totalHotPost.boardName == '자유 게시판' ? 'freeboard' :
-                                                                          totalHotPost.boardName == '고독한 캐핑방' ? 'camping' : ''}">${totalHotPost.boardName}
+                                                                          totalHotPost.boardName == '고독한 캠핑방' ? 'camping' : ''}">${totalHotPost.boardName}
                                         </span>
                                     </a>
                                 </td>
                                 <td class="p-3 title-cell"><a
                                         href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree-post.action' :
-                                                totalHotPost.boardName == '고독한 캐핑방' ? 'boardimage-post.action' : 'boardmain.action'}?postId=${totalHotPost.postId}">${totalHotPost.postTitle}
+                                                totalHotPost.boardName == '고독한 캠핑방' ? 'boardimage-post.action' : 'boardmain.action'}?postId=${totalHotPost.postId}">${totalHotPost.postTitle}
                                         <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
@@ -255,7 +254,7 @@
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
-                                <a href="boardbest.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-left"></i>
                                 </a>
@@ -263,7 +262,7 @@
 
                             <!-- 이전 블록으로 -->
                             <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                                <a href="boardbest.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </a>
@@ -271,13 +270,13 @@
 
                             <!-- 페이지 번호 -->
                             <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
-                                <a href="boardbest.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
                             </c:forEach>
 
                             <!-- 다음 블록으로 -->
                             <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                                <a href="boardbest.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </a>
@@ -285,7 +284,7 @@
 
                             <!-- 마지막 페이지로 -->
                             <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                                <a href="boardbest.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}"
+                                <a href="boardbest.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}${not empty param.sortType ? '&sortType='.concat(param.sortType) : ''}"
                                    class="btn btn-sm">
                                     <i class="fa-solid fa-angles-right"></i>
                                 </a>
@@ -298,5 +297,45 @@
     </div>
 </div>
 <jsp:include page="footer.jsp"></jsp:include>
+
+<script>
+    $(document).ready(function() {
+        // 정렬 드롭다운 변경 이벤트
+        $('select[name="sortType"]').change(function() {
+            // 현재 URL 파라미터 유지하면서 정렬 타입만 변경
+            const params = new URLSearchParams(window.location.search);
+            params.set('sortType', this.value);
+            params.set('page', '1'); // 정렬 변경 시 첫 페이지로 이동
+
+            // 페이지 이동
+            window.location.href = 'boardbest.action?' + params.toString();
+        });
+
+        // 검색 폼 제출 처리
+        $('form[action="boardbest.action"]').submit(function(e) {
+            // 현재 정렬 타입이 있으면 hidden input으로 추가
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentSort = urlParams.get('sortType');
+
+            if (currentSort) {
+                // 이미 존재하는 sortType input이 있는지 확인
+                let sortInput = this.querySelector('input[name="sortType"]');
+                if (!sortInput) {
+                    sortInput = document.createElement('input');
+                    sortInput.type = 'hidden';
+                    sortInput.name = 'sortType';
+                    this.appendChild(sortInput);
+                }
+                sortInput.value = currentSort;
+            }
+        });
+
+        // URL에서 현재 정렬 타입 가져와서 드롭다운 설정
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentSort = urlParams.get('sortType') || 'recent';
+        $('select[name="sortType"]').val(currentSort);
+    });
+</script>
+
 </body>
 </html>

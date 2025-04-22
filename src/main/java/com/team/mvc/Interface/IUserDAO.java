@@ -8,6 +8,12 @@ public interface IUserDAO {
     // 로그인: USER_ID + USER_PW 일치 사용자 반환
     UserDTO getUserByIdAndPw(UserDTO dto);
 
+    // 이미 가입된 이름 및 전화번호인지 여부 확인
+    int getUserCountByNameTel(@Param("userName") String userName, @Param("userTel") String userTel);
+
+    // USER_CODE 등록
+    void insertUserCode(int userCode);
+
     // 신규 사용자 등록
     void insertUser(UserDTO dto);
 
@@ -21,7 +27,9 @@ public interface IUserDAO {
     int getUserCountById(String userId);
 
     // 닉네임 중복 여부 확인
-    int getNicknameCount(String nickname);
+    int getUserCountByNickname(String nickname);
+
+
 
     // 이름, 전화번호, 아이디로 사용자 존재 여부 확인
     int getUserCountByIdNameTel(@Param("userId") String userId,
@@ -36,6 +44,9 @@ public interface IUserDAO {
 
     // 유저코드로 유저 정보 가져오기
     UserDTO getUserByUserCode(@Param("userCode") int userCode);
+
+    // 유저코드로 유저 전체 정보 가져오기
+    UserDTO getFullUserInfoByUserCode(@Param("userCode") int userCode);
 
     // 해당 유저의 주소 신규 등록
     int insertAddress(@Param("userCode") int userCode, @Param("zipCode") String zipCode, @Param("address1") String address1, @Param("address2") String address2);

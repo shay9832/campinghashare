@@ -729,3 +729,99 @@ select.form-control {
     border-left: 2px solid #3f861d;
 }
 
+/* 기존 상태 배지 스타일 */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.status-pass {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-pending {
+    background-color: #FFC107;
+    color: #333;
+}
+
+.status-fail {
+    background-color: #F44336;
+    color: white;
+}
+
+.status-waiting {
+    background-color: #9E9E9E;
+    color: white;
+}
+
+/* 사용자반납 상태 배지 스타일 추가 */
+.status-return {
+    background-color: #FF5722; /* 눈에 띄는 주황색 */
+    color: white;
+}
+
+/* 처리확인 버튼 스타일 */
+.process-btn.view-btn {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.process-btn.view-btn:hover {
+    background-color: #0b7dda;
+}
+
+/* 모달 읽기 전용 모드 스타일 */
+.modal-content.view-mode {
+    background-color: #f9f9f9;
+}
+
+.modal-content.view-mode input,
+.modal-content.view-mode select,
+.modal-content.view-mode textarea {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* 읽기 전용 모드에서 라디오 버튼 스타일 */
+.modal-content.view-mode .grade-checkbox:disabled:checked {
+    opacity: 1;
+    background-color: #2196F3;
+}
+
+.modal-content.view-mode .grade-checkbox:disabled:not(:checked) {
+    opacity: 0.3;
+}
+
+/* 읽기 전용 모드 테이블 스타일 */
+.modal-content.view-mode .checklist-table {
+    background-color: #fff;
+    box-shadow: none;
+}
+
+
+/* 알림 메시지 스타일 */
+.return-alert {
+    background-color: #ffeb3b;
+    color: #333;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border-left: 5px solid #ff5722;
+}
+
+/* 확인 버튼 스타일 (읽기 전용 모드) */
+.modal-content.view-mode .btn-cancel {
+    background-color: #2196F3;
+    color: white;
+    width: 100%;
+}
