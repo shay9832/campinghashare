@@ -9,7 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="" />
+    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/ReplyDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/DTO/ReplyDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IReplyDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IReplyDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/ReplyDAO.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/ReplyDAO.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -255,6 +260,7 @@
       <workItem from="1745258830692" duration="20689000" />
       <workItem from="1745310910128" duration="4000" />
       <workItem from="1745310925006" duration="1807000" />
+      <workItem from="1745314509440" duration="3126000" />
     </task>
     <servers />
   </component>

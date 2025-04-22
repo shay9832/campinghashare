@@ -71,4 +71,42 @@
         DELETE FROM ATTACHMENT_REPLY
         WHERE REPLY_ID = #{replyId}
     </delete>
+
+
+
+
+
+    <!-- (250422 은솔) 임시 : 통합 후 컴파일 오류 제거 위해 임시 삽입 ★★★★★ -->
+    <select id="listRecentReplyByUserCode"
+            parameterType="map"
+            resultType="com.team.mvc.DTO.ReplyDTO">
+
+        SELECT
+            R.REPLY_ID AS replyId,
+            R.ROOT_REPLY_ID AS rootReplyId,
+            R.USER_CODE AS userCode,
+            R.POST_ID AS postId,
+            R.REPLY_CONTENT AS replyContent,
+            TO_CHAR(R.CREATED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS createdDate,
+            NL.NICKNAME AS nickname
+
+        FROM (
+                 SELECT *
+                 FROM REPLY
+                 WHERE USER_CODE = #{userCode, jdbcType=INTEGER}
+                 ORDER BY CREATED_DATE DESC
+             ) R
+                 LEFT JOIN (
+            SELECT USER_CODE, NICKNAME
+            FROM (
+                     SELECT USER_CODE, NICKNAME,
+                            ROW_NUMBER() OVER (PARTITION BY USER_CODE ORDER BY LAST_UPDATED_DATE DESC) AS RN
+                     FROM NICKNAME_LOG
+                 )
+            WHERE RN = 1
+        ) NL ON R.USER_CODE = NL.USER_CODE
+
+        WHERE ROWNUM &lt;= #{limit, jdbcType=INTEGER}
+    </select>
+
 </mapper>

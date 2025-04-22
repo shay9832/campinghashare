@@ -72,4 +72,14 @@ public class ReplyDTO {
     public void setAttachment(List<AttachmentDTO> attachment) {
         this.attachment = attachment;
     }
+
+
+
+
+
+    // (250422 은솔) 임시 : 통합 후 컴파일 오류 제거 위해 임시 삽입 ★★★★★
+    private BoardPostDTO replyPostDTO;
+    public BoardPostDTO getReplyPostDTO() { return replyPostDTO; }
+    public void setReplyPostDTO(BoardPostDTO replyPostDTO) { this.replyPostDTO = replyPostDTO; }
+
 }
