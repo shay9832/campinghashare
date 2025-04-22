@@ -23,11 +23,6 @@ public class UserSessionFilter implements Filter {
         String ctx = httpRequest.getContextPath();
         String uriLower = uri.toLowerCase();
 
-        // 디버깅용 로그
-        System.out.println("=== UserSessionFilter ===");
-        System.out.println("Request URI: " + uri);
-        System.out.println("Context Path: " + ctx);
-
         // 로그인 없이 접근 가능한 경로 정리
         boolean isExcluded = uriLower.startsWith(ctx + "/resources/") ||
                 uriLower.startsWith(ctx + "/favicon.ico") ||
