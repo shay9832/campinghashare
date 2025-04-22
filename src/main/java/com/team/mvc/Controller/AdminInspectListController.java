@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -45,9 +46,10 @@ public class AdminInspectListController {
     }
 
     /**
-     * 검수 결과 처리 (POST 요청 처리)
+     * 검수 결과 처리 (POST 요청 처리) - 항목별 상(1), 중(2), 하(3) 값을 처리하도록 수정
      */
     @PostMapping("/admin-inspectList.action")
+    @Transactional
     public String adminInspectListAdd(
             @RequestParam(value = "platformDeliveryId", required = false) String platformDeliveryIdStr,
             @RequestParam(value = "platformDeliveryReturnId", required = false) String platformDeliveryReturnIdStr,
@@ -55,39 +57,17 @@ public class AdminInspectListController {
             @RequestParam(value = "equipGradeId", required = false, defaultValue = "0") Integer equipGradeId,
             @RequestParam(value = "inspecComment", required = false, defaultValue = "") String inspecComment,
             @RequestParam(value = "finalGrade", required = false) String finalGrade,
+            @RequestParam(value = "totalScore", required = false) String totalScore,
             @RequestParam Map<String, String> paramMap,
-            IAdminInspectListDAO dao,
             RedirectAttributes redirectAttributes) {
 
         try {
-
             // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
             String adminId = "ADMIN1"; // 기본 관리자 ID 설정
-
-
-            //각각의 속성별 코멘트 저장
-            String comment1 = paramMap.get("comment_1");
-            String comment2 = paramMap.get("comment_2");
-            String comment3 = paramMap.get("comment_3");
-            String comment4 = paramMap.get("comment_4");
-            String comment5 = paramMap.get("comment_5");
-
-            System.out.println( "comment1: " + comment1 );
-            System.out.println( "comment2: " + comment2 );
-            System.out.println( "comment3: " + comment3 );
-            System.out.println( "comment4: " + comment4 );
-            System.out.println( "comment5: " + comment5 );
-
-            // AdminInspecList.jsp 에서 받은 코멘트 값 배열로 저장
-            String [] comments = {comment1, comment2, comment3, comment4, comment5};
-
-
 
             // 문자열에서 숫자 추출 및 변환
             Integer platformDeliveryId = null;
             Integer platformDeliveryReturnId = null;
-
-
 
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {
@@ -111,7 +91,7 @@ public class AdminInspectListController {
 
                         // 여기에 반환 ID에 해당하는 원래 배송 ID를 찾는 로직 추가
                         if (platformDeliveryId == null) {
-                            dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+                            IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
                             platformDeliveryId = dao.getDeliveryIdFromReturnId(platformDeliveryReturnId);
 
                             if (platformDeliveryId == null) {
@@ -131,7 +111,6 @@ public class AdminInspectListController {
                 redirectAttributes.addFlashAttribute("error", "배송 ID 또는 반환 ID가 필요합니다.");
                 return "redirect:/admin-inspectList.action";
             }
-
 
             // 등급 정보 업데이트 - finalGrade에 따라 equipGradeId 설정
             if (finalGrade != null) {
@@ -155,17 +134,14 @@ public class AdminInspectListController {
                     case "E":
                         equipGradeId = 5;
                         inspecGradeId = 3; // 하
-                        // E 등급은 사용자반납 대상 아님
                         break;
                     case "F":
                         equipGradeId = 6;
                         inspecGradeId = 3; // 하
-                        // F 등급인 경우 코멘트에 사용자반납 정보 추가
                         inspecComment = inspecComment + " (등급 F로 사용자반납 대상)";
                         break;
                 }
             }
-
 
             // 디버깅 로그 추가
             System.out.println("프로시저 호출 정보: delivery=" + platformDeliveryId
@@ -174,14 +150,75 @@ public class AdminInspectListController {
                     + ", inspecGradeId=" + inspecGradeId
                     + ", adminId=" + adminId
                     + ", finalGrade=" + finalGrade
-                    + ", comment=" + inspecComment);
+                    + ", comment=" + inspecComment
+                    + ", totalScore=" + totalScore);
 
             // MyBatis Mapper 인터페이스 가져오기
-            dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+            IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
 
-            // 확장된 프로시저 호출 메소드 사용
+            // 1. 기존 프로시저 호출 (INSPEC_RESULT 생성)
             dao.callINSPECT_RESULT(platformDeliveryId, platformDeliveryReturnId,
                     inspecGradeId, equipGradeId, adminId, inspecComment);
+
+            // 2. JSP에서 전송된 항목별 코멘트와 등급 정보 처리 - 수정된 부분
+            // 항목 수 파악 (itemCount 파라미터가 있다면 사용)
+            int itemCount = 5; // 기본값으로 5개 설정
+            if (paramMap.containsKey("itemCount")) {
+                try {
+                    itemCount = Integer.parseInt(paramMap.get("itemCount"));
+                } catch (NumberFormatException e) {
+                    // 오류 시 기본값 유지
+                }
+            }
+
+            // 전송된 항목별 등급 처리 (숫자 값으로 처리)
+            for (int i = 0; i < itemCount; i++) {
+                // 항목 ID와 등급 값 가져오기
+                String itemIdKey = "itemIds[" + i + "]";
+                String gradeValueKey = "itemGrades[" + i + "]";
+                String commentKey = "comment_" + paramMap.get(itemIdKey); // 항목 ID를 이용한 코멘트 키
+
+                String itemIdStr = paramMap.get(itemIdKey);
+                String gradeValueStr = paramMap.get(gradeValueKey);
+                String itemComment = paramMap.get(commentKey);
+
+                // 필수 값이 없으면 해당 항목 건너뛰기
+                if (itemIdStr == null || gradeValueStr == null) {
+                    continue;
+                }
+
+                try {
+                    Integer itemId = Integer.parseInt(itemIdStr);
+                    Integer gradeValue = Integer.parseInt(gradeValueStr);
+
+                    // 등급 값이 0이면 미선택이므로 건너뛰기
+                    if (gradeValue == 0) {
+                        continue;
+                    }
+
+                    // 코멘트가 없는 경우 기본값 설정
+                    if (itemComment == null || itemComment.trim().isEmpty()) {
+                        itemComment = "항목 " + (i + 1) + " 검수 완료";
+                    }
+
+                    System.out.println("항목 " + itemId + " 처리: 등급값=" + gradeValue + ", 코멘트=" + itemComment);
+
+                    // 항목별 검수 결과 저장
+                    dao.insertInspecListItem(
+                            platformDeliveryId,
+                            platformDeliveryReturnId,
+                            itemId, // 카테고리 검수 항목 ID
+                            itemComment, // 항목별 코멘트
+                            adminId,
+                            gradeValue // 항목별 등급 값 (1: 상, 2: 중, 3: 하)
+                    );
+
+                    System.out.println("항목 " + itemId + " 검수 결과 저장 완료");
+                } catch (NumberFormatException e) {
+                    System.out.println("항목 " + itemIdStr + " 처리 중 숫자 변환 오류: " + e.getMessage());
+                    // 오류가 있어도 계속 진행
+                }
+            }
 
             // 성공 메시지 설정
             String successMessage = "검수 결과가 성공적으로 등록되었습니다.";

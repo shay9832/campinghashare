@@ -506,6 +506,7 @@
               <label for="equipCategory">카테고리</label>
               <input type="text" id="equipCategory" class="form-control" disabled>
             </div>
+            <!-- 체크리스트 부분 HTML 수정 -->
             <div class="form-group checklist-form-group">
               <label for="checklistTable">체크리스트</label>
               <div class="checklist-container">
@@ -526,14 +527,32 @@
                   </thead>
                   <tbody>
                   <!-- DB에서 가져온 검수 항목으로 체크리스트 동적 생성 -->
-                  <c:forEach var="item" items="${getItemList}">
-                    <tr>
+                  <c:forEach var="item" items="${getItemList}" varStatus="status">
+                    <tr data-item-id="${item.inspecItemId}">
                       <td>${item.inspecItemName}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="상" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescHigh}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="중" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescMid}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="하" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescLow}</td>
-                      <td><input type="text" class="comment-input" name="comment_${item.inspecItemId}" placeholder="코멘트 입력"></td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="high_${item.inspecItemId}"
+                               value="1" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescHigh}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="mid_${item.inspecItemId}"
+                               value="2" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescMid}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="low_${item.inspecItemId}"
+                               value="3" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescLow}
+                      </td>
+                      <td>
+                        <input type="text" class="comment-input" name="comment_${item.inspecItemId}"
+                               id="comment_${item.inspecItemId}" placeholder="코멘트 입력">
+                      </td>
                       <td class="score-cell">20</td>
+                      <!-- 추가: 검수 항목별 등급 값을 저장할 hidden 필드 -->
+                      <input type="hidden" name="itemGrades[${status.index}]" id="item_grade_${status.index}" value="0">
+                      <input type="hidden" name="itemIds[${status.index}]" value="${item.inspecItemId}">
                     </tr>
                   </c:forEach>
                   <tr class="total-row">
@@ -544,6 +563,11 @@
                   </tbody>
                 </table>
               </div>
+              <!-- 추가: 검수 정보를 저장할 hidden 필드들 -->
+              <input type="hidden" name="totalScore" id="totalScoreInput" value="100">
+              <input type="hidden" name="finalGradeValue" id="finalGradeInput" value="A">
+              <input type="hidden" name="itemCount" id="itemCountInput" value="${fn:length(getItemList)}">
+
               <div class="grade-info">
                 <p><strong>[등급 판정 기준]</strong></p>
                 <div class="grade-badges">
@@ -698,8 +722,6 @@
           document.getElementById('deliveryId').value = 'DELV-RTN-' + deliveryId;
         }
 
-        // 나머지 코드는 동일하게 유지...
-
         // 읽기 전용 모드 설정
         if (viewMode) {
           // 모달 제목 변경
@@ -772,26 +794,42 @@
           if (inspectResult) {
             var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
             if (rows.length > 0) {
+              var gradeValue;
+
+              // 상/중/하를 숫자로 변환
+              switch(inspectResult) {
+                case '상': gradeValue = 1; break;
+                case '중': gradeValue = 2; break;
+                case '하': gradeValue = 3; break;
+                default: gradeValue = 0;
+              }
+
               // 모든 항목에 동일한 검수 등급 적용 (간략한 표시용)
-              rows.forEach(function(row) {
+              rows.forEach(function(row, index) {
                 var radios = row.querySelectorAll('input[type="radio"]');
                 radios.forEach(function(radio) {
-                  if (radio.value === inspectResult) {
+                  if (parseInt(radio.value) === gradeValue) {
                     radio.checked = true;
                   }
                 });
+
+                // hidden 필드에도 값 설정
+                var hiddenField = document.getElementById('item_grade_' + index);
+                if (hiddenField) {
+                  hiddenField.value = gradeValue;
+                }
               });
 
               // 총점 표시 업데이트
               var score = 0;
-              switch (inspectResult) {
-                case '상':
+              switch (gradeValue) {
+                case 1: // 상
                   score = 100;
                   break;
-                case '중':
+                case 2: // 중
                   score = 70;
                   break;
-                case '하':
+                case 3: // 하
                   score = 40;
                   break;
               }
@@ -799,6 +837,12 @@
               var totalScoreElement = document.getElementById('totalScore');
               if (totalScoreElement) {
                 totalScoreElement.textContent = score.toFixed(1);
+              }
+
+              // hidden 필드 업데이트
+              var totalScoreInput = document.getElementById('totalScoreInput');
+              if (totalScoreInput) {
+                totalScoreInput.value = score.toFixed(1);
               }
             }
           }
@@ -847,10 +891,15 @@
             radio.checked = false;
           });
 
+          // hidden 필드 초기화
+          var hiddenGradeFields = form.querySelectorAll('input[id^="item_grade_"]');
+          hiddenGradeFields.forEach(function(field) {
+            field.value = "0";
+          });
+
           // 점수 초기화
           updateScores();
         }
-
         // 모달 표시
         modal.style.display = 'block';
       }
@@ -879,12 +928,13 @@
         var totalRows = rows.length;
         var scorePerRow = 100 / totalRows; // 각 항목당 최대 점수를 동적으로 계산
 
-        rows.forEach(function(row) {
+        rows.forEach(function(row, index) {
           var scoreCell = row.querySelector('.score-cell');
           if (!scoreCell) return;
 
           var radios = row.querySelectorAll('input[type="radio"]');
           var score = 0;
+          var gradeValue = 0; // 기본값(선택 안함)
 
           // 체크된 라디오 버튼 찾기
           var selectedRadio = null;
@@ -896,21 +946,31 @@
           }
 
           if (selectedRadio) {
-            var selectedGrade = selectedRadio.value;
+            var selectedGradeValue = parseInt(selectedRadio.value);
 
-            switch(selectedGrade) {
-              case '상':
+            switch(selectedGradeValue) {
+              case 1: // 상
                 score = scorePerRow;
+                gradeValue = 1;
                 break;
-              case '중':
+              case 2: // 중
                 score = scorePerRow * 0.65;
+                gradeValue = 2;
                 break;
-              case '하':
+              case 3: // 하
                 score = scorePerRow * 0.3;
+                gradeValue = 3;
                 break;
               default:
                 score = 0;
+                gradeValue = 0;
             }
+          }
+
+          // 항목별 등급 값을 hidden 필드에 저장
+          var hiddenGradeField = document.getElementById('item_grade_' + index);
+          if (hiddenGradeField) {
+            hiddenGradeField.value = gradeValue;
           }
 
           scoreCell.textContent = score.toFixed(1);
@@ -921,6 +981,12 @@
         var totalScoreElement = document.getElementById('totalScore');
         if (totalScoreElement) {
           totalScoreElement.textContent = totalScore.toFixed(1);
+        }
+
+        // hidden 필드에도 총점 저장
+        var totalScoreInput = document.getElementById('totalScoreInput');
+        if (totalScoreInput) {
+          totalScoreInput.value = totalScore.toFixed(1);
         }
 
         // 최종 등급 업데이트
@@ -979,14 +1045,10 @@
         document.getElementById('inspecGradeId').value = inspecGradeId;
 
         // 최종 등급 정보를 hidden 필드에 설정
-        if (!document.getElementById('finalGradeInput')) {
-          var finalGradeInput = document.createElement('input');
-          finalGradeInput.type = 'hidden';
-          finalGradeInput.name = 'finalGrade';
-          finalGradeInput.id = 'finalGradeInput';
-          document.getElementById('inspectionForm').appendChild(finalGradeInput);
+        var finalGradeInput = document.getElementById('finalGradeInput');
+        if (finalGradeInput) {
+          finalGradeInput.value = grade;
         }
-        document.getElementById('finalGradeInput').value = grade;
 
         // F 등급인 경우만 사용자반납 관련 안내 메시지 표시
         if (grade === 'F') {
@@ -1021,6 +1083,43 @@
           }
         }
       }
+
+      // 폼 제출 전 유효성 검사 추가
+      document.getElementById('inspectionForm').addEventListener('submit', function(event) {
+        var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+        var allSelected = true;
+
+        // 모든 항목이 선택되었는지 확인
+        rows.forEach(function(row, index) {
+          var radios = row.querySelectorAll('input[type="radio"]');
+          var selected = Array.from(radios).some(radio => radio.checked);
+
+          if (!selected) {
+            allSelected = false;
+            // 선택되지 않은 행 강조
+            row.style.backgroundColor = '#ffe6e6';
+          } else {
+            row.style.backgroundColor = '';
+          }
+        });
+
+        if (!allSelected) {
+          event.preventDefault();
+          alert('모든 검수 항목에 대해 등급(상/중/하)을 선택해주세요.');
+          return false;
+        }
+
+        // 추가로 검수 코멘트 필드 확인
+        var comment = document.getElementById('inspecComment').value.trim();
+        if (!comment) {
+          event.preventDefault();
+          alert('검수 코멘트를 입력해주세요.');
+          document.getElementById('inspecComment').focus();
+          return false;
+        }
+
+        return true;
+      });
 
 
     </script>
