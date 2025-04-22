@@ -1,5 +1,6 @@
 package com.team.mvc.Interface;
 
+import org.apache.ibatis.annotations.Param;
 import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.ReplyDTO;
 
@@ -26,4 +27,12 @@ public interface IReplyDAO {
 
     // 댓글 ID로 모든 첨부파일 삭제
     int deleteAttachmentsByReplyId(int replyId);
+
+
+
+
+    // (250422 은솔) 임시 : 통합 후 컴파일 오류 제거 위해 임시 삽입 ★★★★★
+    // 최근 댓글 조회
+    List<ReplyDTO> listRecentReplyByUserCode(@Param("userCode") int userCode, @Param("limit") int limit);
+
 }
