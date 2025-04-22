@@ -52,6 +52,7 @@
         <!-- 매칭 관련 -->
         <result property="matching_request_count" column="MATCHING_REQUEST_COUNT" />
         <result property="matching_status" column="MATCHING_STATUS" />
+        <result property="matching_status_detail" column="DETAILED_MATCHING_STATUS"/>       <!--추가 -->
 
         <!-- 장비 등급/상태 -->
         <result property="equip_grade" column="EQUIP_GRADE" />
@@ -239,21 +240,23 @@
         ORDER BY s.CREATED_DATE DESC
     </select>
 
-    <!-- 스토렌id로 특정 스토렌 정보 가져오기 -->
+    <!-- 스토렌id로 특정 스토렌 정보 가져오기(마이페이지 내가 대여한 장비에 필요한 속성 추가 -->
     <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
-        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
-             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
-             , DAILY_STORAGE_FEE, STORE_MONTH
-             , STOREN_TITLE, STOREN_CONTENT
-             , DAILY_RENT_PRICE, CREATED_DATE
-             , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
-             , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
-             , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
-             , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
-             , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-             , EQUIP_GRADE
-        FROM VW_STOREN
-        <![CDATA[WHERE STOREN_ID = #{storen_id} AND ROWNUM <= 1]]>
+        SELECT S.STOREN_ID, S.EQUIP_CODE, S.USER_CODE
+             , S.SIZE_ID, S.EQUIP_SIZE_NAME, S.REQUIRED_SPACE
+             , S.DAILY_STORAGE_FEE, S.STORE_MONTH
+             , S.STOREN_TITLE, S.STOREN_CONTENT
+             , S.DAILY_RENT_PRICE, S.CREATED_DATE
+             , NVL(S.INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+             , NVL(S.RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+             , NVL(S.RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+             , NVL(S.FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+             , S.MATCHING_REQUEST_COUNT, S.MATCHING_STATUS, S.STATUS
+             , S.EQUIP_GRADE, VWSMS.DETAILED_MATCHING_STATUS
+        FROM VW_STOREN S
+        JOIN VW_STOREN_MATCHING_STATUS VWSMS
+        ON S.STOREN_ID = VWSMS.STOREN_ID
+        <![CDATA[WHERE S.STOREN_ID = #{storen_id} AND ROWNUM <= 1]]>
     </select>
 
     <!-- 스토렌 장비 검색(키워드) -->
@@ -338,6 +341,27 @@
             VW_STOREN
         WHERE
             USER_CODE = #{userCode}
+    </select>
+
+    <!-- 해당 유저가 대여한 스토렌 장비의 각 상태의 개수 조회 -->
+    <select id="getStorenMatchingStatus" resultType="map">
+        SELECT
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '매칭중', 1, 0)), 0) AS "매칭중",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '매칭승인대기', 1, 0)), 0) AS "매칭승인대기",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '매칭완료', 1, 0)), 0) AS "매칭완료",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '렌탈비결제전', 1, 0)), 0) AS "렌탈비결제전",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '렌탈비결제완료', 1, 0)), 0) AS "렌탈비결제완료",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '배송중', 1, 0)), 0) AS "배송중",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '대여중', 1, 0)), 0) AS "대여중",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '반납일임박', 1, 0)), 0) AS "반납일임박",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '반납중', 1, 0)), 0) AS "반납중",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '검수중', 1, 0)), 0) AS "검수중",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '거래완료', 1, 0)), 0) AS "거래완료",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '추가비용결제필요', 1, 0)), 0) AS "추가비용결제필요",
+            NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '상태불명', 1, 0)), 0) AS "상태불명"
+        FROM
+            VW_STOREN_MATCHING_STATUS
+        WHERE USER_CODE = #{userCode}
     </select>
 
     <!-- 해당 유저의 상태별 필터링한 스토렌 목록 조회 -->
