@@ -127,7 +127,7 @@ public class AdminDeliveryUpdateController {
 
                 // 시작일이 비어 있으면 현재 시간 사용
                 if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                    dto.setDeliveryStartDate(newDeliveryStartDate + "T00:00:00");
+                    dto.setDeliveryStartDate(newDeliveryStartDate + " 00:00:00");
                 } else {
                     dto.setDeliveryStartDate(String.valueOf(LocalDateTime.now()));
                 }
@@ -185,13 +185,13 @@ public class AdminDeliveryUpdateController {
 
             // 날짜 처리
             if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                dto.setNewDeliveryStartDate(newDeliveryStartDate + "T00:00:00");
+                dto.setNewDeliveryStartDate(newDeliveryStartDate + " 00:00:00");
             } else {
                 dto.setNewDeliveryStartDate(null); // 명시적으로 null 설정
             }
 
             if (deliveryEndDate != null && !deliveryEndDate.isEmpty()) {
-                dto.setDeliveryEndDate(deliveryEndDate + "T00:00:00");
+                dto.setDeliveryEndDate(deliveryEndDate + " 00:00:00");
             } else {
                 dto.setDeliveryEndDate(null); // 명시적으로 null 설정
             }
@@ -221,16 +221,18 @@ public class AdminDeliveryUpdateController {
         try {
             // 새 배송 시작일이 있으면 DTO에 설정
             if (newDeliveryStartDate != null && !newDeliveryStartDate.isEmpty()) {
-                String startDate = newDeliveryStartDate + "T00:00:00";
+                String startDate = newDeliveryStartDate + " 00:00:00";
                 dto.setDeliveryStartDate(startDate);
             } else {
                 // 기본값으로 현재 시간 설정
-                dto.setDeliveryStartDate(String.valueOf(LocalDateTime.now()));
+                dto.setDeliveryStartDate(
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                );
             }
 
             // 배송 종료일 설정
             if (deliveryEndDate != null && !deliveryEndDate.isEmpty()) {
-                String endDate = deliveryEndDate + "T00:00:00";
+                String endDate = deliveryEndDate + " 00:00:00";
                 dto.setDeliveryEndDate(endDate);
             }
 
