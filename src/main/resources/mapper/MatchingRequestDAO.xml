@@ -103,7 +103,7 @@
         WHERE MATCHING_REQ_ID = #{requestId} AND PAYMENT_STATUS = '결제완료'
     </select>
 
-    <!-- 결제완료한 경우에만!! 유저코드로 "스토렌" 매칭신청 정보 조회하는 메소드 -->
+    <!-- 매칭승인된 경우에만!! 유저코드로 "스토렌" 매칭신청 정보 조회하는 메소드 -->
     <select id="listStorenMatchingByUserCode" resultType="com.team.mvc.DTO.MatchingRequestDTO" resultMap="rentalApplicantResultMap">
         SELECT TRANSACTION_ID, TRANSACTION_TYPE, USER_CODE, USER_NICKNAME
              , TO_CHAR(RENTAL_START_DATE, 'YYYY-MM-DD') AS RENTAL_START_DATE
@@ -111,7 +111,7 @@
              , RENTAL_PAY, TRUST, RENTAL_HISTORY, REQUESTED_DATE, TO_CHAR(PAYMENT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS PAYMENT_DATE
              , MATCHING_REQ_ID, PAYMENT_STATUS, MATCHING_DONE_ID
         FROM VW_RENTAL_APPLICANT
-        WHERE USER_CODE=#{userCode} AND PAYMENT_STATUS = '결제완료' AND TRANSACTION_TYPE LIKE '스토렌%'
+        WHERE USER_CODE=#{userCode} AND PAYMENT_STATUS IN ('결제완료', '결제대기') AND TRANSACTION_TYPE LIKE '스토렌%'
     </select>
 
     <select id="listRecentStorenMatchingByUserCode" resultMap="rentalApplicantResultMap">

@@ -21,6 +21,10 @@
         <result property="userGrade" column="USER_GRADE"></result>
         <result property="nicknameChange" column="ALLOWED_NICKNAME_CHANGE"></result>
         <result property="totalProfit" column="TOTAL_PROFIT"></result>
+        <result property="postCount" column="postCount"></result>
+        <result property="commentCount" column="commentCount"></result>
+        <result property="equipmentCount" column="couponCount"></result>
+        <result property="matchingCount" column="matched_payment_case_count"></result>
     </resultMap>
 
     <!-- USER_CODE 시퀀스 조회 -->
@@ -174,6 +178,29 @@
         SELECT USER_PW
         FROM USERS
         WHERE USER_CODE=#{userCode}
+    </select>
+
+    <!-- 유저코드로 마이페이지 메인에 필요한 유저정보 전부 가져오기 -->
+    <select id="getUserByUserCodeForMain" resultMap="UserInfoMap">
+        SELECT
+            vwu.*,
+            ui."게시물수" AS postCount,
+            ui."댓글수" AS commentCount,
+            ui."장비등록수" AS equipmentCount,
+            ui."보유쿠폰수" AS couponCount,
+            (
+                SELECT COUNT(*)
+                FROM VW_RENTAL_APPLICANT vra
+                WHERE vra.USER_CODE = vwu.user_code
+                  AND vra.TRANSACTION_TYPE IN ('스토렌_매칭완료')
+                  AND vra.PAYMENT_STATUS IN ('결제대기', '결제완료')
+            ) AS matched_payment_case_count
+        FROM
+            user_info ui
+                JOIN
+            VW_USER_WITH_POINT_TRUST vwu
+            ON ui."회원코드" = vwu.user_code
+        WHERE vwu.user_code = #{userCode}
     </select>
 
 </mapper>

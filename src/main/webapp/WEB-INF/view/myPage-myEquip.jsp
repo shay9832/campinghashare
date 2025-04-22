@@ -400,7 +400,7 @@
                                             </td>
                                             <td>
                                                 <div class="button-group-vertical">
-                                                    <button class="btn-sm btn-storen" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-info.action?equip_code=${equip.equip_code}'">스토렌 신청</button>
+                                                    <button class="btn-sm btn-storen" onclick="location.href='storenRegister-storage-info.action?equip_code=${equip.equip_code}'">스토렌 신청</button>
                                                     <button class="btn-sm btn-rental">렌탈 신청</button>
                                                     <button class="btn-sm btn-storage">보관 신청</button>
                                                 </div>
@@ -704,9 +704,9 @@
                 const id = $(this).closest("tr").find("input[name='id']").val();
 
                 if($(this).hasClass('btn-inspection')) {
-                    window.location.href = "mypage-inspecList.action?id=" + id;
+                    window.location.href = "mypage-inspecList.action?id=" + id + "&activeTab=storen&storenTabType=store";
                 } else if($(this).hasClass('btn-shipping')) {
-                    window.location.href = "mypage-delivery.action?id=" + id;
+                    window.location.href = "mypage-delivery.action?id=" +  + "&activeTab=storen&storenTabType=owner";
                 } else if($(this).hasClass('btn-pay')) {
                     window.location.href = "storenregister-storage-pay.action?id=" + id;
                 }

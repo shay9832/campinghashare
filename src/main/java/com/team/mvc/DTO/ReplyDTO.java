@@ -5,6 +5,8 @@ public class ReplyDTO {
     private Integer rootReplyId;  // 대댓글인 경우 부모 댓글 ID
     private String replyContent, createdDate, nickname; // 조인으로 가져올 닉네임
 
+    private BoardPostDTO replyPostDTO;                     // 해당 댓글이 달린 게시물DTO
+
     // Getters and Setters
     public int getReplyId() {
         return replyId;
@@ -60,5 +62,13 @@ public class ReplyDTO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public BoardPostDTO getReplyPostDTO() {
+        return replyPostDTO;
+    }
+
+    public void setReplyPostDTO(BoardPostDTO replyPostDTO) {
+        this.replyPostDTO = replyPostDTO;
     }
 }
