@@ -61,11 +61,6 @@ public class AdminInspectListController {
             RedirectAttributes redirectAttributes) {
 
         try {
-
-            // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
-            String adminId = "ADMIN1"; // 기본 관리자 ID 설정
-
-
             //각각의 속성별 코멘트 저장
             String comment1 = paramMap.get("comment_1");
             String comment2 = paramMap.get("comment_2");
