@@ -19,6 +19,7 @@ public class StorenDTO {
     // 검색 및 페이징 관련
     private String searchKeyword;
     private Pagenation pagenation;
+    private String sortType;
 
     // 마이페이지 매칭내역 때문에 추가한 속성
     // 날짜 관련 속성------------------------------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ public class StorenDTO {
     private String priceDiffSymbol;                         // 상승/하락/중립 기호
     private String priceDiffClass;                          // 색상 클래스명
     private int avgRentalPrice;                             // 추가: 평균 렌탈 가격
+
 
     // Getter/Setter -----------------------------------------
 
@@ -333,5 +335,13 @@ public class StorenDTO {
 
     public void setMatching_status_detail(String matching_status_detail) {
         this.matching_status_detail = matching_status_detail;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
     }
 }
