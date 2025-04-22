@@ -28,7 +28,7 @@ public interface IBoardPostDAO {
     List<BoardPostDTO> getPostLabelsByBoardId(int boardId);
 
     // 전체 공지사항 조회
-    List<BoardPostDTO> listTotalNotice();
+    List<BoardPostDTO> listTotalNotice(BoardPostDTO dto);
 
     // 공지사항 조회 (최대 3개)
     List<BoardPostDTO> listNotice();
@@ -114,4 +114,7 @@ public interface IBoardPostDAO {
     List<BoardPostDTO> listRecentPostByUserCode(@Param("userCode") int userCode, @Param("count") int count);
     // int타입 post_id로 BoardPostDTO 조회
     BoardPostDTO getPostByPostId(int postId);
+
+    // 첨부파일 제거
+    int deleteAttachment(int attachmentId);
 }

@@ -1,12 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    // 배송지 정보 저장할 변수
-    String recipient = "고길동";
-    String tel = "010-0000-0000";
-    String zipCode = "04001";
-    String address1 = "서울 마포구 월드컵북로 21";
-    String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
-%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,13 +30,13 @@
                 <div class="form-row">
                     <label class="form-label">받는 사람</label>
                     <div class="form-input">
-                        <%= recipient %>
+                        <c:out value="${recipient}" />
                     </div>
                 </div>
                 <div class="form-row">
                     <label class="form-label">휴대 전화</label>
                     <div class="form-input">
-                        <%= tel %>
+                        <c:out value="${tel}" />
                     </div>
                 </div>
 
@@ -52,11 +46,11 @@
                     <label class="form-label">주소</label>
                     <div class="form-input">
                         <div class="zipcode-row">
-                            <input type="search" class="address_search form-control" placeholder="우편번호" id="postcode" value="<%= zipCode %>">
+                            <input type="search" class="address_search form-control" placeholder="우편번호" id="postcode" value="${zipCode}">
                             <button class="btn_address" onclick="execDaumPostcode()">우편번호 찾기</button>
                         </div>
-                        <input type="text" class="form-control mt-2" id="address" placeholder="주소" value="<%= address1 %>" readonly>
-                        <input type="text" class="form-control mt-2" id="detailAddress" placeholder="상세주소" value="<%= address2 %>">
+                        <input type="text" class="form-control mt-2" id="address" placeholder="주소" value="${address1}" readonly>
+                        <input type="text" class="form-control mt-2" id="detailAddress" placeholder="상세주소" value="${address2}">
                         <input type="hidden" id="extraAddress" placeholder="참고항목">
 
                         <%-- 우편번호 검색 API 컨테이너 (기본 숨김) --%>

@@ -196,31 +196,30 @@
           <th class="col-point">포인트</th>
           <th class="col-coupon">쿠폰갯수</th>
           <th class="col-transaction">거래건수</th>
-          <th class="col-review">리뷰건수</th>
           <th class="col-post">게시글 작성건수</th>
           <th class="col-comment">댓글 작성건수</th>
           <th class="col-status">회원상태</th>
         </tr>
 
-        <!-- 회원 데이터 행 -->
-        <tr>
-          <td class="checkbox-column"><input type="checkbox"></td>
-          <td>1</td>
-          <td>박제훈</td>
-          <td>2024-12-11</td>
-          <td>010-1111-1111</td>
-          <td>차은우</td>
-          <td>sist@naver.com</td>
-          <td>인천광역시 서구 검암동 123번길 45</td>
-          <td>관리자</td>
-          <td>100</td>
-          <td>100</td>
-          <td>100</td>
-          <td>30</td>
-          <td>2000</td>
-          <td>5000</td>
-          <td><span class="status-badge status-admin">관리자</span></td>
-        </tr>
+        <c:forEach var="user" items="${getList}">
+          <tr>
+            <td class="checkbox-column"><input type="checkbox"></td>
+            <td>${user.userCode}</td>
+            <td>${user.userName}</td>
+            <td>${user.createdDate}</td>
+            <td>${user.userTel}</td>
+            <td>${user.currentNickname}</td>
+            <td>${user.userEmail}</td>
+            <td>${user.currentAddress} ${user.currentDetailAddress}</td>
+            <td>${user.currentRank}</td>
+            <td>${user.totalPoints}</td>
+            <td>${user.couponCount}</td>
+            <td>${user.rentalCount + user.storenCount + user.storageCount}</td>
+            <td>${user.postCount}</td>
+            <td>${user.replyCount}</td>
+            <td><span class="status-badge status-${user.userStatus.replace(' ', '-')}">${user.userStatus}</span></td>
+          </tr>
+        </c:forEach>
       </table>
     </div>
   </div>

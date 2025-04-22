@@ -20,6 +20,7 @@ public class AdminUserListController {
 
         IAdminUserListDAO adminUserListDAO = sqlSession.getMapper(IAdminUserListDAO.class);
 
+        model.addAttribute("getList",adminUserListDAO.getList());
 
         return "admin-userList";
     }

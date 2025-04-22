@@ -40,6 +40,8 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <!-- 필터 -->
+  <!-- UTF-8 인코딩 필터-->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -53,37 +55,37 @@
     </init-param>
   </filter>
 
-  <!-- 관리자 로그인 : 필터 정의 -->
-  <filter>
-    <filter-name>adminSessionFilter</filter-name>
-    <filter-class>com.team.mvc.Filter.AdminSessionFilter</filter-class>
-  </filter>
-
-  <!-- 관리자 로그인 : 필터 매핑 - 모든 admin- URL에 적용 -->
-  <filter-mapping>
-    <filter-name>adminSessionFilter</filter-name>
-    <url-pattern>/admin-*</url-pattern>
-  </filter-mapping>
-
-  <!-- 관리자 로그인 : admin-login.action은 필터에서 예외 처리됨 -->
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 유저 로그인 : 필터 정의 -->
+  <!-- 관리자 로그인 필터 -->
+  <filter>
+    <filter-name>adminSessionFilter</filter-name>
+    <filter-class>com.team.mvc.Filter.AdminSessionFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>adminSessionFilter</filter-name>
+    <url-pattern>/admin-*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>adminSessionFilter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+  </filter-mapping>
+
+  <!-- 유저 로그인 필터 -->
   <filter>
     <filter-name>userSessionFilter</filter-name>
     <filter-class>com.team.mvc.Filter.UserSessionFilter</filter-class>
   </filter>
 
-  <!-- 유저 로그인 : 필터 매핑 (메인, 로그인 등을 UserSessionFilter.java에서 별도 예외 처리 -->
   <filter-mapping>
     <filter-name>userSessionFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 로그인 : 세션 기본 유효시간, 보호, 세션 추적방식 지정 -->
+  <!-- 세션 설정 : 기본 유효시간, 보호, 세션 추적방식 지정 -->
   <session-config>
     <session-timeout>30</session-timeout>  <!-- 세션 타임아웃 30분 설정 -->
     <cookie-config>

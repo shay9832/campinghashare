@@ -20,18 +20,16 @@ public class AdminSessionFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+
         // 세션에서 adminId 값 추출
         HttpSession session = httpRequest.getSession(false);
-        String adminId = null;
-
-        if (session != null) {
-            // 세션에서 adminId 가져오기
-            adminId = (String) session.getAttribute("adminId");
-        }
+        String adminId = (session != null) ? (String) session.getAttribute("adminId") : null;
 
         // 요청 URI 및 contextPath 추출
         String uri = httpRequest.getRequestURI();
         String ctx = httpRequest.getContextPath();
+
+        String uriLower = uri.toLowerCase();
 
         // 관리자 페이지 요청 여부 판단
         boolean isAdminPage = uri.contains("admin-") || uri.contains("/admin/");
@@ -39,40 +37,28 @@ public class AdminSessionFilter implements Filter {
         // 로그인 페이지 제외 및 세션이 없으면 로그인 페이지로 리디렉션
         boolean isLoginPage = uri.contains("admin-login") || uri.contains("login-admin");
 
-        // 관리자가 아닌 경우에 관리자 페이지 접근을 막음
-        if (isAdminPage && !isLoginPage && adminId == null) {
-            // AJAX 요청이면 401 응답
-            if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
-                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpResponse.getWriter().write("{\"error\":\"로그인이 필요합니다.\"}");
-                return;
-            } else {
-                // 관리자 로그인 페이지로 리디렉션
-                httpResponse.sendRedirect(ctx + "/admin-login.action");
-                return;
-            }
-        }
-
         // 로그인 페이지, 리소스 등 접근 제외 경로는 세션 확인 없이 진행
-        boolean isExcluded = uri.startsWith(ctx + "/resources/") ||
-                uri.startsWith(ctx + "/favicon.ico") ||
-                uri.startsWith(ctx + "/login-user") ||
-                uri.startsWith(ctx + "/logout") ||
-                uri.startsWith(ctx + "/registeruser-") ||
-                uri.startsWith(ctx + "/idcheck.action") ||
-                uri.startsWith(ctx + "/nicknamecheck.action") ||
-                uri.startsWith(ctx + "/oauth/");
+        boolean isExcluded = uriLower.startsWith(ctx + "/resources/") ||
+                uriLower.startsWith(ctx + "/favicon.ico") ||
+                uriLower.startsWith(ctx + "/admin") ||
+                uriLower.startsWith(ctx + "/admin-") ||
+                uriLower.startsWith(ctx + "/sitemap.action") ||
+                uriLower.startsWith(ctx + "/registerAdmin-id.action") ||
+                uriLower.startsWith(ctx + "/idcheck.action") ||
+                uriLower.startsWith(ctx + "/nicknamecheck.action") ||
+                uriLower.startsWith(ctx + "/error") ||
+                uriLower.equals(ctx + "/") ||
+                uriLower.equals(ctx + "/main.action");
 
-        if (!isExcluded && session.getAttribute("loginUser") == null) {
-            // 로그인되지 않은 사용자가 로그인 필요 페이지에 접근할 때
+        // 관리자 페이지인데 adminId가 없고 예외 경로도 아니면 차단
+        if (isAdminPage && !isExcluded && adminId == null) {
             if ("XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"))) {
                 httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpResponse.getWriter().write("{\"error\":\"로그인이 필요합니다.\"}");
-                return;
+                httpResponse.getWriter().write("{\"error\":\"관리자 로그인이 필요합니다.\"}");
             } else {
-                httpResponse.sendRedirect(ctx + "/login-user.action");
-                return;
+                httpResponse.sendRedirect(ctx + "/admin-login.action");
             }
+            return;
         }
 
         // 인증 통과 → 다음 필터 또는 컨트롤러로 요청 전달

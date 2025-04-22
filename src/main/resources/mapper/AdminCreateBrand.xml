@@ -5,7 +5,7 @@
     <!-- 브랜드 목록 조회 -->
     <select id="getBrandList" resultType="com.team.mvc.DTO.BrandDTO">
         SELECT
-            brand_id as brand_Id,
+            brand_id as brandId,
             brand_name as brandName
         FROM
             brand
@@ -16,7 +16,7 @@
     <!-- 브랜드 상세 조회 -->
     <select id="getBrandById" parameterType="int" resultType="com.team.mvc.DTO.BrandDTO">
         SELECT
-            brand_id as brand_Id,
+            brand_id as brandId,
             brand_name as brandName
         FROM
             brand
@@ -50,17 +50,22 @@
         WHERE brand_id = #{brandId}
     </delete>
 
+    <!-- 브랜드 삭제시 연관 장비명도 삭제 -->
+    <delete id="deleteEquipmentByBrandId" parameterType="int">
+        DELETE FROM equip_name
+        WHERE brand_id = #{brandId}
+    </delete>
+
     <!-- 특정 브랜드의 장비명 목록 조회 -->
     <select id="getEquipmentListByBrandId" parameterType="int" resultType="com.team.mvc.DTO.EquipmentDTO">
         SELECT
             en.equip_name_id,
-            en.brand_id,
+            en.brand_id as brandId,
             en.equip_name,
             b.brand_name as brand
         FROM
             equip_name en
-                JOIN
-            brand b ON en.brand_id = b.brand_id
+                JOIN brand b ON en.brand_id = b.brand_id
         WHERE
             en.brand_id = #{brandId}
         ORDER BY
@@ -71,13 +76,12 @@
     <select id="getEquipmentById" parameterType="int" resultType="com.team.mvc.DTO.EquipmentDTO">
         SELECT
             en.equip_name_id,
-            en.brand_id,
+            en.brand_id as brandId,
             en.equip_name,
             b.brand_name as brand
         FROM
             equip_name en
-                JOIN
-            brand b ON en.brand_id = b.brand_id
+                JOIN brand b ON en.brand_id = b.brand_id
         WHERE
             en.equip_name_id = #{equip_name_id}
     </select>
