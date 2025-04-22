@@ -43,4 +43,16 @@ public interface IAdminInspectListDAO {
             @Param("adminId") String adminId,
             @Param("inspecComment") String inspecComment
     );
+
+    // IAdminInspectListDAO.java에 추가
+    void insertInspecListItem(
+            @Param("platformDeliveryId") Integer platformDeliveryId,
+            @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
+            @Param("cateInspecId") Integer cateInspecId,
+            @Param("inspecComment") String inspecComment,
+            @Param("adminId") String adminId,
+            @Param("inspecGradeId") Integer inspecGradeId
+    );
+
+
 }
