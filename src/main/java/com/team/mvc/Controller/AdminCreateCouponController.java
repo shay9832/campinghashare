@@ -18,7 +18,7 @@ public class AdminCreateCouponController {
 
     @RequestMapping(value="/admin-createCoupon.action",method = RequestMethod.GET)
     public String adminCreateCoupon(@RequestParam(value="couponName",required = false) String couponName,
-                                    @RequestParam(value="couponDiscount",required = false) int couponDiscount,
+                                    @RequestParam(value="couponDiscount",required = false) Integer couponDiscount,
                                     @RequestParam(value="couponMonth",required = false) String couponMonth,
                                     AdminCreateCouponDTO dto,
                                     Model model){
