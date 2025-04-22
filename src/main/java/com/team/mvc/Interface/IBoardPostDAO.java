@@ -115,6 +115,11 @@ public interface IBoardPostDAO {
     // int타입 post_id로 BoardPostDTO 조회
     BoardPostDTO getPostByPostId(int postId);
 
+    // 사용자가 작성한 게시글 전체 수 조회(userCode와 검색 조건이 담긴 BoardPostDTO를 매개변수로 넘기고 리턴값으로 게시글 수를 받아옴)
+    int getUserPostCount(BoardPostDTO dto);
+    // 사용자가 작성한 게시글 목록 조회(페이징 처리)
+    List<BoardPostDTO> listUserPostByDTO(BoardPostDTO dto);
+
     // 첨부파일 제거
     int deleteAttachment(int attachmentId);
 }

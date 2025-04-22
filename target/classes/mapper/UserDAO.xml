@@ -25,6 +25,9 @@
         <result property="commentCount" column="commentCount"></result>
         <result property="equipmentCount" column="couponCount"></result>
         <result property="matchingCount" column="matched_payment_case_count"></result>
+        <result property="nextUserGrade" column="NEXT_USER_GRADE"></result>
+        <result property="remainPoint" column="REMAIN_POINT"></result>
+        <result property="remainTrust" column="REMAIN_TRUST"></result>
     </resultMap>
 
     <!-- USER_CODE 시퀀스 조회 -->
