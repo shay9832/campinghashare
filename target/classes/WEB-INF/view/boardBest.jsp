@@ -260,7 +260,7 @@
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
-                    <div style="margin: 0; flex: 3; display: flex; justify-content: center;">
+                    <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
@@ -300,6 +300,10 @@
                                 </a>
                             </c:if>
                         </div>
+                    </div>
+                    <!-- 빈 div 추가: 자유게시판과 동일한 구조를 만들기 위함 -->
+                    <div style="flex: 1; display: flex; justify-content: flex-end;">
+                        <!-- 글쓰기 버튼 없음 -->
                     </div>
                 </div>
             </div>

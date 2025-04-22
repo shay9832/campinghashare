@@ -12,7 +12,7 @@
 <footer>
     <div class="footer-container">
         <div class="footer-menu">
-            <a href="${pageContext.request.contextPath}/notice.action" class="brand-name">캠핑하쉐어</a>
+            <a href="${pageContext.request.contextPath}/main.action" class="brand-name">캠핑하쉐어</a>
             <a href="${pageContext.request.contextPath}/notice.action">공지사항</a>
             <a href="${pageContext.request.contextPath}/event.action">이벤트</a>
             <a href="#">고객센터</a>
