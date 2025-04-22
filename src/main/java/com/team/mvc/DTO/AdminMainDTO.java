@@ -5,158 +5,162 @@ import java.util.Date;
 public class AdminMainDTO {
 
         // 회원 관련
-        private int newUserCount;
-        private int totalUserCount;
+        private Integer newUserCount;
+        private Integer totalUserCount;
 
         // 결제 관련
-        private int storenPaymentCount;
-        private long storenPaymentAmount;
-        private int storagePaymentCount;
-        private long storagePaymentAmount;
-        private int rentalPaymentCount;
-        private long rentalPaymentAmount;
+        private Integer storenPaymentCount;
+        private Integer storenPaymentAmount;
+        private Integer storagePaymentCount;
+        private Integer storagePaymentAmount;
+        private Integer rentalPaymentCount;
+        private Integer rentalPaymentAmount;
 
         // 합계
-        private int totalPaymentCount;
-        private long totalPaymentAmount;
+        private Integer totalPaymentCount;
+        private Integer totalPaymentAmount;
 
         // 검수 관련
-        private int inspectionCount;
+        private Integer inspectionCount;
 
         // 신고 관련
-        private int postReportCount;
-        private int commentReportCount;
-        private int rentalCommentReportCount;
-        private int totalReportCount;
+        private Integer postReportCount;
+        private Integer commentReportCount;
+        private Integer rentalCommentReportCount;
+        private Integer totalReportCount;
 
         // 집계 일자
-        private Date statsDate;
+        private String statsDate;
 
-        public int getNewUserCount() {
-            return newUserCount;
-        }
 
-        public void setNewUserCount(int newUserCount) {
-            this.newUserCount = newUserCount;
-        }
 
-        public int getTotalUserCount() {
-            return totalUserCount;
-        }
+        //getter setter 구성
 
-        public void setTotalUserCount(int totalUserCount) {
-            this.totalUserCount = totalUserCount;
-        }
-
-        public int getStorenPaymentCount() {
-            return storenPaymentCount;
-        }
-
-        public void setStorenPaymentCount(int storenPaymentCount) {
-            this.storenPaymentCount = storenPaymentCount;
-        }
-
-        public long getStorenPaymentAmount() {
-            return storenPaymentAmount;
-        }
-
-        public void setStorenPaymentAmount(long storenPaymentAmount) {
-            this.storenPaymentAmount = storenPaymentAmount;
-        }
-
-        public int getStoragePaymentCount() {
-            return storagePaymentCount;
-        }
-
-        public void setStoragePaymentCount(int storagePaymentCount) {
-            this.storagePaymentCount = storagePaymentCount;
-        }
-
-        public long getStoragePaymentAmount() {
-            return storagePaymentAmount;
-        }
-
-        public void setStoragePaymentAmount(long storagePaymentAmount) {
-            this.storagePaymentAmount = storagePaymentAmount;
-        }
-
-        public int getRentalPaymentCount() {
-            return rentalPaymentCount;
-        }
-
-        public void setRentalPaymentCount(int rentalPaymentCount) {
-            this.rentalPaymentCount = rentalPaymentCount;
-        }
-
-        public long getRentalPaymentAmount() {
-            return rentalPaymentAmount;
-        }
-
-        public void setRentalPaymentAmount(long rentalPaymentAmount) {
-            this.rentalPaymentAmount = rentalPaymentAmount;
-        }
-
-        public int getTotalPaymentCount() {
-            return totalPaymentCount;
-        }
-
-        public void setTotalPaymentCount(int totalPaymentCount) {
-            this.totalPaymentCount = totalPaymentCount;
-        }
-
-        public long getTotalPaymentAmount() {
-            return totalPaymentAmount;
-        }
-
-        public void setTotalPaymentAmount(long totalPaymentAmount) {
-            this.totalPaymentAmount = totalPaymentAmount;
-        }
-
-        public int getInspectionCount() {
-            return inspectionCount;
-        }
-
-        public void setInspectionCount(int inspectionCount) {
-            this.inspectionCount = inspectionCount;
-        }
-
-        public int getPostReportCount() {
-            return postReportCount;
-        }
-
-        public void setPostReportCount(int postReportCount) {
-            this.postReportCount = postReportCount;
-        }
-
-        public int getCommentReportCount() {
-            return commentReportCount;
-        }
-
-        public void setCommentReportCount(int commentReportCount) {
-            this.commentReportCount = commentReportCount;
-        }
-
-        public int getRentalCommentReportCount() {
-            return rentalCommentReportCount;
-        }
-
-        public void setRentalCommentReportCount(int rentalCommentReportCount) {
-            this.rentalCommentReportCount = rentalCommentReportCount;
-        }
-
-        public int getTotalReportCount() {
-            return totalReportCount;
-        }
-
-        public void setTotalReportCount(int totalReportCount) {
-            this.totalReportCount = totalReportCount;
-        }
-
-        public Date getStatsDate() {
-            return statsDate;
-        }
-
-        public void setStatsDate(Date statsDate) {
-            this.statsDate = statsDate;
-        }
+    public Integer getNewUserCount() {
+        return newUserCount;
     }
+
+    public void setNewUserCount(Integer newUserCount) {
+        this.newUserCount = newUserCount;
+    }
+
+    public Integer getTotalUserCount() {
+        return totalUserCount;
+    }
+
+    public void setTotalUserCount(Integer totalUserCount) {
+        this.totalUserCount = totalUserCount;
+    }
+
+    public Integer getStorenPaymentCount() {
+        return storenPaymentCount;
+    }
+
+    public void setStorenPaymentCount(Integer storenPaymentCount) {
+        this.storenPaymentCount = storenPaymentCount;
+    }
+
+    public Integer getStorenPaymentAmount() {
+        return storenPaymentAmount;
+    }
+
+    public void setStorenPaymentAmount(Integer storenPaymentAmount) {
+        this.storenPaymentAmount = storenPaymentAmount;
+    }
+
+    public Integer getStoragePaymentCount() {
+        return storagePaymentCount;
+    }
+
+    public void setStoragePaymentCount(Integer storagePaymentCount) {
+        this.storagePaymentCount = storagePaymentCount;
+    }
+
+    public Integer getStoragePaymentAmount() {
+        return storagePaymentAmount;
+    }
+
+    public void setStoragePaymentAmount(Integer storagePaymentAmount) {
+        this.storagePaymentAmount = storagePaymentAmount;
+    }
+
+    public Integer getRentalPaymentCount() {
+        return rentalPaymentCount;
+    }
+
+    public void setRentalPaymentCount(Integer rentalPaymentCount) {
+        this.rentalPaymentCount = rentalPaymentCount;
+    }
+
+    public Integer getRentalPaymentAmount() {
+        return rentalPaymentAmount;
+    }
+
+    public void setRentalPaymentAmount(Integer rentalPaymentAmount) {
+        this.rentalPaymentAmount = rentalPaymentAmount;
+    }
+
+    public Integer getTotalPaymentCount() {
+        return totalPaymentCount;
+    }
+
+    public void setTotalPaymentCount(Integer totalPaymentCount) {
+        this.totalPaymentCount = totalPaymentCount;
+    }
+
+    public Integer getTotalPaymentAmount() {
+        return totalPaymentAmount;
+    }
+
+    public void setTotalPaymentAmount(Integer totalPaymentAmount) {
+        this.totalPaymentAmount = totalPaymentAmount;
+    }
+
+    public Integer getInspectionCount() {
+        return inspectionCount;
+    }
+
+    public void setInspectionCount(Integer inspectionCount) {
+        this.inspectionCount = inspectionCount;
+    }
+
+    public Integer getPostReportCount() {
+        return postReportCount;
+    }
+
+    public void setPostReportCount(Integer postReportCount) {
+        this.postReportCount = postReportCount;
+    }
+
+    public Integer getCommentReportCount() {
+        return commentReportCount;
+    }
+
+    public void setCommentReportCount(Integer commentReportCount) {
+        this.commentReportCount = commentReportCount;
+    }
+
+    public Integer getRentalCommentReportCount() {
+        return rentalCommentReportCount;
+    }
+
+    public void setRentalCommentReportCount(Integer rentalCommentReportCount) {
+        this.rentalCommentReportCount = rentalCommentReportCount;
+    }
+
+    public Integer getTotalReportCount() {
+        return totalReportCount;
+    }
+
+    public void setTotalReportCount(Integer totalReportCount) {
+        this.totalReportCount = totalReportCount;
+    }
+
+    public String getStatsDate() {
+        return statsDate;
+    }
+
+    public void setStatsDate(String statsDate) {
+        this.statsDate = statsDate;
+    }
+}
