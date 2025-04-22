@@ -159,7 +159,7 @@
     </div>
 
     <!-- 쿠폰 생성 폼 - GET 방식으로 변경 -->
-    <form id="couponForm" action="${pageContext.request.contextPath}/admin-insertCoupon.action" method="get">
+    <form id="couponForm" action="${pageContext.request.contextPath}/admin-createCoupon.action" method="get">
       <div class="coupon-form">
         <!-- 쿠폰 생성 타이틀 -->
         <div class="title-box">
@@ -213,7 +213,7 @@
 
         <!-- 버튼 그룹 -->
         <div class="button-group">
-          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-couponList.action'">취소</button>
+          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">취소</button>
           <button type="submit" class="button create">생성</button>
         </div>
       </div>
