@@ -71,9 +71,7 @@ public class AdminDeliveryUpdateDTO {
         private String waybillEntryDate;
 
         //렌탈 데이터 유형
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
         private String rentalStartDate;
-        @DateTimeFormat(pattern = "yyyy-MM-dd")
         private String rentalEndDate;
 
         private String memo;  // 메모 필드 추가

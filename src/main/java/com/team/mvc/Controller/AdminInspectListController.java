@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
+
+
 @Controller
 public class AdminInspectListController {
 
@@ -20,7 +23,7 @@ public class AdminInspectListController {
      * 검수 목록 페이지 (GET 요청 처리)
      */
     @RequestMapping(value="/admin-inspectList.action", method = RequestMethod.GET)
-    public String adminInspectList(@ModelAttribute("adminId") String adminId, Model model, RedirectAttributes redirectAttributes) {
+    public String adminInspectList(Model model, RedirectAttributes redirectAttributes) {
         try {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
@@ -53,12 +56,39 @@ public class AdminInspectListController {
             @RequestParam(value = "equipGradeId", required = false, defaultValue = "0") Integer equipGradeId,
             @RequestParam(value = "inspecComment", required = false, defaultValue = "") String inspecComment,
             @RequestParam(value = "finalGrade", required = false) String finalGrade,
+            @RequestParam Map<String, String> paramMap,
+            IAdminInspectListDAO dao,
             RedirectAttributes redirectAttributes) {
 
         try {
+
+            // 관리자 ID 기본값 설정 (로그인 없이 사용할 기본값)
+            String adminId = "ADMIN1"; // 기본 관리자 ID 설정
+
+
+            //각각의 속성별 코멘트 저장
+            String comment1 = paramMap.get("comment_1");
+            String comment2 = paramMap.get("comment_2");
+            String comment3 = paramMap.get("comment_3");
+            String comment4 = paramMap.get("comment_4");
+            String comment5 = paramMap.get("comment_5");
+
+            System.out.println( "comment1: " + comment1 );
+            System.out.println( "comment2: " + comment2 );
+            System.out.println( "comment3: " + comment3 );
+            System.out.println( "comment4: " + comment4 );
+            System.out.println( "comment5: " + comment5 );
+
+            // AdminInspecList.jsp 에서 받은 코멘트 값 배열로 저장
+            String [] comments = {comment1, comment2, comment3, comment4, comment5};
+
+
+
             // 문자열에서 숫자 추출 및 변환
             Integer platformDeliveryId = null;
             Integer platformDeliveryReturnId = null;
+
+
 
             if (platformDeliveryIdStr != null && !platformDeliveryIdStr.isEmpty()) {
                 try {
@@ -82,7 +112,7 @@ public class AdminInspectListController {
 
                         // 여기에 반환 ID에 해당하는 원래 배송 ID를 찾는 로직 추가
                         if (platformDeliveryId == null) {
-                            IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+                            dao = sqlSession.getMapper(IAdminInspectListDAO.class);
                             platformDeliveryId = dao.getDeliveryIdFromReturnId(platformDeliveryReturnId);
 
                             if (platformDeliveryId == null) {
@@ -148,7 +178,7 @@ public class AdminInspectListController {
                     + ", comment=" + inspecComment);
 
             // MyBatis Mapper 인터페이스 가져오기
-            IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+            dao = sqlSession.getMapper(IAdminInspectListDAO.class);
 
             // 확장된 프로시저 호출 메소드 사용
             dao.callINSPECT_RESULT(platformDeliveryId, platformDeliveryReturnId,
