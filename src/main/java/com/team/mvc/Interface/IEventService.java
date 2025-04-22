@@ -1,13 +1,11 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.EventDTO;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
 
-@Mapper
-public interface IEventDAO {
+public interface IEventService {
 
     // 전체 이벤트 리스트 조회
     List<EventDTO> listEvent(Map<String, Object> map);

@@ -1,7 +1,7 @@
 package com.team.mvc.DTO;
 
 public class AttachmentDTO {
-    private int attachmentEquipRegId, equipCode, attachmentOrder, attachmentPostId, postId;
+    private int attachmentEquipRegId, equipCode, attachmentOrder, attachmentPostId, postId, attachmentReplyId, replyId;
     private String attachmentName, attachmentPath, createdDate;
     private long attachmentSize;
 
@@ -75,5 +75,21 @@ public class AttachmentDTO {
 
     public void setPostId(int postId) {
         this.postId = postId;
+    }
+
+    public int getAttachmentReplyId() {
+        return attachmentReplyId;
+    }
+
+    public void setAttachmentReplyId(int attachmentReplyId) {
+        this.attachmentReplyId = attachmentReplyId;
+    }
+
+    public int getReplyId() {
+        return replyId;
+    }
+
+    public void setReplyId(int replyId) {
+        this.replyId = replyId;
     }
 }

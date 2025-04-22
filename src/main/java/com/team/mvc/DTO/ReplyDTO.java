@@ -1,11 +1,12 @@
 package com.team.mvc.DTO;
 
+import java.util.List;
+
 public class ReplyDTO {
     private int replyId, userCode,  postId;
     private Integer rootReplyId;  // 대댓글인 경우 부모 댓글 ID
     private String replyContent, createdDate, nickname; // 조인으로 가져올 닉네임
-
-    private BoardPostDTO replyPostDTO;                     // 해당 댓글이 달린 게시물DTO
+    private List<AttachmentDTO> attachment;
 
     // Getters and Setters
     public int getReplyId() {
@@ -64,11 +65,11 @@ public class ReplyDTO {
         this.nickname = nickname;
     }
 
-    public BoardPostDTO getReplyPostDTO() {
-        return replyPostDTO;
+    public List<AttachmentDTO> getAttachment() {
+        return attachment;
     }
 
-    public void setReplyPostDTO(BoardPostDTO replyPostDTO) {
-        this.replyPostDTO = replyPostDTO;
+    public void setAttachment(List<AttachmentDTO> attachment) {
+        this.attachment = attachment;
     }
 }
