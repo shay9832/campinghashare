@@ -116,7 +116,13 @@ public class BoardController {
         }
 
         // 전체 인기글 조회 (검색 조건과 정렬 조건 적용)
-        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(null);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : totalHotPost) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
 
         // 페이징 처리
         int totalPostCount = totalHotPost.size();
@@ -371,6 +377,12 @@ public class BoardController {
 
         // 일반 게시물 목록 조회
         List<BoardPostDTO> postList = boardPostService.listPostList(dto);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : postList) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
 
         // 모델에 데이터 추가
         model.addAttribute("postList", postList);
@@ -928,6 +940,7 @@ public class BoardController {
                              @RequestParam(value = "size", defaultValue = "9") int size,
                              @RequestParam(value = "searchType", required = false) String searchType,
                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                             @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
                              @ModelAttribute("userCode") Integer userCode,
                              @ModelAttribute("adminId") String adminId,
                              Model model) {
@@ -942,6 +955,10 @@ public class BoardController {
         // 검색 조건이 담길 dto 생성
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+        model.addAttribute("sortType", sortType);
 
         // 검색 조건 설정
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -1062,6 +1079,7 @@ public class BoardController {
                                              @RequestParam(value = "size", defaultValue = "9") int size,
                                              @RequestParam(value = "searchType", required = false) String searchType,
                                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                             @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
                                              @RequestParam(value = "hotOnly", required = false) Boolean hotOnly,
                                              @RequestParam(value = "originalPostNumbers", required = false) String originalPostNumbersJson,
                                              @ModelAttribute("userCode") Integer userCode,
@@ -1093,6 +1111,9 @@ public class BoardController {
         // 검색 조건이 담긴 DTO 생성 (공통)
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
 
         // 검색 조건 설정 (공통)
         if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
@@ -1160,6 +1181,7 @@ public class BoardController {
         result.put("postList", postList);
         result.put("pagenation", pagenation);
         result.put("hotOnly", hotOnly);
+        result.put("sortType", sortType);
 
         return result;
     }
@@ -1883,13 +1905,6 @@ public class BoardController {
     }
 
     //----------------------------------------------------------------------------------------------------------------------
-    // 이벤트 페이지
-    @RequestMapping("/event.action")
-    public String event(@ModelAttribute("userCode") Integer userCode,
-                        @ModelAttribute("adminId") String adminId) {
-        return "event";
-    }
-//----------------------------------------------------------------------------------------------------------------------
 
     // 추천 수 증가
     @RequestMapping(value = "/api/post/recommend.action", method = RequestMethod.POST)
