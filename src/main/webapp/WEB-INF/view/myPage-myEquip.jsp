@@ -704,9 +704,9 @@
                 const id = $(this).closest("tr").find("input[name='id']").val();
 
                 if($(this).hasClass('btn-inspection')) {
-                    window.location.href = "mypage-inspecList.action?id=" + id;
+                    window.location.href = "mypage-inspecList.action?id=" + id + "&activeTab=storen&storenTabType=store";
                 } else if($(this).hasClass('btn-shipping')) {
-                    window.location.href = "mypage-delivery.action?id=" + id;
+                    window.location.href = "mypage-delivery.action?id=" +  + "&activeTab=storen&storenTabType=owner";
                 } else if($(this).hasClass('btn-pay')) {
                     window.location.href = "storenregister-storage-pay.action?id=" + id;
                 }

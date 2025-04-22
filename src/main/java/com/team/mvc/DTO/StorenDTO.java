@@ -32,8 +32,9 @@ public class StorenDTO {
                                 // (=입고일 + 보관개월수)
     //-------------------------------------------------------------------------------------------------------날짜 관련 속성
     private Integer matching_request_count;                 //매칭수
-    private String matching_status;                         //매칭상태
+    private String matching_status;                         //매칭상태(매칭중, 매칭완료)
     private MatchingRequestDTO matchingDTO;                 //매칭DTO
+    private String matching_status_detail;                  //마이페이지-내가 대여한 장비에서 쓰기 위한 세부 매칭 상태
 
     //장비 등급 추가
     private String equip_grade;                             //장비등급이름
@@ -324,5 +325,13 @@ public class StorenDTO {
 
     public void setMatchingDTO(MatchingRequestDTO matchingDTO) {
         this.matchingDTO = matchingDTO;
+    }
+
+    public String getMatching_status_detail() {
+        return matching_status_detail;
+    }
+
+    public void setMatching_status_detail(String matching_status_detail) {
+        this.matching_status_detail = matching_status_detail;
     }
 }

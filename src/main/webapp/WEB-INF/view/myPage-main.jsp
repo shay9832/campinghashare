@@ -186,6 +186,7 @@
             text-align: center;
             color: var(--text-secondary);
             width: 100%;
+            height: 80%;
         }
 
         .empty-state i {
@@ -213,6 +214,32 @@
             background-color: var(--color-maple);
             color: white;
             text-decoration: none;
+        }
+
+        /* 두 컬럼 레이아웃 스타일 */
+         .two-column-layout-transaction {
+             display: flex;
+             justify-content: space-between;
+             gap: 4%;
+             flex-wrap: wrap;
+         }
+
+        /* 반응형을 위한 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .two-column-layout .transaction-content {
+                width: 100% !important;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* 타이틀 스타일 */
+        .content-subtitle {
+            font-size: var(--font-lg);
+            font-weight: var(--font-semibold);
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
         }
     </style>
 </head>
@@ -316,117 +343,130 @@
             </div>
         </div>
 
+        <!-- 거래 내역 섹션 제목 -->
+        <div class="section-header">거래 내역</div>
+
         <!-- 거래 내역 탭 섹션 -->
-        <div class="tab-nav">
-            <button class="tab-link active" id="registerEquip-tab">
-                <i class="fa fa-exchange-alt"></i> 등록 장비 내역: ${user.equipmentCount}건
-            </button>
-            <button class="tab-link" id="rentEquip-tab">
-                <i class="fa fa-shopping-cart"></i> 대여 장비 내역: ${user.matchingCount}건
-            </button>
-        </div>
-
-
-        <div class="content-box">
+        <div class="two-column-layout-transaction content-box">
             <!-- 등록 장비 내역 콘텐츠 -->
-            <div class="transaction-content" id="registerEquip-content">
+            <div class="transaction-content" id="registerEquip-content" style="width:48%;">
+                <h4 class="content-subtitle">
+                    <i class="fa fa-exchange-alt"></i> 등록 장비 내역: ${user.equipmentCount}건
+                </h4>
                 <div class="info-line">
                     <span class="info-text">최근 등록된 ${myEquipMap.size()}개의 장비를 간략하게 조회 중입니다.</span>
                     <a href="mypage-myequip.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
                 </div>
                 <c:choose>
-                <c:when test="${not empty myEquipMap and myEquipMap.size() > 0}">
-                <div class="custom-table">
-                    <table class="table">
-                        <tbody>
-                        <c:forEach var="entry" items="${myEquipMap}">
-                            <%-- key, value를 개별 변수에 저장 --%>
-                            <c:set var="key" value="${entry.key}" />
-                            <c:set var="val" value="${entry.value}" />
-                            <c:choose>
-                                <%-- 해당 장비가 스토렌일 때 --%>
-                                <c:when test="${fn:contains(key, 'storen')}">
-                                    <tr class="table-row">
-                                        <td style="width: 20%;">
-                                            <div class="product-image">
-                                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                                            </div>
-                                        </td>
-                                        <td style="width: 55%;">
-                                            <div class="equipment-info-container">
-                                                <input type="hidden" name="storen_id" value="${val.storen_id}">
-                                                <a href="#" class="equipment-name"><c:choose>
-                                                    <c:when test="${not empty val.storen_title}">
-                                                        ${val.storen_title}
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        ${val.equipmentDTO.equip_name}
-                                                    </c:otherwise>
-                                                </c:choose></a>
-                                                <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
-                                                <div class="equipment-info-text">${val.equipmentDTO.brand}</div>
-                                                <div class="status-badge status-storage">${val.status}</div>
-                                            </div>
-                                        </td>
-                                        <td style="width: 25%;">
-                                            <div class="button-group-vertical">
-                                                <button class="btn-sm btn-storen">스토렌 정보 확인</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:when>
-                                <c:when test="${fn:contains(key, 'general')}">
-                                    <tr class="table-row">
-                                        <td style="width: 20%;">
-                                            <div class="product-image">
-                                                <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
-                                            </div>
-                                        </td>
-                                        <td style="width: 55%;">
-                                            <div class="equipment-info-container">
-                                                <input type="hidden" name="equip_code" value="${val.equip_code}">
-                                                <a href="#" class="equipment-name">${val.equip_name}</a>
-                                                <div class="equipment-info-text">${val.majorCategory} > ${val.middleCategory}</div>
-                                                <div class="equipment-info-text">${val.brand}</div>
-                                            </div>
-                                        </td>
-                                        <td style="width: 25%;">
-                                            <div class="button-group-vertical">
-                                                <button class="btn-sm btn-storen">스토렌 신청</button>
-                                                <button class="btn-sm btn-rental">렌탈 신청</button>
-                                                <button class="btn-sm btn-storage">보관 신청</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:when>
-                            </c:choose>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
+                    <c:when test="${not empty myEquipMap and myEquipMap.size() > 0}">
+                        <div class="custom-table">
+                            <table class="table">
+                                <tbody>
+                                <c:forEach var="entry" items="${myEquipMap}">
+                                    <%-- key, value를 개별 변수에 저장 --%>
+                                    <c:set var="key" value="${entry.key}" />
+                                    <c:set var="val" value="${entry.value}" />
+                                    <c:choose>
+                                        <%-- 해당 장비가 스토렌일 때 --%>
+                                        <c:when test="${fn:contains(key, 'storen')}">
+                                            <tr class="table-row">
+                                                <td style="width: 20%;">
+                                                    <div class="product-image">
+                                                        <c:choose>
+                                                        <c:when test="${val.equipmentDTO.attachments.get(0) != null && !empty val.equipmentDTO.attachments}">
+                                                            <img src="${val.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="product-placeholder"></div>
+                                                        </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 55%;">
+                                                    <div class="equipment-info-container">
+                                                        <input type="hidden" name="storen_id" value="${val.storen_id}">
+                                                        <a href="#" class="equipment-name"><c:choose>
+                                                            <c:when test="${not empty val.storen_title}">
+                                                                ${val.storen_title}
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                ${val.equipmentDTO.equip_name}
+                                                            </c:otherwise>
+                                                        </c:choose></a>
+                                                        <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
+                                                        <div class="equipment-info-text">${val.equipmentDTO.brand}</div>
+                                                        <div class="status-badge storen-status-badge">${val.status}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <div class="button-group-vertical">
+                                                        <button class="btn-sm btn-storen" onclick="location.href='mypage-myequip.action'">스토렌 정보 확인</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                        <c:when test="${fn:contains(key, 'general')}">
+                                            <tr class="table-row">
+                                                <td style="width: 20%;">
+                                                    <div class="product-image">
+                                                        <c:choose>
+                                                            <c:when test="${val.attachments.get(0) != null && !empty val.attachments}">
+                                                                <img src="${val.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="product-placeholder"></div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 55%;">
+                                                    <div class="equipment-info-container">
+                                                        <input type="hidden" name="equip_code" value="${val.equip_code}">
+                                                        <a href="#" class="equipment-name">${val.equip_name}</a>
+                                                        <div class="equipment-info-text">${val.majorCategory} > ${val.middleCategory}</div>
+                                                        <div class="equipment-info-text">${val.brand}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <div class="button-group-vertical">
+                                                        <button class="btn-sm btn-storen" onclick="location.href='storenRegister-storage-info.action?equip_code=${val.equip_code}'">스토렌 신청</button>
+                                                        <button class="btn-sm btn-rental">렌탈 신청</button>
+                                                        <button class="btn-sm btn-storage">보관 신청</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                    </c:choose>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
                     </c:when>
-                <c:otherwise>
-                    <%-- 등록 장비가 없을 때 --%>
-                    <div class="empty-state">
-                        <i class="fa fa-box-open"></i>
-                        <p>등록한 장비가 없습니다.</p>
-                        <a href="equipment-register.action" class="empty-action">장비 등록하러 가기</a>
-                    </div>
-                </c:otherwise>
+                    <c:otherwise>
+                        <%-- 등록 장비가 없을 때 --%>
+                        <div class="empty-state">
+                            <i class="fa fa-box-open"></i>
+                            <p>등록한 장비가 없습니다.</p>
+                            <a href="equipment-register.action" class="empty-action">장비 등록하러 가기</a>
+                        </div>
+                    </c:otherwise>
                 </c:choose>
             </div>
 
             <!-- 대여 장비 내역 콘텐츠 -->
-            <div class="transaction-content" id="rentEquip-content" style="display: none;">
+            <div class="transaction-content" id="rentEquip-content" style="width:48%;"> <!-- 너비 48%로 조정, display:none 제거 -->
+                <h4 class="content-subtitle">
+                    <i class="fa fa-shopping-cart"></i> 대여 장비 내역: ${user.matchingCount}건
+                </h4>
                 <div class="info-line">
                     <span class="info-text">최근 대여한 ${rentEquipMap.size()}개의 장비를 간략하게 조회 중입니다.</span>
                     <a href="mypage-rentequip.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
                 </div>
                 <c:choose>
-                <c:when test="${not empty rentEquipMap and rentEquipMap.size() > 0}">
-                    <div class="custom-table">
-                        <table class="table">
-                            <tbody>
+                    <c:when test="${not empty rentEquipMap and rentEquipMap.size() > 0}">
+                        <div class="custom-table">
+                            <table class="table">
+                                <tbody>
                                 <c:forEach var="entry" items="${rentEquipMap}">
                                     <%-- key, value를 개별 변수에 저장 --%>
                                     <c:set var="key" value="${entry.key}" />
@@ -437,7 +477,14 @@
                                             <tr class="table-row">
                                                 <td style="width: 20%;">
                                                     <div class="product-image">
-                                                        <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="장비 이미지">
+                                                        <c:choose>
+                                                            <c:when test="${val.equipmentDTO.attachments.get(0) != null && !empty val.equipmentDTO.attachments}">
+                                                                <img src="${val.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="product-placeholder"></div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                                 </td>
                                                 <td style="width: 55%;">
@@ -453,31 +500,31 @@
                                                         </c:choose></a>
                                                         <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
                                                         <div class="equipment-info-text">대여기간: ${val.matchingDTO.rental_start_date} ~ ${val.matchingDTO.rental_end_date}</div>
-                                                        <div class="status-badge status-rental">${val.status}</div>
+                                                        <div class="status-badge matching-status-badge">${val.matching_status_detail}</div>
                                                     </div>
                                                 </td>
                                                 <td style="width: 25%;">
                                                     <div class="button-group-vertical">
-                                                        <button class="btn-sm btn-rental">대여 정보 확인</button>
+                                                        <button class="btn-sm btn-rental" onclick="location.href='mypage-rentequip.action'">대여 정보 확인</button>
                                                     </div>
                                                 </td>
                                             </tr>
                                         </c:when>
                                     </c:choose>
                                 </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <%-- 등록 장비가 없을 때 --%>
-                    <div class="empty-state">
-                        <i class="fa fa-shopping-cart"></i>
-                        <p>대여한 장비가 없습니다.</p>
-                        <a href="rentalsearch-main.action" class="empty-action">장비 대여하러 가기</a>
-                    </div>
-                </c:otherwise>
-            </c:choose>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <%-- 등록 장비가 없을 때 --%>
+                        <div class="empty-state">
+                            <i class="fa fa-shopping-cart"></i>
+                            <p>대여한 장비가 없습니다.</p>
+                            <a href="rentalsearch-main.action" class="empty-action">장비 대여하러 가기</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 
@@ -741,7 +788,14 @@
                             <c:forEach var="wish" items="${wishlist}">
                                 <div class="product-card">
                                     <div class="product-image">
-                                        <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="아이템 이미지">
+                                        <c:choose>
+                                            <c:when test="${wish.equipmentDTO.attachments.get(0) != null && !empty wish.equipmentDTO.attachments}">
+                                                <img src="${wish.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="product-placeholder"></div>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                     <div class="product-info">
                                         <div class="product-title"><c:choose>
@@ -786,20 +840,6 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        // 장비 내역 탭 전환 기능
-        $('#registerEquip-tab').click(function() {
-            $(this).addClass('active');
-            $('#rentEquip-tab').removeClass('active');
-            $('#registerEquip-content').show();
-            $('#rentEquip-content').hide();
-        });
-
-        $('#rentEquip-tab').click(function() {
-            $(this).addClass('active');
-            $('#registerEquip-tab').removeClass('active');
-            $('#rentEquip-content').show();
-            $('#registerEquip-content').hide();
-        });
 
         // 글/댓글 탭 전환 기능
         $('#mypost-tab').click(function() {
@@ -814,6 +854,20 @@
             $('#mypost-tab').removeClass('active');
             $('#mycomment-content').show();
             $('#mypost-content').hide();
+        });
+
+        // 모든 소유한 장비 상태 배지를 순회하며 클래스 적용
+        $('.storen-status-badge').each(function() {
+            const status = $(this).text().trim();
+            const statusClass = getStorenStatusBadgeClass(status);
+            $(this).addClass(statusClass);
+        });
+
+        // 모든 대여한 장비 상태 배지를 순회하며 클래스 적용
+        $('.matching-status-badge').each(function() {
+            const status = $(this).text().trim();
+            const statusClass = getMatchingStatusBadgeClass(status);
+            $(this).addClass(statusClass);
         });
     });
     // 다음 찜 아이템 카드로 이동 기능 구현
@@ -839,6 +893,64 @@
             $slider.animate({ scrollLeft: currentScroll }, 100);
         });
     });
+
+    function getStorenStatusBadgeClass(status) {
+        switch(status) {
+            case '보관비 결제 대기':
+                return 'status-payment-waiting';
+            case '배송 대기':
+                return 'status-shipping-waiting';
+            case '배송 중':
+                return 'status-shipping';
+            case '검수 중':
+                return 'status-inspection';
+            case '보관 중':
+                return 'status-storage';
+            case '강제 반환':
+                return 'status-forced-return';
+            case '승인 대기':
+                return 'status-approval-waiting';
+            case '결제 대기':
+                return 'status-waiting-payment';
+            case '렌탈 중':
+                return 'status-rental';
+            case '반납 중':
+                return 'status-returning';
+            case '거래 완료':
+                return 'status-completed';
+            case '최종 반환':
+                return 'status-final-return';
+            case '상태 불명':
+            default:
+                return 'status-unknown';
+        }
+    }
+
+    // 상태에 따른 CSS 클래스 반환 함수
+    function getMatchingStatusBadgeClass(status) {
+        switch(status) {
+            case '렌탈비결제전':
+                return 'status-rental-payment-waiting';
+            case '렌탈비결제완료':
+                return 'status-rental-payment-completed';
+            case '배송중':
+                return 'status-shipping-in-progress';
+            case '대여중':
+                return 'status-renting';
+            case '반납일임박':
+                return 'status-return-approaching';
+            case '반납중':
+                return 'status-returning-in-progress';
+            case '검수중':
+                return 'status-inspecting';
+            case '거래완료':
+                return 'status-transaction-completed';
+            case '추가비용결제필요':
+                return 'status-additional-payment-required';
+            default:
+                return 'status-unknown';
+        }
+    }
 </script>
 </body>
 </html>
