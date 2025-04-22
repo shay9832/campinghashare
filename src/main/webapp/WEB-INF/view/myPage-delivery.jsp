@@ -61,12 +61,12 @@
         }
         /* 버튼 안 보이는 문제 해결 위한 css 추가 */
         /* 조회 열 명시적 표시 */
-        .custom-table th:nth-child(9),
-        .custom-table td:nth-child(9) {
-            display: table-cell !important;
-            visibility: visible !important;
-            width: auto !important;
-        }
+        /*.custom-table th:nth-child(9),*/
+        /*.custom-table td:nth-child(9) {*/
+        /*    display: table-cell !important;*/
+        /*    visibility: visible !important;*/
+        /*    width: auto !important;*/
+        /*}*/
 
         /* 테이블 열 너비 조정 */
         .custom-table {
@@ -114,11 +114,11 @@
             width: 10%;
         }
 
-        /* 조회 버튼 열 - 좁게 */
-        .custom-table th:nth-child(9),
-        .custom-table td:nth-child(9) {
-            width: 8%;
-        }
+         /*조회 버튼 열 - 좁게 */
+        /*.custom-table th:nth-child(9),*/
+        /*.custom-table td:nth-child(9) {*/
+        /*    width: 8%;*/
+        /*}*/
 
         /* 테이블 셀 내용 처리 */
         .custom-table td,
@@ -268,7 +268,7 @@
                             <th>배송 상태</th>
                             <th>배송 시작일</th>
                             <th>배송 종료일</th>
-                            <th>조회</th>
+<%--                            <th>조회</th>--%>
                         </tr>
                         </thead>
                         <tbody>
@@ -300,11 +300,11 @@
                                     </td>
                                     <td>${delivery.start_date}</td>
                                     <td>${delivery.end_date}</td>
-                                    <td>
-                                        <button type="button" class="btn-sm btn-track-external"
-                                                data-company="${delivery.carrier_name}"
-                                                data-tracking="${delivery.waybill_number}">조회</button>
-                                    </td>
+<%--                                    <td>--%>
+<%--                                        <button type="button" class="btn-sm btn-track-external"--%>
+<%--                                                data-company="${delivery.carrier_name}"--%>
+<%--                                                data-tracking="${delivery.waybill_number}">조회</button>--%>
+<%--                                    </td>--%>
                                 </tr>
                             </c:forEach>
                         </c:if>
@@ -327,7 +327,7 @@
                             <th>배송 상태</th>
                             <th>배송 시작일</th>
                             <th>배송 종료일</th>
-                            <th>조회</th>
+<%--                            <th>조회</th>--%>
                         </tr>
                         </thead>
                         <tbody>
@@ -351,7 +351,7 @@
                             <th>배송 상태</th>
                             <th>배송 시작일</th>
                             <th>배송 종료일</th>
-                            <th>조회</th>
+<%--                            <th>조회</th>--%>
                         </tr>
                         </thead>
                         <tbody>
@@ -378,7 +378,7 @@
         tbody.empty();
 
         if (deliveries.length === 0) {
-            tbody.html('<tr><td colspan="9" class="text-center">데이터가 없습니다.</td></tr>');
+            tbody.html('<tr><td colspan="8" class="text-center">데이터가 없습니다.</td></tr>');
             return;
         }
 
@@ -417,11 +417,11 @@
                 '</td>' +
                 '<td>' + (delivery.start_date || '') + '</td>' +
                 '<td>' + (delivery.end_date || '') + '</td>' +
-                '<td>' +
-                '<button type="button" class="btn-sm btn-track-external" ' +
-                'data-company="' + delivery.carrier_name + '" ' +
-                'data-tracking="' + delivery.waybill_number + '">조회</button>' +
-                '</td>' +
+                // '<td>' +
+                // '<button type="button" class="btn-sm btn-track-external" ' +
+                // 'data-company="' + delivery.carrier_name + '" ' +
+                // 'data-tracking="' + delivery.waybill_number + '">조회</button>' +
+                // '</td>' +
                 '</tr>';
 
             tbody.append(row);
@@ -441,7 +441,7 @@
             // 로딩 표시
             const activeTab = $('.tab.active').data('tab');
             $('#' + activeTab + '-content .table-container tbody').html(
-                '<tr><td colspan="9" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 검색 중...</td></tr>'
+                '<tr><td colspan="8" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 검색 중...</td></tr>'
             );
 
             // API 호출
@@ -468,7 +468,7 @@
                     if(data.length === 0) {
                         // 검색 결과가 없는 경우
                         $('#' + activeTab + '-content .table-container tbody').html(
-                            '<tr><td colspan="9" class="text-center py-4">검색 결과가 없습니다.</td></tr>'
+                            '<tr><td colspan="8" class="text-center py-4">검색 결과가 없습니다.</td></tr>'
                         );
                     } else {
                         // 결과 표시 - 이제 전역 함수가 되어 접근 가능
@@ -481,7 +481,7 @@
                 error: function(xhr, status, error) {
                     console.error('검색 실패: ' + error);
                     $('#' + activeTab + '-content .table-container tbody').html(
-                        '<tr><td colspan="9" class="text-center text-danger">검색 중 오류가 발생했습니다.</td></tr>'
+                        '<tr><td colspan="8" class="text-center text-danger">검색 중 오류가 발생했습니다.</td></tr>'
                     );
                 }
             });
@@ -567,12 +567,30 @@
             }, 300);
         }
 
-        // 현재 활성화된 스토렌 서브탭
-        let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
+        const activeTabId = '${activeTab}';  // 서버에서 받은 activeTab 값
+        const storenTabType = '${storenTabType}';  // 서버에서 받은 storenTabType 값
+
+        // 탭 활성화 (CSS 클래스 추가)
+        $('.tab[data-tab="' + activeTabId + '"]').addClass('active');
+        $('#' + activeTabId + '-content').addClass('active');
+
+        // 스토렌 탭이 활성화되어 있고, 사용자 서브탭이면
+        if (activeTabId === 'storen' && storenTabType === 'user') {
+            $('#storen-owner').removeClass('active');
+            $('#storen-user').addClass('active');
+            loadStorenData('user');  // 사용자 탭 데이터 로드
+        } else if (activeTabId === 'rental') {
+            loadRentalData();  // 렌탈 탭 데이터 로드
+        } else if (activeTabId === 'storage') {
+            loadStorageData();  // 보관 탭 데이터 로드
+        }
 
         // 메인 탭 전환 기능
         $('.tab').on('click', function() {
             const tabId = $(this).data('tab');
+
+            // 검색 결과 표시 지우기
+            $('.filter-notice').remove();
 
             // 탭 활성화
             $('.tab').removeClass('active');
@@ -598,10 +616,14 @@
             if ($('#search-trade-id').val().trim() !== '') {
                 performSearch();
             }
+
         });
 
         // 스토렌 서브탭 전환 기능
         $('#storen-content .tab-link').on('click', function () {
+            // 검색 결과 표시 지우기
+            $('.filter-notice').remove();
+
             // 서브탭 타입 가져오기
             currentStorenSubTab = $(this).data('storen-tab');
             console.log("서브탭 변경: " + currentStorenSubTab);
@@ -634,7 +656,7 @@
             subTabType = subTabType || 'owner';
 
             // 로딩 표시
-            $('#storen-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
+            $('#storen-content .table-container tbody').html('<tr><td colspan="8" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
             const apiUrl = '/api/delivery/storen/' + subTabType;
@@ -655,7 +677,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
-                    $('#storen-content .table-container tbody').html('<tr><td colspan="9" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                    $('#storen-content .table-container tbody').html('<tr><td colspan="8" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
             });
         }
@@ -663,7 +685,7 @@
         // 렌탈 데이터 로드 함수
         function loadRentalData() {
             // 로딩 표시
-            $('#rental-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
+            $('#rental-content .table-container tbody').html('<tr><td colspan="8" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
             const apiUrl = '/api/delivery/rental';
@@ -684,7 +706,7 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
-                    $('#rental-content .table-container tbody').html('<tr><td colspan="9" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                    $('#rental-content .table-container tbody').html('<tr><td colspan="8" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
             });
         }
@@ -692,7 +714,7 @@
         // 보관 데이터 로드 함수
         function loadStorageData() {
             // 로딩 표시
-            $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center">로딩 중...</td></tr>');
+            $('#storage-content .table-container tbody').html('<tr><td colspan="8" class="text-center">로딩 중...</td></tr>');
 
             // API 엔드포인트 결정
             const apiUrl = '/api/delivery/storage';
@@ -713,18 +735,18 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('데이터 로드 실패: ' + error);
-                    $('#storage-content .table-container tbody').html('<tr><td colspan="9" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
+                    $('#storage-content .table-container tbody').html('<tr><td colspan="8" class="text-center text-danger">데이터를 불러오는 데 실패했습니다.</td></tr>');
                 }
             });
         }
 
-        // 배송업체 사이트 버튼 이벤트
-        $(document).on('click', '.btn-track-external, #modal-external-track-btn', function(e) {
-            e.stopPropagation(); // 이벤트 버블링 방지
-            const company = $(this).data('company') || $('#modal-shipping-company').text();
-            const trackingNumber = $(this).data('tracking') || $('#modal-tracking-number').text();
-            openExternalTrackingPage(company, trackingNumber);
-        });
+        // // 배송업체 사이트 버튼 이벤트
+        // $(document).on('click', '.btn-track-external, #modal-external-track-btn', function(e) {
+        //     e.stopPropagation(); // 이벤트 버블링 방지
+        //     const company = $(this).data('company') || $('#modal-shipping-company').text();
+        //     const trackingNumber = $(this).data('tracking') || $('#modal-tracking-number').text();
+        //     openExternalTrackingPage(company, trackingNumber);
+        // });
 
         // 검색 기능
         $('#btn-search').on('click', function() {

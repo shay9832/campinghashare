@@ -64,6 +64,9 @@ public interface IStorenDAO {
     // 해당 유저가 가진 스토렌 장비의 각 상태의 개수 조회
     Map<String, Object> getStorenStatus(@Param("userCode") int userCode);
 
+    // 해당 유저가 대여한 스토렌 장비의 각 상태의 개수 조회
+    Map<String, Object> getStorenMatchingStatus(@Param("userCode") int userCode);
+
     // 해당 유저의 상태별 필터링한 스토렌 목록 조회
     List<StorenDTO> listByUserCodeStatus(@Param("userCode") int userCode, @Param("status") String status);
 

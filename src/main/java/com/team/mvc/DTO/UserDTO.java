@@ -22,6 +22,12 @@ public class UserDTO {
     private int nicknameChange;             //닉네임 변경 횟수
     private int totalProfit;                //총 수익
 
+    private int postCount;                  //등록게시물 수
+    private int commentCount;               //등록댓글 수
+    private int equipmentCount;             //등록장비 수
+    private int couponCount;                //보유쿠폰 수
+    private int matchingCount;              //매칭승인되어 결제대기/결제완료된 수
+
     public UserDTO() {}
 
     public String getUserId() {
@@ -187,5 +193,45 @@ public class UserDTO {
 
     public void setTotalProfit(int totalProfit) {
         this.totalProfit = totalProfit;
+    }
+
+    public int getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(int postCount) {
+        this.postCount = postCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public int getEquipmentCount() {
+        return equipmentCount;
+    }
+
+    public void setEquipmentCount(int equipmentCount) {
+        this.equipmentCount = equipmentCount;
+    }
+
+    public int getCouponCount() {
+        return couponCount;
+    }
+
+    public void setCouponCount(int couponCount) {
+        this.couponCount = couponCount;
+    }
+
+    public int getMatchingCount() {
+        return matchingCount;
+    }
+
+    public void setMatchingCount(int matchingCount) {
+        this.matchingCount = matchingCount;
     }
 }

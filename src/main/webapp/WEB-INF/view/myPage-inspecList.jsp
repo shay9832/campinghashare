@@ -18,6 +18,30 @@
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
     <style>
+        /* 탭 네비게이션 스타일 */
+        .tab-nav {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tab-link {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #495057;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .tab-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .tab-nav .tab-link.active {
+            color: var(--color-white);
+            background-color: var(--color-maple);
+        }
         /* 테이블 너무 긴 장비명 줄이기 */
         .custom-table .title-cell {
             max-width: 200px;
@@ -388,6 +412,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 <script>
     $(document).ready(function () {
+        // 페이지 로드 시 URL 매개변수에 따른 초기화
+        const activeTabId = '${activeTab}';  // 서버에서 받은 activeTab 값
+        const storenTabType = '${storenTabType}';  // 서버에서 받은 storenTabType 값
+
+        // URL 매개변수에 따른 적절한 탭 활성화
+        if (activeTabId === 'storage') {
+            // 보관 탭이 활성화된 경우
+            $('#storage-tab').addClass('active');
+            $('#storen-tab').removeClass('active');
+            $('#storage-content').addClass('active');
+            $('#storen-content').removeClass('active');
+
+            // 보관 데이터 로드
+            loadStorageData();
+        } else if (activeTabId === 'storen' && storenTabType === 'return') {
+            // 스토렌 탭의 반납검수 서브탭이 활성화된 경우
+            $('#storen-store').removeClass('active');
+            $('#storen-return').addClass('active');
+
+            // 반납검수 데이터 로드
+            loadStorenData('return');
+        }
+
         // 페이지 로딩 시 검색창에 값이 있으면 자동 검색 실행
         const initialSearchValue = $('#search-service-id').val().trim();
         console.log('초기 검색값:', initialSearchValue);
@@ -399,7 +446,7 @@
         }
 
         // 현재 활성화된 스토렌 서브탭
-        let currentStorenSubTab = '${storenTabType}'; // 초기값은 서버에서 받아옴
+        let currentStorenSubTab = storenTabType; // 초기값은 서버에서 받아옴
 
         // 메인 탭 전환 기능
         $('.tab').on('click', function () {
@@ -432,6 +479,9 @@
 
         // 스토렌 서브탭 전환 기능
         $('#storen-content .tab-link').on('click', function () {
+            // 필터 상태 제거
+            $('.filter-notice').remove();
+
             // 서브탭 타입 가져오기
             currentStorenSubTab = $(this).data('storen-tab');
             console.log("서브탭 변경: " + currentStorenSubTab);

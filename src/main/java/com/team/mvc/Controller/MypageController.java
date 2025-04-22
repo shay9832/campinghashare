@@ -37,10 +37,19 @@ public class MypageController {
         UserDTO user = mainService.getUserDTO(userCode);
         LinkedHashMap<String, Object> myEquipMap = mainService.getMyEquipmentMap(userCode);
         LinkedHashMap<String, Object> rentEquipMap = mainService.getRentEquipmentMap(userCode);
+        Map<String, Object> postCommentMap = mainService.getPostCommentMap(userCode);
+        Map<String, Map<String, Integer>> statusMap = mainService.getMyEquipmentStatus(userCode);
+        List<StorenDTO> wishlist = mainService.getMyWishlist(userCode);
 
         model.addAttribute("user", user);
         model.addAttribute("myEquipMap", myEquipMap);
         model.addAttribute("rentEquipMap", rentEquipMap);
+        model.addAttribute("postList", postCommentMap.get("postList"));
+        model.addAttribute("commentList", postCommentMap.get("replyList"));
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
+        model.addAttribute("wishlist", wishlist);
 
         return "myPage-main";
     }
@@ -181,15 +190,21 @@ public class MypageController {
     // 마이페이지-검수 결과 조회
     @RequestMapping(value="/mypage-inspecList.action")
     public String mypageInspecList(@ModelAttribute("userCode") Integer userCode, Model model
-                                    , @RequestParam(value="id", required=false) Integer id) {
+                                    , @RequestParam(value="id", required=false) Integer id
+                                    , @RequestParam(value="activeTab", required=false) String activeTab
+                                    , @RequestParam(value="storenTabType", required=false) String storenTabType) {
 
         System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : START ===");
+
+        // 기본값 설정
+        activeTab = (activeTab != null) ? activeTab : "storen";
+        storenTabType = (storenTabType != null) ? storenTabType : "store";
 
         // 초기에는 스토렌 입고 검수내역만 로드
         List<MypageInspecListDTO> storenStoreInspec = inspecListService.listStorenStoreInspec(userCode);
         model.addAttribute("inspecList", storenStoreInspec);
-        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
-        model.addAttribute("storenTabType", "store"); // 초기 서브탭 지정
+        model.addAttribute("activeTab", activeTab); // 초기 탭 지정
+        model.addAttribute("storenTabType", storenTabType); // 초기 서브탭 지정
         model.addAttribute("storenId", id);
 
         System.out.println("storenStoreInspec size : " + storenStoreInspec.size());
@@ -228,23 +243,32 @@ public class MypageController {
     @ResponseBody
     public List<MypageInspecListDTO> searchInspec(@ModelAttribute("userCode") Integer userCode,
                                                   @RequestParam("id") Integer storenId) {
-        return inspecListService.getInspecByStorenId(userCode, storenId);
+        return inspecListService.getInspecByStorenId(storenId);
     }
 
     // 마이페이지-배송 조회/내역
     // 처음에는 스토렌 사용자 배송내역 로드
     @RequestMapping(value="/mypage-delivery.action")
     public String mypageDelivery(@ModelAttribute("userCode") Integer userCode, Model model
-                                , @RequestParam(value="id", required=false) Integer id) {
+                                , @RequestParam(value="id", required=false) Integer id
+                                , @RequestParam(value="activeTab", required=false) String activeTab
+                                , @RequestParam(value="storenTabType", required=false) String storenTabType) {
 
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : START ===");
 
+        // 기본값 설정
+        activeTab = (activeTab != null) ? activeTab : "storen";
+        storenTabType = (storenTabType != null) ? storenTabType : "owner";
+
         // 초기에는 스토렌 소유자 배송내역만 로드
         List<DeliveryDTO> storenOwnerDeliveries = deliveryService.getStorenOwnerDeliveries(userCode);
+
+        // 모델에 데이터 추가
         model.addAttribute("deliveryList", storenOwnerDeliveries);
-        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
-        model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+        model.addAttribute("activeTab", activeTab);
+        model.addAttribute("storenTabType", storenTabType);
         model.addAttribute("storenId", id);
+
 
         System.out.println("deliveryList size : " + storenOwnerDeliveries.size());
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
@@ -425,9 +449,15 @@ public class MypageController {
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")
     public String mypageRentEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
+        System.out.println("내가 대여한 장비의 유저코드 : " + userCode);
         // 사용자가 대여한 장비 정보 조회
         MyRentEquipDTO rentEquipInfo = mypageRentEquipService.listRentStorenInfo(userCode);
+        // 장비 상태현황 맵 가져오기
+        Map<String, Map<String, Integer>> statusMap = mypageRentEquipService.getRentEquipmentStatus(userCode);
 
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
         // 모델에 데이터 추가
         model.addAttribute("rentEquipInfo", rentEquipInfo);
 

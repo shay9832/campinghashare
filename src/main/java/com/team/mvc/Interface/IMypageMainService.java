@@ -21,7 +21,7 @@ public interface IMypageMainService {
     Map<String, Object> getPostCommentMap(int userCode);
 
     // 마이페이지 메인 하단 장비 이용 내역(즉시 확인 필요, 거래 현황 화살표) 카운트 구하기
-    Map<String, Map<String, Object>> getMyEquipmentStatus(int userCode);
+    Map<String, Map<String, Integer>> getMyEquipmentStatus(int userCode);
 
     // 마이페이지 메인 하단 찜 내역 구하기
     List<StorenDTO> getMyWishlist(int userCode);

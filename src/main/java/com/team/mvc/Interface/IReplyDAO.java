@@ -1,6 +1,9 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.ReplyDTO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface IReplyDAO {
     /**
@@ -23,4 +26,8 @@ public interface IReplyDAO {
      * @return 댓글 정보
      */
     ReplyDTO getReplyById(int replyId);
+
+
+    // 회원코드로 해당 유저가 남긴 댓글 리스트(최근 등록일순으로 count건 수 조회)
+    List<ReplyDTO> listRecentReplyByUserCode(@Param("userCode") int userCode, @Param("count") int count);
 }
