@@ -290,6 +290,11 @@
                 loadPosts(1);
             });
         });
+
+        // 글쓰기 페이지로
+        function goToWrite() {
+            window.location.href = "notice-write.action";
+        }
     </script>
 
 </head>
