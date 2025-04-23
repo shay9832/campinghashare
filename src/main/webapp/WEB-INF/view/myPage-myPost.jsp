@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,6 +17,118 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+    <style>
+        /* 게시판 특화 스타일 */
+        .board-category-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-semibold);
+            margin-right: 8px;
+        }
+
+        .board-category-tag.question {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.review {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .board-category-tag.chat {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .board-category-tag.notice {
+            background-color: #fff9c4;
+            color: #ffa000;
+        }
+
+        .board-category-tag.freeboard {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.solocamping {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .title-cell {
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+        }
+
+        .title-cell a:hover {
+            text-decoration: underline;
+            color: var(--color-maple);
+        }
+
+        .hot-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .icon-heart {
+            color: var(--color-error);
+        }
+
+        .icon-comment {
+            color: var(--color-info);
+        }
+
+        .icon-eye {
+            color: var(--text-secondary);
+        }
+
+        .table-icon {
+            margin-right: 5px;
+        }
+
+        .attachment-icon {
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            background-color: var(--bg-secondary);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: var(--font-xs);
+        }
+
+        .filter-btn:hover {
+            background-color: var(--color-gray-200);
+        }
+
+        .filter-btn.active {
+            background-color: var(--color-beige-light);
+            border-color: var(--color-maple);
+            color: var(--color-maple);
+            font-weight: var(--font-semibold);
+        }
+
+        #mypost-table th,
+        #mypost-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+    </style>
 </head>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
@@ -90,203 +203,138 @@
         </div>
 
         <!-- 검색 섹션 -->
-        <div class="search-container mb-4">
-            <input type="text" class="form-control" placeholder="어떤 글을 찾으시나요?">
-            <button class="search-button">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-
-        <!-- 카테고리 필터와 정렬 옵션을 한 줄에 배치 -->
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex flex-wrap align-items-center">
-                <div class="tab-nav">
-                    <a class="tab-link active" href="#">게시물</a>
-                </div>
-                <div class="tab-nav">
-                    <a class="tab-link" href="#">댓글</a>
-                </div>
-                <button id="deleteSelectedBtn" class="btn btn-danger btn-sm ms-3" style="display: none;">
-                    <i class="fas fa-trash-alt me-1"></i> 선택 삭제
-                </button>
-            </div>
-
-            <!-- 정렬 옵션 (오른쪽) -->
-            <div class="sort-container">
-                <select class="form-control sort-select">
-                    <option>최신순</option>
-                    <option>댓글순</option>
-                    <option>조회수</option>
-                    <option>추천순</option>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex align-items-center">
+                <select name="sortType" class="form-control-sm">
+                    <option value="recent">최신순</option>
+                    <option value="views">조회순</option>
+                    <option value="recommends">추천순</option>
                 </select>
+
+                <div style="display: flex; margin-left: 20px;">
+                    <a href="#" id="postsBtn" class="filter-btn active" style="border-radius: 4px; margin-right: 10px; min-width: 80px; text-align: center;">게시글</a>
+                    <a href="#" id="repliesBtn" class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">댓글</a>
+                </div>
+            </div>
+
+            <div class="search-container">
+                <form action="mypage-mypost.action" method="get">
+                    <div class="d-flex border rounded">
+                        <select name="searchType" class="form-control-sm border-0" style="border-right: 1px solid #ddd; background-color: white; padding: 8px 5px; font-size: 13px; width: 60%">
+                            <option value="titlecontent" ${searchType == 'titlecontent' ? 'selected' : ''}>제목+내용</option>
+                            <option value="title" ${searchType == 'title' ? 'selected' : ''}>제목</option>
+                            <option value="content" ${searchType == 'content' ? 'selected' : ''}>내용</option>
+                        </select>
+                        <input type="text" name="searchKeyword" value="${searchKeyword}" class="form-control-sm border-0 w-100" placeholder="검색어를 입력하세요" style="padding: 8px 10px; font-size: 13px;">
+                        <button type="submit" class="btn border-0" style="background-color: #f8f9fa; padding: 8px 10px;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- 물품 관리 테이블 -->
-        <div class="equipment-table">
-            <table class="table">
+        <!-- 게시글 목록 테이블 -->
+        <div class="content-box mb-5">
+            <table class="w-100" id="mypost-table">
                 <thead>
-                <tr>
-                    <th style="width: 3%; vertical-align: middle;" >
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="checkAll">
-                            <label class="form-check-label" for="checkAll"></label>
-                        </div>
-                    </th>
-                    <th style="width: 8%;">
-                        <div class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                게시판
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">전체</a>
-                                <a class="dropdown-item" href="#">자유게시판</a>
-                                <a class="dropdown-item" href="#">장비정보</a>
-                                <a class="dropdown-item" href="#">캠핑장정보</a>
-                            </div>
-                        </div>
-                    </th>
-                    <th style="width: 8%;">
-                        <div class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                말머리
-                            </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">전체</a>
-                                <a class="dropdown-item" href="#">아무말대잔치</a>
-                                <a class="dropdown-item" href="#">묻고답하기</a>
-                            </div>
-                        </div>
-                    </th>
-                    <th style="width: 42%;">제목</th>
-                    <th style="width: 12%;">게시일</th>
-                    <th style="width: 7%;">조회수</th>
-                    <th style="width: 7%;">추천수</th>
-                    <th style="width: 7%;">댓글수</th>
-                    <th style="width: 10%;">관리</th>
+                <tr class="border-bottom">
+                    <th width="7%" class="p-3 text-center">번호</th>
+                    <th width="10%" class="p-3 text-center">게시판</th>
+                    <th width="10%" class="p-3 text-center">분류</th>
+                    <th width="38%" class="p-3 text-center">제목</th>
+                    <th width="10%" class="p-3 text-center">작성일</th>
+                    <th width="8%" class="p-3 text-center">조회수</th>
+                    <th width="8%" class="p-3 text-center">추천수</th>
+                    <th width="9%" class="p-3 text-center">관리</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- 첫 번째 행 -->
-                <tr class="equipment-row">
-                    <td style="vertical-align: middle;">
-                        <div class="form-check">
-                            <input class="form-check-input item-checkbox" type="checkbox">
-                        </div>
-                    </td>
-                    <td>자유게시판</td>
-                    <td>아무말대잔치</td>
-                    <td class="title-cell">
-                        <div class="title-row">
-                            <i class="fa-regular fa-image title-icon"></i>
-                            <a href="product-detail.html" class="equipment-name">산 정상에서 찰칵~ 행복한 하루되세요 ㅎㅎ</a>
-                        </div>
-                    </td>
-                    <td>2025/04/07</td>
-                    <td>999</td>
-                    <td>10</td>
-                    <td>5</td>
-                    <td>
-                        <div class="button-group-horizontal">
-                            <button class="btn-sm btn-edit">수정</button>
-                            <button class="btn-sm btn-delete">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- 두 번째 행 -->
-                <tr class="equipment-row">
-                    <td style="vertical-align: middle;">
-                        <div class="form-check">
-                            <input class="form-check-input item-checkbox" type="checkbox">
-                        </div>
-                    </td>
-                    <td>자유게시판</td>
-                    <td>아무말대잔치</td>
-                    <td class="title-cell">
-                        <div class="title-row">
-                            <i class="fa-regular fa-image title-icon"></i>
-                            <a href="product-detail.html" class="equipment-name">산 정상에서 찰칵~ 행복한 하루되세요 ㅎㅎ</a>
-                        </div>
-                    </td>
-                    <td>2025/04/07</td>
-                    <td>999</td>
-                    <td>10</td>
-                    <td>5</td>
-                    <td>
-                        <div class="button-group-horizontal">
-                            <button class="btn-sm btn-edit">수정</button>
-                            <button class="btn-sm btn-delete">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-
-                <!-- 세 번째 행 -->
-                <tr class="equipment-row">
-                    <td style="vertical-align: middle;">
-                        <div class="form-check">
-                            <input class="form-check-input item-checkbox" type="checkbox">
-                        </div>
-                    </td>
-                    <td>자유게시판</td>
-                    <td>아무말대잔치</td>
-                    <td class="title-cell">
-                        <div class="title-row">
-                            <i class="fa-regular fa-image title-icon"></i>
-                            <a href="product-detail.html" class="equipment-name">산 정상에서 찰칵~ 행복한 하루되세요 ㅎㅎ</a>
-                        </div>
-                    </td>
-                    <td>2025/04/07</td>
-                    <td>999</td>
-                    <td>10</td>
-                    <td>5</td>
-                    <td>
-                        <div class="button-group-horizontal">
-                            <button class="btn-sm btn-edit">수정</button>
-                            <button class="btn-sm btn-delete">삭제</button>
-                        </div>
-                    </td>
-                </tr>
+                <c:if test="${empty postList}">
+                    <tr class="board-row border-bottom">
+                        <td colspan="8" class="p-3 text-center">작성한 게시글이 없습니다.</td>
+                    </tr>
+                </c:if>
+                <c:forEach var="post" items="${postList}" varStatus="status">
+                    <tr class="board-row border-bottom">
+                        <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
+                        <td class="p-3 text-center">${post.boardName}</td>
+                        <td class="p-3 text-center">
+                            <span class="board-category-tag ${post.postLabelName == '묻고답하기' ? 'question' :
+                                                              post.postLabelName == '아무말대잔치' ? 'chat' :
+                                                              post.postLabelName == '고독한캠핑방' ? 'solocamping' : 'freeboard'}">
+                                    ${post.postLabelName}
+                            </span>
+                        </td>
+                        <td class="p-3 title-cell">
+                            <a href="${post.boardName == '자유게시판' ? 'boardfree-post.action' :
+                                      post.boardName == '고독한캠핑방' ? 'boardimage-post.action' :
+                                      'boardfree-post.action'}?postId=${post.postId}">${post.postTitle}</a>
+                            <c:if test="${not empty post.attachments}">
+                                <span class="attachment-icon">
+                                    <i class="fa-solid fa-image"></i>
+                                </span>
+                            </c:if>
+                        </td>
+                        <td class="p-3 text-center">${post.createdDate.substring(0, 10)}</td>
+                        <td class="p-3 text-center">${post.viewCount}</td>
+                        <td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>${post.recommendCount}</td>
+                        <td class="p-3 text-center">
+                            <div class="button-group-horizontal">
+                                <button class="btn-sm btn-edit" onclick="editPost(${post.postId}, '${post.boardName}')">수정</button>
+                                <button class="btn-sm btn-delete" onclick="deletePost(${post.postId}, '${post.postTitle}')">삭제</button>
+                            </div>
+                        </td>
+                    </tr>
+                </c:forEach>
                 </tbody>
             </table>
         </div>
 
-        <!-- 추가 버튼 -->
-        <div class="text-right mb-5">
-            <button class="btn-circle">
-                <i class="fas fa-plus"></i>
-            </button>
+        <!-- 페이지네이션 -->
+        <div class="d-flex justify-content-center">
+            <div class="d-flex gap-1 pagination">
+                <!-- 첫 페이지로 -->
+                <c:if test="${pagenation.pageNum > 1}">
+                    <a href="mypage-mypost.action?page=1${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                        <i class="fa-solid fa-angles-left"></i>
+                    </a>
+                </c:if>
+
+                <!-- 이전 블록으로 -->
+                <c:if test="${pagenation.startPage > pagenation.blockSize}">
+                    <a href="mypage-mypost.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </c:if>
+
+                <!-- 페이지 번호 -->
+                <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
+                    <a href="mypage-mypost.action?page=${i}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
+                </c:forEach>
+
+                <!-- 다음 블록으로 -->
+                <c:if test="${pagenation.endPage < pagenation.totalPage}">
+                    <a href="mypage-mypost.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </c:if>
+
+                <!-- 마지막 페이지로 -->
+                <c:if test="${pagenation.pageNum < pagenation.totalPage}">
+                    <a href="mypage-mypost.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchType='.concat(searchType).concat('&searchKeyword=').concat(searchKeyword) : ''}" class="btn btn-sm">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                </c:if>
+            </div>
         </div>
 
-        <!-- 페이징 처리 -->
-        <div class="pagination-container d-flex justify-content-center">
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
-            </ul>
+        <!-- 글쓰기 버튼 -->
+        <div class="text-end mt-3">
+            <a href="boardfree-write.action" class="btn btn-primary">
+                <i class="fa-solid fa-pen"></i> 글쓰기
+            </a>
         </div>
-
     </div>
 </div>
 
@@ -298,115 +346,283 @@
 
 <script>
     $(document).ready(function() {
-        // 드롭다운 토글 이벤트
-        $('.dropdown-toggle').click(function(e) {
+        // 전역 변수로 현재 모드 설정
+        var isPostMode = true;
+
+        // 게시글/댓글 탭 클릭 이벤트
+        $('#postsBtn').click(function(e) {
             e.preventDefault();
-            $(this).parent().toggleClass('show');
+            if (!isPostMode) {
+                $(this).addClass('active');
+                $('#repliesBtn').removeClass('active');
+                isPostMode = true;
+                loadContent(1, true);
+            }
         });
 
-        // 외부 클릭 시 드롭다운 닫기
-        $(document).click(function(e) {
-            if (!$(e.target).closest('.dropdown').length) {
-                $('.dropdown').removeClass('show');
+        $('#repliesBtn').click(function(e) {
+            e.preventDefault();
+            if (isPostMode) {
+                $(this).addClass('active');
+                $('#postsBtn').removeClass('active');
+                isPostMode = false;
+                loadContent(1, false);
             }
         });
 
         // 정렬 옵션 변경 이벤트
-        $('.sort-select').change(function() {
-            // 정렬 기능 구현 (실제 구현 시에는 여기에 정렬 로직 추가)
-            console.log('정렬 옵션이 변경되었습니다: ' + $(this).val());
+        $('select[name="sortType"]').change(function() {
+            loadContent(1, isPostMode);
         });
 
-        // 페이지네이션 클릭 이벤트
-        $('.page-link').click(function(e) {
-            if (!$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
-                e.preventDefault();
-                $('.page-item').removeClass('active');
-                $(this).parent().addClass('active');
-                // 페이지 이동 기능 구현 (실제 구현 시에는 여기에 페이지 이동 로직 추가)
-            }
-        });
+        // 콘텐츠 로드 함수
+        function loadContent(page, isPostMode) {
+            var searchType = $('select[name="searchType"]').val();
+            var searchKeyword = $('input[name="searchKeyword"]').val();
+            var sortType = $('select[name="sortType"]').val();
 
-        // 장비명 클릭 이벤트
-        $('.equipment-name').click(function(e) {
-            // 여기에 페이지 이동 로직 추가 (기본 동작은 유지)
-            console.log('게시글 상세 페이지로 이동: ' + $(this).text());
-        });
-
-        // 탭 클릭 이벤트
-        $('.tab-link').click(function(e) {
-            e.preventDefault();
-            $('.tab-link').removeClass('active');
-            $(this).addClass('active');
-            // 탭 변경 기능 구현 (실제 구현 시에는 여기에 탭 변경 로직 추가)
-        });
-
-        // 수정 버튼 클릭 이벤트
-        $('.btn-edit').click(function() {
-            const postTitle = $(this).closest('tr').find('.equipment-name').text();
-            console.log('게시글 수정 모드 시작: ' + postTitle);
-            // 수정 기능 구현 (실제 구현 시에는 여기에 수정 로직 추가)
-        });
-
-        // 삭제 버튼 클릭 이벤트
-        $('.btn-delete').click(function() {
-            const postTitle = $(this).closest('tr').find('.equipment-name').text();
-            if(confirm('정말로 "' + postTitle + '" 게시글을 삭제하시겠습니까?')) {
-                console.log('게시글 삭제 확인: ' + postTitle);
-                // 삭제 기능 구현 (실제 구현 시에는 여기에 삭제 로직 추가)
-            }
-        });
-
-        // 체크박스 전체 선택/해제
-        $('#checkAll').change(function() {
-            const isChecked = $(this).prop('checked');
-            $('.item-checkbox').prop('checked', isChecked);
-
-            // 체크박스 선택 여부에 따라 삭제 버튼 표시/숨김
-            if ($('.item-checkbox:checked').length > 0) {
-                $('#deleteSelectedBtn').show();
-            } else {
-                $('#deleteSelectedBtn').hide();
-            }
-        });
-
-        // 개별 체크박스 변경 이벤트
-        $(document).on('change', '.item-checkbox', function() {
-            // 모든 체크박스가 선택되었는지 확인
-            const allChecked = $('.item-checkbox').length === $('.item-checkbox:checked').length;
-            $('#checkAll').prop('checked', allChecked);
-
-            // 체크박스 선택 여부에 따라 삭제 버튼 표시/숨김
-            if ($('.item-checkbox:checked').length > 0) {
-                $('#deleteSelectedBtn').show();
-            } else {
-                $('#deleteSelectedBtn').hide();
-            }
-        });
-
-        // 선택 삭제 버튼 클릭 이벤트
-        $('#deleteSelectedBtn').click(function() {
-            const selectedCount = $('.item-checkbox:checked').length;
-            console.log('선택된 체크박스 개수:', selectedCount);
-            if (selectedCount > 0) {
-                if (confirm('선택한 ' + selectedCount + '개의 게시글을 삭제하시겠습니까?')) {
-                    // 선택된 행을 삭제
-                    $('.item-checkbox:checked').each(function() {
-                        $(this).closest('tr').remove();
-                    });
-
-                    // 전체 선택 체크박스 해제
-                    $('#checkAll').prop('checked', false);
-
-                    // 삭제 버튼 숨김
-                    $('#deleteSelectedBtn').hide();
-
-                    // 알림 메시지
-                    alert(selectedCount + '개의 게시글이 삭제되었습니다.');
+            $.ajax({
+                url: 'api/mypage-mypost.action',
+                type: 'GET',
+                data: {
+                    page: page,
+                    size: 10,
+                    searchType: searchType,
+                    searchKeyword: searchKeyword,
+                    isPostMode: isPostMode,
+                    sortType: sortType
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (isPostMode) {
+                        updatePostTable(response);
+                    } else {
+                        updateReplyTable(response);
+                    }
+                    updatePagination(response.pagenation, isPostMode);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading content:', error);
+                    alert('컨텐츠를 불러오는 중 오류가 발생했습니다.');
                 }
+            });
+        }
+
+        // 게시글 테이블 업데이트 함수
+        function updatePostTable(data) {
+            var html = '';
+            var postList = data.postList;
+
+            if (postList && postList.length > 0) {
+                $.each(postList, function(index, post) {
+                    var categoryClass = '';
+                    if (post.postLabelName === '묻고답하기') categoryClass = 'question';
+                    else if (post.postLabelName === '아무말대잔치') categoryClass = 'chat';
+                    else if (post.postLabelName === '고독한캠핑방') categoryClass = 'solocamping';
+                    else categoryClass = 'freeboard';
+
+                    var attachmentIcon = '';
+                    if (post.attachments && post.attachments.length > 0) {
+                        attachmentIcon = '<span class="attachment-icon"><i class="fa-solid fa-image"></i></span>';
+                    }
+
+                    var postUrl = '';
+                    if (post.boardName === '자유게시판') postUrl = 'boardfree-post.action';
+                    else if (post.boardName === '고독한캠핑방') postUrl = 'boardimage-post.action';
+                    else postUrl = 'boardfree-post.action';
+
+                    html += '<tr class="board-row border-bottom">' +
+                        '<td class="p-3 text-center">' + (data.pagenation.totalPost - ((data.pagenation.pageNum - 1) * data.pagenation.pageSize) - index) + '</td>' +
+                        '<td class="p-3 text-center">' + post.boardName + '</td>' +
+                        '<td class="p-3 text-center"><span class="board-category-tag ' + categoryClass + '">' + post.postLabelName + '</span></td>' +
+                        '<td class="p-3 title-cell"><a href="' + postUrl + '?postId=' + post.postId + '">' + post.postTitle + '</a>' + attachmentIcon + '</td>' +
+                        '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
+                        '<td class="p-3 text-center">' + post.viewCount + '</td>' +
+                        '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + post.recommendCount + '</td>' +
+                        '<td class="p-3 text-center">' +
+                        '<div class="button-group-horizontal">' +
+                        '<button class="btn-sm btn-edit" onclick="editPost(' + post.postId + ', \'' + post.boardName + '\')">수정</button>' +
+                        '<button class="btn-sm btn-delete" onclick="deletePost(' + post.postId + ', \'' + post.postTitle + '\')">삭제</button>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                });
+            } else {
+                html = '<tr class="board-row border-bottom"><td colspan="8" class="p-3 text-center">작성한 게시글이 없습니다.</td></tr>';
             }
+
+            $('tbody').html(html);
+
+            // 테이블 헤더도 변경
+            var headerHtml = '<tr class="border-bottom">' +
+                '<th width="7%" class="p-3 text-center">번호</th>' +
+                '<th width="10%" class="p-3 text-center">게시판</th>' +
+                '<th width="10%" class="p-3 text-center">분류</th>' +
+                '<th width="38%" class="p-3 text-center">제목</th>' +
+                '<th width="10%" class="p-3 text-center">작성일</th>' +
+                '<th width="8%" class="p-3 text-center">조회수</th>' +
+                '<th width="8%" class="p-3 text-center">추천수</th>' +
+                '<th width="9%" class="p-3 text-center">관리</th>' +
+                '</tr>';
+
+            $('#mypost-table thead').html(headerHtml);
+        }
+
+        // 댓글 테이블 업데이트 함수
+        function updateReplyTable(data) {
+            var html = '';
+            var replyList = data.replyList;
+
+            if (replyList && replyList.length > 0) {
+                $.each(replyList, function(index, reply) {
+                    var postUrl = '';
+                    if (reply.boardName === '자유게시판') postUrl = 'boardfree-post.action';
+                    else if (reply.boardName === '고독한캠핑방') postUrl = 'boardimage-post.action';
+                    else postUrl = 'boardfree-post.action';
+
+                    html += '<tr class="board-row border-bottom">' +
+                        '<td class="p-3 text-center">' + (data.pagenation.totalPost - ((data.pagenation.pageNum - 1) * data.pagenation.pageSize) - index) + '</td>' +
+                        '<td class="p-3 text-center">' + reply.boardName + '</td>' +
+                        '<td class="p-3 title-cell" colspan="2"><a href="' + postUrl + '?postId=' + reply.postId + '">' + reply.replyContent + '</a></td>' +
+                        '<td class="p-3 text-center">' + reply.createdDate.substring(0, 10) + '</td>' +
+                        '<td class="p-3 text-center" colspan="2"><a href="' + postUrl + '?postId=' + reply.postId + '">' + reply.postTitle + '</a></td>' +
+                        '<td class="p-3 text-center">' +
+                        '<div class="button-group-horizontal">' +
+                        '<button class="btn-sm btn-delete" onclick="deleteReply(' + reply.replyId + ')">삭제</button>' +
+                        '</div>' +
+                        '</td>' +
+                        '</tr>';
+                });
+            } else {
+                html = '<tr class="board-row border-bottom"><td colspan="8" class="p-3 text-center">작성한 댓글이 없습니다.</td></tr>';
+            }
+
+            $('tbody').html(html);
+
+            // 테이블 헤더도 변경
+            var headerHtml = '<tr class="border-bottom">' +
+                '<th width="7%" class="p-3 text-center">번호</th>' +
+                '<th width="10%" class="p-3 text-center">게시판</th>' +
+                '<th width="48%" class="p-3 text-center" colspan="2">댓글 내용</th>' +
+                '<th width="10%" class="p-3 text-center">작성일</th>' +
+                '<th width="16%" class="p-3 text-center" colspan="2">원글 제목</th>' +
+                '<th width="9%" class="p-3 text-center">관리</th>' +
+                '</tr>';
+
+            $('#mypost-table thead').html(headerHtml);
+        }
+
+        // 페이지네이션 업데이트 함수
+        function updatePagination(pagenation, isPostMode) {
+            var html = '';
+            var contentMode = isPostMode ? 'posts' : 'replies';
+
+            // 첫 페이지로
+            if (pagenation.pageNum > 1) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="1" data-mode="' + contentMode + '">' +
+                    '<i class="fa-solid fa-angles-left"></i></a>';
+            }
+
+            // 이전 블록으로
+            if (pagenation.startPage > pagenation.blockSize) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.prevPage + '" data-mode="' + contentMode + '">' +
+                    '<i class="fa-solid fa-chevron-left"></i></a>';
+            }
+
+            // 페이지 번호
+            for (var i = pagenation.startPage; i <= pagenation.endPage; i++) {
+                html += '<a href="#" class="btn ' + (pagenation.pageNum == i ? 'btn-primary' : '') +
+                    ' btn-sm page-link" data-page="' + i + '" data-mode="' + contentMode + '">' + i + '</a>';
+            }
+
+            // 다음 블록으로
+            if (pagenation.endPage < pagenation.totalPage) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.nextPage + '" data-mode="' + contentMode + '">' +
+                    '<i class="fa-solid fa-chevron-right"></i></a>';
+            }
+
+            // 마지막 페이지로
+            if (pagenation.pageNum < pagenation.totalPage) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.totalPage + '" data-mode="' + contentMode + '">' +
+                    '<i class="fa-solid fa-angles-right"></i></a>';
+            }
+
+            $('.pagination').html(html);
+
+            // 페이지 링크에 이벤트 연결
+            $('.page-link').click(function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                var mode = $(this).data('mode');
+                loadContent(page, mode === 'posts');
+            });
+        }
+
+        // 검색 폼 제출 처리
+        $('form').submit(function(e) {
+            e.preventDefault();
+            loadContent(1, isPostMode);
         });
     });
+
+    // 게시글 수정 함수
+    function editPost(postId, boardName) {
+        let editUrl = '';
+        if (boardName === '자유게시판') {
+            editUrl = 'boardfree-update.action?postId=' + postId;
+        } else if (boardName === '고독한캠핑방') {
+            editUrl = 'boardimage-update.action?postId=' + postId;
+        } else {
+            editUrl = 'boardfree-update.action?postId=' + postId;
+        }
+        window.location.href = editUrl;
+    }
+
+    // 게시글 삭제 함수
+    function deletePost(postId, postTitle) {
+        if (confirm('정말로 "' + postTitle + '" 게시글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/api/post/delete.action',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ postId: postId }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('게시글이 삭제되었습니다.');
+                        window.location.reload();
+                    } else {
+                        alert(response.message || '게시글 삭제에 실패했습니다.');
+                    }
+                },
+                error: function() {
+                    alert('서버 오류가 발생했습니다.');
+                }
+            });
+        }
+    }
+
+    // 댓글 삭제 함수
+    function deleteReply(replyId) {
+        if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/api/reply/delete.action',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ replyId: replyId }),
+                success: function(response) {
+                    if (response.success) {
+                        alert('댓글이 삭제되었습니다.');
+                        window.location.reload();
+                    } else {
+                        alert(response.message || '댓글 삭제에 실패했습니다.');
+                    }
+                },
+                error: function() {
+                    alert('서버 오류가 발생했습니다.');
+                }
+            });
+        }
+    }
 </script>
 </body>
 </html>

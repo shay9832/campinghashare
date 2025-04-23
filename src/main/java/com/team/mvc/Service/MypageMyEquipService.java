@@ -343,4 +343,181 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         return new MyEquipDTO(equipmentList, storenMap, firstStorenList);
 
     }
+
+
+    /* 페이징 처리를 위한 추가 메소드 구현 */
+    @Override
+    public int getMyGeneralEquipCount(EquipmentDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 사용자의 모든 장비 정보 조회
+        List<EquipmentDTO> allEquipmentList = equipDao.listByUserCode(dto.getUser_code());
+
+        // 사용자가 가진 스토렌의 장비코드 조회(중복없이)
+        List<Integer> storenEquipCodes = storenDAO.listStorenEquipCodes(dto.getUser_code());
+
+        // 일반 장비 목록에서 스토렌에 등록된 장비를 제외
+        List<EquipmentDTO> equipmentList = allEquipmentList.stream()
+                .filter(equip -> !storenEquipCodes.contains(equip.getEquip_code()))
+                .toList();
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            equipmentList = equipmentList.stream()
+                    .filter(equip ->
+                            (equip.getEquip_name() != null && equip.getEquip_name().toLowerCase().contains(keyword)) ||
+                                    (equip.getBrand() != null && equip.getBrand().toLowerCase().contains(keyword)) ||
+                                    (equip.getMajorCategory() != null && equip.getMajorCategory().toLowerCase().contains(keyword)) ||
+                                    (equip.getMiddleCategory() != null && equip.getMiddleCategory().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        return equipmentList.size();
+    }
+
+    @Override
+    public List<EquipmentDTO> listMyGeneralPaged(EquipmentDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 사용자의 모든 장비 정보 조회
+        List<EquipmentDTO> allEquipmentList = equipDao.listByUserCode(dto.getUser_code());
+
+        // 사용자가 가진 스토렌의 장비코드 조회(중복없이)
+        List<Integer> storenEquipCodes = storenDAO.listStorenEquipCodes(dto.getUser_code());
+
+        // 일반 장비 목록에서 스토렌에 등록된 장비를 제외
+        List<EquipmentDTO> equipmentList = allEquipmentList.stream()
+                .filter(equip -> !storenEquipCodes.contains(equip.getEquip_code()))
+                .toList();
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            equipmentList = equipmentList.stream()
+                    .filter(equip ->
+                            (equip.getEquip_name() != null && equip.getEquip_name().toLowerCase().contains(keyword)) ||
+                                    (equip.getBrand() != null && equip.getBrand().toLowerCase().contains(keyword)) ||
+                                    (equip.getMajorCategory() != null && equip.getMajorCategory().toLowerCase().contains(keyword)) ||
+                                    (equip.getMiddleCategory() != null && equip.getMiddleCategory().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        // 정렬 적용
+        if (dto.getSortType() != null) {
+            if (dto.getSortType().equals("name")) {
+                equipmentList = equipmentList.stream()
+                        .sorted(Comparator.comparing(EquipmentDTO::getEquip_name, Comparator.nullsLast(String::compareTo)))
+                        .toList();
+            } else { // 최신순 (기본)
+                equipmentList = equipmentList.stream()
+                        .sorted(Comparator.comparing(EquipmentDTO::getCreated_date, Comparator.nullsLast(String::compareTo)).reversed())
+                        .toList();
+            }
+        }
+
+        // 페이징 처리
+        int startIndex = (dto.getPagenation().getStartRow() - 1);
+        int endIndex = Math.min(dto.getPagenation().getEndRow(), equipmentList.size());
+
+        if (startIndex >= equipmentList.size() || startIndex < 0) {
+            return new ArrayList<>();
+        }
+
+        List<EquipmentDTO> pagedList = equipmentList.subList(startIndex, endIndex);
+
+        // 첨부파일(장비 사진) 넣어주기
+        for (EquipmentDTO equip : pagedList) {
+            List<AttachmentDTO> attachmentList = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+            if (!attachmentList.isEmpty()) {
+                equip.setAttachments(attachmentList);
+            }
+        }
+
+        return pagedList;
+    }
+
+    @Override
+    public int getMyStorenCount(StorenDTO dto) {
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 사용자 코드로 스토렌 정보 가져오기
+        List<StorenDTO> allStorenList = storenDAO.listByUserCode(dto.getUser_code());
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            allStorenList = allStorenList.stream()
+                    .filter(storen ->
+                            (storen.getStoren_title() != null && storen.getStoren_title().toLowerCase().contains(keyword)) ||
+                                    (storen.getStatus() != null && storen.getStatus().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        return allStorenList.size();
+    }
+
+    @Override
+    public List<StorenDTO> listMyStorenPaged(StorenDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 사용자 코드로 스토렌 정보 가져오기
+        List<StorenDTO> allStorenList = storenDAO.listByUserCode(dto.getUser_code());
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            allStorenList = allStorenList.stream()
+                    .filter(storen ->
+                            (storen.getStoren_title() != null && storen.getStoren_title().toLowerCase().contains(keyword)) ||
+                                    (storen.getStatus() != null && storen.getStatus().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        // 정렬 적용
+        if (dto.getSortType() != null) {
+            if (dto.getSortType().equals("name")) {
+                allStorenList = allStorenList.stream()
+                        .sorted(Comparator.comparing(StorenDTO::getStoren_title, Comparator.nullsLast(String::compareTo)))
+                        .toList();
+            } else { // 최신순 (기본)
+                allStorenList = allStorenList.stream()
+                        .sorted(Comparator.comparing(StorenDTO::getCreated_date, Comparator.nullsLast(String::compareTo)).reversed())
+                        .toList();
+            }
+        }
+
+        // 페이징 처리
+        int startIndex = (dto.getPagenation().getStartRow() - 1);
+        int endIndex = Math.min(dto.getPagenation().getEndRow(), allStorenList.size());
+
+        if (startIndex >= allStorenList.size() || startIndex < 0) {
+            return new ArrayList<>();
+        }
+
+        List<StorenDTO> pagedList = allStorenList.subList(startIndex, endIndex);
+
+        // 각 스토렌에 해당하는 장비 정보와 첨부파일 정보 추가
+        for (StorenDTO storen : pagedList) {
+            EquipmentDTO equipment = equipDao.getEquipmentByEquipCode(storen.getEquip_code());
+            if (equipment != null) {
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipment.getEquip_code());
+                if (!attachments.isEmpty()) {
+                    equipment.setAttachments(attachments);
+                }
+                storen.setEquipmentDTO(equipment);
+            }
+        }
+
+        return pagedList;
+    }
 }

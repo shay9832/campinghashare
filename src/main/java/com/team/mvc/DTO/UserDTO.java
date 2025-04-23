@@ -28,6 +28,10 @@ public class UserDTO {
     private int couponCount;                //보유쿠폰 수
     private int matchingCount;              //매칭승인되어 결제대기/결제완료된 수
 
+    private String nextUserGrade;           //다음 등급명
+    private int remainPoint;                //다음 등급까지 필요한 포인트
+    private int remainTrust;                //다음 등급까지 필요한 신뢰도
+
     public UserDTO() {}
 
     public String getUserId() {
@@ -233,5 +237,29 @@ public class UserDTO {
 
     public void setMatchingCount(int matchingCount) {
         this.matchingCount = matchingCount;
+    }
+
+    public String getNextUserGrade() {
+        return nextUserGrade;
+    }
+
+    public void setNextUserGrade(String nextUserGrade) {
+        this.nextUserGrade = nextUserGrade;
+    }
+
+    public int getRemainPoint() {
+        return remainPoint;
+    }
+
+    public void setRemainPoint(int remainPoint) {
+        this.remainPoint = remainPoint;
+    }
+
+    public int getRemainTrust() {
+        return remainTrust;
+    }
+
+    public void setRemainTrust(int remainTrust) {
+        this.remainTrust = remainTrust;
     }
 }
