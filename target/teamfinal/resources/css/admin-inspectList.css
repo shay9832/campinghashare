@@ -1,3 +1,5 @@
+/*admin-inspecList.css*/
+
 body {
     margin: 0; /* 바깥 여백 제거 */
     padding: 0; /* 안쪽 여백 제거 */
@@ -346,45 +348,85 @@ body {
     color: #666; /* 텍스트 색상 - 진한 회색 */
 }
 
-/* 토글 스위치 컨테이너 */
+/* 토글 컨테이너와 버튼 스타일 재정의 */
 .toggle-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
+    width: 100%;
 }
 
-/* 토글 스위치 버튼 그룹 */
 .toggle-button-group {
     display: flex;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    width: 100%;
+    border-bottom: 1px solid #ddd;
 }
 
-/* 토글 버튼 기본 스타일 */
 .toggle-button {
-    padding: 10px 20px;
-    background-color: #f8f9fa;
-    border: none;
+    flex: 1;
+    padding: 12px 15px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
     cursor: pointer;
-    min-width: 120px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    color: #666;
-    transition: all 0.3s ease;
+    color: #555;
+    text-align: center;
 }
 
-/* 토글 버튼 호버 효과 */
-.toggle-button:hover:not(.active) {
-    background-color: #f1f1f1;
+.toggle-button:last-child {
+    border-right: none;
 }
 
-/* 활성화된 토글 버튼 */
 .toggle-button.active {
     background-color: #3f861d;
     color: white;
+    border-color: #3f861d;
 }
+
+.toggle-button:hover:not(.active) {
+    background-color: #e0e0e0;
+}
+
+/* 탭 컨테이너 */
+.tab-container {
+    margin: 20px 0;
+    width: 100%;
+}
+
+/* 탭 버튼 그룹 */
+.tab-button-group {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+    gap: 4px;
+}
+
+/* 탭 버튼 */
+.tab-button {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background-color: #f1f1f1;
+    color: #555;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-button.active {
+    background-color: #3f861d;
+    color: white;
+    border-color: #3f861d;
+    border-bottom: 2px solid white;
+}
+
+
 
 /* ===== 검수처리 버튼 스타일 ===== */
 .process-btn {

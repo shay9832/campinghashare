@@ -2,7 +2,8 @@ package com.team.mvc.DTO;
 
 public class EventDTO {
     private int eventId, boardId;
-    private String adminId, eventTitle, eventContent, eventStartDate, eventEndDate, createdDate;
+    private String adminId, eventTitle, eventContent, eventStartDate, eventEndDate, createdDate, status, thumbnailPath;
+
 
     public int getEventId() {
         return eventId;
@@ -66,5 +67,21 @@ public class EventDTO {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getThumbnailPath() {
+        return thumbnailPath;
+    }
+
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 }

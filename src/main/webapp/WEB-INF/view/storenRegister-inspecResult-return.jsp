@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>storenRegister-inspecResult-return.jsp</title>
+    <title>스토렌 신청 (반환 예정 주소 확인)</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
@@ -21,52 +21,63 @@
     <div class="storen-container">
         <h1 class="page-title page-title-storen-register">스토렌 신청 (반환 예정 주소 확인)</h1>
 
-        <!-- 배송지 정보 섹션 -->
-        <div class="info-section card">
-            <div class="card-header">
-                <h3 class="card-title">배송지</h3>
+        <!-- 에러 메시지 표시 -->
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger mb-4">
+                    ${error}
             </div>
-            <div class="card-body">
-                <div class="form-row">
-                    <label class="form-label">받는 사람</label>
-                    <div class="form-input">
-                        <c:out value="${recipient}" />
-                    </div>
+        </c:if>
+
+        <form id="returnAddressForm" onsubmit="return false;">
+            <input type="hidden" name="storen_id" value="${storen_id}">
+
+            <!-- 배송지 정보 섹션 -->
+            <div class="info-section card">
+                <div class="card-header">
+                    <h3 class="card-title">배송지</h3>
                 </div>
-                <div class="form-row">
-                    <label class="form-label">휴대 전화</label>
-                    <div class="form-input">
-                        <c:out value="${tel}" />
-                    </div>
-                </div>
-
-                <hr class="my-3">
-
-                <div class="form-row">
-                    <label class="form-label">주소</label>
-                    <div class="form-input">
-                        <div class="zipcode-row">
-                            <input type="search" class="address_search form-control" placeholder="우편번호" id="postcode" value="${zipCode}">
-                            <button class="btn_address" onclick="execDaumPostcode()">우편번호 찾기</button>
-                        </div>
-                        <input type="text" class="form-control mt-2" id="address" placeholder="주소" value="${address1}" readonly>
-                        <input type="text" class="form-control mt-2" id="detailAddress" placeholder="상세주소" value="${address2}">
-                        <input type="hidden" id="extraAddress" placeholder="참고항목">
-
-                        <%-- 우편번호 검색 API 컨테이너 (기본 숨김) --%>
-                        <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
-                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+                <div class="card-body">
+                    <div class="form-row">
+                        <label class="form-label">받는 사람</label>
+                        <div class="form-input">
+                            <input type="text" class="form-control" name="recipient" value="${recipient}" readonly required>
                         </div>
                     </div>
+                    <div class="form-row">
+                        <label class="form-label">휴대 전화</label>
+                        <div class="form-input">
+                            <input type="text" class="form-control" name="tel" value="${tel}" readonly required>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="form-row">
+                        <label class="form-label">주소</label>
+                        <div class="form-input">
+                            <div class="zipcode-row">
+                                <input type="search" class="address_search form-control" placeholder="우편번호" id="postcode" name="postcode" value="${zipCode}" required>
+                                <button type="button" class="btn_address" onclick="execDaumPostcode()">우편번호 찾기</button>
+                            </div>
+                            <input type="text" class="form-control mt-2" id="address" name="address" placeholder="주소" value="${address1}" readonly required>
+                            <input type="text" class="form-control mt-2" id="detailAddress" name="detailAddress" placeholder="상세주소" value="${address2}" required>
+                            <input type="hidden" id="extraAddress" placeholder="참고항목">
+
+                            <%-- 우편번호 검색 API 컨테이너 (기본 숨김) --%>
+                            <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
+                                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" onclick="foldDaumPostcode()" alt="접기 버튼">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 이전 / 다음 페이지 이동 버튼 -->
-        <div class="button-container">
-            <button class="btn">이전</button>
-            <button class="btn btn-primary">다음</button>
-        </div>
+            <!-- 이전 / 다음 페이지 이동 버튼 -->
+            <div class="button-container">
+                <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/inspec-result.action?storen_id=${storen_id}'">이전</button>
+                <button type="button" class="btn btn-primary" onclick="handleSubmit()">저장</button>
+            </div>
+        </form>
     </div>
 </main>
 
@@ -155,6 +166,24 @@
 
         // iframe을 넣은 element를 보이게 한다. (검색창 활성화)
         element_wrap.style.display = 'block';
+    }
+</script>
+
+<script>
+    // 저장 버튼 클릭 처리 함수
+    function handleSubmit() {
+        // 폼 유효성 검사
+        const form = document.getElementById('returnAddressForm');
+        if (form.checkValidity() === false) {
+            form.reportValidity();
+            return;
+        }
+
+        // 알림창 표시
+        alert('반환 주소 입력이 완료되었습니다.');
+
+        // 마이페이지로 리다이렉트
+        window.location.href = '${pageContext.request.contextPath}/mypage-inspecList.action';
     }
 </script>
 

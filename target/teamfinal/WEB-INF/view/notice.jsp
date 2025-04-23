@@ -3,14 +3,11 @@
 <html>
 <head>
     <title>공지사항</title>
-
-    <!-- jQuery 라이브러리 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- CSS 파일 로드 -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         /* 공지사항 테이블에만 적용되는 스타일 */
@@ -290,6 +287,11 @@
                 loadPosts(1);
             });
         });
+
+        // 글쓰기 페이지로
+        function goToWrite() {
+            window.location.href = "notice-write.action";
+        }
     </script>
 
 </head>

@@ -218,34 +218,26 @@
                 <c:choose>
                     <c:when test="${!empty storenList && storenList.size() > 0}">
                         <ul>
-                        <c:forEach var="storen" items="${storenList}">
-                            <li>
-                                <a href="storenmatching-request.action?storenId=${storen.storen_id}">
-                                    <div class="product-card">
-                                        <div class="product-image">
-                                            <c:choose>
-                                                <c:when test="${!empty storen.equipmentDTO.attachments && storen.equipmentDTO.attachments.size() > 0}">
-                                                    <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <div class="product-placeholder"></div>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            <button class="like-button">
-                                                <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                            </button>
+                            <c:forEach var="i" begin="1" end="20">
+                                <li>
+                                    <a href="#">
+                                        <div class="product-card">
+                                            <div class="product-image">
+                                                <img src="${pageContext.request.contextPath}/resources/images/sample-equip.jpg" alt="샘플 이미지" />
+                                                <button class="like-button">
+                                                    <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
+                                                </button>
+                                            </div>
+                                            <div class="product-info">
+                                                <p class="product-title">샘플 장비 타이틀 ${i}</p>
+                                                <p class="product-brand">스노우피크</p>
+                                                <p class="product-category">텐트/쉘터</p>
+                                                <p class="product-price">25,000원/일</p>
+                                            </div>
                                         </div>
-                                        <div class="product-info">
-                                            <p class="product-title">${storen.storen_title}</p>
-                                            <!-- 수정된 부분: equipmentDTO 접근 방식 변경 -->
-                                            <p class="product-brand">${storen.equipmentDTO.brand}</p>
-                                            <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
-                                            <p class="product-price">${storen.daily_rent_price}원/일</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </c:forEach>
+                                    </a>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </c:when>
                     <c:otherwise>

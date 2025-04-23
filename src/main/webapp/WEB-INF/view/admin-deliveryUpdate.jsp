@@ -24,6 +24,9 @@
             <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
                 <button type="submit" class="submenu-btn">장비 통계</button>
             </form>
+            <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get">
+                <button type="submit" class="submenu-btn">브랜드 및 장비생성</button>
+            </form>
         </div>
 
         <!-- 검수 관리 메뉴 -->
@@ -281,8 +284,6 @@
                             <th class="col-product">장비명</th>
                             <th class="col-start-date">배송 시작일</th>
                             <th class="col-end-date">배송 종료일</th>
-                            <th class="col-courier">택배사</th>
-                            <th class="col-tracking">운송장번호</th>
                             <th class="col-inspection-date">검수 처리일</th>
                             <th class="col-inspection-type">검수 결과</th>
                             <th class="col-actions">관리</th>
@@ -298,8 +299,6 @@
                                 <td>${shipping.equipmentName}</td>
                                 <td>${shipping.deliveryStartDate}</td>
                                 <td>${shipping.deliveryEndDate}</td>
-                                <td>${shipping.carrierName}</td>
-                                <td>${shipping.waybillNumber}</td>
                                 <td>${shipping.inspectionCompletedDate}</td>
                                 <td>${shipping.inspectionResultType}</td>
                                 <td><button class="btn btn-primary action-btn view-shipping-btn" data-id="${shipping.deliveryId}">상세</button></td>
@@ -336,8 +335,6 @@
                             <th class="col-product">장비명</th>
                             <th class="col-start-date">배송 시작일</th>
                             <th class="col-end-date">배송 종료일</th>
-                            <th class="col-courier">택배사</th>
-                            <th class="col-tracking">운송장번호</th>
                             <th class="col-inspection-date">검수 처리일</th>
                             <th class="col-inspection-type">검수 결과</th>
                             <th class="col-actions">관리</th>
@@ -353,8 +350,6 @@
                                 <td>${shipping.equipmentName}</td>
                                 <td>${shipping.deliveryStartDate}</td>
                                 <td>${shipping.deliveryEndDate}</td>
-                                <td>${shipping.carrierName}</td>
-                                <td>${shipping.waybillNumber}</td>
                                 <td>${shipping.inspectionCompletedDate}</td>
                                 <td>${shipping.inspectionResultType}</td>
                                 <td><button class="btn btn-primary action-btn view-shipping-btn" data-id="${shipping.deliveryId}">상세</button></td>

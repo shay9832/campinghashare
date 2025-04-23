@@ -102,6 +102,11 @@
         .table-icon {
             margin-right: 5px;
         }
+
+        .attachment-icon {
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -203,6 +208,11 @@
                                         href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree-post.action' :
                                                 totalHotPost.boardName == '고독한 캠핑방' ? 'boardimage-post.action' : 'boardmain.action'}?postId=${totalHotPost.postId}">${totalHotPost.postTitle}
                                         <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
+                                    <c:if test="${not empty totalHotPost.attachments}">
+                                    <span class="attachment-icon">
+                                            <i class="fa-solid fa-image"></i>
+                                        </span>
+                                    </c:if>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
                                 <td class="p-3 text-center">${totalHotPost.createdDate.substring(0, 10)}</td>
@@ -250,7 +260,7 @@
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
-                    <div style="margin: 0; flex: 3; display: flex; justify-content: center;">
+                    <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
@@ -291,6 +301,10 @@
                             </c:if>
                         </div>
                     </div>
+                    <!-- 빈 div 추가: 자유게시판과 동일한 구조를 만들기 위함 -->
+                    <div style="flex: 1; display: flex; justify-content: flex-end;">
+                        <!-- 글쓰기 버튼 없음 -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -299,42 +313,204 @@
 <jsp:include page="footer.jsp"></jsp:include>
 
 <script>
+
     $(document).ready(function() {
+        // 전역 변수로 현재 페이지와 정렬 타입 설정
+        var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
+        var currentSortType = '${param.sortType}' || 'recent';
+
+        // 원본 게시글 번호를 저장할 객체 (필요시)
+        var originalPostNumbers = {};
+
         // 정렬 드롭다운 변경 이벤트
         $('select[name="sortType"]').change(function() {
-            // 현재 URL 파라미터 유지하면서 정렬 타입만 변경
-            const params = new URLSearchParams(window.location.search);
-            params.set('sortType', this.value);
-            params.set('page', '1'); // 정렬 변경 시 첫 페이지로 이동
-
-            // 페이지 이동
-            window.location.href = 'boardbest.action?' + params.toString();
+            loadPosts(1, this.value);
         });
 
         // 검색 폼 제출 처리
         $('form[action="boardbest.action"]').submit(function(e) {
-            // 현재 정렬 타입이 있으면 hidden input으로 추가
-            const urlParams = new URLSearchParams(window.location.search);
-            const currentSort = urlParams.get('sortType');
+            e.preventDefault();
+            var searchType = $('select[name="searchType"]').val();
+            var searchKeyword = $('input[name="searchKeyword"]').val();
+            loadPosts(1, currentSortType, searchType, searchKeyword);
+        });
 
-            if (currentSort) {
-                // 이미 존재하는 sortType input이 있는지 확인
-                let sortInput = this.querySelector('input[name="sortType"]');
-                if (!sortInput) {
-                    sortInput = document.createElement('input');
-                    sortInput.type = 'hidden';
-                    sortInput.name = 'sortType';
-                    this.appendChild(sortInput);
+        // 게시글 로드 함수
+        function loadPosts(page, sortType, searchType, searchKeyword) {
+            // 검색어가 없으면 폼에서 가져오기
+            if (!searchType) {
+                searchType = $('select[name="searchType"]').val();
+            }
+            if (!searchKeyword) {
+                searchKeyword = $('input[name="searchKeyword"]').val();
+            }
+
+            $.ajax({
+                url: '/api/boardbest.action',
+                type: 'GET',
+                data: {
+                    page: page,
+                    size: 10,
+                    sortType: sortType,
+                    searchType: searchType,
+                    searchKeyword: searchKeyword
+                },
+                dataType: 'json',
+                success: function(response) {
+                    updateTable(response);
+                    updatePagination(response.pagenation, sortType, searchType, searchKeyword);
+                    currentPage = page;
+                    currentSortType = sortType;
+
+                    // URL 파라미터 업데이트 (브라우저 히스토리에 상태 저장)
+                    var newUrl = 'boardbest.action?page=' + page;
+                    if (sortType) {
+                        newUrl += '&sortType=' + sortType;
+                    }
+                    if (searchKeyword) {
+                        newUrl += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
+                    }
+                    history.pushState({page: page, sortType: sortType}, '', newUrl);
+
+                    // 드롭다운 상태 업데이트
+                    $('select[name="sortType"]').val(sortType);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading posts:', error);
+                    alert('게시글을 불러오는 중 오류가 발생했습니다.');
                 }
-                sortInput.value = currentSort;
+            });
+        }
+
+        // 뒤로가기 버튼 처리
+        window.addEventListener('popstate', function(e) {
+            if (e.state) {
+                var page = e.state.page || 1;
+                var sortType = e.state.sortType || 'recent';
+
+                // URL에서 검색 파라미터 가져오기
+                var urlParams = new URLSearchParams(window.location.search);
+                var searchType = urlParams.get('searchType');
+                var searchKeyword = urlParams.get('searchKeyword');
+
+                // 데이터 로드
+                loadPosts(page, sortType, searchType, searchKeyword);
             }
         });
 
+        // 테이블 업데이트 함수
+        function updateTable(data) {
+            var html = '';
+
+            // 공지사항 표시
+            $.each(data.notice, function(index, notice) {
+                html += '<tr class="board-row notice border-bottom">' +
+                    '<td class="p-3 text-center"><a href="notice.action"><span class="notice-tag">공지</span></a></td>' +
+                    '<td class="p-3 text-center"><a href="notice.action"><span class="board-category-tag notice">공지</span></a></td>' +
+                    '<td class="p-3 title-cell"><a href="noticepost.action?postId=' + notice.postId + '">' + notice.postTitle + '</a></td>' +
+                    '<td class="p-3 text-center"><i class="fa-solid fa-user-shield table-icon"></i>관리자</td>' +
+                    '<td class="p-3 text-center">' + notice.createdDate.substring(0, 10) + '</td>' +
+                    '<td class="p-3 text-center">' + notice.viewCount + '</td>' +
+                    '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + notice.recommendCount + '</td>' +
+                    '</tr>';
+            });
+
+            // BEST 게시글 표시
+            if (data.totalHotPost && data.totalHotPost.length > 0) {
+                $.each(data.totalHotPost, function(index, post) {
+                    var rowNum = data.pagenation.totalPost - ((data.pagenation.pageNum - 1) * data.pagenation.pageSize) - index;
+
+                    // 첨부파일 아이콘
+                    var attachmentIcon = '';
+                    if (post.attachments && post.attachments.length > 0) {
+                        attachmentIcon = '<span class="attachment-icon"><i class="fa-solid fa-image"></i></span>';
+                    }
+
+                    // 게시판 카테고리 클래스 결정
+                    var categoryClass = '';
+                    if (post.boardName === '자유 게시판') {
+                        categoryClass = 'freeboard';
+                    } else if (post.boardName === '고독한 캠핑방') {
+                        categoryClass = 'camping';
+                    }
+
+                    html += '<tr class="board-row border-bottom">' +
+                        '<td class="p-3 text-center">' + rowNum + '</td>' +
+                        '<td class="p-3 text-center">' +
+                        '<a href="' + (post.boardName === '자유 게시판' ? 'boardfree.action' :
+                            post.boardName === '고독한 캠핑방' ? 'boardimage.action' : 'boardmain.action') + '">' +
+                        '<span class="board-category-tag ' + categoryClass + '">' + post.boardName + '</span>' +
+                        '</a></td>' +
+                        '<td class="p-3 title-cell"><a href="' +
+                        (post.boardName === '자유 게시판' ? 'boardfree-post.action' :
+                            post.boardName === '고독한 캠핑방' ? 'boardimage-post.action' : 'boardmain.action') +
+                        '?postId=' + post.postId + '">' + post.postTitle + '</a>' + attachmentIcon + '</td>' +
+                        '<td class="p-3 text-center">' + post.nickName + '</td>' +
+                        '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
+                        '<td class="p-3 text-center">' + post.viewCount + '</td>' +
+                        '<td class="p-3 text-center"><i class="fa-solid fa-heart table-icon icon-heart"></i>' + post.recommendCount + '</td>' +
+                        '</tr>';
+                });
+            }
+
+            // 게시글이 없을 경우
+            if ((data.notice === undefined || data.notice.length === 0) &&
+                (data.totalHotPost === undefined || data.totalHotPost.length === 0)) {
+                html += '<tr class="board-row border-bottom"><td colspan="7" class="p-3 text-center">게시글이 없습니다.</td></tr>';
+            }
+
+            $('#boardbest-table tbody').html(html);
+        }
+
+        // 페이지네이션 업데이트 함수
+        function updatePagination(pagenation, sortType, searchType, searchKeyword) {
+            var html = '';
+
+            // 첫 페이지로
+            if (pagenation.pageNum > 1) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="1">' +
+                    '<i class="fa-solid fa-angles-left"></i></a>';
+            }
+
+            // 이전 블록으로
+            if (pagenation.startPage > pagenation.blockSize) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.prevPage + '">' +
+                    '<i class="fa-solid fa-chevron-left"></i></a>';
+            }
+
+            // 페이지 번호
+            for (var i = pagenation.startPage; i <= pagenation.endPage; i++) {
+                html += '<a href="#" class="btn ' + (pagenation.pageNum == i ? 'btn-primary' : '') +
+                    ' btn-sm page-link" data-page="' + i + '">' + i + '</a>';
+            }
+
+            // 다음 블록으로
+            if (pagenation.endPage < pagenation.totalPage) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.nextPage + '">' +
+                    '<i class="fa-solid fa-chevron-right"></i></a>';
+            }
+
+            // 마지막 페이지로
+            if (pagenation.pageNum < pagenation.totalPage) {
+                html += '<a href="#" class="btn btn-sm page-link" data-page="' + pagenation.totalPage + '">' +
+                    '<i class="fa-solid fa-angles-right"></i></a>';
+            }
+
+            $('.pagination').html(html);
+
+            // 페이지 링크에 이벤트 연결
+            $('.page-link').click(function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadPosts(page, sortType, searchType, searchKeyword);
+            });
+        }
+
         // URL에서 현재 정렬 타입 가져와서 드롭다운 설정
         const urlParams = new URLSearchParams(window.location.search);
-        const currentSort = urlParams.get('sortType') || 'recent';
-        $('select[name="sortType"]').val(currentSort);
-    });
+        const sortType = urlParams.get('sortType') || 'recent';
+        $('select[name="sortType"]').val(sortType);
+    });;
 </script>
 
 </body>
