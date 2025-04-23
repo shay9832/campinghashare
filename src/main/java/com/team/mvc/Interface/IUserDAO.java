@@ -53,6 +53,15 @@ public interface IUserDAO {
 
     // 유저코드로 유저id 가져오기
     String getUserIdByUserCode(@Param("userCode") int userCode);
+
     // 유저코드로 유저비밀번호 가져오기
     String getUserPwByUserCode(@Param("userCode") int userCode);
+
+    // 유저코드로 마이페이지 메인에 필요한 정보 모두 가져오기
+    UserDTO getUserByUserCodeForMain(@Param("userCode") int userCode);
+
+    UserDTO getUserById(String userId);
+
+    void disconnectUserCode(@Param("userId") String userId);
+
 }

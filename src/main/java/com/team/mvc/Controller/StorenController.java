@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,10 +37,23 @@ public class StorenController {
             // storen_id로만 정보 조회
             StorenDTO info = dao.getRentalInfoByStorenId(storenId);
 
-            // 권한 검증: 로그인 사용자가 등록한 장비인지 확인
-            if (info == null || info.getUser_code() != userCode) {
+            // 디버그 로그 추가
+            System.out.println("[DEBUG] info: " + info);
+            System.out.println("[DEBUG] userCode from session: " + userCode);
+            if (info != null) {
+                System.out.println("[DEBUG] info.getUser_code(): " + info.getUser_code());
+            }
+
+            // 권한 검증 로직 수정
+            if (info == null) {
+                model.addAttribute("error", "장비 정보를 찾을 수 없습니다.");
+                return "error";
+            }
+
+            // int와 Integer 비교 시 equals 사용
+            if (info == null || userCode == null || !Integer.valueOf(info.getUser_code()).equals(userCode)) {
                 model.addAttribute("error", "접근 권한이 없습니다.");
-                return "error"; // error.jsp 또는 에러 페이지로 리턴
+                return "error";
             }
 
             // storen_id를 모델에 추가
@@ -53,15 +67,31 @@ public class StorenController {
             }
 
             // 사진 불러오기
-            List<AttachmentDTO> photoList = attachmentDAO.listAttachmentByEquipCode(info.getEquip_code());
-            info.setPhotoList(photoList);
+            List<AttachmentDTO> photoList = null;
+            if (info.getEquip_code() != null) {
+                try {
+                    photoList = attachmentDAO.listAttachmentByEquipCode(info.getEquip_code());
+                    System.out.println("[DEBUG] 사진 조회 결과: " + (photoList != null ? photoList.size() + "개" : "null"));
+                    if (photoList != null && !photoList.isEmpty()) {
+                        for (AttachmentDTO photo : photoList) {
+                            System.out.println("[DEBUG] 사진 경로: " + photo.getAttachmentPath());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("[ERROR] 사진 조회 중 오류: " + e.getMessage());
+                }
+                info.setPhotoList(photoList != null ? photoList : new ArrayList<>());
+            } else {
+                System.out.println("[WARNING] equip_code가 null이어서 사진을 조회할 수 없습니다.");
+                info.setPhotoList(new ArrayList<>());
+            }
 
             // 장비명으로 평균가 관련 데이터 가져오기
             String equipName = info.getEquipmentDTO().getEquip_name();
             int avgNewPrice = 0;
             int avgRentalPrice = 0;
 
-            // 장비명이 있으면 장비명 기준, 없으면 장비코드 기준으로 평균 가격 조회
+            // 장비명이 있는 경우에만 평균 가격 조회
             if (equipName != null && !equipName.isEmpty()) {
                 avgNewPrice = dao.getAvgNewPriceByEquipName(equipName);
                 avgRentalPrice = dao.getAvgRentalPriceByEquipName(equipName);
@@ -70,12 +100,7 @@ public class StorenController {
                 System.out.println("[DEBUG] 평균 신품 가격: " + avgNewPrice);
                 System.out.println("[DEBUG] 평균 렌탈 가격: " + avgRentalPrice);
             } else {
-                avgNewPrice = dao.getAvgNewPrice(info.getEquip_code());
-                avgRentalPrice = dao.getAvgRentalPrice(info.getEquip_code());
-
-                System.out.println("[DEBUG] 장비코드로 평균 가격 조회: " + info.getEquip_code());
-                System.out.println("[DEBUG] 평균 신품 가격: " + avgNewPrice);
-                System.out.println("[DEBUG] 평균 렌탈 가격: " + avgRentalPrice);
+                System.out.println("[WARNING] 장비명이 없어 평균 가격을 조회할 수 없습니다.");
             }
 
             // avgRentalPrice 설정

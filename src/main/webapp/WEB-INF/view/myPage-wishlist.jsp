@@ -129,26 +129,26 @@
                             <c:forEach var="storen" items="${storenList}">
                                 <li>
                                     <div class="product-card">
-                                        <a href="storen_matching_request.action?storenId=${storen.storen_id}" class="product-link">
                                         <div class="product-image">
                                             <c:choose>
-                                            <c:when test="${storen.equipmentDTO.attachments.get(0) != null && !empty storen.equipmentDTO.attachments}">
-                                                <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div class="product-placeholder"></div>
-                                            </c:otherwise>
+                                                <c:when test="${storen.equipmentDTO.attachments.get(0) != null && !empty storen.equipmentDTO.attachments}">
+                                                    <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="product-placeholder"></div>
+                                                </c:otherwise>
                                             </c:choose>
-                                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
+                                            <button class="like-button" data-id="${storen.storen_id}" data-type="storen"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
                                         </div>
-                                        <div class="product-info">
-                                            <p class="product-title">${storen.storen_title}</p>
-                                            <p class="product-brand">${storen.equipmentDTO.brand}</p>
-                                            <p class="product-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</p>
-                                            <p class="product-price">${storen.daily_rent_price}원/일</p>
-                                        </div>
+                                        <a href="storen_matching_request.action?storenId=${storen.storen_id}" class="product-link">
+                                            <div class="product-info">
+                                                <p class="product-title">${storen.storen_title}</p>
+                                                <p class="product-brand">${storen.equipmentDTO.brand}</p>
+                                                <p class="product-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</p>
+                                                <p class="product-price">${storen.daily_rent_price}원/일</p>
+                                            </div>
+                                        </a>
                                     </div>
-                                    </a>
                                 </li>
                             </c:forEach>
                             </ul>
@@ -158,6 +158,7 @@
                             <i class="fa-solid fa-heart-crack"></i>
                             <p>찜한 상품이 없습니다</p>
                             <div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>
+                            <a href="rentalsearch-main.action" class="empty-action mt-5">찜하러 가기</a>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -228,7 +229,7 @@
             loadWishData(activeMainTab);
         });
 
-        // 좋아요 버튼 클릭 이벤트 (하트 아이콘)
+        //좋아요 버튼 클릭 이벤트 (하트 아이콘)
         $(document).on('click', '.like-button', function(e) {
             e.preventDefault();         // 링크 이동 방지
             e.stopPropagation();        // 이벤트 버블링 중지
@@ -242,8 +243,10 @@
                 $.ajax({
                     url: '/api/wish/delete',
                     type: 'POST',
-                    data: { id: id,
-                            type: type},
+                    data: {
+                        id: id,
+                        type: type
+                    },
                     success: function(response) {
                         if(response.success) {
                             // 화면에서 요소 제거
@@ -410,6 +413,9 @@
 
         html += '<ul>';
         data.forEach(function(item) {
+            // imageSrc 변수 선언 및 기본값 설정
+            let imageSrc = '<div class="product-placeholder"></div>';
+
             const attachments = item.equipmentDTO.attachments;
             if (Array.isArray(attachments) && attachments.length > 0 && attachments[0].attachmentPath) {
                 imageSrc = `<img src="` + attachments[0].attachmentPath + `" alt="상품 이미지">`;
@@ -417,23 +423,59 @@
             html +=
                 '<li>' +
                 '<div class="product-card">' +
-                '<a href="storen_matching_request.action?storenId=' + item.storen_id + '">' +
                 '<div class="product-image">' +
                 imageSrc +
                 '<button class="like-button" data-id="' + item.storen_id + '" data-type="storen"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>' +
                 '</div>' +
+                '<a href="storen_matching_request.action?storenId=' + item.storen_id + '" class="product-link">' +
                 '<div class="product-info">' +
                 '<p class="product-title">' + item.storen_title + '</p>' +
                 '<p class="product-brand">' + item.equipmentDTO.brand + '</p>' +
                 '<p class="product-category">' + item.equipmentDTO.majorCategory + ' > ' + item.equipmentDTO.middleCategory + '</p>' +
                 '<p class="product-price">' + formatter.format(parseInt(item.daily_rent_price)) + '원/일</p>' +
                 '</div>' +
-                '</div>' +
                 '</a>' +
+                '</div>' +
                 '</li>';
         });
         html += '</ul>';
         targetDiv.html(html);
+
+        // 좋아요 버튼 이벤트 다시 바인딩
+        $('.like-button').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = $(this).data('id');
+            const type = $(this).data('type');
+            const $productCard = $(this).closest('.product-card');
+            const productTitle = $productCard.find('.product-title').text();
+
+            if(confirm('"' + productTitle + '" 상품을 찜 목록에서 삭제하시겠습니까?')) {
+                $.ajax({
+                    url: '/api/wish/delete',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        type: type
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            $productCard.closest('li').fadeOut(300, function() {
+                                $(this).remove();
+                                updateWishlistCount();
+                            });
+                            alert('"' + productTitle + '" 상품이 찜 목록에서 삭제되었습니다.');
+                        } else {
+                            alert('삭제 중 오류가 발생했습니다: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('서버 통신 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        });
     }
 
 
@@ -579,6 +621,14 @@
         border-radius: 8px 8px 0 0;
         overflow: hidden;
     }
+    .product-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .product-placeholder {
         position: absolute;
@@ -597,8 +647,8 @@
         position: absolute;
         bottom: 10px;
         right: 10px;
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background-color: white;
         border: none;
@@ -608,7 +658,7 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s;
-        z-index: 2;
+        z-index: 10;
     }
 
     .like-button:hover {
@@ -703,9 +753,9 @@
         border-color: #2C5F2D;
     }
     .product-link {
-        display: block;
         text-decoration: none;
         color: inherit;
+        display: block;
     }
 
     /* 반응형 디자인 */

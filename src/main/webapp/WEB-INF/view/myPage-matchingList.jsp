@@ -21,6 +21,31 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
 
   <style>
+    /* 탭 네비게이션 스타일 */
+    .tab-nav {
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tab-link {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: #495057;
+      background-color: #f8f9fa;
+      transition: all 0.3s ease;
+    }
+
+    .tab-link:hover {
+      background-color: #e9ecef;
+    }
+
+    .tab-nav .tab-link.active {
+      color: var(--color-white);
+      background-color: var(--color-maple);
+    }
+
     /* 테이블 너무 긴 장비명 줄이기 */
     .custom-table .title-cell {
       max-width: 200px;
@@ -524,12 +549,40 @@
 
     // URL에서 탭 정보 가져오기
     const urlParams = new URLSearchParams(window.location.search);
-    let tabFromUrl = urlParams.get('tab');
-    let subTabFromUrl = urlParams.get('subTab');
+    let activeMainTab = urlParams.get('activeTab') || "${activeTab}" || "storen"; // URL 매개변수 또는 서버 값 또는 기본값
+    let activeSubTab = urlParams.get('storenTabType') || "${storenTabType}" || "owner"; // URL 매개변수 또는 서버 값 또는 기본값
 
-    // 메인 탭 초기화 (스토렌/렌탈)
-    let activeMainTab = tabFromUrl || "storen"; // URL 파라미터 또는 기본값
-    let activeSubTab = subTabFromUrl || "owner"; // URL 파라미터 또는 기본값
+    console.log("초기 탭 설정 - 메인탭:", activeMainTab, "서브탭:", activeSubTab);
+
+    // URL 매개변수에 따른 명시적 탭 활성화 처리
+    if (activeMainTab && activeSubTab) {
+      // 메인 탭 활성화
+      $('.tab').removeClass('active');
+      $('.tab[data-tab="' + activeMainTab + '"]').addClass('active');
+
+      // 콘텐츠 활성화
+      $('.tab-content').removeClass('active');
+      $('#' + activeMainTab + '-content').addClass('active');
+
+      // 서브 탭 활성화 (스토렌 탭인 경우)
+      if (activeMainTab === 'storen') {
+        $('#storen-content .tab-link').removeClass('active');
+        $('#storen-' + activeSubTab).addClass('active');
+
+        // 사용자 탭이면 데이터 다시 로드
+        if (activeSubTab === 'user' && !$('#storen-content .custom-table tbody tr.rental-header').length) {
+          loadMatchingData('storen', 'user');
+        }
+      }
+      // 렌탈 탭인 경우 데이터 로드
+      else if (activeMainTab === 'rental') {
+        $('#rental-content .tab-link').removeClass('active');
+        $('#rental-' + activeSubTab).addClass('active');
+
+        // 렌탈 탭 데이터 로드
+        loadMatchingData('rental', activeSubTab);
+      }
+    }
 
     // 페이지 로딩 시 검색창에 값이 있으면 자동 검색 실행
     const initialSearchValue = $('#search-matching').val().trim();

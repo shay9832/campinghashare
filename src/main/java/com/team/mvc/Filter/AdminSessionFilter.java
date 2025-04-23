@@ -43,7 +43,8 @@ public class AdminSessionFilter implements Filter {
                 uriLower.startsWith(ctx + "/admin") ||
                 uriLower.startsWith(ctx + "/admin-") ||
                 uriLower.startsWith(ctx + "/sitemap.action") ||
-                uriLower.startsWith(ctx + "/registerAdmin-id.action") ||
+                uriLower.startsWith(ctx + "/admin-registerid.action") ||
+                uriLower.startsWith(ctx + "/insertadmin.action") ||
                 uriLower.startsWith(ctx + "/idcheck.action") ||
                 uriLower.startsWith(ctx + "/nicknamecheck.action") ||
                 uriLower.startsWith(ctx + "/error") ||

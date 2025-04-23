@@ -1,75 +1,113 @@
 package com.team.mvc.DTO;
 
+import java.util.Date;
+
 public class AdminCouponListDTO {
 
-    private String userName,telePhone,nickName,emailAdress,couponList,couponCount,couponState;
-    private int userNum;
+    private Integer ownedCouponId;   // 보유쿠폰ID
+    private String userCode;        // 회원코드
+    private String nickname;        // 회원닉네임
+    private String couponName;      // 쿠폰이름
+    private String couponTypeName;  // 쿠폰종류
+    private Integer couponDiscount; // 쿠폰할인율
+    private Integer couponMonth;    // 쿠폰유효개월수
+    private Date issuedDate;      // 쿠폰발행일
+    private Date expiryDate;      // 쿠폰만료일
+    private Date completedDate;   // 쿠폰사용완료일
+
+
+    //쿠폰
+    public Integer couponTypeId;   // 쿠폰 종류 ID
 
 
     //getter setter 구성
 
 
-    public String getUserName() {
-        return userName;
+    public Integer getOwnedCouponId() {
+        return ownedCouponId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setOwnedCouponId(Integer ownedCouponId) {
+        this.ownedCouponId = ownedCouponId;
     }
 
-    public String getTelePhone() {
-        return telePhone;
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setTelePhone(String telePhone) {
-        this.telePhone = telePhone;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getEmailAdress() {
-        return emailAdress;
+    public String getCouponName() {
+        return couponName;
     }
 
-    public void setEmailAdress(String emailAdress) {
-        this.emailAdress = emailAdress;
+    public void setCouponName(String couponName) {
+        this.couponName = couponName;
     }
 
-    public String getCouponList() {
-        return couponList;
+    public String getCouponTypeName() {
+        return couponTypeName;
     }
 
-    public void setCouponList(String couponList) {
-        this.couponList = couponList;
+    public void setCouponTypeName(String couponTypeName) {
+        this.couponTypeName = couponTypeName;
     }
 
-    public String getCouponCount() {
-        return couponCount;
+    public Integer getCouponDiscount() {
+        return couponDiscount;
     }
 
-    public void setCouponCount(String couponCount) {
-        this.couponCount = couponCount;
+    public void setCouponDiscount(Integer couponDiscount) {
+        this.couponDiscount = couponDiscount;
     }
 
-    public String getCouponState() {
-        return couponState;
+    public Integer getCouponMonth() {
+        return couponMonth;
     }
 
-    public void setCouponState(String couponState) {
-        this.couponState = couponState;
+    public void setCouponMonth(Integer couponMonth) {
+        this.couponMonth = couponMonth;
     }
 
-    public int getUserNum() {
-        return userNum;
+    public Date getIssuedDate() {
+        return issuedDate;
     }
 
-    public void setUserNum(int userNum) {
-        this.userNum = userNum;
+    public void setIssuedDate(Date issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public Date getCompletedDate() {
+        return completedDate;
+    }
+
+    public void setCompletedDate(Date completedDate) {
+        this.completedDate = completedDate;
+    }
+
+    public Integer getCouponTypeId() {
+        return couponTypeId;
+    }
+
+    public void setCouponTypeId(Integer couponTypeId) {
+        this.couponTypeId = couponTypeId;
     }
 }

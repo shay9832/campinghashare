@@ -6,6 +6,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -60,5 +63,59 @@ public class MypageRentEquipService implements IMypageRentEquipService {
         }
 
         return rentEquipDTO;
+    }
+
+    @Override
+    public Map<String, Map<String, Integer>> getRentEquipmentStatus(int userCode) {
+        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : START ==");
+
+        // DAO 생성
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 최종 결과 변수
+        Map<String, Map<String, Integer>> equipmentStatus = new HashMap<>();
+
+        // 스토렌의 매칭상태 현황 가져오기
+        Map<String, Object> storenStatusRaw = storenDAO.getStorenMatchingStatus(userCode);
+        Map<String, Integer> storenStatus = new LinkedHashMap<>();
+
+        // 원하는 순서대로 키 배열 정의
+        String[] orderedKeys = {
+                "매칭중", "매칭승인대기", "매칭완료", "렌탈비결제전",
+                "렌탈비결제완료", "배송중", "대여중", "반납일임박",
+                "반납중", "검수중", "거래완료", "추가비용결제필요", "상태불명"
+        };
+
+        // 정의된 순서대로 맵에 삽입
+        for (String key : orderedKeys) {
+            Object value = storenStatusRaw.get(key);
+            System.out.println(key + " : " + value);
+            int count = (value instanceof BigDecimal) ? ((BigDecimal) value).intValue() : 0;
+            storenStatus.put(key, count);
+        }
+
+        equipmentStatus.put("storen", storenStatus);
+
+        //System.out.println(storenStatus.getOrDefault("강제 반환", 0));
+
+        // 즉시 확인 필요 상태 현황 만들기
+        Map<String, Integer> emergencyStatus = new HashMap<>();
+        emergencyStatus.put("렌탈비 결제 필요", storenStatus.getOrDefault("렌탈비결제전", 0));
+        emergencyStatus.put("추가 비용 결제 필요", storenStatus.getOrDefault("추가비용결제필요", 0));
+        emergencyStatus.put("문제 상황 발생", storenStatus.getOrDefault("상태불명", 0));
+
+        equipmentStatus.put("emergency", emergencyStatus);
+
+        // 총 개수 만들기
+        int storenTotal = 0;
+        for (Integer value : storenStatus.values()) {
+            storenTotal += value;
+        }
+        Map<String, Integer> storenCountMap = new HashMap<>();
+        storenCountMap.put("storen", storenTotal);
+        equipmentStatus.put("count", storenCountMap);
+
+        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : END ==");
+        return equipmentStatus;
     }
 }

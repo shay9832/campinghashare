@@ -4,8 +4,13 @@ import java.util.Date;
 
 public class AdminCreateCouponDTO {
 
-    private String adminId,couponName,couponMonth;
-    private int couponDiscount;
+    // 쿠폰 생성을 위한 DTO
+    private String adminId,couponName,couponMonth,issuedDate;
+    private Integer couponDiscount,couponTypeId,issuedCouponId;
+
+
+    //쿠폰 타입을 받기위한 DTO
+    private String couponTypeName;
 
 
 
@@ -27,11 +32,11 @@ public class AdminCreateCouponDTO {
         this.couponName = couponName;
     }
 
-    public int getCouponDiscount() {
+    public Integer getCouponDiscount() {
         return couponDiscount;
     }
 
-    public void setCouponDiscount(int couponDiscount) {
+    public void setCouponDiscount(Integer couponDiscount) {
         this.couponDiscount = couponDiscount;
     }
 
@@ -43,5 +48,35 @@ public class AdminCreateCouponDTO {
         this.couponMonth = couponMonth;
     }
 
+    public String getIssuedDate() {
+        return issuedDate;
+    }
 
+    public void setIssuedDate(String issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
+    public Integer getCouponTypeId() {
+        return couponTypeId;
+    }
+
+    public void setCouponTypeId(Integer couponTypeId) {
+        this.couponTypeId = couponTypeId;
+    }
+
+    public Integer getIssuedCouponId() {
+        return issuedCouponId;
+    }
+
+    public void setIssuedCouponId(Integer issuedCouponId) {
+        this.issuedCouponId = issuedCouponId;
+    }
+
+    public String getCouponTypeName() {
+        return couponTypeName;
+    }
+
+    public void setCouponTypeName(String couponTypeName) {
+        this.couponTypeName = couponTypeName;
+    }
 }
