@@ -535,31 +535,40 @@
 
         <!-- 페이징 처리 -->
         <div class="pagination-container d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+            <div class="d-flex gap-1 pagination">
+                <!-- 첫 페이지로 -->
+                <c:if test="${pagenation.pageNum > 1}">
+                    <a href="mypage-myequip.action?page=1${not empty searchKeyword ? '&searchKeyword='.concat(searchKeyword) : ''}${not empty sortType ? '&sortType='.concat(sortType) : ''}" class="btn btn-sm page-link" data-tab="${activeTab}">
                         <i class="fas fa-angle-double-left"></i>
                     </a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                </c:if>
+
+                <!-- 이전 블록으로 -->
+                <c:if test="${pagenation.startPage > pagenation.blockSize}">
+                    <a href="mypage-myequip.action?page=${pagenation.prevPage}${not empty searchKeyword ? '&searchKeyword='.concat(searchKeyword) : ''}${not empty sortType ? '&sortType='.concat(sortType) : ''}" class="btn btn-sm page-link" data-tab="${activeTab}">
                         <i class="fas fa-angle-left"></i>
                     </a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
+                </c:if>
+
+                <!-- 페이지 번호 -->
+                <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
+                    <a href="mypage-myequip.action?page=${i}${not empty searchKeyword ? '&searchKeyword='.concat(searchKeyword) : ''}${not empty sortType ? '&sortType='.concat(sortType) : ''}" class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm page-link" data-tab="${activeTab}">${i}</a>
+                </c:forEach>
+
+                <!-- 다음 블록으로 -->
+                <c:if test="${pagenation.endPage < pagenation.totalPage}">
+                    <a href="mypage-myequip.action?page=${pagenation.nextPage}${not empty searchKeyword ? '&searchKeyword='.concat(searchKeyword) : ''}${not empty sortType ? '&sortType='.concat(sortType) : ''}" class="btn btn-sm page-link" data-tab="${activeTab}">
                         <i class="fas fa-angle-right"></i>
                     </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
+                </c:if>
+
+                <!-- 마지막 페이지로 -->
+                <c:if test="${pagenation.pageNum < pagenation.totalPage}">
+                    <a href="mypage-myequip.action?page=${pagenation.totalPage}${not empty searchKeyword ? '&searchKeyword='.concat(searchKeyword) : ''}${not empty sortType ? '&sortType='.concat(sortType) : ''}" class="btn btn-sm page-link" data-tab="${activeTab}">
                         <i class="fas fa-angle-double-right"></i>
                     </a>
-                </li>
-            </ul>
+                </c:if>
+            </div>
         </div>
     </div>
 </div>
@@ -616,8 +625,20 @@
             bindButtonEvents();
             bindSearchEvents();
 
-            // 현재 탭의 데이터 로드
-            loadEquipmentData(activeMainTab);
+            // URL에서 탭 정보 가져오기
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+
+            // 탭 파라미터가 있으면 해당 탭으로 전환
+            if (tabParam && tabParam !== 'general') {
+                handleTabChange(tabParam);
+
+                // 스토렌 탭이면 AJAX로 데이터 로드
+                if (tabParam === 'storen') {
+                    const page = urlParams.get('page') || 1;
+                    loadEquipmentData(tabParam, page);
+                }
+            }
         }
 
         //탭 전환 이벤트 바인딩
@@ -755,12 +776,14 @@
         //검색 이벤트 바인딩
         function bindSearchEvents() {
             $('#btn-search-equip').on('click', function() {
-                performSearch();
+                const activeTab = $('.tab.active').data('tab');
+                loadEquipmentData(activeTab, 1); // 첫 페이지부터 다시 로드
             });
 
             $('#search-equip').on('keypress', function(e) {
                 if(e.which === 13) {
-                    performSearch();
+                    const activeTab = $('.tab.active').data('tab');
+                    loadEquipmentData(activeTab, 1); // 첫 페이지부터 다시 로드
                 }
             });
         }
@@ -799,23 +822,35 @@
 
         //장비 데이터 로드 함수
         //@param {string} mainTab - 로드할 데이터의 탭 ID
-        function loadEquipmentData(mainTab) {
+        function loadEquipmentData(mainTab, page = 1) {
+            // 이미 일반 탭이 활성화되어 있고 일반 탭 데이터를 요청하는 경우 무시
+            if (activeMainTab === 'general' && mainTab === 'general') {
+                return;
+            }
+
             // 로딩 표시 활성화
             showLoading();
 
             let apiUrl = '';
             let colSpan = '5';
+            let pageSize = 5; // 페이지당 항목 수
 
             // targetTable 초기화
             let targetTable;
 
+            // 검색어와 정렬 옵션 가져오기
+            let searchKeyword = $('#search-equip').val();
+            let sortType = $('.sort-select').val();
+
             // 메인 탭에 따라 API URL 결정
             if (mainTab === 'general') {
-                apiUrl = '/api/myequipment/general';
-                colSpan = '4';
-                targetTable = $('#general-content tbody');
+                // 일반 서버 요청으로 페이지 전환 (새로고침)
+                window.location.href = "mypage-myequip.action?page=" + page +
+                    "&searchKeyword=" + encodeURIComponent(searchKeyword) +
+                    "&sortType=" + sortType;
+                return;
             } else if (mainTab === 'storen') {
-                apiUrl = '/api/myequipment/storen';
+                apiUrl = '/api/myequipment/storen/paged';
                 targetTable = $('#storen-content tbody');
             } else if (mainTab === 'rental') {
                 apiUrl = '/api/myequipment/rental';
@@ -825,7 +860,7 @@
                 targetTable = $('#storage-content tbody');
             }
 
-            console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab);
+            console.log("데이터 로드 중:", apiUrl, "메인탭:", mainTab, "페이지:", page);
 
             // 로딩 인디케이터 표시
             targetTable.html('<tr><td colspan="' + colSpan + '" class="text-center py-4"><i class="fas fa-spinner fa-spin me-2"></i> 장비 데이터를 불러오는 중...</td></tr>');
@@ -834,6 +869,12 @@
             $.ajax({
                 url: apiUrl,
                 type: 'GET',
+                data: {
+                    page: page,
+                    size: pageSize,
+                    searchKeyword: searchKeyword,
+                    sortType: sortType
+                },
                 dataType: 'json',
                 cache: false,
                 success: function (data) {
@@ -851,13 +892,24 @@
 
                     hideLoading();
 
-                    if (data.length === 0) {
-                        showEmptyState(mainTab, targetTable);
-                        return;
-                    }
+                    if (mainTab === 'storen') {
+                        const storenList = data.storenList;
+                        const pagenation = data.pagenation;
 
-                    // 메인 탭의 정보 렌더링
-                    renderData(data, targetTable);
+                        if (storenList && storenList.length > 0) {
+                            renderData(storenList, targetTable);
+                            renderPagination(pagenation, mainTab, page);
+                        } else {
+                            showEmptyState(mainTab, targetTable);
+                        }
+                    } else {
+                        // 다른 탭에 대한 처리
+                        if (data && data.length > 0) {
+                            renderData(data, targetTable);
+                        } else {
+                            showEmptyState(mainTab, targetTable);
+                        }
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error("데이터 로드 실패:", error);
@@ -865,6 +917,64 @@
 
                     showErrorState(targetTable, colSpan);
                 }
+            });
+        }
+
+        // 페이지네이션 렌더링 함수
+        function renderPagination(pagenation, mainTab, currentPage) {
+            console.log("페이지네이션 데이터:", pagenation);
+            console.log("현재 탭:", mainTab);
+            console.log("현재 페이지:", currentPage);
+
+            const paginationContainer = $('.pagination-container .pagination');
+            let html = '';
+
+            // 검색어와 정렬 조건
+            const searchKeyword = $('#search-equip').val();
+            const sortType = $('.sort-select').val();
+
+            // 첫 페이지로
+            if (pagenation.pageNum > 1) {
+                html += '<a href="javascript:void(0)" class="btn btn-sm page-link" data-page="1" data-tab="' + mainTab + '">' +
+                    '<i class="fas fa-angle-double-left"></i></a>';
+            }
+
+            // 이전 블록으로
+            if (pagenation.startPage > pagenation.blockSize) {
+                html += '<a href="javascript:void(0)" class="btn btn-sm page-link" data-page="' + pagenation.prevPage + '" data-tab="' + mainTab + '">' +
+                    '<i class="fas fa-angle-left"></i></a>';
+            }
+
+            // 페이지 번호
+            for (let i = pagenation.startPage; i <= pagenation.endPage; i++) {
+                const activeClass = (pagenation.pageNum == i) ? 'btn-primary' : '';
+                html += '<a href="javascript:void(0)" class="btn ' + activeClass + ' btn-sm page-link" ' +
+                    'data-page="' + i + '" data-tab="' + mainTab + '">' + i + '</a>';
+            }
+
+            // 다음 블록으로
+            if (pagenation.endPage < pagenation.totalPage) {
+                html += '<a href="javascript:void(0)" class="btn btn-sm page-link" data-page="' + pagenation.nextPage + '" data-tab="' + mainTab + '">' +
+                    '<i class="fas fa-angle-right"></i></a>';
+            }
+
+            // 마지막 페이지로
+            if (pagenation.pageNum < pagenation.totalPage) {
+                html += '<a href="javascript:void(0)" class="btn btn-sm page-link" data-page="' + pagenation.totalPage + '" data-tab="' + mainTab + '">' +
+                    '<i class="fas fa-angle-double-right"></i></a>';
+            }
+
+            paginationContainer.html(html);
+
+            // 페이지 링크에 이벤트 연결
+            $('.page-link').on('click', function(e) {
+                e.preventDefault();
+                const page = $(this).data('page');
+                const tab = $(this).data('tab');
+
+                console.log("페이지 링크 클릭:", page, tab);
+                // 해당 탭의 데이터 로드
+                loadEquipmentData(tab, page);
             });
         }
 
@@ -1261,6 +1371,7 @@
         function clearFilters() {
             // 필터 상태 제거
             $('.arrow-step').removeClass('filtering');
+            $('.urgent-item').removeClass('filtering');
             $('.filter-notice').remove();
 
             // 원래 데이터 다시 로드
@@ -1339,6 +1450,9 @@
             // 로딩 행 제거
             $('.matching-details[data-parent="' + equipCode + '"]').remove();
 
+
+
+
             // 상세 정보 행 만들기
             var detailsHtml = '<tr class="matching-details" data-parent="' + equipCode + '" style="display: table-row;">' +
                 '<td colspan="5">' +
@@ -1352,6 +1466,7 @@
                 '<tr>' +
                 '<th>스토렌ID</th>' +
                 '<th>스토렌제목</th>' +
+                '<th>상태</th>' +
                 '<th>렌탈가능일</th>' +
                 '<th>일일렌탈가격</th>' +
                 '<th>생성일</th>' +
@@ -1364,14 +1479,28 @@
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
+
+                    let storenTitle = '스토렌 제목 미입력';
+                    if (item.storen_title != null) {
+                        storenTitle = item.storen_title;
+                    }
+                    let dailyPrice = '미입력';
+                    if (item.daily_rent_price != null) {
+                        dailyPrice = item.daily_rent_price +' 원';
+                    }
+
+                    // 상태 클래스 가져오기
+                    var statusClass = getStatusBadgeClass(item.status);
+
                     detailsHtml += '<tr>' +
                         '<td>' +
                         '<input type="hidden" name="id" value="' + item.storen_id + '">' +
                         '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_id + '</a>' +
                         '</td>' +
-                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_title + '</a></td>' +
+                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + storenTitle + '</a></td>' +
+                        '<td><span class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</span></td>' +
                         '<td>' + item.rental_start_date + ' ~ ' + item.rental_end_date + '</td>' +
-                        '<td><span class="trust-score high">' + item.daily_rent_price + ' 원</span></td>' +
+                        '<td><span class="trust-score high">' + dailyPrice + '</span></td>' +
                         '<td>' + item.created_date + '</td>' +
                         '<td>' +
                         '<button type="button" class="btn-sm btn-approve" data-rental="' + item.storen_id + '">매칭신청확인</button>' +

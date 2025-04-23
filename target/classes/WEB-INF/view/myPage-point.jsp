@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -22,7 +23,6 @@
 <jsp:include page="header.jsp" />
 
 <div class="container container-wide mypage-container section">
-
   <!-- 마이페이지 사이드바 -->
   <div class="sidebar">
     <div class="sidebar-title">마이 페이지</div>
@@ -98,11 +98,11 @@
               <i class="fas fa-star me-2"></i>현재 포인트
             </div>
             <div class="point-summary-value">
-              <span class="point-value">84</span>
+              <span class="point-value">${user.totalPoint}</span>
               <span class="point-unit">P</span>
             </div>
             <div class="point-description">
-              웹사이트 활동을 통해 적립됩니다.
+              포인트는 캠핑하쉐어 커뮤니티 활동을 통해 적립됩니다.
             </div>
           </div>
         </div>
@@ -112,13 +112,14 @@
               <i class="fas fa-medal me-2"></i>회원 등급
             </div>
             <div class="point-summary-rating">
-              <span class="rating-badge">실버</span>
+              <span class="rating-badge">${user.userGrade}</span>
               <div class="rating-progress-container">
-                <div class="rating-progress-bar" style="width: 70%"></div>
+                <div class="rating-progress-bar" style="width: ${progressPercentage}%"></div>
               </div>
             </div>
             <div class="point-description">
-              포인트 84P + 신뢰도 72점 = 156점 (골드까지 44점 남음)
+              포인트 ${user.totalPoint}P + 신뢰도 ${user.totalTrust}% = 현재 등급 "${user.userGrade}"<br>
+              (${user.nextUserGrade}까지 포인트 ${user.remainPoint}점 + 신뢰도 ${user.remainTrust}% 남음)
             </div>
           </div>
         </div>
@@ -127,18 +128,6 @@
 
     <!-- 포인트 내역 필터 -->
     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
-      <!-- 탭 필터 -->
-      <div class="d-flex flex-wrap align-items-center">
-        <div class="tab-nav">
-          <a class="tab-link active" href="#">전체 내역</a>
-        </div>
-        <div class="tab-nav">
-          <a class="tab-link" href="#">획득 내역</a>
-        </div>
-        <div class="tab-nav">
-          <a class="tab-link" href="#">차감 내역</a>
-        </div>
-      </div>
 
       <!-- 정렬 옵션 (오른쪽) -->
       <div class="d-flex align-items-center">
@@ -166,85 +155,36 @@
         </tr>
         </thead>
         <tbody>
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/04/06</td>
-          <td class="point-description">인기글 지정 [캠핑장비 렌탈 후기: 텐트 체험기]</td>
-          <td class="point-amount earned">+5P</td>
-          <td>84P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/04/06</td>
-          <td class="point-description">게시글 작성 [캠핑장비 렌탈 후기: 텐트 체험기]</td>
-          <td class="point-amount earned">+1P</td>
-          <td>79P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/04/05</td>
-          <td class="point-description">게시글 작성 [텐트 추천 부탁드립니다]</td>
-          <td class="point-amount earned">+1P</td>
-          <td>78P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/04/03</td>
-          <td class="point-description">인기글 지정 [제 첫 캠핑 후기입니다]</td>
-          <td class="point-amount earned">+5P</td>
-          <td>77P</td>
-        </tr>
-
-        <!-- 포인트 차감 내역 -->
-        <tr class="point-used-row">
-          <td>2025/04/01</td>
-          <td class="point-description">허위 신고 처벌 [부적절한 콘텐츠 신고]</td>
-          <td class="point-amount used">-5P</td>
-          <td>72P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/03/30</td>
-          <td class="point-description">게시글 작성 [제 첫 캠핑 후기입니다]</td>
-          <td class="point-amount earned">+1P</td>
-          <td>77P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/03/28</td>
-          <td class="point-description">이벤트 참여 보너스 [봄맞이 캠핑 이벤트]</td>
-          <td class="point-amount earned">+10P</td>
-          <td>76P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/03/25</td>
-          <td class="point-description">인기글 지정 [캠핑장 추천해주세요]</td>
-          <td class="point-amount earned">+5P</td>
-          <td>66P</td>
-        </tr>
-
-        <!-- 포인트 획득 내역 -->
-        <tr class="point-earned-row">
-          <td>2025/03/25</td>
-          <td class="point-description">게시글 작성 [캠핑장 추천해주세요]</td>
-          <td class="point-amount earned">+1P</td>
-          <td>61P</td>
-        </tr>
-
-        <!-- 포인트 차감 내역 -->
-        <tr class="point-used-row">
-          <td>2025/03/20</td>
-          <td class="point-description">신고 처벌 [커뮤니티 가이드라인 위반]</td>
-          <td class="point-amount used">-5P</td>
-          <td>60P</td>
-        </tr>
+        <c:choose>
+          <c:when test="${not empty pointList}">
+            <c:forEach var="point" items="${pointList}">
+              <tr class="point-earned-row">
+                <td>${point.created_date}</td>
+                <td class="point-description">${point.point_reason}</td>
+                <c:choose>
+                  <c:when test="${point.point_change < 0}">
+                    <td class="point-amount used">${point.point_change}P</td>
+                  </c:when>
+                  <c:otherwise>
+                    <td class="point-amount earned">${point.point_change}P</td>
+                  </c:otherwise>
+                </c:choose>
+                <td>${point.total_point}P</td>
+              </tr>
+            </c:forEach>
+          </c:when>
+          <c:otherwise>
+            <tr class="no-data-row">
+              <td colspan="4" class="text-center py-5">
+                <div class="no-data-message">
+                  <i class="fas fa-info-circle fs-4 mb-3 text-secondary"></i>
+                  <p class="mb-1">포인트 내역이 없습니다.</p>
+                  <p class="small text-muted">게시글 작성, 이벤트 참여 등의 활동으로 포인트를 쌓아보세요!</p>
+                </div>
+              </td>
+            </tr>
+          </c:otherwise>
+        </c:choose>
         </tbody>
       </table>
     </div>
@@ -260,7 +200,7 @@
           <ul class="point-rule-list">
             <li><span class="badge bg-success">+1P</span> 게시글 작성</li>
             <li><span class="badge bg-success">+5P</span> 인기글 지정</li>
-            <li><span class="badge bg-success">+?P</span> 이벤트 참여 (이벤트별 상이)</li>
+            <li><span class="badge bg-success">+?P</span> 이벤트 응모 (이벤트별 상이)</li>
           </ul>
         </div>
         <div class="point-rule-section">
@@ -270,45 +210,17 @@
             <li><span class="badge bg-danger">-5P</span> 허위 신고 처벌</li>
           </ul>
         </div>
-        <div class="point-rule-section">
+        <div class="point-rule-section" style="flex:2;">
           <h5 class="point-rule-title">회원 등급 기준</h5>
           <ul class="point-rule-list grade-list">
-            <li><span class="badge bg-secondary">브론즈</span> 포인트+신뢰도 합산 100점 미만</li>
-            <li><span class="badge bg-secondary" style="background-color: #C0C0C0 !important;">실버</span> 포인트+신뢰도 합산 100~199점</li>
-            <li><span class="badge bg-secondary" style="background-color: #FFD700 !important; color: #000 !important;">골드</span> 포인트+신뢰도 합산 200~299점</li>
-            <li><span class="badge bg-secondary" style="background-color: #50C8FF !important;">다이아몬드</span> 포인트+신뢰도 합산 300점 이상</li>
+            <li><span class="badge bg-secondary">도시인</span> 포인트+신뢰도 합산 0~99점 (신뢰도 0~59%)</li>
+            <li><span class="badge bg-secondary" style="background-color: #A0A0A0 !important;">야외인</span> 포인트+신뢰도 합산 100~199점 (신뢰도 60~69%)</li>
+            <li><span class="badge bg-secondary" style="background-color: #8B4513 !important; color: #fff !important;">방랑인</span> 포인트+신뢰도 합산 200~299점 (신뢰도 70~79%)</li>
+            <li><span class="badge bg-secondary" style="background-color: #2E8B57 !important;">개척인</span> 포인트+신뢰도 합산 300~499점 (신뢰도 80~89%)</li>
+            <li><span class="badge bg-secondary" style="background-color: #1E90FF !important;">자연인</span> 포인트+신뢰도 합산 500점 이상 (신뢰도 90% 이상)</li>
           </ul>
         </div>
       </div>
-    </div>
-
-    <!-- 페이징 처리 -->
-    <div class="pagination-container d-flex justify-content-center">
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-            <i class="fas fa-angle-double-left"></i>
-          </a>
-        </li>
-        <li class="page-item disabled">
-          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-            <i class="fas fa-angle-left"></i>
-          </a>
-        </li>
-        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            <i class="fas fa-angle-right"></i>
-          </a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">
-            <i class="fas fa-angle-double-right"></i>
-          </a>
-        </li>
-      </ul>
     </div>
 
   </div>
@@ -322,47 +234,16 @@
 
 <script>
   $(document).ready(function() {
-    // 탭 클릭 이벤트
-    $('.tab-link').click(function(e) {
-      e.preventDefault();
-      $('.tab-link').removeClass('active');
-      $(this).addClass('active');
-
-      // 여기에 탭 필터링 로직 추가
-      const tabType = $(this).text().trim();
-
-      if (tabType === '전체 내역') {
-        $('.point-earned-row, .point-used-row').show();
-      } else if (tabType === '획득 내역') {
-        $('.point-earned-row').show();
-        $('.point-used-row').hide();
-      } else if (tabType === '차감 내역') {
-        $('.point-earned-row').hide();
-        $('.point-used-row').show();
-      }
-    });
-
     // 날짜 필터 변경 이벤트
     $('.date-filter select').change(function() {
-      // 날짜 필터링 기능 구현 (실제 구현 시에는 여기에 필터링 로직 추가)
+      // 날짜 필터링 기능 구현 예정
       console.log('날짜 필터가 변경되었습니다: ' + $(this).val());
-    });
-
-    // 페이지네이션 클릭 이벤트
-    $('.page-link').click(function(e) {
-      if (!$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
-        e.preventDefault();
-        $('.page-item').removeClass('active');
-        $(this).parent().addClass('active');
-        // 페이지 이동 기능 구현 (실제 구현 시에는 여기에 페이지 이동 로직 추가)
-      }
     });
   });
 </script>
 
 <style>
   /* 포인트 내역 페이지 전용 CSS */
-
   /* 포인트 요약 카드 스타일 */
   .point-summary-card {
     background-color: #fff;
@@ -436,7 +317,7 @@
 
   .rating-progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #C0C0C0 0%, #FFD700 100%);
+    background: linear-gradient(90deg, #A0A0A0 0%, #8B4513 30%, #2E8B57 60%, #1E90FF 100%);
     border-radius: 4px;
   }
 
@@ -566,6 +447,33 @@
   .tab-link.active {
     background-color: #2C5F2D;
     color: white;
+  }
+  /* 데이터 없음 메시지 스타일 */
+  .no-data-row {
+    background-color: #f9f9f9;
+  }
+
+  .no-data-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #6c757d;
+  }
+
+  .no-data-message i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #adb5bd;
+  }
+
+  .no-data-message p {
+    margin-bottom: 0;
+  }
+
+  .no-data-message .small {
+    font-size: 0.875rem;
   }
 
   /* 반응형 조정 */
