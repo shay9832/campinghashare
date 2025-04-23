@@ -120,13 +120,6 @@
 </head>
 <body>
 
-<!-- 회원가입 성공 알림 -->
-<c:if test="${not empty registerSuccess && registerSuccess == 'true'}">
-    <script>
-        alert('회원가입이 완료되었습니다. 로그인해주세요.');
-    </script>
-</c:if>
-
 <!-- 비밀번호 재설정 성공 알림 -->
 <c:if test="${not empty resetSuccess && resetSuccess == true}">
     <script>

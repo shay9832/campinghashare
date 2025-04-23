@@ -515,11 +515,11 @@
             // 기본 클릭 이벤트 동작 중지 (페이지 이동 막기)
             e.preventDefault();
 
-            // data-id 속성에서 검수 ID 가져오기
+            // data-id 속성에서 거래 ID 가져오기
             const inspectionId = $(this).data('id');
 
             // 알림창 표시 후 페이지 이동
-            alert('검수 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
+            alert('거래 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
 
             // 원래 링크로 이동
             window.location.href = $(this).attr('href');

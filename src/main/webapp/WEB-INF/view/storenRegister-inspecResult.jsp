@@ -32,90 +32,121 @@
             font-weight: bold;
             margin: 20px 0 10px 0;
             background-color: #f5f5f5;
-            padding: 10px;
-            border-radius: 0;
+            padding: 8px;
+            border-radius: 4px;
         }
 
-        /* 검수 테이블 스타일 */
-        .inspection-table {
+        /* 테이블 스타일 */
+        table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
+            word-wrap: break-word;
             margin-top: 10px;
-            margin-bottom: 20px;
         }
 
-        .inspection-table th,
-        .inspection-table td {
+        th, td {
+            word-break: keep-all;
+            white-space: normal;
+            overflow-wrap: break-word;
             padding: 10px;
             text-align: center;
             border: 1px solid #ddd;
         }
 
-        .inspection-table th {
+        /* 테이블 컬럼 너비 */
+        th:nth-child(1), td:nth-child(1) {
+            width: 8%; /* 항목 */
+        }
+        th:nth-child(2), td:nth-child(2),
+        th:nth-child(3), td:nth-child(3),
+        th:nth-child(4), td:nth-child(4) {
+            width: 18%; /* 상, 중, 하 */
+        }
+        th:nth-child(5), td:nth-child(5) {
+            width: 28%; /* 코멘트 */
+        }
+        th:nth-child(6), td:nth-child(6),
+        th:nth-child(7), td:nth-child(7) {
+            width: 5%; /* 등급, 점수 열 */
+        }
+
+        .bg-primary {
             background-color: #607360;
             color: white;
-            font-weight: normal;
         }
 
-        .inspection-table th.category-header {
-            background-color: #757b75;
-        }
-
-        .inspection-table tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .inspection-table tbody tr:hover {
-            background-color: #f0f0f0;
-        }
-
-        .inspection-table tfoot td {
-            background-color: #607360;
+        .text-light {
             color: white;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .border-bottom {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .font-bold {
             font-weight: bold;
         }
 
-        .inspection-table .score-cell {
-            background-color: #d6c9a3;
+        .bg-secondary {
+            background-color: #f9f9f9;
         }
 
-        /* 장비 정보 테이블 */
-        .equip-info-table {
-            width: 100%;
-            margin-bottom: 20px;
+        /* 장비 등급 행 스타일 */
+        .equipment-grade-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+            margin-bottom: 12px;
         }
 
-        .equip-info-table th {
-            width: 20%;
-            text-align: left;
-            padding: 10px;
-            background-color: #f5f5f5;
+        .equipment-grade-label {
+            font-weight: bold;
+            min-width: 120px;
         }
 
-        .equip-info-table td {
-            width: 80%;
-            text-align: left;
-            padding: 10px;
+        /* 등급 원형 아이콘 공통 스타일 */
+        .grade-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
         }
+
+        /* 등급별 색상 */
+        .grade-A { background-color: #4CAF50; } /* 녹색 */
+        .grade-B { background-color: #8BC34A; } /* 연한 녹색 */
+        .grade-C { background-color: #FFC107; } /* 노란색 */
+        .grade-D { background-color: #FF9800; } /* 주황색 */
+        .grade-E { background-color: #FF5722; } /* 주황-빨강 */
+        .grade-F { background-color: #F44336; } /* 빨강 */
 
         /* 등급 기준 */
-        .grade-info {
+        .notice-area {
             margin-top: 20px;
             padding: 15px;
             background-color: #f9f9f9;
             border-radius: 4px;
         }
 
-        .grade-info ul {
+        .grade-criteria {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
-            list-style-type: none;
-            padding-left: 0;
+            gap: 10px;
             margin-top: 10px;
         }
 
-        .grade-info li {
+        .grade-item {
             display: flex;
             align-items: center;
             gap: 5px;
@@ -145,6 +176,22 @@
             background-color: #dc3545;
             color: white;
             border: none;
+        }
+
+        /* 모바일 화면일 때는 스크롤로 대체 */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            table {
+                display: block;
+            }
+
+            .grade-criteria {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -203,49 +250,58 @@
                         </div>
                     </div>
 
+                    <!-- 장비 등급 표시 -->
+                    <div class="equipment-grade-row">
+                        <div class="equipment-grade-label">장비 등급</div>
+                        <div>
+                            <!-- 장비 등급을 원형 아이콘으로 표시 -->
+                            <div class="grade-icon grade-${firstInspect.gradeName}">${firstInspect.gradeName}</div>
+                        </div>
+                    </div>
+
                     <!-- 검수 결과 소제목 -->
                     <div class="inspection-subtitle">&lt;1차 검수 결과&gt;</div>
 
                     <!-- 검수 항목 테이블 -->
-                    <table class="inspection-table">
-                        <thead>
-                        <tr>
-                            <th rowspan="2">항목</th>
-                            <th colspan="3" class="category-header">기준</th>
-                            <th colspan="3" class="category-header">결과</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">상</th>
-                            <th class="category-header">중</th>
-                            <th class="category-header">하</th>
-                            <th class="category-header">코멘트</th>
-                            <th class="category-header">등급</th>
-                            <th class="category-header">점수</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:set var="firstTotal" value="0"/>
-                        <c:forEach var="row" items="${firstInspect.itemList}" varStatus="status">
-                            <c:set var="score" value="${20 - row.deduction}"/>
-                            <c:set var="firstTotal" value="${firstTotal + score}"/>
-                            <tr>
-                                <td>${row.itemName}</td>
-                                <td>${row.inspecItemDescHigh}</td>
-                                <td>${row.inspecItemDescMid}</td>
-                                <td>${row.inspecItemDescLow}</td>
-                                <td>${row.comment}</td>
-                                <td>${row.gradeName}</td>
-                                <td class="score-cell">${score}</td>
+                    <div class="table-responsive">
+                        <table class="w-100 border-collapse">
+                            <thead>
+                            <tr class="bg-primary text-light">
+                                <th rowspan="2" class="text-center">항목</th>
+                                <th colspan="3" class="text-center">기준</th>
+                                <th colspan="3" class="text-center">결과</th>
                             </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="6">합계</td>
-                            <td class="score-cell">${firstTotal}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            <tr class="bg-primary text-light">
+                                <th class="text-center">상</th>
+                                <th class="text-center">중</th>
+                                <th class="text-center">하</th>
+                                <th class="text-center">코멘트</th>
+                                <th class="text-center">등급</th>
+                                <th class="text-center">점수</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:set var="firstTotal" value="0"/>
+                            <c:forEach var="row" items="${firstInspect.itemList}" varStatus="status">
+                                <c:set var="score" value="${20 - row.deduction}"/>
+                                <c:set var="firstTotal" value="${firstTotal + score}"/>
+                                <tr class="${status.index % 2 == 1 ? 'bg-secondary' : ''} border-bottom">
+                                    <td class="font-bold">${row.itemName}</td>
+                                    <td>${row.inspecItemDescHigh}</td>
+                                    <td>${row.inspecItemDescMid}</td>
+                                    <td>${row.inspecItemDescLow}</td>
+                                    <td>${row.comment}</td>
+                                    <td class="text-center">${row.gradeName}</td>
+                                    <td class="text-center">${score}</td>
+                                </tr>
+                            </c:forEach>
+                            <tr class="bg-primary text-light font-bold">
+                                <td colspan="6" class="text-center">합계</td>
+                                <td class="text-center">${firstTotal}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </c:if>
 
                 <!-- 2차 검수 -->
@@ -260,64 +316,91 @@
                         </div>
                     </div>
 
+                    <!-- 장비 등급 표시 -->
+                    <div class="equipment-grade-row">
+                        <div class="equipment-grade-label">장비 등급</div>
+                        <div>
+                            <!-- 장비 등급을 원형 아이콘으로 표시 -->
+                            <div class="grade-icon grade-${secondInspect.gradeName}">${secondInspect.gradeName}</div>
+                        </div>
+                    </div>
+
                     <!-- 검수 결과 소제목 -->
                     <div class="inspection-subtitle">&lt;2차 검수 결과&gt;</div>
 
                     <!-- 검수 항목 테이블 -->
-                    <table class="inspection-table">
-                        <thead>
-                        <tr>
-                            <th rowspan="2">항목</th>
-                            <th colspan="3" class="category-header">기준</th>
-                            <th colspan="3" class="category-header">결과</th>
-                        </tr>
-                        <tr>
-                            <th class="category-header">상</th>
-                            <th class="category-header">중</th>
-                            <th class="category-header">하</th>
-                            <th class="category-header">코멘트</th>
-                            <th class="category-header">등급</th>
-                            <th class="category-header">점수</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:set var="secondTotal" value="0"/>
-                        <c:forEach var="row" items="${secondInspect.itemList}" varStatus="status">
-                            <c:set var="score" value="${20 - row.deduction}"/>
-                            <c:set var="secondTotal" value="${secondTotal + score}"/>
-                            <tr>
-                                <td>${row.itemName}</td>
-                                <td>${row.inspecItemDescHigh}</td>
-                                <td>${row.inspecItemDescMid}</td>
-                                <td>${row.inspecItemDescLow}</td>
-                                <td>${row.comment}</td>
-                                <td>${row.gradeName}</td>
-                                <td class="score-cell">${score}</td>
+                    <div class="table-responsive">
+                        <table class="w-100 border-collapse">
+                            <thead>
+                            <tr class="bg-primary text-light">
+                                <th rowspan="2" class="text-center">항목</th>
+                                <th colspan="3" class="text-center">기준</th>
+                                <th colspan="3" class="text-center">결과</th>
                             </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="6">합계</td>
-                            <td class="score-cell">${secondTotal}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                            <tr class="bg-primary text-light">
+                                <th class="text-center">상</th>
+                                <th class="text-center">중</th>
+                                <th class="text-center">하</th>
+                                <th class="text-center">코멘트</th>
+                                <th class="text-center">등급</th>
+                                <th class="text-center">점수</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:set var="secondTotal" value="0"/>
+                            <c:forEach var="row" items="${secondInspect.itemList}" varStatus="status">
+                                <c:set var="score" value="${20 - row.deduction}"/>
+                                <c:set var="secondTotal" value="${secondTotal + score}"/>
+                                <tr class="${status.index % 2 == 1 ? 'bg-secondary' : ''} border-bottom">
+                                    <td class="font-bold">${row.itemName}</td>
+                                    <td>${row.inspecItemDescHigh}</td>
+                                    <td>${row.inspecItemDescMid}</td>
+                                    <td>${row.inspecItemDescLow}</td>
+                                    <td>${row.comment}</td>
+                                    <td class="text-center">${row.gradeName}</td>
+                                    <td class="text-center">${score}</td>
+                                </tr>
+                            </c:forEach>
+                            <tr class="bg-primary text-light font-bold">
+                                <td colspan="6" class="text-center">합계</td>
+                                <td class="text-center">${secondTotal}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </c:if>
             </div>
         </div>
 
-        <!-- 등급 기준 안내 -->
-        <div class="grade-info">
-            <p><strong>※ 등급 기준</strong></p>
-            <ul>
-                <li>A: 90~100점</li>
-                <li>B: 80~89점</li>
-                <li>C: 70~79점</li>
-                <li>D: 60~69점</li>
-                <li>E: 50~59점</li>
-                <li>F: 49점 이하 (등록 불가)</li>
-            </ul>
+        <!-- 등급 판정 기준 -->
+        <div class="notice-area mt-4">
+            <strong>[등급 판정 기준]</strong>
+            <div class="grade-criteria">
+                <div class="grade-item">
+                    <div class="grade-icon grade-A">A</div>
+                    <span>100~90점</span>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-icon grade-B">B</div>
+                    <span>89~80점</span>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-icon grade-C">C</div>
+                    <span>79~70점</span>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-icon grade-D">D</div>
+                    <span>69~60점</span>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-icon grade-E">E</div>
+                    <span>59~50점</span>
+                </div>
+                <div class="grade-item">
+                    <div class="grade-icon grade-F">F</div>
+                    <span>49점 이하</span>
+                </div>
+            </div>
         </div>
 
         <!-- 버튼 영역 -->

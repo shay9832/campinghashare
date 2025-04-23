@@ -139,9 +139,11 @@
                 </div>
             </div>
         </div>
+
         <c:if test="${isUser}">
             <div class="user-menu">
-                <a href="#"><i class="fa-solid fa-bell" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>알림</span></a>
+                <a href="javascript:void(0)" id="notiBell"><i class="fa-solid fa-bell" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>알림</span></a>
+                <div id="notiPopupArea" class="noti-popup" style="display: none;"></div>
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>마이페이지</span></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>캠핑일지</span></a>
             </div>
@@ -268,7 +270,8 @@
                 <button class="add-equip"
                         onclick="location.href='${pageContext.request.contextPath}/equipregister-majorcategory.action'">내 장비 등록</button>
                 <a href="${pageContext.request.contextPath}/logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
-                <a href="#"><i class="fa-solid fa-bell"></i></a>
+                <a href="javascript:void(0)" id="notiBell"><i class="fa-solid fa-bell"></i> </a>
+                <div id="notiPopupArea" class="noti-popup" style="display: none;"></div>
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i></a>
             </c:when>
@@ -283,7 +286,37 @@
 </div>
 
 <script>
+
     document.addEventListener("DOMContentLoaded", function() {
+
+        let notiVisible = false;
+
+        $('#notiBell').click(function (e) {
+            e.preventDefault();
+
+            if (notiVisible) {
+                $('#notiPopupArea').hide();
+                notiVisible = false;
+            } else {
+                $('#notiPopupArea').load('${pageContext.request.contextPath}/noti.action', function () {
+                    $(this).show();
+                    notiVisible = true;
+                    $.ajax({
+                        url: '${pageContext.request.contextPath}/noti-read.action',
+                        method: 'POST'
+                    });
+                });
+            }
+        });
+
+        // 클릭 외부 영역 닫기
+        $(document).on("click", function (e) {
+            if (!$(e.target).closest('#notiBell, #notiPopupArea').length) {
+                $('#notiPopupArea').hide();
+                notiVisible = false;
+            }
+        });
+
         const path = window.location.pathname;
 
         const miniHeader = document.getElementById("miniHeader");

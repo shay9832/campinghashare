@@ -93,7 +93,7 @@
             </form>
 
             <div class="login-options">
-                <a href="${pageContext.request.contextPath}/registeradmin-id.action" class="text-secondary">관리자 등록</a>
+                <a href="${pageContext.request.contextPath}/admin-registerid.action" class="text-secondary">관리자 등록</a>
             </div>
         </div>
     </main>
