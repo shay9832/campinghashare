@@ -260,11 +260,16 @@
                         <td class="p-3 text-center">${pagenation.totalPost - ((pagenation.pageNum - 1) * pagenation.pageSize) - status.index}</td>
                         <td class="p-3 text-center">${post.boardName}</td>
                         <td class="p-3 text-center">
-                            <span class="board-category-tag ${post.postLabelName == '묻고답하기' ? 'question' :
-                                                              post.postLabelName == '아무말대잔치' ? 'chat' :
-                                                              post.postLabelName == '고독한캠핑방' ? 'solocamping' : 'freeboard'}">
-                                    ${post.postLabelName}
-                            </span>
+                            <c:choose>
+                                <c:when test="${post.boardName == '자유 게시판' || post.boardName == '자유게시판'}">
+                                    <span class="board-category-tag ${post.postLabelName == '묻고답하기' ? 'question' :
+                                                              post.postLabelName == '아무말대잔치' ? 'chat' : 'freeboard'}">
+                                            ${post.postLabelName}
+                                    </span>
+                                </c:when>
+                                <c:otherwise>
+                                </c:otherwise>
+                            </c:choose>
                         </td>
                         <td class="p-3 title-cell">
                             <a href="${post.boardName == '자유게시판' ? 'boardfree-post.action' :
