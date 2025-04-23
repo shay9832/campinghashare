@@ -4,12 +4,14 @@
 <mapper namespace="com.team.mvc.Interface.IInspecResultDAO">
 
     <!-- 공통: 검수 항목 매핑 -->
-    <resultMap id="inspecResultMap" type="com.team.mvc.DTO.InspecResultDTO">
-        <result property="inspecResultId" column="INSPEC_RESULT_ID"/>
-        <result property="inspecResultActionId" column="INSPEC_RESULT_ACTION_ID"/>
-        <result property="equipGradeName" column="EQUIP_GRADE_NAME"/>
-        <result property="inspecResultActionTypeId" column="INSPEC_RESULT_ACTION_TYPE_ID"/>
-        <result property="completedDate" column="COMPLETED_DATE"/>
+    <resultMap id="inspecItemDetailMap" type="com.team.mvc.DTO.InspecResultDTO$InspecItemDetail">
+        <result property="itemName" column="itemName"/>
+        <result property="gradeName" column="gradeName"/>
+        <result property="deduction" column="deduction"/>
+        <result property="comment" column="comment"/>
+        <result property="inspecItemDescHigh" column="inspecItemDescHigh"/>
+        <result property="inspecItemDescMid" column="inspecItemDescMid"/>
+        <result property="inspecItemDescLow" column="inspecItemDescLow"/>
     </resultMap>
 
     <!-- 1차 검수 항목 -->

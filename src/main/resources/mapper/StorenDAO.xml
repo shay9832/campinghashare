@@ -5,6 +5,9 @@
 
     <!-- resultMap: StorenDTO + 내부 EquipmentDTO 매핑 -->
     <resultMap id="storenRentalInfoMap" type="com.team.mvc.DTO.StorenDTO">
+        <result property="storen_id" column="STOREN_ID"/>
+        <result property="user_code" column="USER_CODE"/>
+        <result property="equip_code" column="EQUIP_CODE"/>
         <result property="equip_size_name" column="EQUIP_SIZE_NAME"/>
         <result property="required_space" column="REQUIRED_SPACE"/>
         <result property="daily_storage_fee" column="DAILY_STORAGE_FEE"/>
@@ -12,8 +15,6 @@
         <result property="daily_rent_price" column="DAILY_RENT_PRICE"/>
         <result property="storen_title" column="STOREN_TITLE"/>
         <result property="storen_content" column="STOREN_CONTENT"/>
-        <result property="user_code" column="USER_CODE"/>
-        <result property="storen_id" column="STOREN_ID"/>
 
         <association property="equipmentDTO" javaType="com.team.mvc.DTO.EquipmentDTO">
             <id property="equip_id" column="EQUIP_ID"/>
@@ -26,7 +27,9 @@
         </association>
     </resultMap>
 
+
     <resultMap id="VWStorenResultMap" type="com.team.mvc.DTO.StorenDTO">
+
         <!-- 기본 정보 -->
         <id property="storen_id" column="STOREN_ID" />
         <result property="equip_code" column="EQUIP_CODE" />
@@ -52,15 +55,16 @@
         <!-- 매칭 관련 -->
         <result property="matching_request_count" column="MATCHING_REQUEST_COUNT" />
         <result property="matching_status" column="MATCHING_STATUS" />
-        <result property="matching_status_detail" column="DETAILED_MATCHING_STATUS"/>
+        <result property="matching_status_detail" column="DETAILED_MATCHING_STATUS"/>       <!--추가 -->
 
         <!-- 장비 등급/상태 -->
         <result property="equip_grade" column="EQUIP_GRADE" />
         <result property="status" column="STATUS" />
+
     </resultMap>
 
     <!-- 전체 스토렌 장비 리스트 조회   -->
-    <select id="listStoren" resultMap="VWStorenResultMap">
+    <select id="listStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -75,7 +79,7 @@
     </select>
 
     <!-- 회원코드로 스토렌 장비 리스트 조회 (해당 회원이 가진 스토렌 장비 리스트) -->
-    <select id="listByUserCode" parameterType="int" resultMap="VWStorenResultMap">
+    <select id="listByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -93,7 +97,7 @@
     </select>
 
     <!-- 유저 코드와 장비 코드로 스토렌 장비 정보 조회 -->
-    <select id="listByUserCodeEquipCode" parameterType="map" resultMap="VWStorenResultMap">
+    <select id="listByUserCodeEquipCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -111,7 +115,7 @@
     </select>
 
     <!-- 해당 장비코드의 가장 최근 스토렌 정보 가져오기-->
-    <select id="getStorenByEquipCode" parameterType="map" resultMap="VWStorenResultMap">
+    <select id="getStorenByEquipCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT *
         FROM (
                  SELECT STOREN_ID, EQUIP_CODE, USER_CODE
@@ -135,29 +139,29 @@
     <!-- storen_id로 렌탈 정보 조회 -->
     <select id="getRentalInfoByStorenId" parameterType="int" resultMap="storenRentalInfoMap">
         SELECT
-            ER.EQUIP_CODE,
-            ER.EQUIP_ID,
-            EN.EQUIP_NAME,
-            B.BRAND_NAME,
-            ER.ORIGINAL_PRICE,
-            CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
-            CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
-            ES.EQUIP_SIZE_NAME,
-            ES.REQUIRED_SPACE,
-            ES.DAILY_STORAGE_FEE,
-            S.STORE_MONTH,
-            S.DAILY_RENT_PRICE,
-            S.STOREN_TITLE,
-            S.STOREN_CONTENT,
-            S.STOREN_ID,
-            S.USER_CODE
+        ER.EQUIP_CODE,
+        ER.EQUIP_ID,
+        EN.EQUIP_NAME,
+        B.BRAND_NAME,
+        ER.ORIGINAL_PRICE,
+        CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
+        CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
+        ES.EQUIP_SIZE_NAME,
+        ES.REQUIRED_SPACE,
+        ES.DAILY_STORAGE_FEE,
+        S.STORE_MONTH,
+        S.DAILY_RENT_PRICE,
+        S.STOREN_TITLE,
+        S.STOREN_CONTENT,
+        S.STOREN_ID,
+        ER.USER_CODE
         FROM EQUIPMENT_REGISTRATION ER
-                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
-                 JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
-                 JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
-                 JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
-                 JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
-                 JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
+        JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
+        JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
+        JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
+        JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
+        JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
         WHERE S.STOREN_ID = #{storen_id}
     </select>
 
@@ -171,38 +175,39 @@
     </update>
 
     <!-- 평균 신품 가격 조회 -->
-    <select id="getAvgNewPrice" parameterType="int" resultType="int">
+    <select id="getAvgNewPrice" resultType="int">
         SELECT NVL(ROUND(AVG(ORIGINAL_PRICE)), 0)
         FROM EQUIPMENT_REGISTRATION
         WHERE EQUIP_CODE = #{equip_code}
     </select>
 
     <!-- 평균 렌탈 가격 조회 -->
-    <select id="getAvgRentalPrice" parameterType="int" resultType="int">
+    <select id="getAvgRentalPrice" resultType="int">
         SELECT NVL(ROUND(AVG(DAILY_RENT_PRICE)), 0)
         FROM RENTAL
         WHERE EQUIP_CODE = #{equip_code}
     </select>
 
     <!-- 장비명으로 평균 신품 가격 조회 (추가) -->
-    <select id="getAvgNewPriceByEquipName" parameterType="string" resultType="int">
+    <select id="getAvgNewPriceByEquipName" resultType="int">
         SELECT NVL(ROUND(AVG(ER.ORIGINAL_PRICE)), 0)
         FROM EQUIPMENT_REGISTRATION ER
                  JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
         WHERE EN.EQUIP_NAME = #{equipName}
     </select>
 
-    <!-- 장비명으로 평균 렌탈 가격 조회 (추가) -->
-    <select id="getAvgRentalPriceByEquipName" parameterType="string" resultType="int">
-        SELECT NVL(ROUND(AVG(R.DAILY_RENT_PRICE)), 0)
-        FROM RENTAL R
-                 JOIN EQUIPMENT_REGISTRATION ER ON R.EQUIP_CODE = ER.EQUIP_CODE
+    <!-- 장비명으로 평균 렌탈 가격 조회 (수정) -->
+    <select id="getAvgRentalPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(S.DAILY_RENT_PRICE)), 0)
+        FROM STOREN S
+                 JOIN EQUIPMENT_REGISTRATION ER ON S.EQUIP_CODE = ER.EQUIP_CODE
                  JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
         WHERE EN.EQUIP_NAME = #{equipName}
+          AND S.DAILY_RENT_PRICE IS NOT NULL
     </select>
 
     <!-- 매칭 신청 수가 1 이상인 스토렌 리스트 가져오기 -->
-    <select id="listMatchingStorenByUserCode" parameterType="int" resultMap="VWStorenResultMap">
+    <select id="listMatchingStorenByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -220,7 +225,7 @@
     </select>
 
     <!-- 내가 매칭 신청한 스토렌 리스트 가져오기 -->
-    <select id="listMyStorenApplicationsByUserCode" parameterType="int" resultMap="VWStorenResultMap">
+    <select id="listMyStorenApplicationsByUserCode" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT STOREN_ID, EQUIP_CODE, USER_CODE
              , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
              , DAILY_STORAGE_FEE, STORE_MONTH
@@ -241,7 +246,7 @@
     </select>
 
     <!-- 스토렌id로 특정 스토렌 정보 가져오기(마이페이지 내가 대여한 장비에 필요한 속성 추가 -->
-    <select id="getStorenByStorenId" parameterType="int" resultMap="VWStorenResultMap">
+    <select id="getStorenByStorenId" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT S.STOREN_ID, S.EQUIP_CODE, S.USER_CODE
              , S.SIZE_ID, S.EQUIP_SIZE_NAME, S.REQUIRED_SPACE
              , S.DAILY_STORAGE_FEE, S.STORE_MONTH
@@ -260,7 +265,7 @@
     </select>
 
     <!-- 스토렌 장비 검색(키워드) -->
-    <select id="searchStorenKeyword" parameterType="string" resultMap="VWStorenResultMap">
+    <select id="searchStorenKeyword" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
              , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
              , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -278,7 +283,7 @@
     </select>
 
     <!-- 스토렌 장비 검색(키워드, 가격 범위, 날짜 범위) -->
-    <select id="searchStoren" parameterType="map" resultMap="VWStorenResultMap">
+    <select id="searchStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
         , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
         , s.DAILY_STORAGE_FEE, s.STORE_MONTH
@@ -312,8 +317,9 @@
         ORDER BY s.CREATED_DATE DESC
     </select>
 
+
     <!-- 해당 유저가 가진 스토렌 장비코드만 조회 (중복제거) -->
-    <select id="listStorenEquipCodes" parameterType="int" resultType="java.lang.Integer">
+    <select id="listStorenEquipCodes" resultType="java.lang.Integer">
         SELECT EQUIP_CODE
         FROM VW_STOREN
         WHERE USER_CODE = #{userCode}
@@ -321,7 +327,7 @@
     </select>
 
     <!-- 해당 유저가 가진 스토렌 장비의 각 상태의 개수 조회 -->
-    <select id="getStorenStatus" parameterType="int" resultType="map">
+    <select id="getStorenStatus" resultType="map">
         SELECT
             NVL(SUM(DECODE(STATUS, '보관비 결제 대기', 1, 0)), 0) AS "보관비 결제 대기",
             NVL(SUM(DECODE(STATUS, '배송 대기', 1, 0)), 0) AS "배송 대기",
@@ -333,8 +339,8 @@
             NVL(SUM(DECODE(STATUS, '결제 대기', 1, 0)), 0) AS "결제 대기",
             NVL(SUM(DECODE(STATUS, '렌탈 중', 1, 0)), 0) AS "렌탈 중",
             NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "반납 중",
-            NVL(SUM(DECODE(STATUS, '거래 완료', 1, 0)), 0) AS "거래 완료",
-            NVL(SUM(DECODE(STATUS, '최종 반환', 1, 0)), 0) AS "최종 반환",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "거래 완료",
+            NVL(SUM(DECODE(STATUS, '반납 중', 1, 0)), 0) AS "최종 반환",
             NVL(SUM(DECODE(STATUS, '상태 불명', 1, 0)), 0) AS "상태 불명"
         FROM
             VW_STOREN
@@ -343,7 +349,7 @@
     </select>
 
     <!-- 해당 유저가 대여한 스토렌 장비의 각 상태의 개수 조회 -->
-    <select id="getStorenMatchingStatus" parameterType="int" resultType="map">
+    <select id="getStorenMatchingStatus" resultType="map">
         SELECT
             NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '매칭중', 1, 0)), 0) AS "매칭중",
             NVL(SUM(DECODE(DETAILED_MATCHING_STATUS, '매칭승인대기', 1, 0)), 0) AS "매칭승인대기",
@@ -364,7 +370,7 @@
     </select>
 
     <!-- 해당 유저의 상태별 필터링한 스토렌 목록 조회 -->
-    <select id="listByUserCodeStatus" parameterType="map" resultMap="VWStorenResultMap">
+    <select id="listByUserCodeStatus" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT *
         FROM VW_STOREN
         WHERE USER_CODE = #{userCode}
@@ -373,7 +379,7 @@
     </select>
 
     <!-- 해당 유저의 다중 상태별 필터링한 스토렌 목록 조회 -->
-    <select id="listByUserCodeMultiStatus" parameterType="map" resultMap="VWStorenResultMap">
+    <select id="listByUserCodeMultiStatus" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT *
         FROM VW_STOREN
         WHERE USER_CODE = #{userCode}
@@ -384,8 +390,9 @@
         ORDER BY CREATED_DATE DESC
     </select>
 
+
     <!-- 해당 유저의 스토렌 위시리스트(찜 목록) 조회 -->
-    <select id="listMyWishByUserCode" parameterType="int" resultMap="VWStorenResultMap">
+    <select id="listMyWishByUserCode" resultMap="VWStorenResultMap">
         SELECT VWS.STOREN_ID, VWS.EQUIP_CODE, VWS.STOREN_TITLE,
                VWS.DAILY_RENT_PRICE, VWS.RENTAL_START_DATE, VWS.RENTAL_END_DATE,
                VWS.MATCHING_REQUEST_COUNT, VWS.MATCHING_STATUS
@@ -397,25 +404,9 @@
     </select>
 
     <!-- 해당 유저의 찜 삭제(스토렌id를 통해) -->
-    <delete id="deleteMyWishByUserCodeStorenId" parameterType="map">
+    <delete id="deleteMyWishByUserCodeStorenId">
         DELETE
         FROM WISHLIST
         WHERE USER_CODE=#{userCode} AND STOREN_ID=#{storenId}
     </delete>
-
-
-    <!-- 반환 정보 저장 -->
-    <insert id="insertStorenReturn" parameterType="com.team.mvc.DTO.StorenReturnDTO">
-        INSERT INTO STOREN_RETURN
-        (STOREN_RETURN_ID, STOREN_ID, USER_CODE, RECIPIENT, TEL, ZIP_CODE, ADDRESS1, ADDRESS2, RETURN_REQUEST_DATE)
-        VALUES
-            (STOREN_RETURN_SEQ.NEXTVAL, #{storenId}, #{userCode}, #{recipient}, #{tel}, #{zipCode}, #{address1}, #{address2}, #{returnRequestDate})
-    </insert>
-
-    <!-- 스토렌 상태 업데이트 -->
-    <update id="updateStorenStatus" parameterType="map">
-        UPDATE STOREN
-        SET STATUS = #{status}
-        WHERE STOREN_ID = #{storenId}
-    </update>
 </mapper>

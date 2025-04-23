@@ -16,7 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Controller
 public class InspecResultController {
@@ -104,51 +107,6 @@ public class InspecResultController {
             e.printStackTrace();
             model.addAttribute("error", "반환 정보를 불러오는 중 오류 발생");
             return "error";
-        }
-    }
-
-    // 반환 주소 저장 처리
-    @RequestMapping(value = "/saveReturnAddress.action", method = RequestMethod.POST)
-    public String saveReturnAddress(@ModelAttribute("userCode") Integer userCode,
-                                    @RequestParam("storen_id") int storenId,
-                                    @RequestParam("recipient") String recipient,
-                                    @RequestParam("tel") String tel,
-                                    @RequestParam("postcode") String zipCode,
-                                    @RequestParam("address") String address1,
-                                    @RequestParam("detailAddress") String address2,
-                                    RedirectAttributes redirect) {
-        try {
-            // DB에 반환 정보 저장 로직
-            IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
-
-            // 반환 정보 객체 생성
-            StorenReturnDTO returnInfo = new StorenReturnDTO();
-            returnInfo.setStorenId(storenId);
-            returnInfo.setRecipient(recipient);
-            returnInfo.setTel(tel);
-            returnInfo.setZipCode(zipCode);
-            returnInfo.setAddress1(address1);
-            returnInfo.setAddress2(address2);
-            returnInfo.setReturnRequestDate(new Date()); // 현재 시간으로 요청일 설정
-            returnInfo.setUserCode(userCode);
-
-            // 반환 정보 저장
-            int result = storenDAO.insertStorenReturn(returnInfo);
-
-            // 스토렌 상태 업데이트 (강제반환으로 상태 변경)
-            storenDAO.updateStorenStatus(storenId, "FORCED_RETURN");
-
-            if (result > 0) {
-                redirect.addFlashAttribute("message", "반환 주소가 성공적으로 등록되었습니다.");
-                return "redirect:/mypage-inspecList.action";
-            } else {
-                redirect.addFlashAttribute("error", "반환 주소 등록 중 오류가 발생했습니다.");
-                return "redirect:/storenRegister-inspecResult-return.action?storen_id=" + storenId;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirect.addFlashAttribute("error", "반환 주소 등록 중 오류가 발생했습니다.");
-            return "redirect:/storenRegister-inspecResult-return.action?storen_id=" + storenId;
         }
     }
 }

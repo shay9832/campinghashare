@@ -28,7 +28,7 @@
             </div>
         </c:if>
 
-        <form action="${pageContext.request.contextPath}/saveReturnAddress.action" method="post">
+        <form id="returnAddressForm" onsubmit="return false;">
             <input type="hidden" name="storen_id" value="${storen_id}">
 
             <!-- 배송지 정보 섹션 -->
@@ -40,13 +40,13 @@
                     <div class="form-row">
                         <label class="form-label">받는 사람</label>
                         <div class="form-input">
-                            <input type="text" class="form-control" name="recipient" value="${recipient}" required>
+                            <input type="text" class="form-control" name="recipient" value="${recipient}" readonly required>
                         </div>
                     </div>
                     <div class="form-row">
                         <label class="form-label">휴대 전화</label>
                         <div class="form-input">
-                            <input type="text" class="form-control" name="tel" value="${tel}" required>
+                            <input type="text" class="form-control" name="tel" value="${tel}" readonly required>
                         </div>
                     </div>
 
@@ -75,7 +75,7 @@
             <!-- 이전 / 다음 페이지 이동 버튼 -->
             <div class="button-container">
                 <button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/inspec-result.action?storen_id=${storen_id}'">이전</button>
-                <button type="submit" class="btn btn-primary">저장</button>
+                <button type="button" class="btn btn-primary" onclick="handleSubmit()">저장</button>
             </div>
         </form>
     </div>
@@ -166,6 +166,24 @@
 
         // iframe을 넣은 element를 보이게 한다. (검색창 활성화)
         element_wrap.style.display = 'block';
+    }
+</script>
+
+<script>
+    // 저장 버튼 클릭 처리 함수
+    function handleSubmit() {
+        // 폼 유효성 검사
+        const form = document.getElementById('returnAddressForm');
+        if (form.checkValidity() === false) {
+            form.reportValidity();
+            return;
+        }
+
+        // 알림창 표시
+        alert('반환 주소 입력이 완료되었습니다.');
+
+        // 마이페이지로 리다이렉트
+        window.location.href = '${pageContext.request.contextPath}/mypage-inspecList.action';
     }
 </script>
 

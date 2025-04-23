@@ -355,6 +355,8 @@ public class StorenDTO {
         this.sortType = sortType;
     }
 
+
+
     // 반환 관련 필드 getter/setter
     public String getRecipient() { return recipient; }
     public void setRecipient(String recipient) { this.recipient = recipient; }
