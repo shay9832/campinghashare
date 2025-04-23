@@ -22,9 +22,22 @@
                     <when test="status == 'coming'">
                         AND EVENT_START_DATE > SYSDATE
                     </when>
-                    <when test="status == 'ended">
+                    <when test="status == 'ended'">
                         AND EVENT_END_DATE &lt; SYSDATE
                     </when>
+                </choose>
+            </if>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchType == 'title'">
+                        AND EVENT_TITLE LIKE '%' || #{searchKeyword} || '%'
+                    </when>
+                    <when test="searchType == 'content'">
+                        AND EVENT_CONTENT LIKE '%' || #{searchKeyword} || '%'
+                    </when>
+                    <otherwise>
+                        AND (EVENT_TITLE LIKE '%' || #{searchKeyword} || '%' OR EVENT_CONTENT LIKE '%' || #{searchKeyword} || '%')
+                    </otherwise>
                 </choose>
             </if>
         </where>
@@ -44,21 +57,21 @@
                     <when test="status == 'coming'">
                         AND EVENT_START_DATE > SYSDATE
                     </when>
-                    <when test="status == 'ended">
+                    <when test="status == 'ended'">
                         AND EVENT_END_DATE &lt; SYSDATE
                     </when>
                 </choose>
             </if>
-            <if test="searchKeword != null and searchKeword != ''">
+            <if test="searchKeyword != null and searchKeyword != ''">
                 <choose>
                     <when test="searchType == 'title'">
-                        AND EVENT_TITLE LIKE '%' || #{searchKeword} || '%'
+                        AND EVENT_TITLE LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <when test="searchType == 'content'">
-                        AND EVENT_CONTENT LIKE '%' || #{searchKeword} || '%'
+                        AND EVENT_CONTENT LIKE '%' || #{searchKeyword} || '%'
                     </when>
                     <otherwise>
-                        AND (EVENT_TITLE LIKE '%' || #{searchKeword} || '%' OR EVENT_CONTENT LIKE '%' || #{searchKeword} || '%')
+                        AND (EVENT_TITLE LIKE '%' || #{searchKeyword} || '%' OR EVENT_CONTENT LIKE '%' || #{searchKeyword} || '%')
                     </otherwise>
                 </choose>
             </if>
