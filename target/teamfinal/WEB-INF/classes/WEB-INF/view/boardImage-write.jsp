@@ -218,23 +218,6 @@
                         <input type="hidden" name="boardId" value="10"> <!-- 10: 고독한캠핑방 -->
 
                         <div class="form-group mb-3">
-                            <label class="form-label">말머리</label>
-                            <select class="form-select" id="postLabelId" name="postLabelId">
-                                <c:if test="${not empty postLabels}">
-                                    <c:forEach var="label" items="${postLabels}">
-                                        <option value="${label.postLabelId}" ${isUpdate && post.postLabelId == label.postLabelId ? 'selected' : ''}>${label.postLabelName}</option>
-                                    </c:forEach>
-                                </c:if>
-                                <c:if test="${empty postLabels}">
-                                    <option value="5">캠핑 후기</option>
-                                    <option value="6">장비 후기</option>
-                                    <option value="7">캠핑 음식</option>
-                                    <option value="8">기타</option>
-                                </c:if>
-                            </select>
-                        </div>
-
-                        <div class="form-group mb-3">
                             <label class="form-label">제목</label>
                             <input type="text" class="form-control" name="postTitle" id="title"
                                    value="${isUpdate ? post.postTitle : ''}" placeholder="제목을 작성하세요." required/>
@@ -334,68 +317,100 @@
             confirmBtn: confirmBtn
         });
 
-        // 이미지 업로드 처리
-        fileInput.addEventListener('change', function () {
-            const files = this.files;
-            if (this.files.length > 0) {
-                fileCount.textContent = '선택된 파일: ' + this.files.length + '개';
+        // 선택된 파일 목록을 추적하는 배열
+        let selectedFiles = [];
+
+        // 현재 파일 카운트 업데이트 함수
+        function updateFileCount() {
+            // 플러스 버튼은 .image-preview 클래스가 아닌 .image-upload-btn 클래스를 가지므로
+            // 실제 이미지 미리보기 요소만 계산합니다
+            const previewCount = document.querySelectorAll('.image-preview').length;
+
+            if (previewCount > 0) {
+                fileCount.textContent = '선택된 파일: ' + previewCount + '개';
             } else {
                 fileCount.textContent = '선택된 파일 없음';
             }
+        }
 
-            // 이미지 갯수 체크 (기존 이미지 + 새 이미지 <= 10)
-            const existingImages = document.querySelectorAll('.image-preview').length;
-            if (existingImages + files.length > 10) {
-                alert('이미지는 최대 10개까지만 업로드 가능합니다.');
-                this.value = '';
-                fileCount.textContent = '선택된 파일 없음';
-                return;
-            }
+        // 초기 파일 카운트 업데이트
+        updateFileCount();
 
-            // 파일 유효성 검사
-            for (let i = 0; i < files.length; i++) {
-                // 파일이 이미지인지 확인
-                if (!files[i].type.match('image.*')) {
-                    alert('이미지 파일만 업로드 가능합니다.');
+        // 이미지 업로드 처리
+        fileInput.addEventListener('change', function () {
+            const files = this.files;
+            if (files.length > 0) {
+                // 이미지 갯수 체크 (기존 이미지 + 새 이미지 <= 10)
+                const existingImages = document.querySelectorAll('.image-preview').length;
+                if (existingImages + files.length > 10) {
+                    alert('이미지는 최대 10개까지만 업로드 가능합니다.');
                     this.value = '';
-                    fileCount.textContent = '선택된 파일 없음';
                     return;
+                }
+
+                // 파일 유효성 검사
+                for (let i = 0; i < files.length; i++) {
+                    // 파일이 이미지인지 확인
+                    if (!files[i].type.match('image.*')) {
+                        alert('이미지 파일만 업로드 가능합니다.');
+                        this.value = '';
+                        return;
+                    }
+                }
+
+                // 새로운 미리보기 생성
+                for (let i = 0; i < files.length; i++) {
+                    const reader = new FileReader();
+                    const file = files[i];
+
+                    reader.onload = function (e) {
+                        // 미리보기 엘리먼트 생성
+                        const preview = document.createElement('div');
+                        preview.className = 'image-preview';
+                        preview.dataset.fileIndex = selectedFiles.length;
+
+                        // 선택된 파일 배열에 추가
+                        selectedFiles.push(file);
+
+                        // 이미지 엘리먼트 생성
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        preview.appendChild(img);
+
+                        // 삭제 버튼 생성
+                        const removeBtn = document.createElement('div');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+                        removeBtn.addEventListener('click', function () {
+                            const fileIndex = parseInt(preview.dataset.fileIndex);
+
+                            // 해당 인덱스의 파일을 배열에서 제거
+                            if (!isNaN(fileIndex) && fileIndex >= 0) {
+                                selectedFiles.splice(fileIndex, 1);
+                            }
+
+                            // 미리보기에서 제거
+                            preview.remove();
+
+                            // 파일 카운트 업데이트
+                            updateFileCount();
+                        });
+                        preview.appendChild(removeBtn);
+
+                        // 미리보기 영역에 추가 (항상 + 버튼 뒤에 추가)
+                        imagePreviewArea.insertBefore(preview, uploadBtn.nextSibling);
+
+                        // 파일 카운트 업데이트
+                        updateFileCount();
+                    };
+
+                    reader.readAsDataURL(file);
                 }
             }
 
-
-            // 새로운 미리보기 생성
-            for (let i = 0; i < files.length; i++) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    // 미리보기 엘리먼트 생성
-                    const preview = document.createElement('div');
-                    preview.className = 'image-preview';
-
-                    // 이미지 엘리먼트 생성
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    preview.appendChild(img);
-
-                    // 삭제 버튼 생성
-                    const removeBtn = document.createElement('div');
-                    removeBtn.className = 'remove-btn';
-                    removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
-                    removeBtn.addEventListener('click', function () {
-                        preview.remove();
-                        // 파일 입력 초기화 (현재 미리보기에서 제거된 파일만 초기화는 불가능)
-                        fileInput.value = '';
-                        fileCount.textContent = '선택된 파일 없음';
-                    });
-                    preview.appendChild(removeBtn);
-
-                    // 미리보기 영역에 추가 (항상 + 버튼 뒤에 추가)
-                    imagePreviewArea.insertBefore(preview, uploadBtn.nextSibling);
-                };
-
-                reader.readAsDataURL(files[i]);
-            }
+            // FileList 객체는 변경할 수 없으므로 이벤트 후 입력값을 비웁니다.
+            // 실제 파일은 selectedFiles 배열에 저장됩니다.
+            this.value = '';
         });
 
         // 등록 버튼 클릭 시 확인 모달 표시
@@ -411,10 +426,9 @@
             }
 
             // 이미지 최소 1개 이상 체크
-            const existingImages = document.querySelectorAll('.image-preview').length - 1; // 플러스 버튼 제외
-            const newImages = fileInput.files ? fileInput.files.length : 0;
+            const existingImages = document.querySelectorAll('.image-preview').length;
 
-            if (existingImages === 0 && newImages === 0) {
+            if (existingImages === 0) {
                 alert('최소 한 개 이상의 이미지를 업로드해주세요.');
                 return;
             }
@@ -438,9 +452,23 @@
             closeModal();
         });
 
-        // 확인 버튼 클릭 시 폼 제출
+        // 확인 버튼 클릭 시 폼 제출 전 선택된 파일 재첨부
         confirmBtn.addEventListener('click', function () {
             console.log("확인 버튼 클릭됨");
+
+            // 선택된 파일들을 FormData에 추가하기 위해 DataTransfer 객체 사용
+            if (selectedFiles.length > 0) {
+                const dataTransfer = new DataTransfer();
+
+                // 선택된 모든 파일을 dataTransfer에 추가
+                selectedFiles.forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+
+                // fileInput의 files 속성에 설정
+                fileInput.files = dataTransfer.files;
+            }
+
             document.getElementById('boardWriteForm').submit();
             closeModal();
         });
@@ -471,6 +499,9 @@
 
                 // 미리보기에서 제거
                 preview.remove();
+
+                // 파일 카운트 업데이트
+                updateFileCount();
             });
         });
 

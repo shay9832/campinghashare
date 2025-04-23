@@ -641,7 +641,7 @@
                         </div>
                         <div class="post-actions-right">
                             <c:if test="${isAuthor}">
-                                <button class="update-btn" onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정</button>
+                                <button class="update-btn" onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정</button>
                             </c:if>
                             <c:if test="${isAuthor || not empty sessionScope.loginAdmin}">
                                 <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
