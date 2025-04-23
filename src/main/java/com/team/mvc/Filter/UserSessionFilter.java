@@ -43,7 +43,8 @@ public class UserSessionFilter implements Filter {
                 uriLower.contains("/admin-registerid.action") ||
                 uriLower.contains("/insertadmin.action") ||
                 uriLower.equals(ctx + "/") ||
-                uriLower.equals(ctx + "/main.action");
+                uriLower.equals(ctx + "/main.action") ||
+                uriLower.equals(ctx + "/serviceinfo-storen.action");
 
 
         // 세션 체크

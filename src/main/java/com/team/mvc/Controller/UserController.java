@@ -31,6 +31,11 @@ public class UserController {
         return "redirect:/main.action";
     }
 
+    // 스토렌 상품 설명 페이지
+    @RequestMapping(value="/serviceinfo-storen.action")
+    public String serviceinfostoren(Model model) {
+        return "serviceInfo-storen";
+    }
     // 로그인 페이지 진입
     @RequestMapping(value = "/login-user.action", method = RequestMethod.GET)
     public String loginPage() {
