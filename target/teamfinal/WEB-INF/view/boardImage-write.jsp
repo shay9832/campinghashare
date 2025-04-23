@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         /* 이미지 업로드 관련 스타일 */
         .image-preview-area {
