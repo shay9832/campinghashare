@@ -3,8 +3,9 @@ package com.team.mvc.DTO;
 import java.util.List;
 
 public class BoardPostDTO {
-    private int postId, userCode, boardId, postLabelId, bookmarkId;
+    private int postId, userCode, boardId, bookmarkId;
     private String  postTitle, postContent, createdDate;
+    private Integer postLabelId;
 
     private int viewCount, recommendCount, replyCount, isHot, isBlinded, rowNum;
     private String nickName, boardName, postLabelName, boardCategory, sortType;
@@ -41,11 +42,11 @@ public class BoardPostDTO {
         this.boardId = boardId;
     }
 
-    public int getPostLabelId() {
+    public Integer getPostLabelId() {
         return postLabelId;
     }
 
-    public void setPostLabelId(int postLabelId) {
+    public void setPostLabelId(Integer postLabelId) {
         this.postLabelId = postLabelId;
     }
 
