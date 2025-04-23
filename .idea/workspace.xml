@@ -13,18 +13,16 @@
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminCreateBrandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminCreateBrandController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminCreateBrand.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminCreateBrand.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminCreateBrandController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminCreateBrandController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/EquipRegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/EquipRegisterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminCreateBrandController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminCreateBrandController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/EquipRegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/EquipRegisterController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/BoardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/BoardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/BoardController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/BoardController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/BoardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/BoardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/mapper/AdminCreateBrand.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/mapper/AdminCreateBrand.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/BoardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminCreateBrand.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/mapper/AdminCreateBrand.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/기타자료/20250403_all.sql" beforeDir="false" afterPath="$PROJECT_DIR$/기타자료/20250403_all.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +72,7 @@
     &quot;Tomcat Server.myPage-delivery.jsp.executor&quot;: &quot;Run&quot;,
     &quot;Tomcat Server.myPage-inspecList.jsp.executor&quot;: &quot;Run&quot;,
     &quot;Tomcat 서버.Tomcat 10.1.39.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;yujin&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;youngsik&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/es/IdeaProjects/teamfinal&quot;,
@@ -266,6 +264,8 @@
       <workItem from="1745234535360" duration="14737000" />
       <workItem from="1745319181621" duration="14774000" />
       <workItem from="1745366363227" duration="15182000" />
+      <workItem from="1745405966072" duration="4894000" />
+      <workItem from="1745411911618" duration="4956000" />
     </task>
     <servers />
   </component>
