@@ -78,4 +78,5 @@ public interface IStorenDAO {
     List<StorenDTO> listMyWishByUserCode(@Param("userCode") int userCode);
     // 해당 유저의 찜 삭제
     int deleteMyWishByUserCodeStorenId(@Param("userCode") int userCode, @Param("storenId") int storenId);
+
 }

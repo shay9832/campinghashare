@@ -40,8 +40,7 @@ public interface IAdminInspectListDAO {
             @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId,
             @Param("inspecGradeId") Integer inspecGradeId,
             @Param("equipGradeId") Integer equipGradeId,
-            @Param("adminId") String adminId,
-            @Param("inspecComment") String inspecComment
+            @Param("adminId") String adminId
     );
 
     // IAdminInspectListDAO.java에 추가
@@ -54,5 +53,15 @@ public interface IAdminInspectListDAO {
             @Param("inspecGradeId") Integer inspecGradeId
     );
 
+    // 검수 통계 조회 메서드
+    int getTotalInspectionCount();
+    int getCompletedInspectionCount();
+    int getReturnedInspectionCount();
+    int getPendingInspectionCount();
 
+    // 검수 항목별 결과 조회
+    List<AdminInspectListDTO> getInspectionItemResults(
+            @Param("platformDeliveryId") Integer platformDeliveryId,
+            @Param("platformDeliveryReturnId") Integer platformDeliveryReturnId
+    );
 }
