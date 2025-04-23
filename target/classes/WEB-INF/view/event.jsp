@@ -160,20 +160,21 @@
             gap: var(--spacing-sm);
         }
 
-        .filter-option {
-            padding: 6px 12px;
+        .filter-btn {
+            padding: 6px 16px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-medium);
-            font-size: var(--font-xxs);
+            background-color: var(--bg-secondary);
             cursor: pointer;
             transition: all var(--transition-normal);
+            font-size: var(--font-xs);
         }
 
-        .filter-option:hover {
+        .filter-btn:hover {
             background-color: var(--color-gray-200);
         }
 
-        .filter-option.active {
+        .filter-btn.active {
             background-color: var(--color-beige-light);
             border-color: var(--color-maple);
             color: var(--color-maple);
@@ -206,7 +207,7 @@
         // 문서가 로드되면 실행
         document.addEventListener('DOMContentLoaded', function() {
             // 필터 옵션 버튼들을 선택
-            const filterOptions = document.querySelectorAll('.filter-option');
+            const filterOptions = document.querySelectorAll('.filter-btn');
             // 모든 이벤트 카드를 선택
             const eventCards = document.querySelectorAll('.card.product-card');
 
@@ -267,10 +268,10 @@
                     <div class="filter-group">
                         <div class="filter-label">진행상태</div>
                         <div class="filter-options">
-                            <div class="filter-option active">전체</div>
-                            <div class="filter-option">진행중</div>
-                            <div class="filter-option">진행예정</div>
-                            <div class="filter-option">종료</div>
+                            <div class="filter-btn active" style="border-radius: 4px; min-width: 80px; text-align: center;">전체</div>
+                            <div class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">진행중</div>
+                            <div class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">진행예정</div>
+                            <div class="filter-btn" style="border-radius: 4px; min-width: 80px; text-align: center;">종료</div>
                         </div>
                     </div>
                 </div>
@@ -376,9 +377,11 @@
 
                     <!-- 관리자만 보이는 글쓰기 버튼 - 오른쪽 -->
                     <div style="flex: 1; display: flex; justify-content: flex-end;">
-                        <button class="btn btn-primary">
-                            <i class="fa-solid fa-pen mr-1"></i> 글쓰기
-                        </button>
+                        <c:if test="${not empty adminId}">
+                            <button class="btn btn-primary" onclick="goToWrite()">
+                                <i class="fa-solid fa-pen"></i> 글쓰기
+                            </button>
+                        </c:if>
                     </div>
                 </div>
             </div>
