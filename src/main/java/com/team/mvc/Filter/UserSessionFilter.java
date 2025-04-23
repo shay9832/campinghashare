@@ -46,7 +46,8 @@ public class UserSessionFilter implements Filter {
                 uriLower.startsWith(ctx + "/admin") ||
                 uriLower.startsWith(ctx + "/admin-") ||
                 uriLower.equals(ctx + "/") ||
-                uriLower.equals(ctx + "/main.action");
+                uriLower.equals(ctx + "/main.action") ||
+                uriLower.equals(ctx + "/serviceinfo-storen.action");
 
         // 세션 체크
         HttpSession session = httpRequest.getSession(false);
