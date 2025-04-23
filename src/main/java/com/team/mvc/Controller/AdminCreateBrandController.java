@@ -43,6 +43,8 @@ public class AdminCreateBrandController {
                 return handleFormSubmission(formAction, brandId, equipNameId, brandName, equipName, categoryId, redirectAttributes);
             }
 
+            String temp = handlePageLoad(action, brandId, equipNameId, model);
+
             // GET 요청 처리 (페이지 로드)
             return handlePageLoad(action, brandId, equipNameId, model);
         } catch (Exception e) {

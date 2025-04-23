@@ -10,20 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7f5008c7-a077-49b2-b775-df4ac1c5e7dd/storage_v2/_src_/schema/FINAL3TEAM.eoVPrQ.zip" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/MypageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/MypageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Filter/UserSessionFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Filter/UserSessionFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-myPost.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/myPage-myPost.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/WEB-INF/view/myPage-myPost.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/WEB-INF/view/myPage-myPost.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/MypageController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/MypageController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Filter/UserSessionFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Filter/UserSessionFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/myPage-myPost.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/myPage-myPost.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/MypageController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/MypageController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Filter/UserSessionFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Filter/UserSessionFilter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myPost.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/myPage-myPost.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminCreateBrandController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminCreateBrandController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminCreateBrand.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminCreateBrand.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminCreateBrandController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminCreateBrandController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/EquipRegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/EquipRegisterController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminCreateBrandController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminCreateBrandController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/EquipRegisterController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/EquipRegisterController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/DTO/CategoryDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createBrand.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-createBrand.jsp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
