@@ -1,5 +1,6 @@
 package com.team.mvc.DTO;
 
+import java.util.Date;
 import java.util.List;
 
 public class StorenDTO {
@@ -52,6 +53,16 @@ public class StorenDTO {
     private String priceDiffSymbol;                         // 상승/하락/중립 기호
     private String priceDiffClass;                          // 색상 클래스명
     private int avgRentalPrice;                             // 추가: 평균 렌탈 가격
+
+    // 반환 관련 필드 추가
+    private String recipient;
+    private String tel;
+    private String zipCode;
+    private String address1;
+    private String address2;
+    private Date returnRequestDate;
+    private Date returnCompletedDate;
+
 
     // Getter/Setter -----------------------------------------
 
@@ -334,4 +345,27 @@ public class StorenDTO {
     public void setMatching_status_detail(String matching_status_detail) {
         this.matching_status_detail = matching_status_detail;
     }
+
+    // 반환 관련 필드 getter/setter
+    public String getRecipient() { return recipient; }
+    public void setRecipient(String recipient) { this.recipient = recipient; }
+
+    public String getTel() { return tel; }
+    public void setTel(String tel) { this.tel = tel; }
+
+    public String getZipCode() { return zipCode; }
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+
+    public String getAddress1() { return address1; }
+    public void setAddress1(String address1) { this.address1 = address1; }
+
+    public String getAddress2() { return address2; }
+    public void setAddress2(String address2) { this.address2 = address2; }
+
+    public Date getReturnRequestDate() { return returnRequestDate; }
+    public void setReturnRequestDate(Date returnRequestDate) { this.returnRequestDate = returnRequestDate; }
+
+    public Date getReturnCompletedDate() { return returnCompletedDate; }
+    public void setReturnCompletedDate(Date returnCompletedDate) { this.returnCompletedDate = returnCompletedDate; }
+
 }

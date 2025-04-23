@@ -1,5 +1,6 @@
 package com.team.mvc.Controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import com.team.mvc.DTO.AdminInspectListDTO;
 import com.team.mvc.Interface.IAdminInspectListDAO;
 import org.apache.ibatis.session.SqlSession;
@@ -37,12 +38,29 @@ public class AdminInspectListController {
             model.addAttribute("getEquipList", dao.getEquipList());
             model.addAttribute("equipGrades", dao.getGradeList()); // 추가: 등급 정보를 모델에 직접 포함
 
+            // 상단 통계 데이터 동적 변환
+            model.addAttribute("totalCount", dao.getTotalInspectionCount());
+            model.addAttribute("completedCount", dao.getCompletedInspectionCount());
+            model.addAttribute("returnedCount", dao.getReturnedInspectionCount());
+            model.addAttribute("pendingCount", dao.getPendingInspectionCount());
+
             return "admin-inspectList";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "데이터를 가져오는 중 오류가 발생했습니다: " + e.getMessage());
             return "redirect:/admin-inspectList.action";
         }
+    }
+
+    // 검수 항목별 결과 조회
+    @GetMapping("/admin-inspectItemResults.action")
+    @ResponseBody
+    public List<AdminInspectListDTO> getInspectionItemResults(
+            @RequestParam(value = "platformDeliveryId", required = false) Integer platformDeliveryId,
+            @RequestParam(value = "platformDeliveryReturnId", required = false) Integer platformDeliveryReturnId) {
+
+        IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
+        return dao.getInspectionItemResults(platformDeliveryId, platformDeliveryReturnId);
     }
 
     /**
@@ -136,7 +154,6 @@ public class AdminInspectListController {
                     case "F":
                         equipGradeId = 6;
                         inspecGradeId = 3; // 하
-                        inspecComment = inspecComment + " (등급 F로 사용자반납 대상)";
                         break;
                 }
             }
@@ -154,11 +171,7 @@ public class AdminInspectListController {
             // MyBatis Mapper 인터페이스 가져오기
             IAdminInspectListDAO dao = sqlSession.getMapper(IAdminInspectListDAO.class);
 
-            // 1. 기존 프로시저 호출 (INSPEC_RESULT 생성)
-            dao.callINSPECT_RESULT(platformDeliveryId, platformDeliveryReturnId,
-                    inspecGradeId, equipGradeId, adminId, inspecComment);
-
-            // 2. JSP에서 전송된 항목별 코멘트와 등급 정보 처리 - 수정된 부분
+            // 1. JSP에서 전송된 항목별 코멘트와 등급 정보 처리 - 순서 변경
             // 항목 수 파악 (itemCount 파라미터가 있다면 사용)
             int itemCount = 5; // 기본값으로 5개 설정
             if (paramMap.containsKey("itemCount")) {
@@ -217,6 +230,10 @@ public class AdminInspectListController {
                     // 오류가 있어도 계속 진행
                 }
             }
+
+            // 2. 기존 프로시저 호출 (INSPEC_RESULT 생성)
+            dao.callINSPECT_RESULT(platformDeliveryId, platformDeliveryReturnId,
+                    inspecGradeId, equipGradeId, adminId);
 
             // 성공 메시지 설정
             String successMessage = "검수 결과가 성공적으로 등록되었습니다.";

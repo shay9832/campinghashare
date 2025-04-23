@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.mvc.DTO.StorenDTO;
 import com.team.mvc.DTO.AttachmentDTO;
 import com.team.mvc.DTO.EquipmentDTO;
+import com.team.mvc.DTO.UserDTO;
 import com.team.mvc.Interface.IStorenDAO;
 import com.team.mvc.Interface.IAttachmentDAO;
+import com.team.mvc.Interface.IUserDAO;
 import jakarta.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,4 +231,5 @@ public class StorenController {
     public String rentalComplete() {
         return "storenRegister-rentalRegister-complete";
     }
+
 }

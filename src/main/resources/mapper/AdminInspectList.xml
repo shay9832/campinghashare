@@ -13,17 +13,16 @@
             '입고검수' as inspectName,
             en.EQUIP_NAME as equipName,
             c.CATEGORY_NAME as categoryName,
-            COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
-            ig.INSPEC_GRADE_NAME as inspectResult,
             (SELECT MIN(ii.INSPEC_ITEM_NAME)
              FROM INSPEC_ITEM ii
                       JOIN CATE_INSPEC ci ON ii.INSPEC_ITEM_ID = ci.INSPEC_ITEM_ID
                       JOIN INSPEC_LIST il2 ON ci.CATE_INSPEC_ID = il2.CATE_INSPEC_ID
              WHERE il2.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID) as inspectList,
-            il.INSPEC_COMMENT as inspectComment,
+            COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
             eg.EQUIP_GRADE_NAME as finalGrade,
             CASE
                 WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
+                WHEN eg.EQUIP_GRADE_NAME = 'F' THEN '사용자반납'
                 ELSE '검수완료'
                 END as inspectState
         FROM PLATFORM_DELIVERY pd
@@ -64,11 +63,10 @@
                       JOIN INSPEC_LIST il2 ON ci.CATE_INSPEC_ID = il2.CATE_INSPEC_ID
              WHERE il2.PLATFORM_DELIVERY_RETURN_ID = pdr.PLATFORM_DELIVERY_RETURN_ID) as inspectList,
             COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
-            ig.INSPEC_GRADE_NAME as inspectResult,
-            il.INSPEC_COMMENT as inspectComment,
             eg.EQUIP_GRADE_NAME as finalGrade,
             CASE
                 WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
+                WHEN eg.EQUIP_GRADE_NAME = 'F' THEN '사용자반납'
                 ELSE '검수완료'
                 END as inspectState
         FROM PLATFORM_DELIVERY_RETURN pdr
@@ -133,8 +131,7 @@
                 #{platformDeliveryReturnId, jdbcType=INTEGER, mode=IN},
                 #{inspecGradeId, jdbcType=INTEGER, mode=IN},
                 #{equipGradeId, jdbcType=INTEGER, mode=IN},
-                #{adminId, jdbcType=VARCHAR, mode=IN},
-                #{inspecComment, jdbcType=VARCHAR, mode=IN}
+                #{adminId, jdbcType=VARCHAR, mode=IN}
               )}
     </update>
 
@@ -172,6 +169,31 @@
     </select>
 
 
+
+
+    <!-- 검수 항목별 결과 조회 -->
+    <select id="getInspectionItemResults" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+        il.INSPEC_LIST_ID as inspecListId,
+        il.INSPEC_COMMENT as inspectComment,
+        ii.INSPEC_ITEM_ID as inspecItemId,
+        ii.INSPEC_ITEM_NAME as inspecItemName,
+        ig.INSPEC_GRADE_ID as inspecGradeId,
+        ig.INSPEC_GRADE_NAME as inspecGradeName
+        FROM INSPEC_LIST il
+        JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
+        JOIN INSPEC_ITEM ii ON ci.INSPEC_ITEM_ID = ii.INSPEC_ITEM_ID
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        WHERE
+        <if test="platformDeliveryId != null">
+            il.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+        </if>
+        <if test="platformDeliveryReturnId != null">
+            il.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+        </if>
+        ORDER BY il.INSPEC_LIST_ID
+    </select>
+
     <insert id="insertInspecListItem">
         INSERT INTO INSPEC_LIST
         (INSPEC_LIST_ID, INSPEC_COMMENT, CATE_INSPEC_ID, PLATFORM_DELIVERY_ID,
@@ -186,4 +208,48 @@
              #{inspecGradeId, jdbcType=NUMERIC},
              SYSDATE)
     </insert>
+
+
+    <!-- 검수 통계 조회 -->
+    <select id="getTotalInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT pd.PLATFORM_DELIVERY_ID
+                 FROM PLATFORM_DELIVERY pd
+                 WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL
+                 UNION
+                 SELECT pdr.PLATFORM_DELIVERY_RETURN_ID
+                 FROM PLATFORM_DELIVERY_RETURN pdr
+                 WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
+             )
+    </select>
+
+    <select id="getCompletedInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM INSPEC_RESULT ir
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE eg.EQUIP_GRADE_NAME != 'F'
+    </select>
+
+    <select id="getReturnedInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM INSPEC_RESULT ir
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE eg.EQUIP_GRADE_NAME = 'F'
+    </select>
+
+    <select id="getPendingInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT pd.PLATFORM_DELIVERY_ID
+                 FROM PLATFORM_DELIVERY pd
+                          LEFT JOIN INSPEC_RESULT ir ON pd.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
+                 WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL AND ir.INSPEC_RESULT_ID IS NULL
+                 UNION
+                 SELECT pdr.PLATFORM_DELIVERY_RETURN_ID
+                 FROM PLATFORM_DELIVERY_RETURN pdr
+                          LEFT JOIN INSPEC_RESULT ir ON pdr.PLATFORM_DELIVERY_RETURN_ID = ir.PLATFORM_DELIVERY_RETURN_ID
+                 WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL AND ir.INSPEC_RESULT_ID IS NULL
+             )
+    </select>
 </mapper>
