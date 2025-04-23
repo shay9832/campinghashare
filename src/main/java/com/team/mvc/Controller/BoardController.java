@@ -136,6 +136,71 @@ public class BoardController {
         return "boardBest";
     }
 
+
+    // BEST 게시판 AJAX 처리를 위한 메서드
+    @RequestMapping("/api/boardbest.action")
+    @ResponseBody
+    public Map<String, Object> boardBestApi(@RequestParam(value = "page", defaultValue = "1") int page,
+                                            @RequestParam(value = "size", defaultValue = "10") int size,
+                                            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+                                            @RequestParam(value = "searchType", required = false) String searchType,
+                                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                                            @ModelAttribute("userCode") Integer userCode,
+                                            @ModelAttribute("adminId") String adminId) {
+
+        Map<String, Object> result = new HashMap<>();
+
+        // 공지사항 조회(최대 3개)
+        List<BoardPostDTO> notice = boardPostService.listNotice();
+        result.put("notice", notice);
+
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+        }
+
+        // 전체 인기글 조회 (검색 조건과 정렬 조건 적용)
+        List<BoardPostDTO> totalHotPost = boardPostService.listTotalHotPost(dto);
+
+        // 각 게시글의 첨부파일 정보도 함께 조회
+        for (BoardPostDTO post : totalHotPost) {
+            List<AttachmentDTO> attachments = boardPostService.getAttachmentsByPostId(post.getPostId());
+            post.setAttachments(attachments);
+        }
+
+        // 페이징 처리
+        int totalPostCount = totalHotPost.size();
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 페이지에 맞는 게시글만 필터링 (리스트가 이미 필터링 되어있지 않은 경우만)
+        List<BoardPostDTO> pagedHotPosts;
+        if (totalHotPost.size() > size) {
+            int startIndex = (page - 1) * size;
+            int endIndex = Math.min(startIndex + size, totalHotPost.size());
+
+            if (startIndex < totalHotPost.size()) {
+                pagedHotPosts = totalHotPost.subList(startIndex, endIndex);
+            } else {
+                pagedHotPosts = new ArrayList<>();
+            }
+        } else {
+            pagedHotPosts = totalHotPost;
+        }
+
+        result.put("totalHotPost", pagedHotPosts);
+        result.put("pagenation", pagenation);
+        result.put("sortType", sortType);
+
+        return result;
+    }
     //----------------------------------------------------------------------------------------------------------------------
     // boardTemplate 페이지
     @RequestMapping("/board{boardName}.action")
@@ -1204,6 +1269,9 @@ public class BoardController {
 
         // 게시판 ID를 고독한캠핑방(10)으로 설정
         dto.setBoardId(10);
+
+        // 중요: POST_LABEL_ID를 명시적으로 null로 설정
+        dto.setPostLabelId(null);
 
         try {
             // 게시글 등록

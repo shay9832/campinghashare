@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IAdminCouponListDAO"
+>
+    <resultMap id="couponList" type="com.team.mvc.DTO.AdminCouponListDTO">
+        <result column="보유쿠폰ID" property="ownedCouponId"/>
+        <result column="회원코드" property="userCode"/>
+        <result column="회원닉네임" property="nickname"/>
+        <result column="쿠폰이름" property="couponName"/>
+        <result column="쿠폰종류" property="couponTypeName"/>
+        <result column="쿠폰할인율" property="couponDiscount"/>
+        <result column="쿠폰유효개월수" property="couponMonth"/>
+        <result column="쿠폰발행일" property="issuedDate"/>
+        <result column="쿠폰만료일" property="expiryDate"/>
+        <result column="쿠폰사용완료일" property="completedDate"/>
+    </resultMap>
+
+
+
+    <select id="getList" resultMap="couponList">
+        SELECT "보유쿠폰ID", "회원코드", "회원닉네임", "쿠폰이름", "쿠폰종류", "쿠폰할인율", "쿠폰유효개월수", "쿠폰발행일", "쿠폰만료일", "쿠폰사용완료일"
+        FROM VW_COUPON_MANAGEMENT
+    </select>
+
+    <select id="getTypes" resultType="com.team.mvc.DTO.AdminCouponListDTO">
+        SELECT COUPON_TYPE_ID as couponTypeId ,COUPON_TYPE_NAME as couponTypeName
+        FROM COUPON_TYPE
+    </select>
+
+</mapper>
