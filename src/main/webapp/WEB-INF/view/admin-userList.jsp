@@ -25,6 +25,9 @@
       <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
         <button type="submit" class="submenu-btn">장비 통계</button>
       </form>
+      <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get">
+        <button type="submit" class="submenu-btn">브랜드 및 장비생성</button>
+      </form>
     </div>
 
     <!-- 검수 관리 메뉴 -->

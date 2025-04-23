@@ -18,6 +18,6 @@ public interface IMypageInspecListDAO {
     List<MypageInspecListDTO> listStorageStoreByUserCode(@Param("user_code") int user_code);
 
     // id로 스토렌 검색
-    List<MypageInspecListDTO> getInspecByStorenId(@Param("userCode") int userCode, @Param("storenId") int storenId);
+    List<MypageInspecListDTO> getInspecByStorenId(@Param("storenId") int storenId);
 
 }

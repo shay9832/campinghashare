@@ -24,4 +24,14 @@ public interface IMypageMyEquipService {
     // 즉시 확인 필요로 상태 필터링(일단은 스토렌만)
     List<StorenDTO> listMyStorenByStatus(int userCode, String type, String[] statuses);
 
+    /* 페이징 처리를 위한 추가 메소드 */
+    // 사용자의 일반 장비 전체 개수 조회
+    int getMyGeneralEquipCount(EquipmentDTO dto);
+    // 사용자의 스토렌 장비 전체 개수 조회
+    int getMyStorenCount(StorenDTO dto);
+    // 사용자의 일반 장비 목록 조회 (페이징 적용)
+    List<EquipmentDTO> listMyGeneralPaged(EquipmentDTO dto);
+    // 사용자의 스토렌 장비 목록 조회 (페이징 적용)
+    List<StorenDTO> listMyStorenPaged(StorenDTO dto);
+
 }

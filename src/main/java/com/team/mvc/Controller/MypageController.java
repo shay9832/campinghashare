@@ -30,6 +30,10 @@ public class MypageController {
     private IMypageInfoEditService infoEditService;
     @Autowired
     private IMypageMainService mainService;
+    @Autowired
+    private IMypagePointService pointService;
+    @Autowired
+    private IMypageMypostService mypostService;
 
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
@@ -37,10 +41,19 @@ public class MypageController {
         UserDTO user = mainService.getUserDTO(userCode);
         LinkedHashMap<String, Object> myEquipMap = mainService.getMyEquipmentMap(userCode);
         LinkedHashMap<String, Object> rentEquipMap = mainService.getRentEquipmentMap(userCode);
+        Map<String, Object> postCommentMap = mainService.getPostCommentMap(userCode);
+        Map<String, Map<String, Integer>> statusMap = mainService.getMyEquipmentStatus(userCode);
+        List<StorenDTO> wishlist = mainService.getMyWishlist(userCode);
 
         model.addAttribute("user", user);
         model.addAttribute("myEquipMap", myEquipMap);
         model.addAttribute("rentEquipMap", rentEquipMap);
+        model.addAttribute("postList", postCommentMap.get("postList"));
+        model.addAttribute("commentList", postCommentMap.get("replyList"));
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
+        model.addAttribute("wishlist", wishlist);
 
         return "myPage-main";
     }
@@ -107,24 +120,65 @@ public class MypageController {
     // 마이페이지-포인트
     @RequestMapping(value="/mypage-point.action")
     public String mypagePoint(@ModelAttribute("userCode") Integer userCode, Model model) {
+        List<MyPointDTO> pointList = pointService.listMyPointHistory(userCode);
+        UserDTO user = pointService.getMyPointInfo(userCode);
+
+        model.addAttribute("user", user);
+        model.addAttribute("pointList", pointList);
+
+        // 진행률 계산
+        int currentTotal = user.getTotalPoint() + user.getTotalTrust();
+        int nextTotal = currentTotal + user.getRemainPoint() + user.getRemainTrust();
+        int progressPercentage = (int)((double)currentTotal / nextTotal * 100);
+        model.addAttribute("progressPercentage", progressPercentage);
+
         return "myPage-point";
     }
 
 
     // 마이페이지-내가 소유한 장비(첫 요청 시)
     @RequestMapping(value="/mypage-myequip.action")
-    public String getMypageMyEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
+    public String getMypageMyEquip(@RequestParam(value = "page", defaultValue = "1") int page
+                                   , @RequestParam(value = "size", defaultValue = "5") int size // 페이지당 표시할 장비 수
+                                   , @RequestParam(value = "searchKeyword", required = false) String searchKeyword
+                                   , @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType
+                                   , @ModelAttribute("userCode") Integer userCode
+                                   , Model model) {
         System.out.println("=== MypageController : mypageMyEquip() : START ===");
-        
-        // 일반 장비 리스트 가져오기
-        List<EquipmentDTO> equipmentList = myEquipService.listMyGeneral(userCode);
+
+        // DTO 생성 및 검색/정렬 조건 설정
+        EquipmentDTO dto = new EquipmentDTO();
+        dto.setUser_code(userCode);
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 정렬 조건 설정 (최신순, 이름순, 등급순 등)
+        dto.setSortType(sortType);
+        model.addAttribute("sortType", sortType);
+
         // 장비 상태현황 맵 가져오기
         Map<String, Map<String, Integer>> statusMap = myEquipService.getMyEquipmentStatus(userCode);
-
-        model.addAttribute("equipList", equipmentList);
         model.addAttribute("emergencyMap", statusMap.get("emergency"));
         model.addAttribute("storenStatusMap", statusMap.get("storen"));
         model.addAttribute("count", statusMap.get("count"));
+
+        // 전체 장비 수 조회
+        int totalEquipCount = myEquipService.getMyGeneralEquipCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalEquipCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 일반 장비 리스트 가져오기 (페이징 적용)
+        List<EquipmentDTO> equipmentList = myEquipService.listMyGeneralPaged(dto);
+
+        model.addAttribute("equipList", equipmentList);
+        model.addAttribute("pagenation", pagenation);
+        model.addAttribute("activeTab", "general"); // 초기 탭 지정
+
         model.addAttribute("activeTab", "general"); // 초기 탭 지정
         
         System.out.println("=== MypageController : mypageMyEquip() : END ===");
@@ -144,6 +198,45 @@ public class MypageController {
     public List<StorenDTO> getMypageMyStoren(@ModelAttribute("userCode") Integer userCode) {
         System.out.println("Storen-userCode : " + userCode);
         return myEquipService.listMyStoren(userCode);
+    }
+
+    // 스토렌 탭 전용 페이지네이션 API
+    @RequestMapping("/api/myequipment/storen/paged")
+    @ResponseBody
+    public Map<String, Object> getMypageMyStorenPaged(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+            @ModelAttribute("userCode") Integer userCode) {
+
+        Map<String, Object> result = new HashMap<>();
+
+        // DTO 생성 및 검색/정렬 조건 설정
+        StorenDTO dto = new StorenDTO();
+        dto.setUser_code(userCode);
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchKeyword(searchKeyword);
+        }
+
+        // 정렬 조건 설정
+        dto.setSortType(sortType);
+
+        // 전체 스토렌 수 조회
+        int totalStorenCount = myEquipService.getMyStorenCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalStorenCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 스토렌 리스트 가져오기 (페이징 적용)
+        List<StorenDTO> storenList = myEquipService.listMyStorenPaged(dto);
+
+        result.put("storenList", storenList);
+        result.put("pagenation", pagenation);
+
+        return result;
     }
 
     // 마이페이지-내가 소유한 장비 - 스토렌 탭 - 상세
@@ -181,15 +274,21 @@ public class MypageController {
     // 마이페이지-검수 결과 조회
     @RequestMapping(value="/mypage-inspecList.action")
     public String mypageInspecList(@ModelAttribute("userCode") Integer userCode, Model model
-                                    , @RequestParam(value="id", required=false) Integer id) {
+                                    , @RequestParam(value="id", required=false) Integer id
+                                    , @RequestParam(value="activeTab", required=false) String activeTab
+                                    , @RequestParam(value="storenTabType", required=false) String storenTabType) {
 
         System.out.println("=== MypageController : mypageInspecList() - AJAX - STOREN Store : START ===");
+
+        // 기본값 설정
+        activeTab = (activeTab != null) ? activeTab : "storen";
+        storenTabType = (storenTabType != null) ? storenTabType : "store";
 
         // 초기에는 스토렌 입고 검수내역만 로드
         List<MypageInspecListDTO> storenStoreInspec = inspecListService.listStorenStoreInspec(userCode);
         model.addAttribute("inspecList", storenStoreInspec);
-        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
-        model.addAttribute("storenTabType", "store"); // 초기 서브탭 지정
+        model.addAttribute("activeTab", activeTab); // 초기 탭 지정
+        model.addAttribute("storenTabType", storenTabType); // 초기 서브탭 지정
         model.addAttribute("storenId", id);
 
         System.out.println("storenStoreInspec size : " + storenStoreInspec.size());
@@ -228,23 +327,32 @@ public class MypageController {
     @ResponseBody
     public List<MypageInspecListDTO> searchInspec(@ModelAttribute("userCode") Integer userCode,
                                                   @RequestParam("id") Integer storenId) {
-        return inspecListService.getInspecByStorenId(userCode, storenId);
+        return inspecListService.getInspecByStorenId(storenId);
     }
 
     // 마이페이지-배송 조회/내역
     // 처음에는 스토렌 사용자 배송내역 로드
     @RequestMapping(value="/mypage-delivery.action")
     public String mypageDelivery(@ModelAttribute("userCode") Integer userCode, Model model
-                                , @RequestParam(value="id", required=false) Integer id) {
+                                , @RequestParam(value="id", required=false) Integer id
+                                , @RequestParam(value="activeTab", required=false) String activeTab
+                                , @RequestParam(value="storenTabType", required=false) String storenTabType) {
 
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : START ===");
 
+        // 기본값 설정
+        activeTab = (activeTab != null) ? activeTab : "storen";
+        storenTabType = (storenTabType != null) ? storenTabType : "owner";
+
         // 초기에는 스토렌 소유자 배송내역만 로드
         List<DeliveryDTO> storenOwnerDeliveries = deliveryService.getStorenOwnerDeliveries(userCode);
+
+        // 모델에 데이터 추가
         model.addAttribute("deliveryList", storenOwnerDeliveries);
-        model.addAttribute("activeTab", "storen"); // 초기 탭 지정
-        model.addAttribute("storenTabType", "owner"); // 초기 서브탭 지정
+        model.addAttribute("activeTab", activeTab);
+        model.addAttribute("storenTabType", storenTabType);
         model.addAttribute("storenId", id);
+
 
         System.out.println("deliveryList size : " + storenOwnerDeliveries.size());
         System.out.println("=== MypageController : mypageDelivery() - AJAX - STOREN Owner : END ===");
@@ -425,9 +533,15 @@ public class MypageController {
     // 마이페이지-내가 대여한 장비
     @RequestMapping(value="/mypage-rentequip.action")
     public String mypageRentEquip(@ModelAttribute("userCode") Integer userCode, Model model) {
+        System.out.println("내가 대여한 장비의 유저코드 : " + userCode);
         // 사용자가 대여한 장비 정보 조회
         MyRentEquipDTO rentEquipInfo = mypageRentEquipService.listRentStorenInfo(userCode);
+        // 장비 상태현황 맵 가져오기
+        Map<String, Map<String, Integer>> statusMap = mypageRentEquipService.getRentEquipmentStatus(userCode);
 
+        model.addAttribute("emergencyMap", statusMap.get("emergency"));
+        model.addAttribute("storenStatusMap", statusMap.get("storen"));
+        model.addAttribute("count", statusMap.get("count"));
         // 모델에 데이터 추가
         model.addAttribute("rentEquipInfo", rentEquipInfo);
 
@@ -436,8 +550,95 @@ public class MypageController {
 
     // 마이페이지-내가 작성한 글
     @RequestMapping(value="/mypage-mypost.action")
-    public String mypageMyPost(@ModelAttribute("userCode") Integer userCode, Model model) {
+    public String mypageMyPost(@ModelAttribute("userCode") Integer userCode
+                            , @RequestParam(value = "page", defaultValue = "1") int page
+                            , @RequestParam(value = "size", defaultValue = "10") int size
+                            , @RequestParam(value = "searchType", required = false) String searchType
+                            , @RequestParam(value = "searchKeyword", required = false) String searchKeyword
+                            , @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType
+                            , Model model) {
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setUserCode(userCode);
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+            model.addAttribute("searchType", searchType);
+            model.addAttribute("searchKeyword", searchKeyword);
+        }
+
+        // 전체 게시물 수 조회
+        int totalPostCount = mypostService.getUserPostCount(dto);
+
+        // 페이징 처리
+        Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+        dto.setPagenation(pagenation);
+
+        // 게시물 목록 조회
+        List<BoardPostDTO> postList = mypostService.getUserPostList(dto);
+
+        // 모델에 데이터 추가
+        model.addAttribute("postList", postList);
+        model.addAttribute("pagenation", pagenation);
+        model.addAttribute("sortType", sortType);
+        model.addAttribute("isPostMode", true);
+
         return "myPage-myPost";
+    }
+    // AJAX를 위한 API 메소드
+    @RequestMapping("api/mypage-mypost.action")
+    @ResponseBody
+    public Map<String, Object> myPageMyPostApi(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "searchType", required = false) String searchType,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "sortType", required = false, defaultValue = "recent") String sortType,
+            @RequestParam(value = "isPostMode", required = false, defaultValue = "true") boolean isPostMode,
+            @ModelAttribute("userCode") Integer userCode) {
+
+        Map<String, Object> result = new HashMap<>();
+
+        // 검색 조건이 담길 dto 생성
+        BoardPostDTO dto = new BoardPostDTO();
+        dto.setUserCode(userCode);
+        dto.setSortType(sortType);
+
+        // 검색 조건 설정
+        if (searchType != null && searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            dto.setSearchType(searchType);
+            dto.setSearchKeyword(searchKeyword);
+        }
+
+        if (isPostMode) {
+            // 게시글 모드
+            int totalPostCount = mypostService.getUserPostCount(dto);
+            Pagenation pagenation = new Pagenation(page, totalPostCount, size, 10);
+            dto.setPagenation(pagenation);
+
+            List<BoardPostDTO> postList = mypostService.getUserPostList(dto);
+
+            result.put("postList", postList);
+            result.put("pagenation", pagenation);
+        } else {
+            // 댓글 모드
+            int totalReplyCount = mypostService.getUserReplyCount(dto);
+            Pagenation pagenation = new Pagenation(page, totalReplyCount, size, 10);
+            dto.setPagenation(pagenation);
+
+            List<ReplyDTO> replyList = mypostService.getUserReplyList(dto);
+
+            result.put("replyList", replyList);
+            result.put("pagenation", pagenation);
+        }
+
+        result.put("sortType", sortType);
+        result.put("isPostMode", isPostMode);
+
+        return result;
     }
 
     // 마이페이지-찜

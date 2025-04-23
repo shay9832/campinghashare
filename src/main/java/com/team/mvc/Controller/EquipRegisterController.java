@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.io.File;
 import java.util.*;
+import java.util.logging.Logger;
 
 
 @Controller
@@ -33,6 +34,9 @@ public class EquipRegisterController {
 
     @Autowired
     private SqlSession sqlSession;
+
+    // 로깅 추가
+    private static final Logger logger = Logger.getLogger(EquipRegisterController.class.getName());
 
     // 대분류 선택 페이지
     @RequestMapping("/equipregister-majorcategory.action")
@@ -64,18 +68,15 @@ public class EquipRegisterController {
             List<CategoryDTO> majorCategoryList = sqlSession.getMapper(ICategoryDAO.class).listCategoryByName(category);
 
             if (majorCategoryList != null) {
-
                 CategoryDTO majorCategory = majorCategoryList.get(0);
-
                 List<CategoryDTO> middleCategory = sqlSession.getMapper(ICategoryDAO.class).listMiddleCategory(majorCategory.getCategory_id());
                 model.addAttribute("middleCategory", middleCategory);
             }
-
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // 오류 처리
         }
         model.addAttribute("majorCategory", category);
-        return "equipRegister-middleCategory"; // 확장자까지 포함
+        return "equipRegister-middleCategory";
     }
 
     // 브랜드 선택 페이지
@@ -90,10 +91,8 @@ public class EquipRegisterController {
             model.addAttribute("brands", brands);
             model.addAttribute("majorCategory", majorCategory);
             model.addAttribute("middleCategory", middleCategory);
-            System.out.println(brands.get(0).getBrandName());
-
         } catch (Exception e) {
-            System.out.println(e.toString());
+            // 오류 처리
         }
         return "equipRegister-brand";
     }
@@ -105,23 +104,25 @@ public class EquipRegisterController {
             @RequestParam("middleCategory") String middleCategory,
             @RequestParam("brand") String brand,
             Model model) {
-        model.addAttribute("majorCategory", majorCategory);
-        model.addAttribute("middleCategory", middleCategory);
-        model.addAttribute("brand", brand);
-        return "equipRegister-newPrice";
-    }
 
+        try {
+            model.addAttribute("majorCategory", majorCategory);
+            model.addAttribute("middleCategory", middleCategory);
+            model.addAttribute("brand", brand);
+
+            return "equipRegister-newPrice";
+        } catch (Exception e) {
+            return "error/500";
+        }
+    }
 
     // 검색창에 장비명, 신품가격 데이터 불러오기
     @RequestMapping(value = "/listequipnamesbybrandid.action")
     @ResponseBody
     public List<Map<String, Object>> listEquipNamesByBrand(@RequestParam("brand") String brand) {
-        System.out.println("브랜드명: " + brand);
-
         try {
             // 브랜드 ID 조회
             List<BrandDTO> brandList = sqlSession.getMapper(IBrandDAO.class).getBrandByName(brand);
-            System.out.println("브랜드 목록 조회 결과: " + (brandList != null ? brandList.size() : "null"));
 
             if (brandList == null || brandList.isEmpty()) {
                 return Collections.emptyList();
@@ -131,13 +132,10 @@ public class EquipRegisterController {
 
             // 해당 브랜드의 장비명 목록 조회
             List<Map<String, Object>> equipList = sqlSession.getMapper(IEquipmentDAO.class).listEquipNamesByBrand(brandId);
-            System.out.println("장비명 목록 조회 결과: " + (equipList != null ? equipList.size() : "null"));
 
             return equipList;
 
         } catch (Exception e) {
-            System.out.println("에러 발생: " + e.toString());
-            e.printStackTrace();
             return Collections.emptyList();
         }
     }
@@ -145,46 +143,39 @@ public class EquipRegisterController {
     // 장비 등록 완료 페이지로 이동 (장비 정보는 테이블에 저장)
     @RequestMapping(value = "/equipregister-complete.action", method = RequestMethod.POST)
     public String equipComplete(
-                                @ModelAttribute("userCode") Integer userCode,
-                                @RequestParam("majorCategory") String majorCategory,
-                                @RequestParam("middleCategory") String middleCategory,
-                                @RequestParam("brand") String brand,
-                                @RequestParam("equipName") String equipName,
-                                @RequestParam("originalPrice") String originalPrice,
-                                @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
-                                HttpSession session,
-                                Model model) {
-
-        System.out.println("=== equipComplete 메서드 실행 ===");
-        System.out.println("대분류: " + majorCategory);
-        System.out.println("중분류: " + middleCategory);
-        System.out.println("브랜드: " + brand);
-        System.out.println("장비명: " + equipName);
-        System.out.println("신품가격: " + originalPrice);
-        System.out.println("사진 있음: " + (photos != null ? "예" : "아니오"));
+            @ModelAttribute("userCode") Integer userCode,
+            @RequestParam("majorCategory") String majorCategory,
+            @RequestParam("middleCategory") String middleCategory,
+            @RequestParam("brand") String brand,
+            @RequestParam("equipName") String equipName,
+            @RequestParam("originalPrice") String originalPrice,
+            @RequestParam(value = "photos", required = false) List<MultipartFile> photos,
+            HttpSession session,
+            Model model) {
 
         try {
             int user_code = userCode;
-            System.out.println("User Code: " + user_code);
+
+            logger.info("사용자 코드: " + user_code);
+            logger.info("대분류: " + majorCategory + ", 중분류: " + middleCategory);
+            logger.info("브랜드: " + brand + ", 장비명: " + equipName);
+            logger.info("원가: " + originalPrice);
+            logger.info("사진 개수: " + (photos != null ? photos.size() : 0));
 
             // 대분류 카테고리 ID 조회
             List<CategoryDTO> majorCategoryList = sqlSession.getMapper(ICategoryDAO.class).listCategoryByName(majorCategory);
-            System.out.println("대분류 카테고리 조회 결과: " + (majorCategoryList != null ? majorCategoryList.size() : "null"));
 
             if (majorCategoryList == null || majorCategoryList.isEmpty()) {
-                System.out.println("대분류 카테고리 정보를 찾을 수 없습니다.");
                 model.addAttribute("message", "대분류 카테고리 정보를 찾을 수 없습니다.");
                 model.addAttribute("redirectUrl", "/equipregister-majorcategory.action");
                 return "redirect";
             }
 
             int parentCategoryId = majorCategoryList.get(0).getCategory_id();
-            System.out.println("대분류 ID: " + parentCategoryId);
 
             // 중분류 카테고리 목록 조회
             int categoryId = -1;
             List<CategoryDTO> middleCategoryList = sqlSession.getMapper(ICategoryDAO.class).listMiddleCategory(parentCategoryId);
-            System.out.println("중분류 카테고리 조회 결과: " + middleCategoryList.size() + "개");
 
             // 해당 중분류 카테고리 이름으로 카테고리 ID 찾기
             for (CategoryDTO category : middleCategoryList) {
@@ -195,7 +186,6 @@ public class EquipRegisterController {
             }
 
             if (categoryId == -1) {
-                System.out.println("중분류 카테고리 정보를 찾을 수 없습니다.");
                 model.addAttribute("message", "중분류 카테고리 정보를 찾을 수 없습니다.");
                 model.addAttribute("redirectUrl", "/equipregister-middlecategory.action?category=" + majorCategory);
                 return "redirect";
@@ -203,7 +193,6 @@ public class EquipRegisterController {
 
             // 브랜드 ID 조회
             List<BrandDTO> brandList = sqlSession.getMapper(IBrandDAO.class).getBrandByName(brand);
-            System.out.println("브랜드 조회 결과: " + (brandList != null ? brandList.size() : "null"));
 
             if (brandList == null || brandList.isEmpty()) {
                 model.addAttribute("message", "브랜드 정보를 찾을 수 없습니다.");
@@ -211,14 +200,11 @@ public class EquipRegisterController {
                 return "redirect";
             }
             int brandId = brandList.get(0).getBrandId();
-            System.out.println("브랜드 ID: " + brandId);
 
             // 장비명 ID 조회 또는 생성
             Integer equipNameId = sqlSession.getMapper(IEquipmentDAO.class).getEquipNameId(brandId, equipName);
-            System.out.println("장비명 ID 조회 결과: " + (equipNameId != null ? equipNameId : "존재하지 않음"));
 
             int price = Integer.parseInt(originalPrice.replaceAll(",", ""));
-            System.out.println("변환된 가격: " + price);
 
             // EquipmentDTO 생성 및 설정
             EquipmentDTO dto = new EquipmentDTO();
@@ -227,26 +213,28 @@ public class EquipRegisterController {
             dto.setEquip_name_id(equipNameId);
             dto.setOriginal_price(price);
 
-            System.out.println("EquipmentDTO 설정 완료: " + dto.getUser_code() + ", " + dto.getCategory_id() + ", " +
-                    dto.getEquip_name_id() + ", " + dto.getOriginal_price());
-
             // 장비 코드 생성 및 EQUIP_CODE 테이블에 삽입
             sqlSession.getMapper(IEquipmentDAO.class).insertEquipCode(dto);
 
+            logger.info("장비 코드 생성 완료: " + dto.getEquip_code());
+
             // 장비 등록 테이블에 정보 삽입
             int result = sqlSession.getMapper(IEquipmentDAO.class).insertEquipmentRegistration(dto);
+            logger.info("장비 등록 결과: " + result);
 
-
-            // 사진 처리
+            // 사진 처리 - 여기가 수정된 부분입니다
             if (photos != null && !photos.isEmpty()) {
+                logger.info("사진 처리 시작, 개수: " + photos.size());
                 // 애플리케이션 실제 경로 가져오기 (web root)
                 String uploadDir = session.getServletContext().getRealPath("/resources/uploads");
                 File uploadPath = new File(uploadDir);
                 if (!uploadPath.exists()) {
                     uploadPath.mkdirs();
+                    logger.info("업로드 디렉토리 생성: " + uploadDir);
                 }
 
                 int order = 1; // 첨부파일 순서
+                IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
                 for (MultipartFile photo : photos) {
                     if (!photo.isEmpty()) {
@@ -255,9 +243,12 @@ public class EquipRegisterController {
                             String originalFilename = photo.getOriginalFilename();
                             String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
 
+                            logger.info("파일 저장 중: " + originalFilename);
+
                             // 파일 저장
                             File destination = new File(uploadPath + File.separator + originalFilename);
                             photo.transferTo(destination);
+                            logger.info("파일 저장 완료: " + destination.getAbsolutePath());
 
                             // 첨부파일 테이블에 정보 저장
                             AttachmentDTO attachmentDTO = new AttachmentDTO();
@@ -267,14 +258,23 @@ public class EquipRegisterController {
                             attachmentDTO.setAttachmentSize(photo.getSize());
                             attachmentDTO.setAttachmentOrder(order++);
 
-                            // 첨부파일 정보 DB에 저장
-                            sqlSession.getMapper(IAttachmentDAO.class).insertAttachment(attachmentDTO);
+                            // 첨부파일 정보 DB에 저장 - 여기서 문제가 있었을 수 있습니다
+                            int attachResult = attachmentDAO.insertAttachment(attachmentDTO);
+                            logger.info("첨부파일 등록 결과: " + attachResult + ", 장비 코드: " + attachmentDTO.getEquipCode());
+
+                            if (attachResult <= 0) {
+                                logger.warning("첨부파일 등록 실패: " + originalFilename);
+                            }
                         } catch (Exception e) {
-                            System.out.println("파일 저장 중 오류 발생: " + e.getMessage());
-                            // 하나의 파일 저장 실패해도 계속 진행
+                            // 로그 추가
+                            logger.warning("파일 처리 중 오류 발생: " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
                 }
+                logger.info("사진 처리 완료");
+            } else {
+                logger.info("업로드된 사진 없음");
             }
 
             if (result > 0) {
@@ -288,7 +288,8 @@ public class EquipRegisterController {
                 return "redirect";
             }
         } catch (Exception e) {
-            System.out.println(e.toString());
+            logger.severe("장비 등록 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
             model.addAttribute("message", "장비 등록 중 오류가 발생했습니다: " + e.getMessage());
             model.addAttribute("redirectUrl", "/equipregister-newprice.action?majorCategory=" + majorCategory
                     + "&middleCategory=" + middleCategory + "&brand=" + brand);
@@ -318,7 +319,6 @@ public class EquipRegisterController {
             result.put("formattedRentalPrice", nf.format(avgRentalPrice));
 
         } catch (Exception e) {
-            e.printStackTrace();
             result.put("success", false);
             result.put("message", e.getMessage());
         }
@@ -327,7 +327,3 @@ public class EquipRegisterController {
     }
 
 }
-
-
-
-

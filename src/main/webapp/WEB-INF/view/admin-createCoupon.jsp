@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%--
   Created by IntelliJ IDEA.
   User: huni
@@ -49,6 +50,9 @@
       </form>
       <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
         <button type="submit" class="submenu-btn">장비 통계</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get">
+        <button type="submit" class="submenu-btn">브랜드 및 장비생성</button>
       </form>
     </div>
 
@@ -158,8 +162,8 @@
       <h2>쿠폰 발급</h2>
     </div>
 
-    <!-- 쿠폰 생성 폼 - GET 방식으로 변경 -->
-    <form id="couponForm" action="${pageContext.request.contextPath}/admin-insertCoupon.action" method="get">
+    <!-- 쿠폰 생성 폼 - POST 메소드 사용 -->
+    <form id="couponForm" action="${pageContext.request.contextPath}/admin-createCoupon.action" method="post">
       <div class="coupon-form">
         <!-- 쿠폰 생성 타이틀 -->
         <div class="title-box">
@@ -170,7 +174,34 @@
         <div class="form-row">
           <div class="label">관리자 ID</div>
           <div class="input-field">
-            <input type="text" name="adminId" value="${sessionScope.adminId}" readonly>
+            <input type="text" name="adminId" value="${not empty sessionScope.adminId ? sessionScope.adminId : 'ADMIN1'}" readonly>
+          </div>
+        </div>
+
+        <!-- 쿠폰 종류 선택 -->
+        <div class="form-row">
+          <div class="label">쿠폰종류</div>
+          <div class="input-field">
+            <select name="couponTypeId" required>
+              <option value="" disabled selected>쿠폰 종류를 선택하세요</option>
+              <c:choose>
+                <c:when test="${empty couponTypeList}">
+                  <option value="" disabled>쿠폰 종류가 없습니다</option>
+                </c:when>
+                <c:otherwise>
+                  <c:forEach var="type" items="${couponTypeList}">
+                    <option value="${type.couponTypeId}">${type.couponTypeName}</option>
+                  </c:forEach>
+                </c:otherwise>
+              </c:choose>
+            </select>
+            <!-- 디버깅용 정보 표시 -->
+            <span style="font-size: 12px; color: #999;">
+      <c:choose>
+        <c:when test="${empty couponTypeList}">쿠폰 타입 목록이 비어있습니다.</c:when>
+        <c:otherwise>쿠폰 타입 ${couponTypeList.size()}개 로드됨</c:otherwise>
+      </c:choose>
+    </span>
           </div>
         </div>
 
@@ -182,19 +213,19 @@
           </div>
         </div>
 
-        <!-- 쿠폰 할인율 추가 -->
+        <!-- 쿠폰 할인율 - name 수정 -->
         <div class="form-row">
           <div class="label">쿠폰할인율</div>
           <div class="input-field">
-            <input type="number" name="discountRate" min="1" max="100" placeholder="할인율을 입력하세요(%)" required>
+            <input type="number" name="couponDiscount" min="1" max="100" placeholder="할인율을 입력하세요(%)" required>
           </div>
         </div>
 
-        <!-- 유효개월수로 변경 -->
+        <!-- 유효개월수 - name 수정 -->
         <div class="form-row">
           <div class="label">유효개월수</div>
           <div class="input-field">
-            <input type="number" name="validMonths" id="validMonths" min="1" max="36" placeholder="유효 개월 수" required>
+            <input type="number" name="couponMonth" id="validMonths" min="1" max="36" placeholder="유효 개월 수" required>
             <div class="validity-info">만료일: <span id="expiryDate">-</span></div>
             <!-- 계산된 만료일을 서버로 전송하기 위한 hidden 필드 -->
             <input type="hidden" name="expiryDate" id="expiryDateHidden">
@@ -208,12 +239,12 @@
 
         <!-- 쿠폰 내용 -->
         <div class="coupon-content">
-          <textarea name="couponContent" rows="4" cols="50" placeholder="쿠폰 상세 내용 및 주의사항을 입력하세요"></textarea>
+<%--쿠폰에 고지해야하는 내용입력--%>
         </div>
 
         <!-- 버튼 그룹 -->
         <div class="button-group">
-          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-couponList.action'">취소</button>
+          <button type="button" class="button" onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">취소</button>
           <button type="submit" class="button create">생성</button>
         </div>
       </div>
@@ -255,11 +286,30 @@
     const expiryDateHidden = document.getElementById('expiryDateHidden');
     const couponForm = document.getElementById('couponForm');
 
+    // URL 파라미터 체크 추가
+    const urlParams = new URLSearchParams(window.location.search);
+    const message = urlParams.get('message');
+
+    if (message) {
+      // URL 인코딩된 메시지를 디코딩하여 표시
+      alert(decodeURIComponent(message));
+
+      // 메시지 표시 후 URL에서 파라미터 제거 (선택사항)
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, document.title, newUrl);
+    }
+
+    // 컨트롤러에서 전달된 메시지가 있는지 확인 (request scope)
+    const serverMessage = "${message}";
+    if (serverMessage && serverMessage !== "") {
+      alert(serverMessage);
+    }
+
     // 세션 정보가 없을 경우를 대비한 관리자 ID 처리
     const adminIdField = document.querySelector('input[name="adminId"]');
-    if (adminIdField && !adminIdField.value) {
-      console.warn('세션에서 관리자 ID를 가져오지 못했습니다.');
-      // 필요에 따라 기본값 설정 또는 경고 처리
+    if (adminIdField && (!adminIdField.value || adminIdField.value.trim() === '')) {
+      adminIdField.value = 'ADMIN1'; // 기본값 설정
+      console.log('세션에서 관리자 ID를 가져오지 못해 기본값 "ADMIN1"을 설정했습니다.');
     }
 
     if (!validMonthsInput || !expiryDateElement || !expiryDateHidden || !couponForm) {

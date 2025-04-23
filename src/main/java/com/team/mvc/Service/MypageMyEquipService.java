@@ -25,7 +25,7 @@ public class MypageMyEquipService implements IMypageMyEquipService {
     // 일반 장비 리스트만 반환
     @Override
     public List<EquipmentDTO> listMyGeneral(int userCode) {
-        System.out.println("== MypageMyEquip Service : listMyGeneral : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyGeneral : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -51,7 +51,7 @@ public class MypageMyEquipService implements IMypageMyEquipService {
             }
         }
 
-        System.out.println("== MypageMyEquip Service : listMyGeneral : END ==");
+//        System.out.println("== MypageMyEquip Service : listMyGeneral : END ==");
 
         // ===================================================================================================일반 장비 탭
         return equipmentList;
@@ -59,7 +59,7 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
     // 장비 상태 현황 반환(화살표)
     public Map<String, Map<String, Integer>> getMyEquipmentStatus(int userCode) {
-        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : START ==");
+//        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : START ==");
 
         // DAO 생성
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -108,13 +108,13 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         storenCountMap.put("storen", storenTotal);
         equipmentStatus.put("count", storenCountMap);
 
-        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : END ==");
+//        System.out.println("== MypageMyEquip Service : getMyEquipmentStatus : END ==");
         return equipmentStatus;
     }
 
     @Override
     public List<StorenDTO> listMyStoren(int userCode) {
-        System.out.println("== MypageMyEquip Service : listMyStoren : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyStoren : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -128,35 +128,35 @@ public class MypageMyEquipService implements IMypageMyEquipService {
 
         // 최근등록 스토렌 찾아서 넣어주기
         for (EquipmentDTO equipmentDTO : allEquipmentList) {
-            System.out.println(">> 장비 조회 시도: equip_code=" + equipmentDTO.getEquip_code());
+//            System.out.println(">> 장비 조회 시도: equip_code=" + equipmentDTO.getEquip_code());
             StorenDTO newStoren = storenDAO.getStorenByEquipCode(userCode, equipmentDTO.getEquip_code());
 
             if (newStoren != null && newStoren.getStoren_id() > 0) {  // 스토렌 ID가 유효한 경우만 추가
-                System.out.println(">> 유효한 스토렌 정보 찾음: " + newStoren.getStoren_id());
+//                System.out.println(">> 유효한 스토렌 정보 찾음: " + newStoren.getStoren_id());
                 // 첨부파일(장비 사진) 넣어주기
                 List<AttachmentDTO> attachmentList = attachmentDAO.listAttachmentByEquipCode(equipmentDTO.getEquip_code());
                 if (!attachmentList.isEmpty()) {
                     equipmentDTO.setAttachments(attachmentList);
                 }
                 newStoren.setEquipmentDTO(equipmentDTO);
-                System.out.println(">> StorenDTO 확인: equip_code=" + equipmentDTO.getEquip_code()
-                        + ", storen_id=" + newStoren.getStoren_id()
-                        + ", storen_title=" + newStoren.getStoren_title()
-                        + ", created_date=" + newStoren.getCreated_date());
+//                System.out.println(">> StorenDTO 확인: equip_code=" + equipmentDTO.getEquip_code()
+//                        + ", storen_id=" + newStoren.getStoren_id()
+//                        + ", storen_title=" + newStoren.getStoren_title()
+//                        + ", created_date=" + newStoren.getCreated_date());
                 newStorenList.add(newStoren);
             } else {
-                System.out.println(">> 해당 장비의 유효한 스토렌 정보 없음: equip_code=" + equipmentDTO.getEquip_code());
+//                System.out.println(">> 해당 장비의 유효한 스토렌 정보 없음: equip_code=" + equipmentDTO.getEquip_code());
                 // 여기서 빈 스토렌 객체를 생성하거나 추가하지 않음
             }
         }
 
-        System.out.println("== MypageMyEquip Service : listMyStoren : END ==");
+//        System.out.println("== MypageMyEquip Service : listMyStoren : END ==");
         return newStorenList;
     }
 
     @Override
     public List<StorenDTO> listMyStorenDetail(int userCode, int equipCode) {
-        System.out.println("== MypageMyEquip Service : listMyStorenDetail : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyStorenDetail : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -164,13 +164,13 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         // 사용자의 해당 장비코드의 모든 스토렌 정보 리스트
         List<StorenDTO> storenList = storenDAO.listByUserCodeEquipCode(userCode, equipCode);
 
-        System.out.println("== MypageMyEquip Service : listMyStorenDetail : END ==");
+//        System.out.println("== MypageMyEquip Service : listMyStorenDetail : END ==");
         return storenList;
     }
 
     @Override
     public List<StorenDTO> listMyStorenByStatus(int userCode, String status) {
-        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -191,14 +191,14 @@ public class MypageMyEquipService implements IMypageMyEquipService {
             }
         }
 
-        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
+//        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
         return filteredList;
     }
 
 
     @Override
     public List<StorenDTO> listMyStorenByStatus(int userCode, String keyword, String[] statuses) {
-        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -243,15 +243,15 @@ public class MypageMyEquipService implements IMypageMyEquipService {
             }
         }
 
-        System.out.println("필터링된 결과 개수: " + storenList.size());
-        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
+//        System.out.println("필터링된 결과 개수: " + storenList.size());
+//        System.out.println("== MypageMyEquip Service : listMyStorenByStatus : END ==");
         return storenList;
     }
 
     @Override
     public MyEquipDTO listMyEquip(int userCode) {
 
-        System.out.println("== MypageMyEquip Service : listMyEquip : START ==");
+//        System.out.println("== MypageMyEquip Service : listMyEquip : START ==");
         // dao객체 생성
         IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
@@ -286,9 +286,9 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         List<StorenDTO> firstStorenList = new ArrayList<StorenDTO>();
 
         // 디버깅 콘솔체크
-        System.out.println("모든 장비 리스트 : " + allEquipmentList.size());
-        System.out.println("스토렌 제외 장비 리스트 : " + equipmentList.size());
-        System.out.println("storenList : " + storenList.size());
+//        System.out.println("모든 장비 리스트 : " + allEquipmentList.size());
+//        System.out.println("스토렌 제외 장비 리스트 : " + equipmentList.size());
+//        System.out.println("storenList : " + storenList.size());
 
         // 사용자가 등록한 일반 장비 개수만큼 첫등록 스토렌 리스트 만들기
         for (EquipmentDTO equipment : allEquipmentList) {
@@ -299,10 +299,10 @@ public class MypageMyEquipService implements IMypageMyEquipService {
                 firstStoren.setEquipmentDTO(equipment);
 
                 // 디버깅
-                System.out.println(">> StorenDTO 확인: equip_code=" + equipment.getEquip_code()
-                        + ", storen_id=" + firstStoren.getStoren_id()
-                        + ", storen_title=" + firstStoren.getStoren_title()
-                        + ", created_date=" + firstStoren.getCreated_date());
+//                System.out.println(">> StorenDTO 확인: equip_code=" + equipment.getEquip_code()
+//                        + ", storen_id=" + firstStoren.getStoren_id()
+//                        + ", storen_title=" + firstStoren.getStoren_title()
+//                        + ", created_date=" + firstStoren.getCreated_date());
 
                 firstStorenList.add(firstStoren);
             }
@@ -326,21 +326,198 @@ public class MypageMyEquipService implements IMypageMyEquipService {
         }
 
         // 디버깅 콘솔체크(둘의 size가 일치해야함)
-        System.out.println("firstStorenList : " + firstStorenList.size());
-        System.out.println("storenMap : " + storenMap.size());
+//        System.out.println("firstStorenList : " + firstStorenList.size());
+//        System.out.println("storenMap : " + storenMap.size());
 
         // 디버깅 콘솔체크
         for (int key : storenMap.keySet()) {
             List<StorenDTO> valueList = storenMap.get(key);
             int size = (valueList != null) ? valueList.size() : 0;
-            System.out.println("ㄴ Key: " + key + ", value list size: " + size);
+//            System.out.println("ㄴ Key: " + key + ", value list size: " + size);
         }
 
         // =================================================================================================스토렌 장비 탭
 
-        System.out.println("== MypageMyEquip Service : listMyEquip : END ==");
+//        System.out.println("== MypageMyEquip Service : listMyEquip : END ==");
 
         return new MyEquipDTO(equipmentList, storenMap, firstStorenList);
 
+    }
+
+
+    /* 페이징 처리를 위한 추가 메소드 구현 */
+    @Override
+    public int getMyGeneralEquipCount(EquipmentDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 사용자의 모든 장비 정보 조회
+        List<EquipmentDTO> allEquipmentList = equipDao.listByUserCode(dto.getUser_code());
+
+        // 사용자가 가진 스토렌의 장비코드 조회(중복없이)
+        List<Integer> storenEquipCodes = storenDAO.listStorenEquipCodes(dto.getUser_code());
+
+        // 일반 장비 목록에서 스토렌에 등록된 장비를 제외
+        List<EquipmentDTO> equipmentList = allEquipmentList.stream()
+                .filter(equip -> !storenEquipCodes.contains(equip.getEquip_code()))
+                .toList();
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            equipmentList = equipmentList.stream()
+                    .filter(equip ->
+                            (equip.getEquip_name() != null && equip.getEquip_name().toLowerCase().contains(keyword)) ||
+                                    (equip.getBrand() != null && equip.getBrand().toLowerCase().contains(keyword)) ||
+                                    (equip.getMajorCategory() != null && equip.getMajorCategory().toLowerCase().contains(keyword)) ||
+                                    (equip.getMiddleCategory() != null && equip.getMiddleCategory().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        return equipmentList.size();
+    }
+
+    @Override
+    public List<EquipmentDTO> listMyGeneralPaged(EquipmentDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 사용자의 모든 장비 정보 조회
+        List<EquipmentDTO> allEquipmentList = equipDao.listByUserCode(dto.getUser_code());
+
+        // 사용자가 가진 스토렌의 장비코드 조회(중복없이)
+        List<Integer> storenEquipCodes = storenDAO.listStorenEquipCodes(dto.getUser_code());
+
+        // 일반 장비 목록에서 스토렌에 등록된 장비를 제외
+        List<EquipmentDTO> equipmentList = allEquipmentList.stream()
+                .filter(equip -> !storenEquipCodes.contains(equip.getEquip_code()))
+                .toList();
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            equipmentList = equipmentList.stream()
+                    .filter(equip ->
+                            (equip.getEquip_name() != null && equip.getEquip_name().toLowerCase().contains(keyword)) ||
+                                    (equip.getBrand() != null && equip.getBrand().toLowerCase().contains(keyword)) ||
+                                    (equip.getMajorCategory() != null && equip.getMajorCategory().toLowerCase().contains(keyword)) ||
+                                    (equip.getMiddleCategory() != null && equip.getMiddleCategory().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        // 정렬 적용
+        if (dto.getSortType() != null) {
+            if (dto.getSortType().equals("name")) {
+                equipmentList = equipmentList.stream()
+                        .sorted(Comparator.comparing(EquipmentDTO::getEquip_name, Comparator.nullsLast(String::compareTo)))
+                        .toList();
+            } else { // 최신순 (기본)
+                equipmentList = equipmentList.stream()
+                        .sorted(Comparator.comparing(EquipmentDTO::getCreated_date, Comparator.nullsLast(String::compareTo)).reversed())
+                        .toList();
+            }
+        }
+
+        // 페이징 처리
+        int startIndex = (dto.getPagenation().getStartRow() - 1);
+        int endIndex = Math.min(dto.getPagenation().getEndRow(), equipmentList.size());
+
+        if (startIndex >= equipmentList.size() || startIndex < 0) {
+            return new ArrayList<>();
+        }
+
+        List<EquipmentDTO> pagedList = equipmentList.subList(startIndex, endIndex);
+
+        // 첨부파일(장비 사진) 넣어주기
+        for (EquipmentDTO equip : pagedList) {
+            List<AttachmentDTO> attachmentList = attachmentDAO.listAttachmentByEquipCode(equip.getEquip_code());
+            if (!attachmentList.isEmpty()) {
+                equip.setAttachments(attachmentList);
+            }
+        }
+
+        return pagedList;
+    }
+
+    @Override
+    public int getMyStorenCount(StorenDTO dto) {
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+
+        // 사용자 코드로 스토렌 정보 가져오기
+        List<StorenDTO> allStorenList = storenDAO.listByUserCode(dto.getUser_code());
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            allStorenList = allStorenList.stream()
+                    .filter(storen ->
+                            (storen.getStoren_title() != null && storen.getStoren_title().toLowerCase().contains(keyword)) ||
+                                    (storen.getStatus() != null && storen.getStatus().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        return allStorenList.size();
+    }
+
+    @Override
+    public List<StorenDTO> listMyStorenPaged(StorenDTO dto) {
+        IEquipmentDAO equipDao = sqlSession.getMapper(IEquipmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // 사용자 코드로 스토렌 정보 가져오기
+        List<StorenDTO> allStorenList = storenDAO.listByUserCode(dto.getUser_code());
+
+        // 검색 조건이 있는 경우 필터링
+        if (dto.getSearchKeyword() != null && !dto.getSearchKeyword().trim().isEmpty()) {
+            String keyword = dto.getSearchKeyword().toLowerCase();
+            allStorenList = allStorenList.stream()
+                    .filter(storen ->
+                            (storen.getStoren_title() != null && storen.getStoren_title().toLowerCase().contains(keyword)) ||
+                                    (storen.getStatus() != null && storen.getStatus().toLowerCase().contains(keyword))
+                    )
+                    .toList();
+        }
+
+        // 정렬 적용
+        if (dto.getSortType() != null) {
+            if (dto.getSortType().equals("name")) {
+                allStorenList = allStorenList.stream()
+                        .sorted(Comparator.comparing(StorenDTO::getStoren_title, Comparator.nullsLast(String::compareTo)))
+                        .toList();
+            } else { // 최신순 (기본)
+                allStorenList = allStorenList.stream()
+                        .sorted(Comparator.comparing(StorenDTO::getCreated_date, Comparator.nullsLast(String::compareTo)).reversed())
+                        .toList();
+            }
+        }
+
+        // 페이징 처리
+        int startIndex = (dto.getPagenation().getStartRow() - 1);
+        int endIndex = Math.min(dto.getPagenation().getEndRow(), allStorenList.size());
+
+        if (startIndex >= allStorenList.size() || startIndex < 0) {
+            return new ArrayList<>();
+        }
+
+        List<StorenDTO> pagedList = allStorenList.subList(startIndex, endIndex);
+
+        // 각 스토렌에 해당하는 장비 정보와 첨부파일 정보 추가
+        for (StorenDTO storen : pagedList) {
+            EquipmentDTO equipment = equipDao.getEquipmentByEquipCode(storen.getEquip_code());
+            if (equipment != null) {
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(equipment.getEquip_code());
+                if (!attachments.isEmpty()) {
+                    equipment.setAttachments(attachments);
+                }
+                storen.setEquipmentDTO(equipment);
+            }
+        }
+
+        return pagedList;
     }
 }

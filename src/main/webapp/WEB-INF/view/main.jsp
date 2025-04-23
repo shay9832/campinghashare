@@ -332,6 +332,12 @@
 
     <jsp:include page="header.jsp"/>
 
+    <c:if test="${not empty logoutRedirect}">
+        <script type="text/javascript">
+            alert("탈퇴 완료되었습니다.");
+        </script>
+    </c:if>
+
     <!-- 메인 콘텐츠 영역 -->
     <div class="container">
         <!-- 메인 배너 -->
@@ -359,14 +365,6 @@
             </div>
             <button class="banner-next"><i class="fas fa-chevron-right"></i></button>
         </div>
-
-
-        <%-- 관리자 권한 테스트용 버튼--%>
-        <c:if test="${not empty sessionScope.loginAdmin}">
-            <button type="submit" class="btn-admin-page" onclick="location.href='${pageContext.request.contextPath}/admin-main.action'">관리자 권한 테스트용</button>
-        </c:if>
-
-
 
         <!-- 필터 영역 -->
         <div class="filter-container">
