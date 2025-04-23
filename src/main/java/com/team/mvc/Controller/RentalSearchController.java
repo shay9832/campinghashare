@@ -1,11 +1,8 @@
 package com.team.mvc.Controller;
 
-import com.team.mvc.DTO.Pagenation;
-import com.team.mvc.DTO.MatchingRequestDTO;
-import com.team.mvc.DTO.StorenDTO;
+import com.team.mvc.DTO.*;
 import com.team.mvc.Interface.IRentalSearchService;
 import com.team.mvc.Interface.IStorenDAO;
-import com.team.mvc.DTO.StorenRequestDTO;
 import com.team.mvc.Interface.ISearchMatchingRequestService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +77,14 @@ public class RentalSearchController {
             filteredList = storenList.stream()
                     .filter(dto -> "STOREN".equals(dto.getType()))
                     .collect(Collectors.toList());
+        } else if ("rental".equals(tab)) {
+            // 렌탈 탭 - 렌탈 유형만 필터링
+            filteredList = storenList.stream()
+                    .filter(dto -> "RENTAL".equals(dto.getType()))
+                    .collect(Collectors.toList());
         } else {
-            // 스토렌 탭이 아니면 빈 리스트 반환 (데이터 표시 안 함)
-            filteredList = new ArrayList<>();
+            // "all" 탭 또는 기타 - 모든 유형 표시
+            filteredList = storenList;
         }
 
         model.addAttribute("storenList", filteredList);

@@ -35,6 +35,7 @@ public class MypageController {
     @Autowired
     private IMypageMypostService mypostService;
 
+
     // 마이페이지-메인
     @RequestMapping(value="/mypage-main.action")
     public String mypageMain(@ModelAttribute("userCode") Integer userCode, Model model) {
