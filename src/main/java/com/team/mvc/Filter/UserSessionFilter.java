@@ -23,11 +23,6 @@ public class UserSessionFilter implements Filter {
         String ctx = httpRequest.getContextPath();
         String uriLower = uri.toLowerCase();
 
-        // 디버깅용 로그
-        System.out.println("=== UserSessionFilter ===");
-        System.out.println("Request URI: " + uri);
-        System.out.println("Context Path: " + ctx);
-
         // 로그인 없이 접근 가능한 경로 정리
         boolean isExcluded = uriLower.startsWith(ctx + "/resources/") ||
                 uriLower.startsWith(ctx + "/favicon.ico") ||
@@ -40,13 +35,16 @@ public class UserSessionFilter implements Filter {
                 uriLower.startsWith(ctx + "/registeruser-id.action") ||
                 uriLower.startsWith(ctx + "/user-idcheck.action") ||
                 uriLower.startsWith(ctx + "/user-nicknamecheck.action") ||
-                uriLower.startsWith(ctx + "/insertuser.action") ||  // 회원가입 처리 URL
+                uriLower.startsWith(ctx + "/insertuser.action") ||
                 uriLower.startsWith(ctx + "/boardmain.action") ||
                 uriLower.startsWith(ctx + "/error") ||
                 uriLower.startsWith(ctx + "/admin") ||
                 uriLower.startsWith(ctx + "/admin-") ||
+                uriLower.contains("/admin-registerid.action") ||
+                uriLower.contains("/insertadmin.action") ||
                 uriLower.equals(ctx + "/") ||
                 uriLower.equals(ctx + "/main.action");
+
 
         // 세션 체크
         HttpSession session = httpRequest.getSession(false);

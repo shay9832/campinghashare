@@ -443,42 +443,42 @@
         <choose>
             <when test="deliveryType == '플랫폼 배송' or deliveryType == 'platform'">
                 UPDATE PLATFORM_DELIVERY
-                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR}
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS')
                 WHERE PLATFORM_DELIVERY_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '플랫폼 배송 반환' or deliveryType == 'platform-return'">
                 UPDATE PLATFORM_DELIVERY_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR}
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS')
                 WHERE PLATFORM_DELIVERY_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '거래자 택배' or deliveryType == 'user'">
                 UPDATE USERS_DELIVERY
-                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR},
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS'),
                 CARRIER_NAME = #{carrierName},
                 WAYBILL_NUMBER = #{waybillNumber}
                 WHERE USERS_DELIVERY_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '거래자 택배 반환' or deliveryType == 'user-return'">
                 UPDATE USERS_DELIVERY_RETURN
-                SET WAYBILL_ENTRY_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR},
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS'),
                 CARRIER_NAME = #{carrierName},
                 WAYBILL_NUMBER = #{waybillNumber}
                 WHERE USERS_DELIVERY_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '보관 최종 반환' or deliveryType == 'storage-return'">
                 UPDATE STORAGE_LAST_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR}
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS')
                 WHERE STORAGE_LAST_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
             <when test="deliveryType == '스토렌 최종 반환' or deliveryType == 'storen-return'">
                 UPDATE STOREN_LAST_RETURN
-                SET DELIVERY_START_DATE = #{deliveryStartDate,jdbcType=VARCHAR},
-                DELIVERY_END_DATE = #{deliveryEndDate,jdbcType=VARCHAR}
+                SET DELIVERY_START_DATE = TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+                DELIVERY_END_DATE = TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS')
                 WHERE STOREN_LAST_RETURN_ID = #{deliveryId,jdbcType=BIGINT}
             </when>
         </choose>
@@ -493,7 +493,10 @@
         INSERT INTO PLATFORM_DELIVERY (
         PLATFORM_DELIVERY_ID, PAY_ID, DELIVERY_START_DATE, DELIVERY_END_DATE
         ) VALUES (
-        #{deliveryId}, #{payId}, #{deliveryStartDate}, #{deliveryEndDate}
+        #{deliveryId},
+        #{payId},
+        TO_DATE(#{deliveryStartDate}, 'YYYY-MM-DD HH24:MI:SS'),
+        TO_DATE(#{deliveryEndDate}, 'YYYY-MM-DD HH24:MI:SS')
         )
     </insert>
 

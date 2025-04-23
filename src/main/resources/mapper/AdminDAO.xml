@@ -28,19 +28,18 @@
     <!-- 관리자 등록 -->
     <insert id="insertAdmin" parameterType="com.team.mvc.DTO.AdminDTO">
         INSERT INTO ADMINS (ADMIN_ID, USER_CODE, ADMIN_PW, ADMIN_TEL, CREATED_DATE)
-        VALUES (
-                   #{adminId},
-                   #{userCode},
-                   #{adminPw},
-                   #{adminTel},
-                   SYSDATE
-               )
+        VALUES (#{adminId}, #{userCode}, #{adminPw}, #{adminTel}, SYSDATE)
     </insert>
 
     <!-- USER_CODE 시퀀스 조회 -->
     <select id="getNextUserCode" resultType="int">
         SELECT USER_CODE_SEQ.NEXTVAL FROM DUAL
     </select>
+
+    <!-- USER_CODE 삽입 -->
+    <insert id="insertUserCode" parameterType="int">
+        INSERT INTO USER_CODE (USER_CODE) VALUES (#{userCode})
+    </insert>
 
     <!-- 중복 ID 확인 -->
     <select id="getAdminCountById" parameterType="String" resultType="int">

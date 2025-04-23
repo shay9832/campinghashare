@@ -260,6 +260,43 @@ select:focus, input[type="text"]:focus {
     align-items: center;
 }
 
+.price-diff {
+    color: var(--text-secondary);
+}
+
+.text-coral {
+    color: var(--color-coral);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.tooltip-trigger {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-content {
+    position: absolute;
+    display: none;
+    background-color: var(--color-gray-800);
+    color: var(--color-white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xxs);
+    white-space: nowrap;
+    z-index: var(--z-tooltip);
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 5px;
+}
+
 /* 카운터 컨테이너 */
 .counter-container {
     display: inline-flex;

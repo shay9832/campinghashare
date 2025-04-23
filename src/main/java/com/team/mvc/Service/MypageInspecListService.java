@@ -70,9 +70,9 @@ public class MypageInspecListService implements IMypageInspecListService {
     }
     //id로 스토렌 검색
     @Override
-    public List<MypageInspecListDTO> getInspecByStorenId(int userCode, int storenId) {
+    public List<MypageInspecListDTO> getInspecByStorenId(int storenId) {
         IMypageInspecListDAO dao = sqlSession.getMapper(IMypageInspecListDAO.class);
-        List<MypageInspecListDTO> list = dao.getInspecByStorenId(userCode, storenId);
+        List<MypageInspecListDTO> list = dao.getInspecByStorenId(storenId);
         processInspecList(list);
         return list;
     }

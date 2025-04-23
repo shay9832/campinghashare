@@ -143,7 +143,7 @@
             <div class="form-group">
                 <label class="form-label">비밀번호 <span class="required-field">*</span></label>
                 <input type="password" id="password" name="password" class="form-input" required>
-                <p class="form-error" id="passwordError">비밀번호는 숫자 혹은 영문으로 8자리 이상이어야 합니다.</p>
+                <p class="form-error" id="passwordError">비밀번호는 8~16자 영문+숫자 조합이어야 합니다.</p>
                 <p class="form-success" id="passwordSuccess">사용 가능한 비밀번호입니다.</p>
             </div>
 
@@ -274,7 +274,7 @@
         const passwordConfirm = document.getElementById("passwordConfirm").value;
 
         // 비밀번호 길이 검사 및 영문/숫자 조합 확인
-        const isValidPassword = password.length >= 8;
+        const isValidPassword = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/.test(password);
 
         if (isValidPassword) {
             document.getElementById("passwordSuccess").style.display = "block";
@@ -329,37 +329,35 @@
         }
     }
 
-    // 폼 제출 시 최종 확인
+    // 폼 제출 시 최종 확인 + 알림 추가
     document.getElementById("registerForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
         if (!idChecked) {
             alert("아이디 중복 확인을 해주세요.");
-            e.preventDefault();
-            return false;
+            return;
         }
-
         if (!nicknameChecked) {
             alert("닉네임 중복 확인을 해주세요.");
-            e.preventDefault();
-            return false;
+            return;
         }
 
         const pw = document.getElementById("password").value;
         const pwConfirm = document.getElementById("passwordConfirm").value;
 
-        if (pw.length < 8) {
-            alert("비밀번호는 8자 이상이어야 합니다.");
-            e.preventDefault();
-            return false;
+        if (pw.length < 8 || !/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,16}$/.test(pw)) {
+            alert("비밀번호는 8~16자 영문+숫자 조합이어야 합니다.");
+            return;
         }
-
         if (pw !== pwConfirm) {
             alert("비밀번호가 일치하지 않습니다.");
-            e.preventDefault();
-            return false;
+            return;
         }
 
-        // 모든 검증을 통과하면 폼 제출 계속 진행
-        return true;
+        // 최종 alert 후 서버 전송
+        alert("회원 가입이 완료되었습니다.");
+        this.action = "${pageContext.request.contextPath}/insertUser.action";
+        this.submit();
     });
 </script>
 </body>

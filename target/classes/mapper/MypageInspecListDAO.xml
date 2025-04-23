@@ -50,7 +50,7 @@
              , "대분류카테명", "중분류카테명", "검수상태", "검수결과장비등급"
              , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
-        WHERE "유저코드" = #{userCode} AND "검수유형" LIKE '스토렌%' AND "거래ID" = #{storenId}
+        WHERE "검수유형" LIKE '스토렌%' AND "거래ID" = #{storenId}
     </select>
 
 

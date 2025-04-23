@@ -1,10 +1,11 @@
 package com.team.mvc.DTO;
 
+import java.util.Date;
 import java.util.List;
 
 public class StorenDTO {
     private EquipmentDTO equipmentDTO;                      //일반 장비 DTO
-    private int storen_id, size_id, store_month;//스토렌id, 장비코드, 사이즈id, 보관개월수
+    private int storen_id, size_id, store_month;            //스토렌id, 장비코드, 사이즈id, 보관개월수
     private Integer equip_code;
     private String storen_title, storen_content;            //스토렌 제목, 상품내용
     private Integer daily_rent_price;                       //일일 렌탈가격
@@ -19,6 +20,7 @@ public class StorenDTO {
     // 검색 및 페이징 관련
     private String searchKeyword;
     private Pagenation pagenation;
+    private String sortType;
 
     // 마이페이지 매칭내역 때문에 추가한 속성
     // 날짜 관련 속성------------------------------------------------------------------------------------------------------
@@ -32,7 +34,9 @@ public class StorenDTO {
                                 // (=입고일 + 보관개월수)
     //-------------------------------------------------------------------------------------------------------날짜 관련 속성
     private Integer matching_request_count;                 //매칭수
-    private String matching_status;                         //매칭상태
+    private String matching_status;                         //매칭상태(매칭중, 매칭완료)
+    private MatchingRequestDTO matchingDTO;                 //매칭DTO
+    private String matching_status_detail;                  //마이페이지-내가 대여한 장비에서 쓰기 위한 세부 매칭 상태
 
     //장비 등급 추가
     private String equip_grade;                             //장비등급이름
@@ -50,6 +54,16 @@ public class StorenDTO {
     private String priceDiffSymbol;                         // 상승/하락/중립 기호
     private String priceDiffClass;                          // 색상 클래스명
     private int avgRentalPrice;                             // 추가: 평균 렌탈 가격
+
+    // 반환 관련 필드 추가
+    private String recipient;
+    private String tel;
+    private String zipCode;
+    private String address1;
+    private String address2;
+    private Date returnRequestDate;
+    private Date returnCompletedDate;
+
 
     // Getter/Setter -----------------------------------------
 
@@ -316,4 +330,53 @@ public class StorenDTO {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public MatchingRequestDTO getMatchingDTO() {
+        return matchingDTO;
+    }
+
+    public void setMatchingDTO(MatchingRequestDTO matchingDTO) {
+        this.matchingDTO = matchingDTO;
+    }
+
+    public String getMatching_status_detail() {
+        return matching_status_detail;
+    }
+
+    public void setMatching_status_detail(String matching_status_detail) {
+        this.matching_status_detail = matching_status_detail;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+
+
+    // 반환 관련 필드 getter/setter
+    public String getRecipient() { return recipient; }
+    public void setRecipient(String recipient) { this.recipient = recipient; }
+
+    public String getTel() { return tel; }
+    public void setTel(String tel) { this.tel = tel; }
+
+    public String getZipCode() { return zipCode; }
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+
+    public String getAddress1() { return address1; }
+    public void setAddress1(String address1) { this.address1 = address1; }
+
+    public String getAddress2() { return address2; }
+    public void setAddress2(String address2) { this.address2 = address2; }
+
+    public Date getReturnRequestDate() { return returnRequestDate; }
+    public void setReturnRequestDate(Date returnRequestDate) { this.returnRequestDate = returnRequestDate; }
+
+    public Date getReturnCompletedDate() { return returnCompletedDate; }
+    public void setReturnCompletedDate(Date returnCompletedDate) { this.returnCompletedDate = returnCompletedDate; }
+
 }

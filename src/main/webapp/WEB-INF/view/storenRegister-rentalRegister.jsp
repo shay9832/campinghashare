@@ -235,6 +235,30 @@
                     }
                 }
             });
+
+            // 입력값 포맷팅 추가 (입력 후 포커스를 잃을 때)
+            rentalPrice.addEventListener('blur', function() {
+                if (this.value) {
+                    // 숫자로 변환 후 다시 문자열로 포맷팅
+                    const numValue = parseInt(this.value.replace(/,/g, '')) || 0;
+                    this.value = numValue.toLocaleString('ko-KR');
+                }
+            });
+
+            // 포커스 받을 때는 콤마 제거
+            rentalPrice.addEventListener('focus', function() {
+                this.value = this.value.replace(/,/g, '');
+            });
+
+            // 폼 제출 시 콤마 제거
+            const rentalForm = document.querySelector('form');
+            if (rentalForm) {
+                rentalForm.addEventListener('submit', function(e) {
+                    if (rentalPrice) {
+                        rentalPrice.value = rentalPrice.value.replace(/,/g, '');
+                    }
+                });
+            }
         }
 
         // 상품 내용 byte 수 카운터 (한글 및 이모지 처리)
