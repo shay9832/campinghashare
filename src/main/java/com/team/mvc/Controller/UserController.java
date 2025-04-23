@@ -19,6 +19,12 @@ public class UserController {
     @Autowired
     private SqlSession sqlSession;
 
+//    @Autowired
+//    private IUserDAO userDAO;
+//
+//    @Autowired
+//    private BCryptPasswordEncoder passwordEncoder;
+
     // 서버 재시작 시 최초 페이지 설정
     @RequestMapping("/")
     public String rootRedirect() {
@@ -84,9 +90,10 @@ public class UserController {
     }
 
     // 로그아웃 처리
-    @RequestMapping(value = "/logout.action", method = RequestMethod.GET)
-    public String logout(HttpSession session) {
-        session.invalidate(); // 세션 무효화
+    @RequestMapping("/logout.action")
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+        session.invalidate(); // 세션 종료
+        redirectAttributes.addFlashAttribute("logoutRedirect", true);
         return "redirect:/main.action";
     }
 
@@ -259,4 +266,24 @@ public class UserController {
         }
         return "equipRegister";
     }
+
+//    // 비밀번호 확인 후 탈퇴 처리
+//    @RequestMapping(value = "/confirmAndExit.action", method = RequestMethod.POST)
+//    public String confirmAndExit(
+//            @RequestParam("userId") String userId,
+//            @RequestParam("userPw") String userPw,
+//            RedirectAttributes redirectAttributes) {
+//
+//        UserDTO user = userDAO.getUserById(userId);
+//
+//        if (user != null && passwordEncoder.matches(userPw, user.getUserPw())) {
+//            userDAO.disconnectUserCode(userId);
+//            redirectAttributes.addFlashAttribute("exitSuccess", true);
+//            return "redirect:/logout.action";
+//        } else {
+//            redirectAttributes.addFlashAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+//            return "redirect:/exitUser.action";
+//        }
+//    }
+
 }

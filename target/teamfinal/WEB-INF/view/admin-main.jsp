@@ -1,11 +1,14 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>admin-main.jsp</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin-main.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link>
 </head>
 <body>
@@ -23,6 +26,9 @@
       </form>
       <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
         <button type="submit" class="submenu-btn">장비 통계</button>
+      </form>
+      <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get">
+        <button type="submit" class="submenu-btn">브랜드 및 장비생성</button>
       </form>
     </div>
 
@@ -133,7 +139,7 @@
         <div class="widget-header">그래프 상세</div>
         <div class="widget-content chart-container">
           <div>
-            ${count.totalReportCount}
+            <canvas id="myChart" width="771" height="230"></canvas>
           </div>
         </div>
       </div>
@@ -151,6 +157,9 @@
         <div class="widget-header">신고글 목록 <span class="badge">5</span></div>
         <div class="widget-content">
           <!-- 게시물 목록 내용 -->
+          <c:forEach var="item" items="${report}">
+            ${item.report_content}
+          </c:forEach>
         </div>
       </div>
 
@@ -189,6 +198,46 @@
   </div>
 
 </div>
+
+<%--그래프용 스크립트--%>
+<script>
+  const userCount = ${count.newUserCount}
+  const storenPaymentCount = ${count.storenPaymentCount}
+  const storagePaymentCount = ${count.storagePaymentCount}
+  const rentalPaymentCount = ${count.rentalPaymentCount}
+  const totalPaymentCount = ${count.totalPaymentCount}
+
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  const myChart = new Chart(ctx, {
+    type: 'line', // 'line', 'pie', 'doughnut', 'radar', 등 다양함
+    data: {
+      labels: ['신규 회원수','스토렌결제수','보관결제수','렌탈결제수','총결제수'],
+      datasets: [{
+        label: '일일 상황판',
+        data: [userCount,storenPaymentCount,storagePaymentCount,rentalPaymentCount,totalPaymentCount],
+        borderWidth: 1,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          // ...
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
 
 
 <!-- 자바스크립트 - 드롭다운 메뉴 기능 구현 -->

@@ -1,171 +1,78 @@
-// InspecResultDTO.java
 package com.team.mvc.DTO;
 
+import java.util.Date;
+import java.util.List;
+
 public class InspecResultDTO {
-    private String storenId;
-    private String equipmentCategory;
-    private String equipmentSubCategory;
-    private String brand;
-    private String equipmentName;
-    private String equipmentSize;
-    private String inspectionDate;
-    private String equipmentGrade;
+    private int equipId;
+    private String equipName;
+    private String brandName;
+    private int originalPrice;
+    private String majorCategory;
+    private String middleCategory;
+    private String equipSize;
+    private String gradeName;
+    private Date inspectionDate; // 검수 날짜 필드
+    private List<InspecItemDetail> itemList;
 
-    private String inspecItemName;
-    private String inspectComment;
-    private String inspectResult;
-    private int inspecGradeDeduction;
+    public int getEquipId() { return equipId; }
+    public void setEquipId(int equipId) { this.equipId = equipId; }
 
-    private String inspecItemDescHigh;
-    private String inspecItemDescMid;
-    private String inspecItemDescLow;
+    public String getEquipName() { return equipName; }
+    public void setEquipName(String equipName) { this.equipName = equipName; }
 
-    private String inspecType;
-    private int equipCode;
-    private int totalScore;
+    public String getBrandName() { return brandName; }
+    public void setBrandName(String brandName) { this.brandName = brandName; }
 
-    public String getStorenId() {
-        return storenId;
-    }
+    public int getOriginalPrice() { return originalPrice; }
+    public void setOriginalPrice(int originalPrice) { this.originalPrice = originalPrice; }
 
-    public void setStorenId(String storenId) {
-        this.storenId = storenId;
-    }
+    public String getMajorCategory() { return majorCategory; }
+    public void setMajorCategory(String majorCategory) { this.majorCategory = majorCategory; }
 
-    public String getEquipmentCategory() {
-        return equipmentCategory;
-    }
+    public String getMiddleCategory() { return middleCategory; }
+    public void setMiddleCategory(String middleCategory) { this.middleCategory = middleCategory; }
 
-    public void setEquipmentCategory(String equipmentCategory) {
-        this.equipmentCategory = equipmentCategory;
-    }
+    public String getEquipSize() { return equipSize; }
+    public void setEquipSize(String equipSize) { this.equipSize = equipSize; }
 
-    public String getEquipmentSubCategory() {
-        return equipmentSubCategory;
-    }
+    public String getGradeName() { return gradeName; }
+    public void setGradeName(String gradeName) { this.gradeName = gradeName; }
 
-    public void setEquipmentSubCategory(String equipmentSubCategory) {
-        this.equipmentSubCategory = equipmentSubCategory;
-    }
+    public List<InspecItemDetail> getItemList() { return itemList; }
+    public void setItemList(List<InspecItemDetail> itemList) { this.itemList = itemList; }
 
-    public String getBrand() {
-        return brand;
-    }
+    public Date getInspectionDate() { return inspectionDate; }
+    public void setInspectionDate(Date inspectionDate) { this.inspectionDate = inspectionDate; }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
+    public static class InspecItemDetail {
+        private String itemName;
+        private String gradeName;
+        private int deduction;
+        private String comment;
+        private String inspecItemDescHigh;
+        private String inspecItemDescMid;
+        private String inspecItemDescLow;
 
-    public String getEquipmentName() {
-        return equipmentName;
-    }
+        public String getItemName() { return itemName; }
+        public void setItemName(String itemName) { this.itemName = itemName; }
 
-    public void setEquipmentName(String equipmentName) {
-        this.equipmentName = equipmentName;
-    }
+        public String getGradeName() { return gradeName; }
+        public void setGradeName(String gradeName) { this.gradeName = gradeName; }
 
-    public String getEquipmentSize() {
-        return equipmentSize;
-    }
+        public int getDeduction() { return deduction; }
+        public void setDeduction(int deduction) { this.deduction = deduction; }
 
-    public void setEquipmentSize(String equipmentSize) {
-        this.equipmentSize = equipmentSize;
-    }
+        public String getComment() { return comment; }
+        public void setComment(String comment) { this.comment = comment; }
 
-    public String getInspectionDate() {
-        return inspectionDate;
-    }
+        public String getInspecItemDescHigh() { return inspecItemDescHigh; }
+        public void setInspecItemDescHigh(String inspecItemDescHigh) { this.inspecItemDescHigh = inspecItemDescHigh; }
 
-    public void setInspectionDate(String inspectionDate) {
-        this.inspectionDate = inspectionDate;
-    }
+        public String getInspecItemDescMid() { return inspecItemDescMid; }
+        public void setInspecItemDescMid(String inspecItemDescMid) { this.inspecItemDescMid = inspecItemDescMid; }
 
-    public String getEquipmentGrade() {
-        return equipmentGrade;
-    }
-
-    public void setEquipmentGrade(String equipmentGrade) {
-        this.equipmentGrade = equipmentGrade;
-    }
-
-    public String getInspecItemName() {
-        return inspecItemName;
-    }
-
-    public void setInspecItemName(String inspecItemName) {
-        this.inspecItemName = inspecItemName;
-    }
-
-    public String getInspectComment() {
-        return inspectComment;
-    }
-
-    public void setInspectComment(String inspectComment) {
-        this.inspectComment = inspectComment;
-    }
-
-    public String getInspectResult() {
-        return inspectResult;
-    }
-
-    public void setInspectResult(String inspectResult) {
-        this.inspectResult = inspectResult;
-    }
-
-    public int getInspecGradeDeduction() {
-        return inspecGradeDeduction;
-    }
-
-    public void setInspecGradeDeduction(int inspecGradeDeduction) {
-        this.inspecGradeDeduction = inspecGradeDeduction;
-    }
-
-    public String getInspecItemDescHigh() {
-        return inspecItemDescHigh;
-    }
-
-    public void setInspecItemDescHigh(String inspecItemDescHigh) {
-        this.inspecItemDescHigh = inspecItemDescHigh;
-    }
-
-    public String getInspecItemDescMid() {
-        return inspecItemDescMid;
-    }
-
-    public void setInspecItemDescMid(String inspecItemDescMid) {
-        this.inspecItemDescMid = inspecItemDescMid;
-    }
-
-    public String getInspecItemDescLow() {
-        return inspecItemDescLow;
-    }
-
-    public void setInspecItemDescLow(String inspecItemDescLow) {
-        this.inspecItemDescLow = inspecItemDescLow;
-    }
-
-    public String getInspecType() {
-        return inspecType;
-    }
-
-    public void setInspecType(String inspecType) {
-        this.inspecType = inspecType;
-    }
-
-    public int getEquipCode() {
-        return equipCode;
-    }
-
-    public void setEquipCode(int equipCode) {
-        this.equipCode = equipCode;
-    }
-
-
-    public int getTotalScore() {
-        return totalScore;
-    }
-
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
+        public String getInspecItemDescLow() { return inspecItemDescLow; }
+        public void setInspecItemDescLow(String inspecItemDescLow) { this.inspecItemDescLow = inspecItemDescLow; }
     }
 }

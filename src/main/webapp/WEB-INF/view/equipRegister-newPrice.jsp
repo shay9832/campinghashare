@@ -156,6 +156,11 @@
                 if (value) {
                     $(this).val(Number(value).toLocaleString());
                 }
+
+                const equipName = $("#equipNameSearch").val();
+                if (equipName && equipName !== "기타") {
+                    updatePriceInfo(equipName);
+                }
             });
         }
 
@@ -360,8 +365,6 @@
             window.processedNames = [];
         }
 
-
-
         // 장비명 선택 시 동적으로 평균 신품가격 및 평균 렌탈가격 표시
         function updatePriceInfo(equipName) {
             if (!equipName || equipName === "기타") return;
@@ -374,35 +377,45 @@
                 success: function(response) {
                     if (response.success) {
                         const avgNewPrice = response.avgNewPrice;
-                        const avgRentalPrice = response.avgRentalPrice;
                         const formattedNewPrice = response.formattedNewPrice;
-                        const formattedRentalPrice = response.formattedRentalPrice;
 
-                        // 신품가격 입력란에 평균가 표시
-                        if (avgNewPrice > 0) {
-                            $("#originalPrice").val(formattedNewPrice);
-                            $("#avgPriceInfo").html("평균 신품 가격: " + formattedNewPrice + "원");
-                            $("#avgPriceInfo").show();
-                        } else {
-                            $("#avgPriceInfo").hide();
-                        }
+                        // 평균가 표시
+                        $("#avgPriceFormatted").text(formattedNewPrice + "원");
 
-                        // 평균 렌탈가격 정보 표시
-                        if (avgRentalPrice > 0) {
-                            $("#avgRentalInfo").html("평균 렌탈 가격: " + formattedRentalPrice + "원/일 (참고용)");
-                            $("#avgRentalInfo").show();
+                        // 입력값이 있으면 비교
+                        const enteredPriceStr = $("#priceInput").val().replace(/,/g, '');
+                        const enteredPrice = parseInt(enteredPriceStr) || 0;
+
+                        if (enteredPrice > 0 && avgNewPrice > 0) {
+                            const diff = Math.round((enteredPrice - avgNewPrice) / avgNewPrice * 100);
+                            let symbol = '-';
+                            let className = 'text-secondary';
+
+                            if (diff > 0) {
+                                symbol = '▲';
+                                className = 'text-coral';
+                            } else if (diff < 0) {
+                                symbol = '▼';
+                                className = 'text-success';
+                            }
+
+                            // 백틱 대신 문자열 연결 사용
+                            $("#priceDiff").text('(평균 대비 ' + Math.abs(diff) + '%' + symbol + ')').attr("class", "price-diff " + className);
+                            $("#priceComparison").show();
                         } else {
-                            $("#avgRentalInfo").hide();
+                            $("#priceDiff").text('(평균 대비 -)').attr("class", "price-diff text-secondary");
+                            $("#priceComparison").hide();
                         }
+                    } else {
+                        $("#priceComparison").hide();
                     }
                 },
                 error: function(xhr, status, error) {
                     console.error("가격 정보 불러오기 실패:", error);
+                    $("#priceComparison").hide();
                 }
             });
         }
-
-
 
         // 장비 등록 폼 제출
         function submitEquipmentForm() {
@@ -428,8 +441,30 @@
 
             console.log("선택된 파일 수: " + selectedFiles.length);
 
-            // AJAX 대신 기본 폼 제출 방식 사용
-            document.getElementById("equipmentForm").submit();
+            // 선택된 파일들을 폼에 추가
+            const formElement = document.getElementById("equipmentForm");
+
+            // 기존 file input 필드 제거
+            const oldFileInputs = formElement.querySelectorAll('input[type="file"][name="photos"]');
+            oldFileInputs.forEach(input => input.remove());
+
+            // 선택된 각 파일에 대해 새 file input 요소 생성하여 폼에 추가
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(selectedFiles[i]);
+
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.name = 'photos';
+                fileInput.style.display = 'none';
+                fileInput.files = dataTransfer.files;
+
+                formElement.appendChild(fileInput);
+            }
+
+            // 폼 제출
+            formElement.submit();
+            return true;
         }
     </script>
 </head>
@@ -507,13 +542,14 @@
                     <div class="input-container price-row">
                         <input type="text" placeholder="금액 입력" class="price-input" id="priceInput" name="originalPrice">
                         <span class="currency">원</span>
-                        <div class="price-comparison" id="priceComparison">
-                            <span class="price-diff" id="priceDiff">(평균 대비 22%▲)</span>
+
+                        <div class="price-comparison" id="priceComparison" style="display:none;">
+                            <span class="price-diff" id="priceDiff"></span>
                             <span class="avg-price">평균 신품 가격</span>
-                            <span class="avg-price-value">2,500,000원</span>
+                            <span class="avg-price-value" id="avgPriceFormatted"></span>
                             <div class="info-icon tooltip-trigger">
                                 <i class="fa-solid fa-circle-question"></i>
-                                <div class="tooltip-content">이 가격은 유저들이 등록한 동일 상품의 평균 가격입니다.</div>
+                                <div class="tooltip-content">유저들이 입력한 평균 신품 가격 기준입니다.</div>
                             </div>
                         </div>
                     </div>

@@ -358,8 +358,7 @@
                                         <c:choose>
                                             <c:when test="${isCompleted}">
                                                 <!-- 검수 완료 시 inspec-result.action으로 이동 -->
-                                                <a href="${pageContext.request.contextPath}/inspec-result.action?storen_id=${inspec.service_id}"
-                                                   class="btn-sm btn btn-primary">자세히</a>
+                                                <a href="inspec-result.action?storen_id=${inspec.service_id}" class="btn-sm btn-detail" data-id="${inspec.service_id}">자세히</a>
                                             </c:when>
                                             <c:otherwise>
                                                 <!-- 미완료 시 버튼 비활성화 -->
@@ -512,10 +511,18 @@
         });
 
         // 상세 버튼 클릭 이벤트
-        $('.btn-detail').on('click', function () {
+        $(document).on('click', '.btn-detail', function(e) {
+            // 기본 클릭 이벤트 동작 중지 (페이지 이동 막기)
+            e.preventDefault();
+
+            // data-id 속성에서 거래 ID 가져오기
             const inspectionId = $(this).data('id');
-            // 여기에 상세 정보 조회 로직 추가
-            alert('검수 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
+
+            // 알림창 표시 후 페이지 이동
+            alert('거래 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
+
+            // 원래 링크로 이동
+            window.location.href = $(this).attr('href');
         });
     });
 
@@ -649,8 +656,9 @@
                 '<td>' + resultActionType + '</td>' +
                 '<td>' + completedDate + '</td>' +
                 '<td>' +
-                '<button type="button" class="btn-sm btn-track-external" ' +
-                'data-id="' + inspec.service_id + '" ' + buttonDisabled + '>자세히..</button>' +
+                (isInspectionCompleted
+                    ? '<a href="inspec-result.action?storen_id=' + inspec.service_id + '" class="btn-sm btn-detail" data-id="' + inspec.service_id + '">자세히</a>'
+                    : '<button type="button" class="btn-sm btn-secondary" disabled>자세히</button>') +
                 '</td>' +
                 '</tr>';
 

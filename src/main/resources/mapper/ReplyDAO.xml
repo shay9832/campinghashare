@@ -39,6 +39,40 @@
         WHERE REPLY_ID = #{replyId}
     </select>
 
+    <!-- 첨부파일 추가 -->
+    <insert id="insertReplyAttachment" parameterType="com.team.mvc.DTO.AttachmentDTO">
+        INSERT INTO ATTACHMENT_REPLY (ATTACHMENT_REPLY_ID, REPLY_ID, ATTACHMENT_NAME, ATTACHMENT_PATH, ATTACHMENT_SIZE, ATTACHMENT_ORDER, CREATED_DATE)
+        VALUES (ATTACHMENT_REPLY_SEQ.NEXTVAL, #{replyId}, #{attachmentName}, #{attachmentPath}, #{attachmentSize}, #{attachmentOrder}, SYSDATE)
+    </insert>
+
+    <!-- 댓글별 첨부파일 조회 -->
+    <select id="getAttachmentsByReplyId" parameterType="int" resultType="com.team.mvc.DTO.AttachmentDTO">
+        SELECT
+            ATTACHMENT_REPLY_ID as attachmentReplyId,
+            REPLY_ID as replyId,
+            ATTACHMENT_NAME as attachmentName,
+            ATTACHMENT_PATH as attachmentPath,
+            ATTACHMENT_SIZE as attachmentSize,
+            ATTACHMENT_ORDER as attachmentOrder
+        FROM ATTACHMENT_REPLY
+        WHERE REPLY_ID = #{replyId}
+        ORDER BY ATTACHMENT_REPLY_ID ASC
+    </select>
+
+    <!-- 첨부파일 삭제 -->
+    <delete id="deleteReplyAttachment" parameterType="int">
+        DELETE FROM ATTACHMENT_REPLY
+        WHERE ATTACHMENT_REPLY_ID = #{attachmentReplyId}
+    </delete>
+
+    <!-- 댓글 ID로 모든 첨부파일 삭제 -->
+    <delete id="deleteAttachmentsByReplyId" parameterType="int">
+        DELETE FROM ATTACHMENT_REPLY
+        WHERE REPLY_ID = #{replyId}
+    </delete>
+
+
+
 
     <!-- 회원코드로 해당 유저가 남긴 댓글 리스트(최근 등록일순으로 count건 수 조회) -->
     <select id="listRecentReplyByUserCode" resultType="com.team.mvc.DTO.ReplyDTO">

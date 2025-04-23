@@ -248,6 +248,7 @@
             // 전역 변수로 현재 모드와 페이지 설정
             var isHotMode = ${not empty hotOnly ? 'true' : 'false'};
             var currentPage = ${not empty pagenation.pageNum ? pagenation.pageNum : 1};
+            var sortType = "${not empty sortType ? sortType : 'recent'}";
 
             // 원본 게시글 번호를 저장할 객체
             var originalPostNumbers = {};
@@ -279,23 +280,29 @@
                 }
             });
 
+            // 정렬 타입 선택 이벤트
+            $('select[name="sortType"]').val(sortType).change(function () {
+                sortType = $(this).val();
+                loadPosts(1, isHotMode);
+            });
+
             // 인기글 버튼 클릭 이벤트
-            $('.filter-btn:contains("인기글")').click(function (e) {
+            $('#hotPostsBtn').click(function (e) {
                 e.preventDefault();
                 if (!isHotMode) {
                     $(this).addClass('active');
-                    $('.filter-btn:contains("전체")').removeClass('active');
+                    $('#allPostsBtn').removeClass('active');
                     isHotMode = true;
                     loadPosts(1, true); // 항상 1페이지부터 시작하도록 설정
                 }
             });
 
             // 전체 버튼 클릭 이벤트
-            $('.filter-btn:contains("전체")').click(function (e) {
+            $('#allPostsBtn').click(function (e) {
                 e.preventDefault();
                 if (isHotMode) {
                     $(this).addClass('active');
-                    $('.filter-btn:contains("인기글")').removeClass('active');
+                    $('#hotPostsBtn').removeClass('active');
                     isHotMode = false;
                     loadPosts(1, false); // 항상 1페이지부터 시작하도록 설정
                 }
@@ -311,10 +318,11 @@
                     type: 'GET',
                     data: {
                         page: page,
-                        size: 10,
+                        size: 9,
                         searchType: searchType,
                         searchKeyword: searchKeyword,
                         hotOnly: hotOnly,
+                        sortType: sortType,
                         originalPostNumbers: JSON.stringify(originalPostNumbers) // 원본 번호 전달
                     },
                     dataType: 'json',
@@ -331,7 +339,10 @@
                         if (searchKeyword) {
                             newUrl += '&searchType=' + searchType + '&searchKeyword=' + encodeURIComponent(searchKeyword);
                         }
-                        history.pushState({page: page, hotOnly: hotOnly}, '', newUrl);
+                        if (sortType && sortType !== 'recent') {
+                            newUrl += '&sortType=' + sortType;
+                        }
+                        history.pushState({page: page, hotOnly: hotOnly, sortType: sortType}, '', newUrl);
                     },
                     error: function (xhr, status, error) {
                         console.error('Error loading posts:', error);
@@ -345,17 +356,22 @@
                 if (e.state) {
                     var hotOnly = e.state.hotOnly;
                     var page = e.state.page || 1;
+                    var newSortType = e.state.sortType || 'recent';
 
                     // 버튼 상태 업데이트
                     if (hotOnly) {
-                        $('.filter-btn:contains("인기글")').addClass('active');
-                        $('.filter-btn:contains("전체")').removeClass('active');
+                        $('#hotPostsBtn').addClass('active');
+                        $('#allPostsBtn').removeClass('active');
                         isHotMode = true;
                     } else {
-                        $('.filter-btn:contains("전체")').addClass('active');
-                        $('.filter-btn:contains("인기글")').removeClass('active');
+                        $('#allPostsBtn').addClass('active');
+                        $('#hotPostsBtn').removeClass('active');
                         isHotMode = false;
                     }
+
+                    // 정렬 상태 업데이트
+                    sortType = newSortType;
+                    $('select[name="sortType"]').val(sortType);
 
                     // 데이터 로드
                     loadPosts(page, hotOnly);
@@ -545,17 +561,16 @@
                 <!-- 정렬 및 필터 옵션 -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="d-flex align-items-center">
-                        <select class="form-control-sm">
-                            <option>정렬</option>
-                            <option>최신순</option>
-                            <option>조회순</option>
-                            <option>추천순</option>
+                        <select name="sortType" class="form-control-sm">
+                            <option value="recent" ${sortType == 'recent' ? 'selected' : ''}>최신순</option>
+                            <option value="views" ${sortType == 'views' ? 'selected' : ''}>조회순</option>
+                            <option value="recommends" ${sortType == 'recommends' ? 'selected' : ''}>추천순</option>
                         </select>
 
                         <div style="display: flex; margin-left: 20px;">
-                            <a href="#" class="filter-btn active"
+                            <a href="#" id="allPostsBtn" class="filter-btn active"
                                style="border-radius: 4px; margin-right: 10px;  min-width: 80px; text-align: center;">전체</a>
-                            <a href="#" class="filter-btn"
+                            <a href="#" id="hotPostsBtn" class="filter-btn"
                                style="border-radius: 4px; min-width: 80px; text-align: center;">인기글</a>
                         </div>
                     </div>

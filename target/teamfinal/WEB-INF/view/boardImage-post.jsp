@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../../resources/css/main.css">
     <!-- Font Awesome CDN 추가 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         /* 심플 카드 그리드 스타일 - boardImage.jsp와 동일하게 적용 */
         .post-container {
@@ -641,7 +641,7 @@
                         </div>
                         <div class="post-actions-right">
                             <c:if test="${isAuthor}">
-                                <button class="update-btn" onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정</button>
+                                <button class="update-btn" onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정</button>
                             </c:if>
                             <c:if test="${isAuthor || not empty sessionScope.loginAdmin}">
                                 <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
@@ -1261,27 +1261,98 @@
         });
     }
 
-    // 댓글 삭제 이벤트 처리
+    // 댓글 삭제 이벤트 처리 - 모달 방식으로 변경
     document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) {
-                return;
-            }
-
+        button.addEventListener('click', function() {
             const replyId = this.getAttribute('data-id');
-
-            // AJAX 요청 통합 함수 사용
-            sendAjaxRequest('api/reply/delete.action', 'POST', {
-                replyId: replyId
-            }, function (data) {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('댓글 삭제에 실패했습니다: ' + data.message);
-                }
-            });
+            confirmDeleteComment(replyId);
         });
     });
+
+    // 댓글 삭제 확인 모달 표시 함수
+    function confirmDeleteComment(replyId) {
+        // 모달 내용 설정
+        document.querySelector('#reportModal .modal-title').textContent = '댓글 삭제';
+        document.querySelector('#reportModal .modal-body').innerHTML = `
+        <p>정말 이 댓글을 삭제하시겠습니까?</p>
+        <p>삭제된 댓글은 복구할 수 없습니다.</p>
+    `;
+
+        // 취소 버튼 텍스트 변경
+        document.getElementById('cancelReportBtn').textContent = '취소';
+
+        // 삭제 버튼 텍스트와 색상 변경
+        const submitBtn = document.getElementById('submitReportBtn');
+        submitBtn.textContent = '삭제하기';
+        submitBtn.className = 'btn btn-danger';
+
+        // 모달 표시
+        showModal(document.getElementById('reportModal'));
+
+        // 기존 이벤트 리스너 제거하고 새로운 리스너 설정
+        const newSubmitBtn = submitBtn.cloneNode(true);
+        submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+
+        // 삭제 확인 버튼 이벤트
+        newSubmitBtn.addEventListener('click', function() {
+            // 모달 닫기
+            closeModal(document.getElementById('reportModal'));
+
+            // 삭제 요청 보내기
+            sendAjaxRequest('api/reply/delete.action', 'POST', {
+                replyId: replyId
+            }, function(data) {
+                // 완료 모달 내용 설정
+                const iconElement = document.querySelector('#completionModal .popup-alert-icon i');
+                const iconContainer = document.querySelector('#completionModal .popup-alert-icon');
+                const titleElement = document.querySelector('#completionModal .popup-alert-title');
+                const contentElement = document.querySelector('#completionModal .popup-alert-content');
+
+                if (data.success) {
+                    // 성공 모달 설정
+                    iconElement.className = 'fa-solid fa-check-circle';
+                    iconContainer.className = 'popup-alert-icon text-success';
+                    titleElement.textContent = '삭제 완료';
+                    contentElement.textContent = '댓글이 성공적으로 삭제되었습니다.';
+
+                    // 확인 버튼 이벤트 처리 (페이지 새로고침)
+                    setupConfirmButtonForComment(true);
+                } else {
+                    // 실패 모달 설정
+                    iconElement.className = 'fa-solid fa-exclamation-circle';
+                    iconContainer.className = 'popup-alert-icon text-danger';
+                    titleElement.textContent = '삭제 실패';
+                    contentElement.textContent = data.message || '알 수 없는 오류가 발생했습니다.';
+
+                    // 확인 버튼 이벤트 처리 (새로고침 없음)
+                    setupConfirmButtonForComment(false);
+                }
+
+                // 완료 모달 표시
+                showModal(document.getElementById('completionModal'));
+            });
+        });
+
+        // 취소 및 닫기 버튼 이벤트 리스너 재설정
+        setupCancelButtons();
+    }
+
+    // 댓글 삭제용 확인 버튼 설정 함수
+    function setupConfirmButtonForComment(shouldRefresh) {
+        const confirmBtn = document.getElementById('confirmReportBtn');
+        const newConfirmBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+        newConfirmBtn.addEventListener('click', function() {
+            // 모달 닫기
+            closeAllModals();
+
+            // 페이지 새로고침 (성공한 경우에만)
+            if (shouldRefresh) {
+                location.reload();
+            }
+        });
+    }
 
     // 바이트 카운터 초기화 및 적용
     function initializeByteCounters() {

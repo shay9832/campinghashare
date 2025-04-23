@@ -26,6 +26,9 @@
       <form action="${pageContext.request.contextPath}/admin-equipStatistics.action" method="get">
         <button type="submit" class="submenu-btn">장비 통계</button>
       </form>
+      <form action="${pageContext.request.contextPath}/admin-createBrand.action" method="get">
+        <button type="submit" class="submenu-btn">브랜드 및 장비생성</button>
+      </form>
     </div>
 
     <!-- 검수 관리 메뉴 - 초기에 활성화 -->
@@ -184,25 +187,25 @@
     <!-- 검수 정보 요약 - 주요 통계 -->
     <div class="inspection-count">
       <div class="inspection-all">
-        <span>총 검수 건수: 156건</span>
+        <span>총 검수 건수: ${totalCount}건</span>
       </div>
       <div class="inspection-pass">
-        <span>합격: 98건</span>
+        <span>합격: ${completedCount}건</span>
       </div>
       <div class="inspection-fail">
-        <span>불합격: 58건</span>
+        <span>불합격: ${returnedCount}건</span>
       </div>
       <div class="inspection-pending">
-        <span>대기중: 35건</span>
+        <span>대기중: ${pendingCount}건</span>
       </div>
     </div>
 
     <!-- 검수 단계 토글 스위치 -->
-    <div class="toggle-container">
-      <div class="toggle-button-group">
-        <button type="button" class="toggle-button active" data-stage="all">전체 검수</button>
-        <button type="button" class="toggle-button" data-stage="primary">플랫폼 검수</button>
-        <button type="button" class="toggle-button" data-stage="secondary">플랫폼 반환 검수</button>
+    <div class="tab-container">
+      <div class="tab-button-group">
+        <button type="button" class="tab-button active" data-stage="all">전체 검수</button>
+        <button type="button" class="tab-button" data-stage="primary">플랫폼 검수</button>
+        <button type="button" class="tab-button" data-stage="secondary">플랫폼 반환 검수</button>
       </div>
     </div>
 
@@ -217,17 +220,15 @@
       <div class="inspection-index">
         <table>
           <tr>
-            <th class="col-select">선택</th>
-            <th class="col-code">장비코드</th>
-            <th class="col-type">검수유형</th>
-            <th class="col-name">장비명</th>
-            <th class="col-category">카테고리명</th>
-            <th class="col-item">검수항목</th>
-            <th class="col-admin">관리자ID</th>
-            <th class="col-process">검수처리</th>
-            <th class="col-result">검수결과</th>
-            <th class="col-comment">검수코멘트</th>
-            <th class="col-status">검수상태</th>
+            <th class="col-select" style="width: 5%;">선택</th>
+            <th class="col-code" style="width: 8%;">장비코드</th>
+            <th class="col-type" style="width: 10%;">검수유형</th>
+            <th class="col-name" style="width: 20%;">장비명</th>
+            <th class="col-category" style="width: 10%;">카테고리명</th>
+            <th class="col-admin" style="width: 10%;">관리자ID</th>
+            <th class="col-process" style="width: 10%;">검수처리</th>
+            <th class="col-result" style="width: 8%;">장비등급</th>
+            <th class="col-status" style="width: 9%;">검수상태</th>
           </tr>
 
           <!-- 전체 검수 데이터 행 -->
@@ -238,45 +239,38 @@
               <td>${inspect.inspectName}</td>
               <td>${inspect.equipName}</td>
               <td>${inspect.categoryName}</td>
-              <td>${inspect.inspectList}</td>
               <td>${inspect.adminId}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}')">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn disabled" disabled>처리완료</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
               <td>
-                <c:if test="${inspect.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                <c:if test="${not empty inspect.finalGrade}">
+                  <span class="status-badge grade-${fn:toLowerCase(inspect.finalGrade)}">${inspect.finalGrade}</span>
                 </c:if>
               </td>
-              <td>${inspect.inspectComment}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <span class="status-badge status-waiting">검수대기</span>
                   </c:when>
-                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                  <c:when test="${inspect.inspectState eq '사용자반납'}">
                     <span class="status-badge status-return">사용자반납</span>
                   </c:when>
                   <c:otherwise>
-                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                    <span class="status-badge status-pass">검수완료</span>
                   </c:otherwise>
                 </c:choose>
               </td>
             </tr>
           </c:forEach>
+
           <!-- 반환검수(listr) 목록의 처리 버튼 수정 -->
           <c:forEach var="inspect" items="${listr}">
             <tr>
@@ -289,36 +283,29 @@
               <td>${inspect.adminId}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
               <td>
-                <c:if test="${inspect.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                <c:if test="${not empty inspect.finalGrade}">
+                  <span class="status-badge grade-${fn:toLowerCase(inspect.finalGrade)}">${inspect.finalGrade}</span>
                 </c:if>
               </td>
-              <td>${inspect.inspectComment}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <span class="status-badge status-waiting">검수대기</span>
                   </c:when>
-                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                  <c:when test="${inspect.inspectState eq '사용자반납'}">
                     <span class="status-badge status-return">사용자반납</span>
                   </c:when>
                   <c:otherwise>
-                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                    <span class="status-badge status-pass">검수완료</span>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -334,17 +321,15 @@
       <div class="inspection-index">
         <table>
           <tr>
-            <th class="col-select">선택</th>
-            <th class="col-code">장비코드</th>
-            <th class="col-type">검수유형</th>
-            <th class="col-name">장비명</th>
-            <th class="col-category">카테고리명</th>
-            <th class="col-item">검수항목</th>
-            <th class="col-admin">관리자ID</th>
-            <th class="col-process">검수처리</th>
-            <th class="col-result">검수결과</th>
-            <th class="col-comment">검수코멘트</th>
-            <th class="col-status">검수상태</th>
+            <th class="col-select" style="width: 5%;">선택</th>
+            <th class="col-code" style="width: 8%;">장비코드</th>
+            <th class="col-type" style="width: 10%;">검수유형</th>
+            <th class="col-name" style="width: 20%;">장비명</th>
+            <th class="col-category" style="width: 10%;">카테고리명</th>
+            <th class="col-admin" style="width: 10%;">관리자ID</th>
+            <th class="col-process" style="width: 10%;">검수처리</th>
+            <th class="col-result" style="width: 8%;">장비등급</th>
+            <th class="col-status" style="width: 9%;">검수상태</th>
           </tr>
 
           <!-- 1차 검수 데이터 행 -->
@@ -355,37 +340,32 @@
               <td>${inspect.inspectName}</td>
               <td>${inspect.equipName}</td>
               <td>${inspect.categoryName}</td>
-              <td>${inspect.inspectList}</td>
               <td>${inspect.adminId}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
               <td>
-                <c:if test="${inspect.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                <c:if test="${not empty inspect.finalGrade}">
+                  <span class="status-badge grade-${fn:toLowerCase(inspect.finalGrade)}">${inspect.finalGrade}</span>
                 </c:if>
               </td>
-              <td>${inspect.inspectComment}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <span class="status-badge status-waiting">검수대기</span>
                   </c:when>
+                  <c:when test="${inspect.inspectState eq '사용자반납'}">
+                    <span class="status-badge status-return">사용자반납</span>
+                  </c:when>
                   <c:otherwise>
-                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                    <span class="status-badge status-pass">검수완료</span>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -401,17 +381,15 @@
       <div class="inspection-index">
         <table>
           <tr>
-            <th class="col-select">선택</th>
-            <th class="col-code">장비코드</th>
-            <th class="col-type">검수유형</th>
-            <th class="col-name">장비명</th>
-            <th class="col-category">카테고리명</th>
-            <th class="col-item">검수항목</th>
-            <th class="col-admin">관리자ID</th>
-            <th class="col-process">검수처리</th>
-            <th class="col-result">검수결과</th>
-            <th class="col-comment">검수코멘트</th>
-            <th class="col-status">검수상태</th>
+            <th class="col-select" style="width: 5%;">선택</th>
+            <th class="col-code" style="width: 8%;">장비코드</th>
+            <th class="col-type" style="width: 10%;">검수유형</th>
+            <th class="col-name" style="width: 20%;">장비명</th>
+            <th class="col-category" style="width: 10%;">카테고리명</th>
+            <th class="col-admin" style="width: 10%;">관리자ID</th>
+            <th class="col-process" style="width: 10%;">검수처리</th>
+            <th class="col-result" style="width: 8%;">장비등급</th>
+            <th class="col-status" style="width: 9%;">검수상태</th>
           </tr>
 
           <!-- 2차 검수 데이터 행 -->
@@ -422,40 +400,32 @@
               <td>${inspect.inspectName}</td>
               <td>${inspect.equipName}</td>
               <td>${inspect.categoryName}</td>
-              <td>${inspect.inspectList}</td>
               <td>${inspect.adminId}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <button class="process-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', false)">검수처리</button>
                   </c:when>
                   <c:otherwise>
-                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.inspectResult}', '${fn:escapeXml(inspect.inspectComment)}', '${inspect.finalGrade}')">처리확인</button>
+                    <button class="process-btn view-btn" onclick="openModal('${inspect.equipCode}', '${inspect.platformDeliveryReturnId}', '${inspect.inspectName}', '${inspect.equipName}', '${inspect.categoryName}', true, '${inspect.finalGrade}')">처리확인</button>
                   </c:otherwise>
                 </c:choose>
               </td>
               <td>
-                <c:if test="${inspect.inspectResult eq '상'}">
-                  <span class="status-badge status-pass">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '중'}">
-                  <span class="status-badge status-pending">${inspect.inspectResult}</span>
-                </c:if>
-                <c:if test="${inspect.inspectResult eq '하'}">
-                  <span class="status-badge status-fail">${inspect.inspectResult}</span>
+                <c:if test="${not empty inspect.finalGrade}">
+                  <span class="status-badge grade-${fn:toLowerCase(inspect.finalGrade)}">${inspect.finalGrade}</span>
                 </c:if>
               </td>
-              <td>${inspect.inspectComment}</td>
               <td>
                 <c:choose>
-                  <c:when test="${empty inspect.inspectResult}">
+                  <c:when test="${inspect.inspectState eq '검수대기'}">
                     <span class="status-badge status-waiting">검수대기</span>
                   </c:when>
-                  <c:when test="${inspect.inspectResult eq '하' && inspect.finalGrade eq 'F'}">
+                  <c:when test="${inspect.inspectState eq '사용자반납'}">
                     <span class="status-badge status-return">사용자반납</span>
                   </c:when>
                   <c:otherwise>
-                    <span class="status-badge status-pass">${inspect.inspectState}</span>
+                    <span class="status-badge status-pass">검수완료</span>
                   </c:otherwise>
                 </c:choose>
               </td>
@@ -474,11 +444,12 @@
         </div>
         <div class="modal-body">
           <form action="${pageContext.request.contextPath}/admin-inspectList.action" method="POST" id="inspectionForm">
-            <!-- 프로시저에 필요한 필드 -->
+
             <input type="hidden" name="platformDeliveryId" id="platformDeliveryId">
             <input type="hidden" name="platformDeliveryReturnId" id="platformDeliveryReturnId">
             <input type="hidden" name="equipGradeId" id="equipGradeId" value="1">
             <input type="hidden" name="inspecGradeId" id="inspecGradeId" value="1">
+            <input type="hidden" name="inspecComment" id="inspecComment" value="">
 
             <div class="form-group">
               <label for="equipCode">장비코드</label>
@@ -503,6 +474,7 @@
               <label for="equipCategory">카테고리</label>
               <input type="text" id="equipCategory" class="form-control" disabled>
             </div>
+            <!-- 체크리스트 부분 HTML 수정 -->
             <div class="form-group checklist-form-group">
               <label for="checklistTable">체크리스트</label>
               <div class="checklist-container">
@@ -523,14 +495,32 @@
                   </thead>
                   <tbody>
                   <!-- DB에서 가져온 검수 항목으로 체크리스트 동적 생성 -->
-                  <c:forEach var="item" items="${getItemList}">
-                    <tr>
+                  <c:forEach var="item" items="${getItemList}" varStatus="status">
+                    <tr data-item-id="${item.inspecItemId}">
                       <td>${item.inspecItemName}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="상" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescHigh}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="중" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescMid}</td>
-                      <td><input type="radio" name="${item.inspecItemName}" value="하" class="grade-checkbox" onclick="updateScores()"> ${item.inspecItemDescLow}</td>
-                      <td><input type="text" class="comment-input" name="comment_${item.inspecItemId}" placeholder="코멘트 입력"></td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="high_${item.inspecItemId}"
+                               value="1" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescHigh}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="mid_${item.inspecItemId}"
+                               value="2" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescMid}
+                      </td>
+                      <td>
+                        <input type="radio" name="item_${item.inspecItemId}" id="low_${item.inspecItemId}"
+                               value="3" class="grade-checkbox" onclick="updateScores()">
+                          ${item.inspecItemDescLow}
+                      </td>
+                      <td>
+                        <input type="text" class="comment-input" name="comment_${item.inspecItemId}"
+                               id="comment_${item.inspecItemId}" placeholder="코멘트 입력">
+                      </td>
                       <td class="score-cell">20</td>
+                      <!-- 추가: 검수 항목별 등급 값을 저장할 hidden 필드 -->
+                      <input type="hidden" name="itemGrades[${status.index}]" id="item_grade_${status.index}" value="0">
+                      <input type="hidden" name="itemIds[${status.index}]" value="${item.inspecItemId}">
                     </tr>
                   </c:forEach>
                   <tr class="total-row">
@@ -541,6 +531,11 @@
                   </tbody>
                 </table>
               </div>
+              <!-- 추가: 검수 정보를 저장할 hidden 필드들 -->
+              <input type="hidden" name="totalScore" id="totalScoreInput" value="100">
+              <input type="hidden" name="finalGrade" id="finalGradeInput" value="A">
+              <input type="hidden" name="itemCount" id="itemCountInput" value="${fn:length(getItemList)}">
+
               <div class="grade-info">
                 <p><strong>[등급 판정 기준]</strong></p>
                 <div class="grade-badges">
@@ -552,11 +547,6 @@
                   <span class="grade-info-badge grade-f">F</span> 49점 이하
                 </div>
               </div>
-            </div>
-
-            <div class="form-group">
-              <label for="inspecComment">검수 코멘트</label>
-              <textarea id="inspecComment" name="inspecComment" class="form-control" rows="3"></textarea>
             </div>
 
             <div class="modal-actions">
@@ -623,26 +613,21 @@
 
       // 토글 버튼 클릭 이벤트 초기화
       function initToggleButtons() {
-        var toggleButtons = document.querySelectorAll('.toggle-button');
+        const tabButtons = document.querySelectorAll('.tab-button');
 
-        toggleButtons.forEach(function(button) {
+        tabButtons.forEach(button => {
           button.addEventListener('click', function() {
             // 모든 토글 버튼에서 active 클래스 제거
-            toggleButtons.forEach(function(btn) {
-              btn.classList.remove('active');
-            });
+            tabButtons.forEach(btn => btn.classList.remove('active'));
 
             // 클릭된 버튼에 active 클래스 추가
             this.classList.add('active');
 
             // 선택된 단계 가져오기
-            var stage = this.getAttribute('data-stage');
+            const stage = this.getAttribute('data-stage');
 
             // 모든 콘텐츠 영역 숨기기
-            var contentAreas = document.querySelectorAll('.content-area');
-            contentAreas.forEach(function(area) {
-              area.classList.remove('active');
-            });
+            document.querySelectorAll('.content-area').forEach(area => area.classList.remove('active'));
 
             // 선택된 단계에 해당하는 콘텐츠 영역 표시
             document.getElementById(stage + '-inspections').classList.add('active');
@@ -670,7 +655,7 @@
       }
 
       // 모달 열기 함수 수정 - 반환검수 대응
-      function openModal(code, deliveryId, inspectName, equipName, category, viewMode = false, inspectResult = null, inspectComment = null, finalGrade = null) {
+      function openModal(code, deliveryId, inspectName, equipName, category, viewMode = false, finalGrade = null) {
         console.log("모달 열기:", code, deliveryId, inspectName, equipName, category, "읽기 모드:", viewMode);
 
         // 모달 요소 가져오기
@@ -695,8 +680,6 @@
           document.getElementById('deliveryId').value = 'DELV-RTN-' + deliveryId;
         }
 
-        // 나머지 코드는 동일하게 유지...
-
         // 읽기 전용 모드 설정
         if (viewMode) {
           // 모달 제목 변경
@@ -716,11 +699,6 @@
           checkboxes.forEach(function(checkbox) {
             checkbox.disabled = true;
           });
-
-          // 검수 결과 정보 표시
-          if (inspectComment) {
-            document.getElementById('inspecComment').value = inspectComment;
-          }
 
           // 저장 버튼 숨기기, 확인 버튼만 표시
           var saveButton = document.querySelector('.btn-save');
@@ -765,40 +743,42 @@
             }
           }
 
-          // 검수 등급(상/중/하) 표시
-          if (inspectResult) {
-            var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
-            if (rows.length > 0) {
-              // 모든 항목에 동일한 검수 등급 적용 (간략한 표시용)
-              rows.forEach(function(row) {
-                var radios = row.querySelectorAll('input[type="radio"]');
-                radios.forEach(function(radio) {
-                  if (radio.value === inspectResult) {
-                    radio.checked = true;
-                  }
-                });
-              });
+          // 검수 항목별 결과 조회를 위한 AJAX 호출 (4번 요구사항)
+          var platformDeliveryId = document.getElementById('platformDeliveryId').value;
+          var platformDeliveryReturnId = document.getElementById('platformDeliveryReturnId').value;
 
-              // 총점 표시 업데이트
-              var score = 0;
-              switch (inspectResult) {
-                case '상':
-                  score = 100;
-                  break;
-                case '중':
-                  score = 70;
-                  break;
-                case '하':
-                  score = 40;
-                  break;
-              }
+          // AJAX 호출 구현
+          var xhr = new XMLHttpRequest();
+          var url = '${pageContext.request.contextPath}/admin-inspectItemResults.action?';
 
-              var totalScoreElement = document.getElementById('totalScore');
-              if (totalScoreElement) {
-                totalScoreElement.textContent = score.toFixed(1);
-              }
-            }
+          if (platformDeliveryId && platformDeliveryId !== '') {
+            url += 'platformDeliveryId=' + platformDeliveryId;
+          } else if (platformDeliveryReturnId && platformDeliveryReturnId !== '') {
+            url += 'platformDeliveryReturnId=' + platformDeliveryReturnId;
           }
+
+          xhr.open('GET', url, true);
+
+          xhr.onload = function() {
+            if (xhr.status === 200) {
+              try {
+                var itemResults = JSON.parse(xhr.responseText);
+
+                // 항목별 결과를 표시
+                displayItemResults(itemResults);
+              } catch (e) {
+                console.error('결과 파싱 오류:', e);
+              }
+            } else {
+              console.error('AJAX 요청 실패:', xhr.status);
+            }
+          };
+
+          xhr.onerror = function() {
+            console.error('AJAX 요청 네트워크 오류');
+          };
+
+          xhr.send();
         } else {
           // 수정 모드
           modalTitle.textContent = "검수 처리";
@@ -834,20 +814,21 @@
           if (saveButton) saveButton.style.display = '';
           if (cancelButton) cancelButton.textContent = '취소';
 
-          // 기존 코멘트 초기화
-          var commentField = document.getElementById('inspecComment');
-          if (commentField) commentField.value = '';
-
           // 체크박스 초기화
           var radios = form.querySelectorAll('input[type="radio"]');
           radios.forEach(function(radio) {
             radio.checked = false;
           });
 
+          // hidden 필드 초기화
+          var hiddenGradeFields = form.querySelectorAll('input[id^="item_grade_"]');
+          hiddenGradeFields.forEach(function(field) {
+            field.value = "0";
+          });
+
           // 점수 초기화
           updateScores();
         }
-
         // 모달 표시
         modal.style.display = 'block';
       }
@@ -869,6 +850,83 @@
         console.log('모달 닫기');
       }
 
+      // 항목별 결과 표시 함수
+      function displayItemResults(itemResults) {
+        if (!itemResults || itemResults.length === 0) {
+          console.log('항목별 결과 없음');
+          return;
+        }
+
+        var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+        var totalScore = 0;
+        var totalRows = rows.length;
+        var scorePerRow = 100 / totalRows;
+
+        // 먼저 모든 체크박스 초기화
+        rows.forEach(function(row) {
+          var radios = row.querySelectorAll('input[type="radio"]');
+          radios.forEach(function(radio) {
+            radio.checked = false;
+          });
+
+          var commentInput = row.querySelector('.comment-input');
+          if (commentInput) {
+            commentInput.value = '';
+          }
+        });
+
+        // 항목별 결과 표시
+        itemResults.forEach(function(result) {
+          rows.forEach(function(row) {
+            var itemId = row.getAttribute('data-item-id');
+
+            if (itemId == result.inspecItemId) {
+              // 등급에 맞는 라디오 버튼 체크
+              var gradeName = result.inspecGradeName;
+              var gradeValue = 0;
+
+              switch(gradeName) {
+                case '상': gradeValue = 1; break;
+                case '중': gradeValue = 2; break;
+                case '하': gradeValue = 3; break;
+              }
+
+              var gradeRadio = row.querySelector('input[name="item_' + itemId + '"][value="' + gradeValue + '"]');
+              if (gradeRadio) {
+                gradeRadio.checked = true;
+              }
+
+              // 코멘트 표시
+              var commentInput = row.querySelector('.comment-input');
+              if (commentInput && result.inspectComment) {
+                commentInput.value = result.inspectComment;
+              }
+
+              // 점수 계산
+              var score = 0;
+              switch(gradeName) {
+                case '상': score = scorePerRow; break;
+                case '중': score = scorePerRow * 0.65; break;
+                case '하': score = scorePerRow * 0.3; break;
+              }
+
+              var scoreCell = row.querySelector('.score-cell');
+              if (scoreCell) {
+                scoreCell.textContent = score.toFixed(1);
+              }
+
+              totalScore += score;
+            }
+          });
+        });
+
+        // 총점 업데이트
+        var totalScoreElement = document.getElementById('totalScore');
+        if (totalScoreElement) {
+          totalScoreElement.textContent = totalScore.toFixed(1);
+        }
+      }
+
       // 체크리스트 점수 계산 함수
       function updateScores() {
         var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
@@ -876,12 +934,13 @@
         var totalRows = rows.length;
         var scorePerRow = 100 / totalRows; // 각 항목당 최대 점수를 동적으로 계산
 
-        rows.forEach(function(row) {
+        rows.forEach(function(row, index) {
           var scoreCell = row.querySelector('.score-cell');
           if (!scoreCell) return;
 
           var radios = row.querySelectorAll('input[type="radio"]');
           var score = 0;
+          var gradeValue = 0; // 기본값(선택 안함)
 
           // 체크된 라디오 버튼 찾기
           var selectedRadio = null;
@@ -893,21 +952,31 @@
           }
 
           if (selectedRadio) {
-            var selectedGrade = selectedRadio.value;
+            var selectedGradeValue = parseInt(selectedRadio.value);
 
-            switch(selectedGrade) {
-              case '상':
+            switch(selectedGradeValue) {
+              case 1: // 상
                 score = scorePerRow;
+                gradeValue = 1;
                 break;
-              case '중':
+              case 2: // 중
                 score = scorePerRow * 0.65;
+                gradeValue = 2;
                 break;
-              case '하':
+              case 3: // 하
                 score = scorePerRow * 0.3;
+                gradeValue = 3;
                 break;
               default:
                 score = 0;
+                gradeValue = 0;
             }
+          }
+
+          // 항목별 등급 값을 hidden 필드에 저장
+          var hiddenGradeField = document.getElementById('item_grade_' + index);
+          if (hiddenGradeField) {
+            hiddenGradeField.value = gradeValue;
           }
 
           scoreCell.textContent = score.toFixed(1);
@@ -918,6 +987,12 @@
         var totalScoreElement = document.getElementById('totalScore');
         if (totalScoreElement) {
           totalScoreElement.textContent = totalScore.toFixed(1);
+        }
+
+        // hidden 필드에도 총점 저장
+        var totalScoreInput = document.getElementById('totalScoreInput');
+        if (totalScoreInput) {
+          totalScoreInput.value = totalScore.toFixed(1);
         }
 
         // 최종 등급 업데이트
@@ -976,14 +1051,10 @@
         document.getElementById('inspecGradeId').value = inspecGradeId;
 
         // 최종 등급 정보를 hidden 필드에 설정
-        if (!document.getElementById('finalGradeInput')) {
-          var finalGradeInput = document.createElement('input');
-          finalGradeInput.type = 'hidden';
-          finalGradeInput.name = 'finalGrade';
-          finalGradeInput.id = 'finalGradeInput';
-          document.getElementById('inspectionForm').appendChild(finalGradeInput);
+        var finalGradeInput = document.getElementById('finalGradeInput');
+        if (finalGradeInput) {
+          finalGradeInput.value = grade;
         }
-        document.getElementById('finalGradeInput').value = grade;
 
         // F 등급인 경우만 사용자반납 관련 안내 메시지 표시
         if (grade === 'F') {
@@ -1019,6 +1090,33 @@
         }
       }
 
+      // 폼 제출 전 유효성 검사 추가
+      document.getElementById('inspectionForm').addEventListener('submit', function(event) {
+        var rows = document.querySelectorAll('#checklistTable tbody tr:not(.total-row)');
+        var allSelected = true;
+
+        // 모든 항목이 선택되었는지 확인
+        rows.forEach(function(row, index) {
+          var radios = row.querySelectorAll('input[type="radio"]');
+          var selected = Array.from(radios).some(radio => radio.checked);
+
+          if (!selected) {
+            allSelected = false;
+            // 선택되지 않은 행 강조
+            row.style.backgroundColor = '#ffe6e6';
+          } else {
+            row.style.backgroundColor = '';
+          }
+        });
+
+        if (!allSelected) {
+          event.preventDefault();
+          alert('모든 검수 항목에 대해 등급(상/중/하)을 선택해주세요.');
+          return false;
+        }
+
+        return true;
+      });
 
     </script>
   </div>

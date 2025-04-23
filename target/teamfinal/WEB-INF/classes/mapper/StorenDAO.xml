@@ -5,6 +5,9 @@
 
     <!-- resultMap: StorenDTO + 내부 EquipmentDTO 매핑 -->
     <resultMap id="storenRentalInfoMap" type="com.team.mvc.DTO.StorenDTO">
+        <result property="storen_id" column="STOREN_ID"/>
+        <result property="user_code" column="USER_CODE"/>
+        <result property="equip_code" column="EQUIP_CODE"/>
         <result property="equip_size_name" column="EQUIP_SIZE_NAME"/>
         <result property="required_space" column="REQUIRED_SPACE"/>
         <result property="daily_storage_fee" column="DAILY_STORAGE_FEE"/>
@@ -116,16 +119,16 @@
         SELECT *
         FROM (
                  SELECT STOREN_ID, EQUIP_CODE, USER_CODE
-                     , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
-                     , DAILY_STORAGE_FEE, STORE_MONTH
-                     , STOREN_TITLE, STOREN_CONTENT
-                     , DAILY_RENT_PRICE, CREATED_DATE
-                     , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
-                     , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
-                     , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
-                     , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
-                     , MATCHING_REQUEST_COUNT, MATCHING_STATUS
-                     , EQUIP_GRADE, STATUS
+                      , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+                      , DAILY_STORAGE_FEE, STORE_MONTH
+                      , STOREN_TITLE, STOREN_CONTENT
+                      , DAILY_RENT_PRICE, CREATED_DATE
+                      , NVL(INSPEC_COMPLETED_DATE, '검수 대기 중') AS inspec_completed_date
+                      , NVL(RENTAL_START_DATE, '검수 대기 중') AS rental_start_date
+                      , NVL(RENTAL_END_DATE, '검수 대기 중') AS rental_end_date
+                      , NVL(FINAL_RETURN_DATE, '검수 대기 중') AS final_return_date
+                      , MATCHING_REQUEST_COUNT, MATCHING_STATUS
+                      , EQUIP_GRADE, STATUS
                  FROM VW_STOREN
                  WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
                  ORDER BY CREATED_DATE DESC
@@ -136,28 +139,29 @@
     <!-- storen_id로 렌탈 정보 조회 -->
     <select id="getRentalInfoByStorenId" parameterType="int" resultMap="storenRentalInfoMap">
         SELECT
-            ER.EQUIP_CODE,
-            ER.EQUIP_ID,
-            EN.EQUIP_NAME,
-            B.BRAND_NAME,
-            ER.ORIGINAL_PRICE,
-            CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
-            CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
-            ES.EQUIP_SIZE_NAME,
-            ES.REQUIRED_SPACE,
-            ES.DAILY_STORAGE_FEE,
-            S.STORE_MONTH,
-            S.DAILY_RENT_PRICE,
-            S.STOREN_TITLE,
-            S.STOREN_CONTENT,
-            S.STOREN_ID
+        ER.EQUIP_CODE,
+        ER.EQUIP_ID,
+        EN.EQUIP_NAME,
+        B.BRAND_NAME,
+        ER.ORIGINAL_PRICE,
+        CAT_M.CATEGORY_NAME AS MIDDLE_CATEGORY,
+        CAT_P.CATEGORY_NAME AS MAJOR_CATEGORY,
+        ES.EQUIP_SIZE_NAME,
+        ES.REQUIRED_SPACE,
+        ES.DAILY_STORAGE_FEE,
+        S.STORE_MONTH,
+        S.DAILY_RENT_PRICE,
+        S.STOREN_TITLE,
+        S.STOREN_CONTENT,
+        S.STOREN_ID,
+        ER.USER_CODE
         FROM EQUIPMENT_REGISTRATION ER
-                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
-                 JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
-                 JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
-                 JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
-                 JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
-                 JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
+        JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        JOIN BRAND B ON EN.BRAND_ID = B.BRAND_ID
+        JOIN CATEGORY CAT_M ON ER.CATEGORY_ID = CAT_M.CATEGORY_ID
+        JOIN CATEGORY CAT_P ON CAT_M.PARENT_CATEGORY_ID = CAT_P.CATEGORY_ID
+        JOIN STOREN S ON ER.EQUIP_CODE = S.EQUIP_CODE
+        JOIN EQUIP_SIZE ES ON S.SIZE_ID = ES.EQUIP_SIZE_ID
         WHERE S.STOREN_ID = #{storen_id}
     </select>
 
@@ -192,13 +196,14 @@
         WHERE EN.EQUIP_NAME = #{equipName}
     </select>
 
-    <!-- 장비명으로 평균 렌탈 가격 조회 (추가) -->
+    <!-- 장비명으로 평균 렌탈 가격 조회 (수정) -->
     <select id="getAvgRentalPriceByEquipName" resultType="int">
-        SELECT NVL(ROUND(AVG(R.DAILY_RENT_PRICE)), 0)
-        FROM RENTAL R
-                 JOIN EQUIPMENT_REGISTRATION ER ON R.EQUIP_CODE = ER.EQUIP_CODE
+        SELECT NVL(ROUND(AVG(S.DAILY_RENT_PRICE)), 0)
+        FROM STOREN S
+                 JOIN EQUIPMENT_REGISTRATION ER ON S.EQUIP_CODE = ER.EQUIP_CODE
                  JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
         WHERE EN.EQUIP_NAME = #{equipName}
+          AND S.DAILY_RENT_PRICE IS NOT NULL
     </select>
 
     <!-- 매칭 신청 수가 1 이상인 스토렌 리스트 가져오기 -->
@@ -236,7 +241,7 @@
         WHERE s.STOREN_ID IN (SELECT TRANSACTION_ID
                               FROM VW_RENTAL_APPLICANT
                               WHERE USER_CODE = #{user_code}
-                                    AND TRANSACTION_TYPE LIKE '스토렌%')
+                                AND TRANSACTION_TYPE LIKE '스토렌%')
         ORDER BY s.CREATED_DATE DESC
     </select>
 
@@ -254,8 +259,8 @@
              , S.MATCHING_REQUEST_COUNT, S.MATCHING_STATUS, S.STATUS
              , S.EQUIP_GRADE, VWSMS.DETAILED_MATCHING_STATUS
         FROM VW_STOREN S
-        JOIN VW_STOREN_MATCHING_STATUS VWSMS
-        ON S.STOREN_ID = VWSMS.STOREN_ID
+                 JOIN VW_STOREN_MATCHING_STATUS VWSMS
+                      ON S.STOREN_ID = VWSMS.STOREN_ID
         <![CDATA[WHERE S.STOREN_ID = #{storen_id} AND ROWNUM <= 1]]>
     </select>
 
@@ -273,20 +278,20 @@
             OR e.BRAND_NAME LIKE '%' || #{searchKeyword} || '%'
             OR e.CATEGORY_NAME LIKE '%' || #{searchKeyword} || '%'
             OR s.STOREN_TITLE LIKE '%' || #{searchKeyword} || '%')
-            AND MATCHING_STATUS != '매칭완료'
-            AND EQUIP_GRADE IS NOT NULL
+          AND MATCHING_STATUS != '매칭완료'
+          AND EQUIP_GRADE IS NOT NULL
     </select>
 
     <!-- 스토렌 장비 검색(키워드, 가격 범위, 날짜 범위) -->
     <select id="searchStoren" resultType="com.team.mvc.DTO.StorenDTO" resultMap="VWStorenResultMap">
         SELECT s.STOREN_ID, s.EQUIP_CODE, s.USER_CODE
-             , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
-             , s.DAILY_STORAGE_FEE, s.STORE_MONTH
-             , s.STOREN_TITLE, s.STOREN_CONTENT
-             , s.DAILY_RENT_PRICE, s.CREATED_DATE
-             , e.TYPE
+        , s.SIZE_ID, s.EQUIP_SIZE_NAME, s.REQUIRED_SPACE
+        , s.DAILY_STORAGE_FEE, s.STORE_MONTH
+        , s.STOREN_TITLE, s.STOREN_CONTENT
+        , s.DAILY_RENT_PRICE, s.CREATED_DATE
+        , e.TYPE
         FROM VW_STOREN s
-                 INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
+        INNER JOIN VW_SEARCH_EQUIP e ON s.EQUIP_CODE = e.EQUIP_CODE
         WHERE 1=1
         <if test="searchKeyword != null and searchKeyword != ''">
             AND (e.EQUIP_NAME LIKE '%' || #{searchKeyword} || '%'
@@ -306,9 +311,9 @@
             s.rental_end_date >= TO_DATE(#{startDate}, 'YYYY-MM-DD') AND s.rental_start_date <= TO_DATE(#{endDate}, 'YYYY-MM-DD')
             ) ]]>
         </if>
-            AND s.MATCHING_STATUS != '매칭완료'
-            AND s.EQUIP_GRADE IS NOT NULL
-            AND s.DAILY_RENT_PRICE IS NOT NULL
+        AND s.MATCHING_STATUS != '매칭완료'
+        AND s.EQUIP_GRADE IS NOT NULL
+        AND s.DAILY_RENT_PRICE IS NOT NULL
         ORDER BY s.CREATED_DATE DESC
     </select>
 

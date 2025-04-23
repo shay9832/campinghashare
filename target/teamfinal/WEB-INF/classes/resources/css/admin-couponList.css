@@ -1,267 +1,298 @@
 /* ===== 기본 설정 ===== */
 body {
-    margin: 0; /* 바깥 여백 제거 */
-    padding: 0; /* 안쪽 여백 제거 */
-    font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 - 한글 지원이 좋은 폰트 사용 */
-    background-color: #f8f9fa; /* 페이지 배경색 - 연한 회색 */
-    color: #333; /* 기본 텍스트 색상 */
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
 }
 
 /* ===== 헤더 영역 ===== */
 #header {
-    height: 60px; /* 헤더 높이 */
-    background-color: #3f861d; /* 헤더 배경색 - 녹색 사용 */
-    color: white; /* 헤더 텍스트 색상 */
-    width: 100%; /* 전체 너비 사용 */
-    padding: 10px; /* 내부 여백 */
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
-    display: flex; /* 플렉스 레이아웃 사용 */
-    align-items: center; /* 세로 중앙 정렬 */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 헤더 하단 그림자 효과 */
+    height: 60px;
+    background-color: #3f861d;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 #header h1 {
-    margin: 0; /* 제목 기본 여백 제거 */
-    font-size: 24px; /* 제목 글자 크기 */
+    margin: 0;
+    font-size: 24px;
 }
 
 /* ===== 메인 컨테이너 ===== */
 #container {
-    display: flex; /* 플렉스 레이아웃으로 메뉴와 콘텐츠 영역 수평 배치 */
-    min-height: calc(100vh - 60px); /* 헤더 제외한 전체 높이 */
+    display: flex;
+    min-height: calc(100vh - 60px);
 }
 
 /* 왼쪽 메뉴 영역 스타일링 */
 #leftMenu {
-    padding: 30px; /* 내부 여백 */
-    border-right: 1px solid #ccc; /* 오른쪽에 경계선 추가 */
-    min-width: 150px; /* 메뉴 영역 너비 고정 */
-    background: #ffffff; /* 메뉴 배경색 (연한 회색) */
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05); /* 오른쪽에 그림자 효과 */
+    padding: 30px;
+    border-right: 1px solid #ccc;
+    min-width: 150px;
+    background: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
 }
 
-/* 메뉴 버튼의 기본 스타일 - 하위 메뉴를 가진 버튼 */
+/* 메뉴 버튼의 기본 스타일 */
 .menu-button {
-    display: block; /* 블록 레벨 요소로 설정 (가로 전체 차지) */
-    width: 100%; /* 부모 컨테이너의 너비 100% 차지 */
-    padding: 12px 15px; /* 내부 여백 (위아래 12px, 좌우 15px) */
-    margin-bottom: 15px; /* 하단 여백 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    background-color: white; /* 버튼 배경색 */
-    border: 1px solid #ddd; /* 테두리 설정 */
-    border-radius: 4px; /* 둥근 모서리 설정 */
-    cursor: pointer; /* 마우스 오버 시 손가락 커서 표시 */
-    transition: all 0.3s ease; /* 모든 변화에 0.3초 애니메이션 적용 */
-    position: relative; /* 상대적 위치 설정 (화살표 배치를 위함) */
-    font-weight: 500; /*글자 굵기*/
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    text-align: left;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: 500;
 }
 
 /* 메뉴 버튼 호버 효과 */
 .menu-button:hover {
-    background: #ebf5e3; /* 호버 시 배경색 변경 - 연한 녹색 */
-    border-left: 4px solid #3f861d; /* 왼쪽에 강조 테두리 추가 */
+    background: #ebf5e3;
+    border-left: 4px solid #3f861d;
 }
 
 /* 메뉴 버튼 화살표 아이콘 */
 .menu-button::after {
-    content: "▼"; /* 화살표 문자 */
-    position: absolute; /* 절대 위치 설정 */
-    right: 15px; /* 오른쪽 여백 */
-    top: 50%; /* 세로 중앙 배치 */
-    transform: translateY(-50%); /* 정확한 세로 중앙 정렬 */
-    font-size: 12px; /* 화살표 크기 */
-    transition: transform 0.3s ease; /* 회전 애니메이션 */
+    content: "▼";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    transition: transform 0.3s ease;
 }
 
 /* 활성화된 메뉴 버튼의 화살표 회전 */
 .menu-button.active::after {
-    transform: translateY(-50%) rotate(180deg); /* 화살표 180도 회전 */
+    transform: translateY(-50%) rotate(180deg);
 }
 
 /* 하위 메뉴 컨테이너 */
 .submenu {
-    max-height: 0; /* 초기에는 보이지 않도록 높이 0 설정 */
-    overflow: hidden; /* 넘치는 내용 숨김 */
-    transition: max-height 0.3s ease; /* 높이 변화에 애니메이션 */
-    margin-bottom: 10px; /* 하단 여백 */
-    margin-top: -5px; /* 상단 여백 조정 */
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin-bottom: 10px;
+    margin-top: -5px;
 }
 
-/* 하위 메뉴 항목 (링크) */
-.submenu a {
-    display: block; /* 블록 요소로 설정 */
-    padding: 10px 10px 10px 25px; /* 내부 여백 - 왼쪽 여백 더 넓게 */
-    text-decoration: none; /* 링크 밑줄 제거 */
-    color: #555; /* 텍스트 색상 */
-    border-left: 1px solid #e0e0e0; /* 왼쪽 테두리 */
-    margin-left: 10px; /* 왼쪽 여백 */
-    transition: all 0.2s ease; /* 변화에 애니메이션 */
-    font-size: 14px; /* 글자 크기 */
+/* 하위 메뉴 항목 */
+.submenu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 10px 10px 25px;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 10px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
 }
 
 /* 하위 메뉴 항목 호버 효과 */
-.submenu a:hover {
-    background-color: #f1f8e9; /* 호버 시 배경색 - 연한 녹색 */
-    color: #3f861d; /* 호버 시 텍스트 색상 - 녹색 */
-    border-left: 2px solid #3f861d; /* 왼쪽에 강조 테두리 */
+.submenu-btn:hover {
+    background-color: #f1f8e9;
+    color: #3f861d;
+    border-left: 2px solid #3f861d;
+}
+
+/* 현재 선택된 메뉴 스타일 */
+.submenu-btn.active {
+    color: #3f861d;
+    font-weight: bold;
+    border-left: 2px solid #3f861d;
+}
+
+/* 폼 태그에 기본 마진과 패딩 제거 */
+.submenu form {
+    margin: 0;
+    padding: 0;
+    display: block;
 }
 
 /* ===== 콘텐츠 영역 ===== */
 #content {
-    flex-grow: 1; /* 남은 공간 모두 차지 */
-    padding: 20px; /* 내부 여백 */
-    background-color: #ffffff; /* 배경색 */
-    overflow: auto; /* 콘텐츠가 넘치면 스크롤 */
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* 내부 그림자 효과 */
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    overflow: auto;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
 }
 
 /* 콘텐츠 헤더 */
 .content-header {
-    border-bottom: 2px solid #3f861d; /* 하단 경계선 - 녹색 */
-    padding-bottom: 10px; /* 하단 여백 */
-    margin-bottom: 20px; /* 하단 외부 여백 */
+    border-bottom: 2px solid #3f861d;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .content-header h2 {
-    color: #333; /* 텍스트 색상 */
-    margin: 0; /* 여백 제거 */
-    font-size: 22px; /* 글자 크기 */
+    color: #333;
+    margin: 0;
+    font-size: 22px;
 }
 
 /* ===== 검색 영역 ===== */
 .content-search-info {
-    display: flex; /* 플렉스 레이아웃 */
-    align-items: center; /* 세로 중앙 정렬 */
-    background-color: #f8f9fa; /* 배경색 - 연한 회색 */
-    padding: 15px; /* 내부 여백 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    margin-bottom: 20px; /* 하단 여백 */
-    flex-wrap: wrap; /* 필요시 여러 줄로 나누기 */
-    gap: 10px; /* 항목 간 간격 */
+    display: flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .content-search-info span {
-    margin-right: 10px; /* 오른쪽 여백 */
-    font-weight: 500; /* 글자 굵기 */
+    margin-right: 10px;
+    font-weight: 500;
 }
 
 /* 검색 입력 요소들 공통 스타일 */
 .content-search-info select,
 .content-search-date input,
 .content-search-bar input {
-    padding: 8px 12px; /* 내부 여백 */
-    border: 1px solid #ddd; /* 테두리 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    margin-right: 10px; /* 오른쪽 여백 */
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
 }
 
 /* 날짜 검색 영역 */
 .content-search-date {
-    display: flex; /* 플렉스 레이아웃 */
-    align-items: center; /* 세로 중앙 정렬 */
+    display: flex;
+    align-items: center;
 }
 
 .content-search-date span {
-    margin: 0 10px; /* 좌우 여백 */
+    margin: 0 10px;
 }
 
 /* 검색 버튼 */
 .content-search-btn input {
-    background-color: #3f861d; /* 배경색 - 녹색 */
-    color: white; /* 텍스트 색상 */
-    border: none; /* 테두리 제거 */
-    padding: 8px 15px; /* 내부 여백 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    cursor: pointer; /* 마우스 커서 포인터로 변경 */
-    transition: background-color 0.3s; /* 배경색 변화에 애니메이션 */
+    background-color: #3f861d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 /* 검색 버튼 호버 효과 */
 .content-search-btn input:hover {
-    background-color: #346e18; /* 호버 시 배경색 - 더 진한 녹색 */
+    background-color: #346e18;
 }
 
 /* ===== 쿠폰 정보 요약 ===== */
 .coupon-count {
-    display: flex; /* 플렉스 레이아웃 */
-    margin-bottom: 20px; /* 하단 여백 */
-    gap: 15px; /* 요소 간 간격 */
+    display: flex;
+    margin-bottom: 20px;
+    gap: 15px;
 }
 
 /* 쿠폰 통계 박스 공통 스타일 */
 .coupon-all, .coupon-used, .coupon-active {
-    flex: 1; /* 동일한 너비로 공간 차지 */
-    background-color: #f8f9fa; /* 배경색 - 연한 회색 */
-    padding: 15px; /* 내부 여백 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    flex: 1;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 /* 각 통계 박스 왼쪽 테두리 색상 구분 */
 .coupon-all {
-    border-left: 4px solid #3f861d; /* 총 쿠폰 - 녹색 */
+    border-left: 4px solid #3f861d;
 }
 
 .coupon-used {
-    border-left: 4px solid #d32f2f; /* 사용된 쿠폰 - 빨간색 */
+    border-left: 4px solid #d32f2f;
 }
 
 .coupon-active {
-    border-left: 4px solid #1976d2; /* 유효 쿠폰 - 파란색 */
+    border-left: 4px solid #1976d2;
 }
 
 /* ===== 전체 선택 체크박스 ===== */
 .select-all-checkbox {
     display: flex;
-    margin-bottom: 10px; /* 하단 여백 */
+    margin-bottom: 10px;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
 }
 
 .delete {
-    background-color: #3f861d; /* 배경색 - 녹색 */
-    color: white; /* 텍스트 색상 */
-    border: none; /* 테두리 제거 */
-    padding: 8px 15px; /* 내부 여백 */
-    border-radius: 4px; /* 모서리 둥글게 */
-    cursor: pointer; /* 마우스 커서 포인터로 변경 */
-    transition: background-color 0.3s; /* 배경색 변화에 애니메이션 */
-    text-align: right;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
+.delete:hover {
+    background-color: #b71c1c;
+}
 
 /* ===== 테이블 스타일 ===== */
 .coupon-index {
-    overflow-x: auto; /* 가로 스크롤 허용 - 모바일 대응 */
-    margin-right: 10px; /* 오른쪽 여백 */
-    border: 1px solid #e0e0e0; /* 테두리 */
-    border-radius: 5px; /* 모서리 둥글게 */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 그림자 효과 */
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .coupon-index table {
-    width: 100%; /* 테이블 전체 너비 */
-    border-collapse: collapse; /* 테두리 합치기 */
-    min-width: 1200px; /* 최소 너비 설정 - 가로 스크롤 발생 임계값 */
-    table-layout: fixed; /* 고정 테이블 레이아웃 사용 - 열 너비 고정 */
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1400px; /* 테이블 최소 너비 증가 */
+    table-layout: fixed;
 }
 
 /* 테이블 헤더 셀 */
 .coupon-index th {
-    background-color: #f1f8e9; /* 배경색 - 연한 녹색 */
-    padding: 12px 15px; /* 내부 여백 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    border-bottom: 2px solid #3f861d; /* 하단 테두리 - 녹색 */
-    color: #333; /* 텍스트 색상 */
-    font-weight: 500; /* 글자 굵기 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    background-color: #f1f8e9;
+    padding: 12px 8px; /* 패딩 축소 */
+    text-align: center; /* 중앙 정렬 */
+    border-bottom: 2px solid #3f861d;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap;
+    font-size: 13px; /* 글자 크기 축소 */
 }
 
 /* 테이블 데이터 셀 */
 .coupon-index td {
-    padding: 10px 15px; /* 내부 여백 */
-    border-bottom: 1px solid #e0e0e0; /* 하단 테두리 */
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 - 한 줄로 표시 */
-    overflow: hidden; /* 넘치는 내용 숨김 */
-    text-overflow: ellipsis; /* 넘치는 텍스트 ... 처리 */
+    padding: 10px 8px; /* 패딩 축소 */
+    border-bottom: 1px solid #e0e0e0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center; /* 중앙 정렬 */
+    font-size: 13px; /* 글자 크기 축소 */
 }
 
 /* 테이블 행 호버 효과 */
@@ -275,16 +306,18 @@ body {
     text-align: center; /* 가운데 정렬 */
 }
 
-/* 각 열의 너비 설정 */
-.col-select { width: 25px; } /* 체크박스 열 */
-.col-id { width: 70px; } /* 회원번호 열 */
-.col-name { width: 80px; } /* 이름 열 */
-.col-phone { width: 120px; } /* 핸드폰번호 열 */
-.col-nickname { width: 100px; } /* 닉네임 열 */
-.col-email { width: 150px; } /* 이메일 열 */
-.col-coupon-type { width: 150px; } /* 쿠폰종류 열 */
-.col-coupon-usage { width: 100px; } /* 쿠폰사용횟수 열 */
-.col-status { width: 80px; } /* 상태 열 */
+/* 각 열의 너비 설정 - 각 칼럼에 맞게 조정 */
+.col-select { width: 40px; } /* 체크박스 열 */
+.col-coupon-id { width: 80px; } /* 보유쿠폰ID 열 */
+.col-member-code { width: 80px; } /* 회원코드 열 */
+.col-nickname { width: 100px; } /* 회원닉네임 열 */
+.col-coupon-name { width: 150px; } /* 쿠폰이름 열 */
+.col-coupon-type { width: 100px; } /* 쿠폰종류 열 */
+.col-coupon-discount { width: 80px; } /* 쿠폰할인율 열 */
+.col-coupon-validity { width: 100px; } /* 쿠폰유효개월수 열 */
+.col-coupon-issue { width: 100px; } /* 쿠폰발행일 열 */
+.col-coupon-expire { width: 100px; } /* 쿠폰만료일 열 */
+.col-coupon-used { width: 120px; } /* 쿠폰사용완료일 열 */
 
 /* ===== 커스텀 스크롤바 ===== */
 .coupon-index::-webkit-scrollbar {
@@ -313,6 +346,7 @@ body {
     border-radius: 3px; /* 모서리 둥글게 */
     font-size: 12px; /* 글자 크기 */
     font-weight: 500; /* 글자 굵기 */
+    margin-left: 5px; /* 왼쪽 여백 추가 */
 }
 
 /* 상태 배지 종류 */
@@ -380,73 +414,4 @@ body {
     border-color: #eee;
     color: #bbb;
     cursor: not-allowed;
-}
-
-/* 추가적인 버튼 스타일 - submenu-btn */
-.submenu-btn {
-    display: block;
-    width: 100%;
-    padding: 10px 10px 10px 25px;
-    text-align: left;
-    background-color: transparent;
-    border: none;
-    border-left: 1px solid #e0e0e0;
-    margin-left: 10px;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* 하위 메뉴 버튼 호버 효과 */
-.submenu-btn:hover {
-    background-color: #f1f8e9;
-    color: #3f861d;
-    border-left: 2px solid #3f861d;
-}
-
-/* 현재 선택된 메뉴 스타일 */
-.submenu-btn.active {
-    color: #3f861d;
-    font-weight: bold;
-    border-left: 2px solid #3f861d;
-}
-
-/* 폼 태그에 기본 마진과 패딩 제거 */
-.submenu form {
-    margin: 0;
-    padding: 0;
-    display: block;
-}
-
-/* 폼 내부 버튼 스타일 - 원래 a 태그와 동일하게 */
-.submenu form button {
-    display: block;
-    width: 100%;
-    padding: 10px 10px 10px 25px;
-    text-align: left;
-    background-color: transparent;
-    border: none;
-    border-left: 1px solid #e0e0e0;
-    margin-left: 10px;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-}
-
-/* 버튼 호버 효과 - 원래 a 태그와 동일하게 */
-.submenu form button:hover {
-    background-color: #f1f8e9;
-    color: #3f861d;
-    border-left: 2px solid #3f861d;
-}
-
-/* 현재 활성화된 버튼 스타일 */
-.submenu form button.active {
-    color: #3f861d;
-    font-weight: bold;
-    border-left: 2px solid #3f861d;
 }
