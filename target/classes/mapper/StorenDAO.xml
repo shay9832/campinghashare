@@ -90,7 +90,7 @@
              , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code}
-        ORDER BY CREATED_DATE DESC
+        ORDER BY CREATED_DATE DESC, STOREN_ID DESC
     </select>
 
     <!-- 유저 코드와 장비 코드로 스토렌 장비 정보 조회 -->
@@ -108,7 +108,7 @@
              , EQUIP_GRADE, STATUS
         FROM VW_STOREN
         WHERE USER_CODE = #{user_code} AND EQUIP_CODE = #{equip_code}
-        ORDER BY CREATED_DATE DESC
+        ORDER BY CREATED_DATE DESC, STOREN_ID DESC
     </select>
 
     <!-- 해당 장비코드의 가장 최근 스토렌 정보 가져오기-->

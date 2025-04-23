@@ -1450,6 +1450,9 @@
             // 로딩 행 제거
             $('.matching-details[data-parent="' + equipCode + '"]').remove();
 
+
+
+
             // 상세 정보 행 만들기
             var detailsHtml = '<tr class="matching-details" data-parent="' + equipCode + '" style="display: table-row;">' +
                 '<td colspan="5">' +
@@ -1463,6 +1466,7 @@
                 '<tr>' +
                 '<th>스토렌ID</th>' +
                 '<th>스토렌제목</th>' +
+                '<th>상태</th>' +
                 '<th>렌탈가능일</th>' +
                 '<th>일일렌탈가격</th>' +
                 '<th>생성일</th>' +
@@ -1475,14 +1479,28 @@
             if (data && data.length > 0) {
                 for (var i = 0; i < data.length; i++) {
                     var item = data[i];
+
+                    let storenTitle = '스토렌 제목 미입력';
+                    if (item.storen_title != null) {
+                        storenTitle = item.storen_title;
+                    }
+                    let dailyPrice = '미입력';
+                    if (item.daily_rent_price != null) {
+                        dailyPrice = item.daily_rent_price +' 원';
+                    }
+
+                    // 상태 클래스 가져오기
+                    var statusClass = getStatusBadgeClass(item.status);
+
                     detailsHtml += '<tr>' +
                         '<td>' +
                         '<input type="hidden" name="id" value="' + item.storen_id + '">' +
                         '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_id + '</a>' +
                         '</td>' +
-                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_title + '</a></td>' +
+                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + storenTitle + '</a></td>' +
+                        '<td><span class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</span></td>' +
                         '<td>' + item.rental_start_date + ' ~ ' + item.rental_end_date + '</td>' +
-                        '<td><span class="trust-score high">' + item.daily_rent_price + ' 원</span></td>' +
+                        '<td><span class="trust-score high">' + dailyPrice + '</span></td>' +
                         '<td>' + item.created_date + '</td>' +
                         '<td>' +
                         '<button type="button" class="btn-sm btn-approve" data-rental="' + item.storen_id + '">매칭신청확인</button>' +
