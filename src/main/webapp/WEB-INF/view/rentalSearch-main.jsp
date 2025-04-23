@@ -30,93 +30,93 @@
 <div class="main-container">
     <!-- 왼쪽 카테고리 메뉴 -->
     <div class="left-category">
-        <ul>
-            <li>
-                <a id="all" href="" onclick="" class="on">ALL</a>
-            </li>
-            <li>
-                <a id="brand" href="" onclick="">브랜드</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">가나다</a></li>
-                    <li><a href="" onclick="">라바사</a></li>
-                    <li><a href="" onclick="">아자카</a></li>
-                    <li><a href="" onclick="">타파하</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category1" href="" onclick="">텐트/쉘터</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category4" href="" onclick="">조명/전력장비</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category5" href="" onclick="">조리장비</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category6" href="" onclick="">냉/난방장비</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category7" href="" onclick="">수납/운반용품</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-            <li>
-                <a id="category8" href="" onclick="">기타장비</a>
-                <ul class="left-category-sub">
-                    <li><a href="" onclick="">ALL</a></li>
-                    <li><a href="" onclick="">텐트</a></li>
-                    <li><a href="" onclick="">쉘터/타프</a></li>
-                    <li><a href="" onclick="">설치용부속품</a></li>
-                    <li><a href="" onclick="">보조텐트류</a></li>
-                    <li><a href="" onclick="">바닥보호시트</a></li>
-                    <li><a href="" onclick="">기타용품</a></li>
-                </ul>
-            </li>
-        </ul>
+<%--        <ul>--%>
+<%--            <li>--%>
+<%--                <a id="all" href="" onclick="" class="on">ALL</a>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="brand" href="" onclick="">브랜드</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">가나다</a></li>--%>
+<%--                    <li><a href="" onclick="">라바사</a></li>--%>
+<%--                    <li><a href="" onclick="">아자카</a></li>--%>
+<%--                    <li><a href="" onclick="">타파하</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category1" href="" onclick="">텐트/쉘터</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category4" href="" onclick="">조명/전력장비</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category5" href="" onclick="">조리장비</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category6" href="" onclick="">냉/난방장비</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category7" href="" onclick="">수납/운반용품</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--            <li>--%>
+<%--                <a id="category8" href="" onclick="">기타장비</a>--%>
+<%--                <ul class="left-category-sub">--%>
+<%--                    <li><a href="" onclick="">ALL</a></li>--%>
+<%--                    <li><a href="" onclick="">텐트</a></li>--%>
+<%--                    <li><a href="" onclick="">쉘터/타프</a></li>--%>
+<%--                    <li><a href="" onclick="">설치용부속품</a></li>--%>
+<%--                    <li><a href="" onclick="">보조텐트류</a></li>--%>
+<%--                    <li><a href="" onclick="">바닥보호시트</a></li>--%>
+<%--                    <li><a href="" onclick="">기타용품</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+<%--        </ul>--%>
     </div>
 
     <div class="content">
@@ -218,34 +218,26 @@
                 <c:choose>
                     <c:when test="${!empty storenList && storenList.size() > 0}">
                         <ul>
-                        <c:forEach var="storen" items="${storenList}">
-                            <li>
-                                <a href="storenmatching-request.action?storenId=${storen.storen_id}">
-                                    <div class="product-card">
-                                        <div class="product-image">
-                                            <c:choose>
-                                                <c:when test="${!empty storen.equipmentDTO.attachments && storen.equipmentDTO.attachments.size() > 0}">
-                                                    <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <div class="product-placeholder"></div>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            <button class="like-button">
-                                                <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
-                                            </button>
+                            <c:forEach var="i" begin="1" end="20">
+                                <li>
+                                    <a href="#">
+                                        <div class="product-card">
+                                            <div class="product-image">
+                                                <img src="${pageContext.request.contextPath}/resources/images/sample-equip.jpg" alt="샘플 이미지" />
+                                                <button class="like-button">
+                                                    <i class="fa-solid fa-heart" style="color: #f2e8cf;"></i>
+                                                </button>
+                                            </div>
+                                            <div class="product-info">
+                                                <p class="product-title">샘플 장비 타이틀 ${i}</p>
+                                                <p class="product-brand">스노우피크</p>
+                                                <p class="product-category">텐트/쉘터</p>
+                                                <p class="product-price">25,000원/일</p>
+                                            </div>
                                         </div>
-                                        <div class="product-info">
-                                            <p class="product-title">${storen.storen_title}</p>
-                                            <!-- 수정된 부분: equipmentDTO 접근 방식 변경 -->
-                                            <p class="product-brand">${storen.equipmentDTO.brand}</p>
-                                            <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
-                                            <p class="product-price">${storen.daily_rent_price}원/일</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </c:forEach>
+                                    </a>
+                                </li>
+                            </c:forEach>
                         </ul>
                     </c:when>
                     <c:otherwise>

@@ -189,12 +189,16 @@
                 <div class="urgent-header">즉시 확인 필요</div>
                 <div class="urgent-content">
                     <a href="#" class="urgent-item">
-                        <div class="item-label">매칭 승인 대기</div>
-                        <div class="item-count">5</div>
+                        <div class="item-label">렌탈비 결제 필요</div>
+                        <div class="item-count">${emergencyMap["렌탈비 결제 필요"]}</div>
                     </a>
                     <a href="#" class="urgent-item">
-                        <div class="item-label">추가 비용 결제 대기</div>
-                        <div class="item-count">2</div>
+                        <div class="item-label">추가 비용 결제 필요</div>
+                        <div class="item-count">${emergencyMap["추가 비용 결제 필요"]}</div>
+                    </a>
+                    <a href="#" class="urgent-item">
+                        <div class="item-label">문제 상황 발생</div>
+                        <div class="item-count">${emergencyMap["문제 상황 발생"]}</div>
                     </a>
                 </div>
             </div>
@@ -207,46 +211,27 @@
                     <div class="status-row">
                         <div class="status-type">스토렌</div>
                         <div class="chevron-arrows">
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">배송대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
-                                <span class="arrow-label">배송 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
-                                <span class="arrow-label">검수 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
-                                <span class="arrow-label">보관 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">매칭대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">승인대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">렌탈 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">반환 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
+                            <c:if test="${!empty storenStatusMap}">
+                                <c:forEach var="status" items="${storenStatusMap}">
+                                    <c:set var="cssClass" value=""/>
+                                    <c:if test="${status.value > 0}">
+                                        <c:set var="cssClass" value="active"/>
+                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${status.key eq '매칭중' || status.key eq '매칭승인대기' || status.key eq '매칭완료'
+                                        || status.key eq '추가비용결제필요' || status.key eq '상태불명'}">
+                                            <%-- 아무것도 하지 않음(continue처럼) --%>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="#" class="arrow-step ${cssClass}" data-status="${status.key}">
+                                                <span class="arrow-badge">${status.value}</span>
+                                                <span class="arrow-label">${status.key}</span>
+                                                <div class="arrow-chevron"></div>
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
 
@@ -255,28 +240,38 @@
                         <div class="status-type">렌탈</div>
                         <div class="chevron-arrows">
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">매칭대기</span>
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">렌탈비 결제 전</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
-                                <span class="arrow-label">승인대기</span>
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">렌탈비 결제완료</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
-                                <span class="arrow-label">렌탈 중</span>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">대여 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">반환 중</span>
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">반납일 임박</span>
+                                <div class="arrow-chevron"></div>
+                            </a>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">반납 중</span>
+                                <div class="arrow-chevron"></div>
+                            </a>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
+                                <span class="arrow-label">거래 완료</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                         </div>
@@ -314,8 +309,17 @@
         <!-- 장비 관리 탭 컨테이너 -->
         <div class="tab-container">
             <div class="tabs">
-                <div class="tab" data-tab="storen" id="storen-tab">스토렌 <span class="badge-count">3</span></div>
-                <div class="tab" data-tab="rental" id="rental-tab">렌탈 <span class="badge-count">2</span></div>
+                <div class="tab" data-tab="storen" id="storen-tab">스토렌
+                    <span class="badge-count">
+                    <c:choose>
+                        <c:when test="${not empty rentEquipInfo.rentalItems}">
+                            ${rentEquipInfo.rentalItems.size()}
+                        </c:when>
+                        <c:otherwise>
+                            0
+                        </c:otherwise>
+                    </c:choose></span></div>
+                <div class="tab" data-tab="rental" id="rental-tab">렌탈 <span class="badge-count">0</span></div>
             </div>
 
             <!-- 스토렌 탭 콘텐츠 -->
@@ -370,28 +374,26 @@
                                         </td>
                                         <td>
                                             <div class="equipment-info-container">
-                                                <div class="equipment-code">스토렌ID : ${item.storen.storen_id}</div>
+                                                <div class="equipment-info-text">스토렌ID : ${item.storen.storen_id}</div>
                                                 <a href="storenmatching-request.action?storen_id=${item.storen.storen_id}" class="equipment-name">${item.storen.storen_title}</a>
-                                                <div class="equipment-category">${item.storen.equipmentDTO.majorCategory} > ${item.storen.equipmentDTO.middleCategory}</div>
-                                                <div class="equipment-brand">${item.storen.equipmentDTO.brand}</div>
-                                                <div class="equipment-price">원가 : ${item.storen.equipmentDTO.original_price}원</div>
-                                                <div class="storen-date">${item.storen.created_date}</div>
+                                                <div class="equipment-info-text">${item.storen.equipmentDTO.majorCategory} > ${item.storen.equipmentDTO.middleCategory}</div>
+                                                <div class="equipment-info-text">${item.storen.equipmentDTO.brand}</div>
+                                                <div class="equipment-info-text">${item.storen.created_date}</div>
+                                                <div class="equipment-info-text">원가 : ${item.storen.equipmentDTO.original_price}원</div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="equipment-info-container">
-                                                <input type="hidden" name="id" value="${item.matching.matching_req_id}">
-                                                <div class="equipment-code">매칭완료ID : ${item.matching.matching_done_id}</div>
-                                                <div class="equipment-date">렌탈시작일 : ${item.matching.rental_start_date}</div>
-                                                <div class="equipment-date">렌탈종료일 : ${item.matching.rental_end_date}</div>
-                                                <div class="equipment-price">결제금액 : ${item.payment.payAmount}</div>
+                                                <input type="hidden" name="id" value="${item.storen.storen_id}">
+                                                <div class="equipment-info-text">매칭완료ID : ${item.matching.matching_done_id}</div>
+                                                <div class="equipment-info-text">렌탈시작일 : ${item.matching.rental_start_date}</div>
+                                                <div class="equipment-info-text">렌탈종료일 : ${item.matching.rental_end_date}</div>
+                                                <div class="equipment-info-text">결제금액 : ${item.payment.payAmount}</div>
+                                                <div class="status-badge">${item.storen.matching_status_detail}</div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="button-group-vertical">
-                                                <button class="btn-sm btn-inspection">매칭 승인 내역</button>
-                                                <button class="btn-sm btn-shipping">배송 내역 조회</button>
-                                                <button class="btn-sm btn-danger">문제 발생</button>
                                             </div>
                                         </td>
                                     </tr>
@@ -481,8 +483,12 @@
     $(document).ready(function() {
         // 탭 전환 이벤트 ========= ======================================================================================
         // 초기 설정 - 첫 번째 탭만 표시
+        $('.tab').removeClass('active');
+        $('#storen-tab').addClass('active');
         $('.tab-content').hide();
         $('#storen-content').show();
+
+        const userCode = ${userCode};
 
         // 탭 전환 기능
         $('.tab').on('click', function() {
@@ -497,33 +503,149 @@
             $('#' + tabId + '-content').show();
         });
 
+        // 상품 상태에 따라 상태 클래스와 버튼 활성화 다르게 동적 생성 ==========================================================
+        // 모든 상태 배지를 순회하며 클래스 적용
+        $('.status-badge').each(function() {
+            const status = $(this).text().trim();
+            const statusClass = getStatusBadgeClass(status);
+            $(this).addClass(statusClass);
+        });
+
+        // 모든 버튼 그룹을 순회하며 상태에 따라 다른 버튼 세트 적용
+        $('.matching-row').each(function() {
+            const status = $(this).find('.status-badge').text().trim();
+            const buttonContainer = $(this).find('.button-group-vertical');
+            const buttonList = generateButtonList(status);
+            buttonContainer.html(buttonList);
+        });
+
+        // 버튼 이벤트 다시 바인딩
+        bindStorenButtonEvents();
+
+        // 상태에 따른 CSS 클래스 반환 함수
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case '렌탈비결제전':
+                    return 'status-rental-payment-waiting';
+                case '렌탈비결제완료':
+                    return 'status-rental-payment-completed';
+                case '배송중':
+                    return 'status-shipping-in-progress';
+                case '대여중':
+                    return 'status-renting';
+                case '반납일임박':
+                    return 'status-return-approaching';
+                case '반납중':
+                    return 'status-returning-in-progress';
+                case '검수중':
+                    return 'status-inspecting';
+                case '거래완료':
+                    return 'status-transaction-completed';
+                case '추가비용결제필요':
+                    return 'status-additional-payment-required';
+                default:
+                    return 'status-unknown';
+            }
+        }
+
+        // 상태에 따른 버튼 리스트 생성 함수
+        function generateButtonList(status) {
+            if (status === '렌탈비결제전') {
+                return '<button class="btn-sm btn-pay">렌탈비 결제하기</button>' +
+                    '<button class="btn-sm btn-shipping" disabled="disabled">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>';
+            } else if (status === '렌탈비결제완료' || status === '배송중') {
+                return '<button class="btn-sm btn-pay" disabled="disabled">렌탈비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection" disabled="disabled">검수 결과 확인</button>';
+            } else if (status === '대여중' || status === '반납일임박') {
+                return '<button class="btn-sm btn-pay" disabled="disabled">렌탈비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-danger">분실 신고</button>';
+            } else if (status === '반납중' || status === '검수중') {
+                return '<button class="btn-sm btn-pay" disabled="disabled">렌탈비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection">검수 결과 확인</button>';
+            } else if (status === '추가비용결제필요') {
+                return '<button class="btn-sm btn-repay">추가 비용 결제</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection">검수 결과 확인</button>';
+            } else {
+                return '<button class="btn-sm btn-pay" disabled="disabled">렌탈비 결제완료</button>' +
+                    '<button class="btn-sm btn-shipping">배송 내역 조회</button>' +
+                    '<button class="btn-sm btn-inspection">검수 결과 확인</button>';
+            }
+        }
+
+        function bindStorenButtonEvents() {
+            // 검수 결과 확인 버튼 클릭 이벤트
+            $('.btn-inspection').off('click').on('click', function(e) {
+                e.preventDefault(); // 기본 동작 방지
+                var id = $(this).closest("tr").find("input[name='id']").val();
+                // 검수 조회/내역 페이지로 이동
+                window.location.href = "mypage-inspecList.action?id=" + id + "&activeTab=storen&storenTabType=return";
+            });
+
+            // 배송 확인 버튼 클릭 이벤트
+            $('.btn-shipping').off('click').on('click', function(e) {
+                e.preventDefault(); // 기본 동작 방지
+                var id = $(this).closest("tr").find("input[name='id']").val();
+                // 배송 조회/내역 페이지로 이동
+                window.location.href = "mypage-delivery.action?id=" + id + "&activeTab=storen&storenTabType=user";
+            });
+
+            // 결제 버튼 클릭 이벤트
+            $('.btn-pay').off('click').on('click', function (e) {
+                e.preventDefault(); // 기본 동작 방지
+                var id = $(this).closest("tr").find("input[name='id']").val();
+                // 결제 페이지로 이동
+                window.location.href = "rentalmatching-rental-pay.action?rentalI=" + id + "&userCode=" + userCode + "&type=storen";
+            });
+
+            // 분실 신고 이벤트
+            $('.btn-danger').off('click').on('click', function (e) {
+                e.preventDefault(); // 기본 동작 방지
+                var id = $(this).closest("tr").find("input[name='id']").val();
+                // 1:1 문의 페이지로 이동
+                window.location.href = "mypage-inquiry-write.action";
+            });
+        }
+
         // ================================================================================================ 탭 전환 이벤트
 
         // 각 탭에서 버튼 클릭 이벤트 ======================================================================================
-        // 스토렌 & 렌탈 & 보관--------------------------------------------------------------------------------------------
+        // 스토렌 -------------------------------------------------------------------------------------------------------
         // 검수 결과 확인 버튼 클릭 이벤트
-        $('.btn-inspection').on('click', function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 검수 조회/내역 페이지로 이동
-            window.location.href = "mypage-inspecList.action?id=" + id;
-        });
-
-        // 배송 확인 버튼 클릭 이벤트
-        $('.btn-shipping').on('click', function(e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 배송 조회/내역 페이지로 이동
-            window.location.href = "mypage-delivery.action?id=" + id;
-        });
-
-        // 결제 버튼 클릭 이벤트
-        $('.btn-pay').on('click', function (e) {
-            e.preventDefault(); // 기본 동작 방지
-            var id = $(this).closest("tr").find("input[name='id']").val();
-            // 결제 페이지로 이동
-            window.location.href = "storenregister-storage-pay.action?id=" + id;
-        });
+        // $('.btn-inspection').on('click', function(e) {
+        //     e.preventDefault(); // 기본 동작 방지
+        //     var id = $(this).closest("tr").find("input[name='id']").val();
+        //     // 검수 조회/내역 페이지로 이동
+        //     window.location.href = "mypage-inspecList.action?id=" + id;
+        // });
+        //
+        // // 배송 확인 버튼 클릭 이벤트
+        // $('.btn-shipping').on('click', function(e) {
+        //     e.preventDefault(); // 기본 동작 방지
+        //     var id = $(this).closest("tr").find("input[name='id']").val();
+        //     // 배송 조회/내역 페이지로 이동
+        //     window.location.href = "mypage-delivery.action?id=" + id;
+        // });
+        //
+        // // 결제 버튼 클릭 이벤트
+        // $('.btn-pay').on('click', function (e) {
+        //     e.preventDefault(); // 기본 동작 방지
+        //     var id = $(this).closest("tr").find("input[name='id']").val();
+        //     // 결제 페이지로 이동
+        //     window.location.href = "rentalmatching-rental-pay.action?id=" + id;
+        // });
+        //
+        // // 분실 신고 이벤트
+        // $('.btn-danger').on('click', function (e) {
+        //     e.preventDefault(); // 기본 동작 방지
+        //     var id = $(this).closest("tr").find("input[name='id']").val();
+        //     // 1:1 문의 페이지로 이동
+        //     window.location.href = "mypage-inquiry-write.action";
+        // });
 
         // 검색 기능
         $('#btn-search-equip').on('click', function() {
@@ -583,23 +705,6 @@
         }
     });
 
-    $(document).ready(function() {
-        // 정렬 옵션 변경 이벤트
-        $('.sort-select').change(function() {
-            // 정렬 기능 구현 (실제 구현 시에는 여기에 정렬 로직 추가)
-            alert('정렬 옵션이 변경되었습니다: ' + $(this).val());
-        });
-
-        // 페이지네이션 클릭 이벤트
-        $('.page-link').click(function(e) {
-            if (!$(this).parent().hasClass('disabled') && !$(this).parent().hasClass('active')) {
-                e.preventDefault();
-                $('.page-item').removeClass('active');
-                $(this).parent().addClass('active');
-                // 페이지 이동 기능 구현 (실제 구현 시에는 여기에 페이지 이동 로직 추가)
-            }
-        });
-    });
 </script>
 </body>
 </html>

@@ -102,6 +102,11 @@
         .table-icon {
             margin-right: 5px;
         }
+
+        .attachment-icon {
+            margin-left: 5px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -203,6 +208,11 @@
                                         href="${totalHotPost.boardName == '자유 게시판' ? 'boardfree-post.action' :
                                                 totalHotPost.boardName == '고독한 캠핑방' ? 'boardimage-post.action' : 'boardmain.action'}?postId=${totalHotPost.postId}">${totalHotPost.postTitle}
                                         <%-- <i class="fa-solid fa-comment table-icon icon-comment"></i> 15</a>--%>
+                                    <c:if test="${not empty totalHotPost.attachments}">
+                                    <span class="attachment-icon">
+                                            <i class="fa-solid fa-image"></i>
+                                        </span>
+                                    </c:if>
                                 </td>
                                 <td class="p-3 text-center">${totalHotPost.nickName}</td>
                                 <td class="p-3 text-center">${totalHotPost.createdDate.substring(0, 10)}</td>
@@ -250,7 +260,7 @@
                     </div>
 
                     <!-- 페이지네이션 - 중앙에 가깝게 -->
-                    <div style="margin: 0; flex: 3; display: flex; justify-content: center;">
+                    <div style="margin: 0; flex: 2; display: flex; justify-content: center;">
                         <div class="d-flex gap-1">
                             <!-- 첫 페이지로 -->
                             <c:if test="${pagenation.pageNum > 1}">
@@ -290,6 +300,10 @@
                                 </a>
                             </c:if>
                         </div>
+                    </div>
+                    <!-- 빈 div 추가: 자유게시판과 동일한 구조를 만들기 위함 -->
+                    <div style="flex: 1; display: flex; justify-content: flex-end;">
+                        <!-- 글쓰기 버튼 없음 -->
                     </div>
                 </div>
             </div>

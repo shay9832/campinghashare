@@ -320,7 +320,9 @@
                             '<td class="p-3 text-center"><span class="board-category-tag ' +
                             getCategoryClass(post.postLabelName) + '">' + post.postLabelName + '</span></td>' +
                             '<td class="p-3 title-cell"><a href="boardfree-post.action?postId=' + post.postId + '">' + post.postTitle + '</a>' +
-                            attachmentIcon + '</td>' +
+                            // 첨부파일 아이콘 추가
+                            (post.attachments && post.attachments.length > 0 ? ' <i class="fa-solid fa-paperclip table-icon" style="color: #888;"></i>' : '') +
+                            '</td>' +
                             '<td class="p-3 text-center">' + post.nickName + '</td>' +
                             '<td class="p-3 text-center">' + post.createdDate.substring(0, 10) + '</td>' +
                             '<td class="p-3 text-center">' + post.viewCount + '</td>' +
@@ -504,6 +506,11 @@
                                 </td>
                                 <td class="p-3 title-cell"><a
                                         href="boardfree-post.action?postId=${boardHotPosts.postId}">${boardHotPosts.postTitle}</a>
+                                    <c:if test="${not empty boardHotPosts.attachments}">
+                                        <span class="attachment-icon">
+                                            <i class="fa-solid fa-image"></i>
+                                        </span>
+                                    </c:if>
                                 </td>
                                 <td class="p-3 text-center">${boardHotPosts.nickName}</td>
                                 <td class="p-3 text-center">${boardHotPosts.createdDate.substring(0, 10)}</td>

@@ -46,4 +46,21 @@
         WHERE er.EQUIP_CODE = #{equip_code}
     </select>
 
+    <!-- 장비명으로 평균 신품 가격 조회 -->
+    <select id="getAvgNewPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(ER.ORIGINAL_PRICE)), 0)
+        FROM EQUIPMENT_REGISTRATION ER
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
+    </select>
+
+    <!-- 장비명으로 평균 렌탈 가격 조회 -->
+    <select id="getAvgRentalPriceByEquipName" resultType="int">
+        SELECT NVL(ROUND(AVG(R.DAILY_RENT_PRICE)), 0)
+        FROM RENTAL R
+                 JOIN EQUIPMENT_REGISTRATION ER ON R.EQUIP_CODE = ER.EQUIP_CODE
+                 JOIN EQUIP_NAME EN ON ER.EQUIP_NAME_ID = EN.EQUIP_NAME_ID
+        WHERE EN.EQUIP_NAME = #{equipName}
+    </select>
+
 </mapper>

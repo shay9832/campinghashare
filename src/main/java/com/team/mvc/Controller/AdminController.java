@@ -56,33 +56,38 @@ public class AdminController {
     }
 
     // 관리자 회원가입 화면 진입
-    @RequestMapping("/registeradmin-id.action")
+    @RequestMapping("/admin-registerid.action")
     public String registerAdminId() {
-        return "registerAdmin-id";
+        return "admin-registerId";
     }
-
-    // 관리자 회원가입 처리
+    // 관리자 등록
     @RequestMapping(value = "/insertadmin.action", method = RequestMethod.POST)
     public String insertAdmin(AdminDTO dto, Model model) {
         IAdminDAO dao = sqlSession.getMapper(IAdminDAO.class);
 
         if (dao.getAdminById(dto.getAdminId()) != null) {
             model.addAttribute("error", "이미 사용 중인 아이디입니다.");
-            return "registerAdmin-id";
+            return "admin-registerId";
         }
 
+        int userCode = dao.getNextUserCode();
+
+        // user_code 테이블에 먼저 insert
+        dao.insertUserCode(userCode);
+
+        dto.setUserCode(userCode);
         dao.insertAdmin(dto);
+
         return "redirect:/admin-login.action";
     }
 
-    // 관리자 ID 중복 확인
-    @RequestMapping(value = "/admin-idcheck.action", method = RequestMethod.GET)
-    public String adminIdCheck(@RequestParam("adminId") String adminId, Model model) {
+    // ID 중복 확인 (AJAX 대응 - 사용자 방식 동일)
+    @RequestMapping(value = "/admin-idcheck.action", method = RequestMethod.GET, produces = "text/plain;charset=UTF-8")
+    @ResponseBody
+    public String adminIdCheck(@RequestParam("adminId") String adminId) {
         IAdminDAO dao = sqlSession.getMapper(IAdminDAO.class);
-        AdminDTO admin = dao.getAdminById(adminId);
+        int count = dao.getAdminCountById(adminId);
 
-        model.addAttribute("available", admin == null);  // 중복 여부 표시
-        model.addAttribute("checkedId", adminId);  // 확인한 아이디 값
-        return "admin-registerId"; // 중복 확인 후 해당 페이지로 이동
+        return (count == 0) ? "사용 가능한 아이디입니다." : "중복된 아이디입니다.";
     }
 }

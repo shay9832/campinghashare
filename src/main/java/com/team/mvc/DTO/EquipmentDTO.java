@@ -13,6 +13,11 @@ public class EquipmentDTO {
     // 첨부파일 추가
     private List<AttachmentDTO> attachments;
 
+    // 검색 및 정렬, 페이징 관련
+    private String searchKeyword;
+    private String sortType;
+    private Pagenation pagenation;
+
     // getter/setter
 
     public int getEquip_id() {
@@ -117,5 +122,29 @@ public class EquipmentDTO {
 
     public void setAttachments(List<AttachmentDTO> attachments) {
         this.attachments = attachments;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    public Pagenation getPagenation() {
+        return pagenation;
+    }
+
+    public void setPagenation(Pagenation pagenation) {
+        this.pagenation = pagenation;
     }
 }

@@ -1,6 +1,7 @@
 package com.team.mvc.Interface;
 
 import com.team.mvc.DTO.AdminDTO;
+import org.apache.ibatis.annotations.Param;
 
 public interface IAdminDAO {
 
@@ -15,6 +16,9 @@ public interface IAdminDAO {
 
     // USER_CODE 시퀀스 조회
     int getNextUserCode();
+
+    // 가입 시 유저 코드 삽입
+    void insertUserCode(int userCode);
 
     // 중복 ID 확인
     int getAdminCountById(String adminId);

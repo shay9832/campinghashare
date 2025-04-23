@@ -16,11 +16,15 @@ public class MypageMainService implements IMypageMainService {
 
     @Autowired
     SqlSession sqlSession;
+    @Autowired
+    MypageMyEquipService myEquipService;
+    @Autowired
+    MypageWishlistService mypageWishlistService;
 
     @Override
     public UserDTO getUserDTO(int userCode) {
         IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
-        return userDAO.getUserByUserCode(userCode);
+        return userDAO.getUserByUserCodeForMain(userCode);
     }
 
     @Override
@@ -48,16 +52,19 @@ public class MypageMainService implements IMypageMainService {
             StorenDTO storenDTO = storenDAO.getStorenByEquipCode(userCode, equipment.getEquip_code());
             if (storenDTO == null) {
                 // 스토렌이 아니라면 -> 스토렌으로 등록되지 않은 일반장비.
-                result.put("general", equipment);
+                // key 값을 그냥 "general"이라고만 하면 같은 key일 경우 덮어씌워지므로 고유한 key를 정해준다.
+                result.put("general_" + equipment.getEquip_code(), equipment);
+                System.out.println(equipment.getEquip_code());
             }
             else {
                 // 스토렌이라면 -> 스토렌으로 등록된 장비.
                 // 스토렌에 equipmentDTO 넣어주기
                 storenDTO.setEquipmentDTO(equipment);
-                result.put("storen", storenDTO);
+                result.put("storen_" + equipment.getEquip_code(), storenDTO);
+                System.out.println(equipment.getEquip_code());
             }
         }
-
+        System.out.println("result size : " + result.size());
         return result;
     }
 
@@ -92,26 +99,53 @@ public class MypageMainService implements IMypageMainService {
                     }
                     // 해당 스토렌에 equipmentDTO 넣어주기
                     storenDTO.setEquipmentDTO(equip);
+                    // 해당 스토렌에 matchingRequestDTO 넣어주기
+                    storenDTO.setMatchingDTO(matchingRequestDTO);
                     // 첨부파일 있든 없든 일단 해당 스토렌은 결과반환할 map에 넣어주기
-                    result.put("storen", storenDTO);
+                    result.put("storen_" + storenDTO.getEquip_code(), storenDTO);
                 }
             }
         }
+        System.out.println("result size : " + result.size());
         return result;
     }
 
     @Override
     public Map<String, Object> getPostCommentMap(int userCode) {
-        return Map.of();
+        // dao 생성
+        IBoardPostDAO boardPostDAO = sqlSession.getMapper(IBoardPostDAO.class);
+        IReplyDAO replyDAO = sqlSession.getMapper(IReplyDAO.class);
+
+        // 반환할 Map 변수 생성
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        // 최근 등록한 게시물 5개까지 가져오기
+        List<BoardPostDTO> postDTOList = boardPostDAO.listRecentPostByUserCode(userCode, 5);
+
+        // 최근 등록한 댓글 5개까지 가져오기
+        List<ReplyDTO> replyDTOList = replyDAO.listRecentReplyByUserCode(userCode, 5);
+        for (ReplyDTO replyDTO : replyDTOList) {
+            // 해당 댓글이 달린 게시물 정보 가져와서 넣어주기
+            replyDTO.setReplyPostDTO(boardPostDAO.getPostByPostId(replyDTO.getPostId()));
+
+        }
+
+        result.put("postList", postDTOList);
+        result.put("replyList", replyDTOList);
+
+        return result;
     }
 
     @Override
-    public Map<String, Map<String, Object>> getMyEquipmentStatus(int userCode) {
-        return Map.of();
+    public Map<String, Map<String, Integer>> getMyEquipmentStatus(int userCode) {
+        Map<String, Map<String, Integer>> equipmentStatus = myEquipService.getMyEquipmentStatus(userCode);
+        return equipmentStatus;
     }
 
     @Override
     public List<StorenDTO> getMyWishlist(int userCode) {
-        return List.of();
+        List<StorenDTO> wishlist = mypageWishlistService.listMyWishStoren(userCode);
+
+        return wishlist;
     }
 }

@@ -1,9 +1,12 @@
 package com.team.mvc.DTO;
 
+import java.util.List;
+
 public class ReplyDTO {
     private int replyId, userCode,  postId;
     private Integer rootReplyId;  // 대댓글인 경우 부모 댓글 ID
     private String replyContent, createdDate, nickname; // 조인으로 가져올 닉네임
+    private List<AttachmentDTO> attachment;
 
     // Getters and Setters
     public int getReplyId() {
@@ -61,4 +64,22 @@ public class ReplyDTO {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public List<AttachmentDTO> getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(List<AttachmentDTO> attachment) {
+        this.attachment = attachment;
+    }
+
+
+
+
+
+    // (250422 은솔) 임시 : 통합 후 컴파일 오류 제거 위해 임시 삽입 ★★★★★
+    private BoardPostDTO replyPostDTO;
+    public BoardPostDTO getReplyPostDTO() { return replyPostDTO; }
+    public void setReplyPostDTO(BoardPostDTO replyPostDTO) { this.replyPostDTO = replyPostDTO; }
+
 }

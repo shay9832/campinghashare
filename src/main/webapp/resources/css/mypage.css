@@ -338,6 +338,68 @@
     color: var(--color-gray-700);
     border: 1px solid var(--color-gray-400);
 }
+/* 렌탈비결제전 - 주의 필요 */
+.status-badge.status-rental-payment-waiting {
+    background-color: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+    border: 1px solid var(--color-warning);
+}
+
+/* 렌탈비결제완료 - 진행 상태 */
+.status-badge.status-rental-payment-completed {
+    background-color: var(--color-beige-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-beige);
+}
+
+/* 배송중 - 진행 상태 */
+.status-badge.status-shipping-in-progress {
+    background-color: var(--color-slate);
+    color: var(--color-white);
+    border: 1px solid var(--color-slate);
+}
+
+/* 대여중 - 활성 상태 */
+.status-badge.status-renting {
+    background-color: var(--color-sage);
+    color: var(--color-white);
+    border: 1px solid var(--color-sage);
+}
+
+/* 반납일임박 - 주의 필요 */
+.status-badge.status-return-approaching {
+    background-color: var(--color-mustard);
+    color: var(--color-white);
+    border: 1px solid var(--color-mustard);
+}
+
+/* 반납중 - 진행 상태 */
+.status-badge.status-returning-in-progress {
+    background-color: var(--color-coral-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-coral);
+}
+
+/* 검수중 - 진행 상태 */
+.status-badge.status-inspecting {
+    background-color: var(--color-slate);
+    color: var(--text-primary);
+    border: 1px solid var(--color-slate);
+}
+
+/* 거래완료 - 완료 상태 */
+.status-badge.status-transaction-completed {
+    background-color: var(--alert-success-bg);
+    color: var(--alert-success-text);
+    border: 1px solid var(--color-success);
+}
+
+/* 추가비용결제필요 - 경고 상태 */
+.status-badge.status-additional-payment-required {
+    background-color: var(--alert-error-bg);
+    color: var(--alert-error-text);
+    border: 1px solid var(--color-error);
+}
 
 /* ===== 검색 컨테이너 스타일 ===== */
 .search-container {
@@ -560,15 +622,15 @@
 /*}*/
 
 /*!* 추가 상태 배지 *!*/
-/*.status-pending {*/
-/*    background-color: #fff4e5;*/
-/*    color: #ff8a00;*/
-/*}*/
+.status-pending {
+    background-color: #fff4e5;
+    color: #ff8a00;
+}
 
-/*.status-progress {*/
-/*    background-color: #e6f3ff;*/
-/*    color: #0077cc;*/
-/*}*/
+.status-progress {
+    background-color: #e6f3ff;
+    color: #0077cc;
+}
 
 /*.status-completed {*/
 /*    background-color: #e8f5e8;*/
@@ -780,13 +842,13 @@
     box-shadow: var(--shadow-md);
 }
 
-.btn-pay {
+.btn-pay, .btn-repay {
     background-color: var(--color-coral-light);
     color: var(--text-primary);
     border-color: var(--color-coral-light);
 }
 
-.btn-pay:hover {
+.btn-pay:hover, .btn-repay:hover{
     background-color: var(--color-coral);
     color: var(--color-white);
     border-color: var(--color-coral);
