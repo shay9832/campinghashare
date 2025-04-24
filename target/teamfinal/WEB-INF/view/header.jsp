@@ -483,7 +483,14 @@
 
         // ===== (2) 탭 토글 라디오 상태 설정 =====
         const currentPath = window.location.pathname;
-        const isCommunityPage = currentPath.includes("boardmain") || currentPath.includes("board");
+
+        // board 관련 외에도 커뮤니티성 페이지를 포함시킴
+        const isCommunityPage =
+            currentPath.includes("board") ||
+            currentPath.includes("notice") ||
+            currentPath.includes("event") ||
+            currentPath.includes("faq") ||
+            currentPath.includes("qna");
 
         if (isCommunityPage) {
             document.getElementById("community-radio").checked = true;

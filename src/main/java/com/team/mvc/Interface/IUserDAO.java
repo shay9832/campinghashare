@@ -62,6 +62,8 @@ public interface IUserDAO {
 
     UserDTO getUserById(String userId);
 
+    int checkPassword(@Param("userId") String userId, @Param("userPw") String userPw);
+
     void disconnectUserCode(@Param("userId") String userId);
 
 }
