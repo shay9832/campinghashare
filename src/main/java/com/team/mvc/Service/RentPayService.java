@@ -29,6 +29,7 @@ public class RentPayService implements IRentPayService {
         IEquipmentDAO equipmentDAO = sqlSession.getMapper(IEquipmentDAO.class);
         IMatchingRequestDAO matchingRequestDAO = sqlSession.getMapper(IMatchingRequestDAO.class);
         ICouponDAO couponDAO = sqlSession.getMapper(ICouponDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         //사용자 유저 정보
         UserDTO userDTO = userDAO.getUserByUserCode(user_code);
@@ -37,6 +38,11 @@ public class RentPayService implements IRentPayService {
         StorenDTO storenDTO = storenDAO.getStorenByStorenId(storenId);
         // 해당 스토렌에 장비정보 넣어주기
         storenDTO.setEquipmentDTO(equipmentDAO.getEquipmentByEquipCode(storenDTO.getEquip_code()));
+        // 장비 사진 넣어주기
+        List<AttachmentDTO> attachmentDTOList = attachmentDAO.listAttachmentByEquipCode(storenDTO.getEquip_code());
+        if (attachmentDTOList != null && !attachmentDTOList.isEmpty()) {
+            storenDTO.getEquipmentDTO().setAttachments(attachmentDTOList);
+        }
 
         //매칭 정보
         MatchingRequestDTO matchingRequestDTO = matchingRequestDAO.getMatchingByStorenAndUser(storenId, user_code);
