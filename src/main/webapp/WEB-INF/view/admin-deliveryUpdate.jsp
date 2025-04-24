@@ -230,8 +230,10 @@
                             <th class="col-select"><input type="checkbox" id="pending-header-checkbox"></th>
                             <th class="col-delivery-type">배송 유형</th>
                             <th class="col-customer">발송인</th>
+                            <th class="col-customer">수취인</th>
                             <th class="col-storen-id">스토렌ID</th>
                             <th class="col-storage-id">보관ID</th>
+                            <th class="col-rental-id">렌탈매칭ID</th>
                             <th class="col-product">장비명</th>
                             <th class="col-actions">관리</th>
                         </tr>
@@ -240,12 +242,15 @@
                                 <td class="col-select"><input type="checkbox" value="${shipping.deliveryId}"></td>
                                 <td>${shipping.deliveryType}</td>
                                 <td>${shipping.senderId}</td>
+                                <td>${shipping.receiverId}</td>
                                 <td>${shipping.storenId}</td>
                                 <td>${shipping.storageId}</td>
+                                <td>${shipping.rentalMatchingDoneId}</td>
                                 <td>${shipping.equipmentName}</td>
                                 <td>
                                     <button class="btn btn-primary action-btn create-shipping-btn"
                                             data-sender="${shipping.senderId}"
+                                            data-receiver="${shipping.receiverId}"
                                             data-storen="${shipping.storenId}"
                                             data-storage="${shipping.storageId}"
                                             data-equipment="${shipping.equipmentName}"
@@ -643,12 +648,12 @@
                         <div class="form-group">
                             <label for="courier">택배사</label>
                             <select id="courier" name="carrierName" class="form-control">
-                                <option value="대한통운">CJ대한통운</option>
-                                <option value="한진택배">한진택배</option>
-                                <option value="우체국택배">우체국택배</option>
-                                <option value="로젠택배">로젠택배</option>
-                                <option value="롯데택배">롯데택배</option>
-                                <option value="기타">기타</option>
+<%--                                <option value="대한통운">CJ대한통운</option>--%>
+<%--                                <option value="한진택배">한진택배</option>--%>
+<%--                                <option value="우체국택배">우체국택배</option>--%>
+<%--                                <option value="로젠택배">로젠택배</option>--%>
+<%--                                <option value="롯데택배">롯데택배</option>--%>
+                                <option value="자체배송">자체배송</option>
                             </select>
                         </div>
 
@@ -704,6 +709,11 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="start-receiver-id">수취인 ID</label> <!-- 새로운 필드 -->
+                            <input type="text" id="start-receiver-id" name="receiverId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
                             <label for="start-storen-id">스토렌 ID</label>
                             <input type="text" id="start-storen-id" name="storenId" class="form-control" readonly>
                         </div>
@@ -711,6 +721,11 @@
                         <div class="form-group">
                             <label for="start-storage-id">보관 ID</label>
                             <input type="text" id="start-storage-id" name="storageId" class="form-control" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start-rental-matching-id">렌탈 매칭 ID</label> <!-- 새로운 필드 -->
+                            <input type="text" id="start-rental-matching-id" name="rentalMatchingDoneId" class="form-control" readonly>
                         </div>
 
                         <div class="form-group">
@@ -732,12 +747,12 @@
                         <div class="form-group">
                             <label for="start-courier">택배사</label>
                             <select id="start-courier" name="carrierName" class="form-control">
-                                <option value="대한통운">CJ대한통운</option>
-                                <option value="한진택배">한진택배</option>
-                                <option value="우체국택배">우체국택배</option>
-                                <option value="로젠택배">로젠택배</option>
-                                <option value="롯데택배">롯데택배</option>
-                                <option value="기타">기타</option>
+<%--                                <option value="대한통운">CJ대한통운</option>--%>
+<%--                                <option value="한진택배">한진택배</option>--%>
+<%--                                <option value="우체국택배">우체국택배</option>--%>
+<%--                                <option value="로젠택배">로젠택배</option>--%>
+<%--                                <option value="롯데택배">롯데택배</option>--%>
+                                <option value="자체배송">자체배송</option>
                             </select>
                         </div>
 
@@ -1102,21 +1117,32 @@
     document.querySelectorAll('.create-shipping-btn').forEach(button => {
         button.addEventListener('click', function() {
             const senderId = this.getAttribute('data-sender');
+            const receiverId = this.getAttribute('data-receiver');
             const storenId = this.getAttribute('data-storen');
             const storageId = this.getAttribute('data-storage');
+            const rentalMatchingId = this.getAttribute('data-rental-matching');
             const equipmentName = this.getAttribute('data-equipment');
             const payId = this.getAttribute('data-pay-id');
 
             // 모달 필드 초기화
             document.getElementById('start-sender-id').value = senderId;
+            document.getElementById('start-receiver-id').value = receiverId || '';
             document.getElementById('start-storen-id').value = storenId || '';
             document.getElementById('start-storage-id').value = storageId || '';
+            document.getElementById('start-rental-matching-id').value = rentalMatchingId || '';
             document.getElementById('start-equipment-name').value = equipmentName;
             document.getElementById('start-pay-id').value = payId || '';
 
             // 배송 유형 결정 (스토렌ID가 있으면 스토렌_최초입고, 보관ID가 있으면 보관_최초입고)
             let deliveryType = '';
             if (storenId && storenId !== 'null' && storenId !== '') {
+                deliveryType = '스토렌_최초입고';
+            } else if (storageId && storageId !== 'null' && storageId !== '') {
+                deliveryType = '보관_최초입고';
+            }
+            if (rentalMatchingId && rentalMatchingId !== 'null' && rentalMatchingId !== '') {
+                deliveryType = '렌탈_발송'; // 렌탈 매칭이 있는 경우
+            } else if (storenId && storenId !== 'null' && storenId !== '') {
                 deliveryType = '스토렌_최초입고';
             } else if (storageId && storageId !== 'null' && storageId !== '') {
                 deliveryType = '보관_최초입고';
@@ -1182,28 +1208,28 @@
             return;
         }
 
-        // 택배사별 배송조회 URL
-        let trackingUrl = '';
-        switch(courier) {
-            case '대한통운':
-                trackingUrl = `https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=${trackingNumber}`;
-                break;
-            case '한진택배':
-                trackingUrl = `https://www.hanjin.co.kr/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumText=${trackingNumber}`;
-                break;
-            case '우체국택배':
-                trackingUrl = `https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm?sid1=${trackingNumber}`;
-                break;
-            case '로젠택배':
-                trackingUrl = `https://www.ilogen.com/web/personal/trace/${trackingNumber}`;
-                break;
-            case '롯데택배':
-                trackingUrl = `https://www.lotteglogis.com/home/reservation/tracking/index?InvNo=${trackingNumber}`;
-                break;
-            default:
-                alert('지원하지 않는 택배사입니다.');
-                return;
-        }
+        <%--// 택배사별 배송조회 URL--%>
+        <%--let trackingUrl = '';--%>
+        <%--switch(courier) {--%>
+        <%--    case '대한통운':--%>
+        <%--        trackingUrl = `https://www.cjlogistics.com/ko/tool/parcel/tracking?gnbInvcNo=${trackingNumber}`;--%>
+        <%--        break;--%>
+        <%--    case '한진택배':--%>
+        <%--        trackingUrl = `https://www.hanjin.co.kr/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&schLang=KR&wblnumText=${trackingNumber}`;--%>
+        <%--        break;--%>
+        <%--    case '우체국택배':--%>
+        <%--        trackingUrl = `https://service.epost.go.kr/trace.RetrieveDomRigiTraceList.comm?sid1=${trackingNumber}`;--%>
+        <%--        break;--%>
+        <%--    case '로젠택배':--%>
+        <%--        trackingUrl = `https://www.ilogen.com/web/personal/trace/${trackingNumber}`;--%>
+        <%--        break;--%>
+        <%--    case '롯데택배':--%>
+        <%--        trackingUrl = `https://www.lotteglogis.com/home/reservation/tracking/index?InvNo=${trackingNumber}`;--%>
+        <%--        break;--%>
+        <%--    default:--%>
+        <%--        alert('지원하지 않는 택배사입니다.');--%>
+        <%--        return;--%>
+        <%--}--%>
 
         // 새 창에서 배송 조회 페이지 열기
         window.open(trackingUrl, '_blank');
