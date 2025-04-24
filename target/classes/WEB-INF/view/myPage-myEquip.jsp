@@ -1131,7 +1131,7 @@
                 '<div class="equipment-info-container">' +
                 '<input type="hidden" name="id" value="' + item.storen_id + '">' +
                 '<div class="equipment-info-text">스토렌ID : ' + item.storen_id + '</div>' +
-                '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
+                '<a href="storenmatching-request.action?storenId=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
                 '<div class="equipment-info-text">' + (item.store_month || '0') + '개월 보관</div>' +
                 '<div class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</div>' +
                 '<div class="equipment-info-text">보관시작일 : ' + (item.inspec_completed_date || '검수 중') + '</div>' +
@@ -1334,7 +1334,7 @@
                     '<div class="equipment-info-container">' +
                     '<input type="hidden" name="id" value="' + item.storen_id + '">' +
                     '<div class="equipment-info-text">스토렌ID : ' + item.storen_id + '</div>' +
-                    '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
+                    '<a href="storenmatching-request.action?storenId=' + item.storen_id + '" class="equipment-name">' + (item.storen_title || '제목 없음') + '</a>' +
                     '<div class="equipment-info-text">' + (item.store_month || '0') + '개월 보관</div>' +
                     '<div class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</div>' +
                     '<div class="equipment-info-text">보관시작일 : ' + (item.inspec_completed_date || '검수 중') + '</div>' +
@@ -1495,9 +1495,9 @@
                     detailsHtml += '<tr>' +
                         '<td>' +
                         '<input type="hidden" name="id" value="' + item.storen_id + '">' +
-                        '<a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + item.storen_id + '</a>' +
+                        '<a href="storenmatching-request.action?storenId=' + item.storen_id + '" class="user-link">' + item.storen_id + '</a>' +
                         '</td>' +
-                        '<td class="text-left"><a href="storenmatching-request.action?storen_id=' + item.storen_id + '" class="user-link">' + storenTitle + '</a></td>' +
+                        '<td class="text-left"><a href="storenmatching-request.action?storenId=' + item.storen_id + '" class="user-link">' + storenTitle + '</a></td>' +
                         '<td><span class="status-badge ' + statusClass + '">' + (item.status || '정보 없음') + '</span></td>' +
                         '<td>' + item.rental_start_date + ' ~ ' + item.rental_end_date + '</td>' +
                         '<td><span class="trust-score high">' + dailyPrice + '</span></td>' +
