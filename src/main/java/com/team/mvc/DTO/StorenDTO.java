@@ -379,4 +379,16 @@ public class StorenDTO {
     public Date getReturnCompletedDate() { return returnCompletedDate; }
     public void setReturnCompletedDate(Date returnCompletedDate) { this.returnCompletedDate = returnCompletedDate; }
 
+
+    // EL 접근 목적
+    public String getStorenTitle() {
+        return storen_title;
+    }
+    public String getStorenContent() {
+        return storen_content;
+    }
+    public Integer getDailyRentPrice() {
+        return daily_rent_price;
+    }
+
 }
