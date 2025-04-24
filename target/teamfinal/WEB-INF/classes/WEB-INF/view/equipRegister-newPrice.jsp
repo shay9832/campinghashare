@@ -560,9 +560,9 @@
             <div class="notice-container">
                 <div class="notice-title">등록 시 주의사항</div>
                 <ul class="notice-list">
-                    <li><strong>브랜드, 장비명을 정확히 기재해 주세요.</strong></li>
+                    <li><strong>브랜드, 장비명을 정확히 선택해 주시고, 선택지에 없는 경우 '기타'를 선택해주세요.</strong></li>
                     <li><strong>장비의 전체 모습과 상세 부분을 여러 각도에서 촬영한 사진을 첨부해 주세요.</strong></li>
-                    <li><strong>신품가격을 명확히 표시해 주세요.</strong></li>
+                    <li><strong>신품 가격(공식 홈페이지 가격 등 정가 기반)을 명확히 기재해 주세요.</strong></li>
                 </ul>
             </div>
 

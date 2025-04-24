@@ -31,7 +31,7 @@
 
     <div class="button-container">
         <button class="btn" onclick="location.href='${pageContext.request.contextPath}/main.action'"><%=prevMenu%></button>
-        <button type="button" class="btn btn-primary" onclick="handleSubmit()">저장</button>
+        <button class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/mypage-myequip.action'"><%=nextMenu%></button>
     </div>
 </main>
 

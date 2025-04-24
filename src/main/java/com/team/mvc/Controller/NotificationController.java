@@ -1,17 +1,14 @@
 package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.NotificationDTO;
-import com.team.mvc.DTO.UserDTO;
 import com.team.mvc.Interface.INotificationDAO;
-import com.team.mvc.Service.NotificationService;
-import jakarta.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -19,32 +16,43 @@ import java.util.List;
 public class NotificationController {
 
     @Autowired
-    private SqlSession sqlSession;
+    private SqlSession sqlSession;  // SqlSession을 자동 주입
 
-    @Autowired
-    private NotificationService notificationService;
-
+    // 알림 목록 페이지 요청 (JSP로 전달)
     @RequestMapping("/noti.action")
-    public String getNotifications(HttpSession session, Model model) {
+    public String showNotifications(HttpSession session, Model model) {
         Integer userCode = (Integer) session.getAttribute("userCode");
 
         if (userCode != null) {
-            List<NotificationDTO> notiList = notificationService.getNotificationsByUserCode(userCode);
-            model.addAttribute("notiList", notiList);
+            INotificationDAO notificationDAO = sqlSession.getMapper(INotificationDAO.class);  // SqlSession을 통해 DAO 얻기
+            List<NotificationDTO> list = notificationDAO.getRecentNotifications(userCode);
+            model.addAttribute("notificationList", list);
         }
 
-        return "notification";
+        return "notification"; // /WEB-INF/view/notification.jsp
     }
 
-    @PostMapping("/noti-read.action")
+    // 읽지 않은 알림 수 반환 (AJAX)
     @ResponseBody
-    public String readAllNotifications(HttpSession session) {
-        UserDTO loginUser = (UserDTO) session.getAttribute("loginUser");
-        if (loginUser != null) {
-            int userCode = loginUser.getUserCode();
-            notificationService.markAllAsRead(userCode);
-            return "success";
+    @GetMapping("/noti/count.action")
+    public int getUnreadCount(HttpSession session) {
+        Integer userCode = (Integer) session.getAttribute("userCode");
+        if (userCode != null) {
+            INotificationDAO notificationDAO = sqlSession.getMapper(INotificationDAO.class);  // SqlSession을 통해 DAO 얻기
+            return notificationDAO.getUnreadNotificationCount(userCode);
         }
-        return "fail";
+        return 0;
+    }
+
+    // 알림 전체 읽음 처리 (AJAX)
+    @ResponseBody
+    @PostMapping("/noti/readall.action")
+    public int readAllNotifications(HttpSession session) {
+        Integer userCode = (Integer) session.getAttribute("userCode");
+        if (userCode != null) {
+            INotificationDAO notificationDAO = sqlSession.getMapper(INotificationDAO.class);  // SqlSession을 통해 DAO 얻기
+            return notificationDAO.markAllNotificationsAsRead(userCode);
+        }
+        return 0;
     }
 }
