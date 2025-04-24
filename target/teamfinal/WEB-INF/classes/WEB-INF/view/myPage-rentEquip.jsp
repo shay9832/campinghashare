@@ -375,7 +375,7 @@
                                         <td>
                                             <div class="equipment-info-container">
                                                 <div class="equipment-info-text">스토렌ID : ${item.storen.storen_id}</div>
-                                                <a href="storenmatching-request.action?storen_id=${item.storen.storen_id}" class="equipment-name">${item.storen.storen_title}</a>
+                                                <a href="storenmatching-request.action?storenId=${item.storen.storen_id}" class="equipment-name">${item.storen.storen_title}</a>
                                                 <div class="equipment-info-text">${item.storen.equipmentDTO.majorCategory} > ${item.storen.equipmentDTO.middleCategory}</div>
                                                 <div class="equipment-info-text">${item.storen.equipmentDTO.brand}</div>
                                                 <div class="equipment-info-text">${item.storen.created_date}</div>

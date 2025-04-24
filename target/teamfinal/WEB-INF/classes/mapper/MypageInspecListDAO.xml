@@ -24,6 +24,7 @@
              , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '스토렌_입고검수'
+        ORDER BY "거래ID" DESC, "배송ID" DESC
     </select>
 
     <!-- 해당 회원의 스토렌 반납 검수내역 출력 -->
@@ -33,6 +34,7 @@
              , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '스토렌_반납검수'
+        ORDER BY "거래ID" DESC, "배송ID" DESC
     </select>
 
     <!-- 해당 회원의 보관 입고 검수내역 출력-->
@@ -42,6 +44,7 @@
              , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "유저코드" = #{user_code} AND "검수유형" = '보관_입고검수'
+        ORDER BY "거래ID" DESC, "배송ID" DESC
     </select>
 
     <!-- id로 스토렌 검색 -->
@@ -51,6 +54,7 @@
              , "검수처리유형이름", TO_CHAR("검수일", 'YYYY-MM-DD') AS "검수일", "유저코드", "유저닉네임"
         FROM VW_INSPEC_RESULT_AND_EQUIPMENT
         WHERE "검수유형" LIKE '스토렌%' AND "거래ID" = #{storenId}
+        ORDER BY "거래ID" DESC, "배송ID" DESC
     </select>
 
 
