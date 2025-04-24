@@ -3,6 +3,20 @@
  * 헤더 및 내비게이션 스타일 정의 (미니헤더 + 사이드바 포함)
  */
 
+<<<<<<< HEAD
+=======
+/* 알림 관련 스타일 */
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-wrapper.mini {
+    display: flex;
+    align-items: center;
+}
+
+>>>>>>> origin/develop
 .noti-count-badge {
     position: absolute;
     top: -6px;
@@ -28,6 +42,14 @@
     cursor: pointer;
 }
 
+<<<<<<< HEAD
+=======
+.notification-link.mini {
+    flex-direction: row;
+    align-items: center;
+}
+
+>>>>>>> origin/develop
 .notification-link:hover {
     color: var(--color-maple);
 }
@@ -41,6 +63,24 @@
     position: relative;
 }
 
+<<<<<<< HEAD
+=======
+.noti-dropdown-container {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 9999;
+    margin-top: 10px;
+}
+
+/* 미니 헤더용 알림 드롭다운 */
+.mini .noti-dropdown-container {
+    position: fixed;
+    right: auto;
+    margin-top: 0;
+}
+
+>>>>>>> origin/develop
 /* 공통 헤더 */
 .header-container {
     position: relative;

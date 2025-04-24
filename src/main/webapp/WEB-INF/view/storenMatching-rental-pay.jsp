@@ -80,7 +80,13 @@
                     <label class="form-label">장비 사진</label>
                     <div class="form-input">
                         <div class="image-upload d-flex gap-3">
-                            <div class="image-placeholder"></div>
+                            <c:if test="${not empty storen.equipmentDTO.attachments}">
+                                <c:forEach var="photo" items="${storen.equipmentDTO.attachments}" varStatus="status">
+                                    <div class="photo-preview">
+                                        <img src="${photo.attachmentPath}" alt="장비 사진 ${status.index + 1}" />
+                                    </div>
+                                </c:forEach>
+                            </c:if>
                             <div class="image-placeholder"></div>
                         </div>
                     </div>

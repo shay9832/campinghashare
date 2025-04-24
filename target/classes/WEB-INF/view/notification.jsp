@@ -1,7 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop
 
 <style>
     /* 알림 드롭다운 컨테이너 */
@@ -10,7 +13,11 @@
         max-height: 460px;
         background: #fff;
         box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+<<<<<<< HEAD
         position: relative; /* 여기를 absolute에서 relative로 변경 */
+=======
+        position: relative; /* absolute에서 relative로 변경 */
+>>>>>>> origin/develop
         border-radius: 12px;
         overflow: hidden;
         z-index: 999;
@@ -106,7 +113,11 @@
         background-color: #fafafa;
     }
 
+<<<<<<< HEAD
     .notification-link {
+=======
+    .notification-item a {
+>>>>>>> origin/develop
         display: flex;
         padding: 16px;
         text-decoration: none;
@@ -190,27 +201,43 @@
     /* 반응형 처리 */
     @media (max-width: 576px) {
         .notification-dropdown {
+<<<<<<< HEAD
             position: fixed;
             top: 60px;
             right: 10px;
             left: 10px;
             width: calc(100% - 20px);
+=======
+            position: relative;
+            width: 100%;
+>>>>>>> origin/develop
             max-height: calc(100vh - 120px);
             border-radius: 8px;
         }
 
+<<<<<<< HEAD
         .notification-link {
+=======
+        .notification-item a {
+>>>>>>> origin/develop
             padding: 12px 16px;
         }
     }
 </style>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/develop
 <div class="notification-dropdown">
     <!-- 상단 제목 및 전체읽음 -->
     <div class="notification-header">
         <div class="header-title">
+<<<<<<< HEAD
             <i class="fa-solid fa-bell-on"></i>
+=======
+            <i class="fa-solid fa-bell"></i>
+>>>>>>> origin/develop
             <span>알림</span>
         </div>
         <button id="readAllNotiBtn" class="read-all-btn">
@@ -223,7 +250,11 @@
         <ul class="notification-list">
             <c:forEach var="noti" items="${notificationList}">
                 <li class="notification-item ${noti.isRead == 0 ? 'unread' : ''}">
+<<<<<<< HEAD
                     <a href="#" class="notification-link">
+=======
+                    <a href="#" class="notification-item-link">
+>>>>>>> origin/develop
                         <div class="noti-indicator"></div>
                         <div class="noti-content-wrapper">
                             <span class="noti-content">${noti.notiContent}</span>
@@ -247,6 +278,7 @@
     </div>
 </div>
 
+<<<<<<< HEAD
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
@@ -263,6 +295,10 @@
             }
         });
 
+=======
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+>>>>>>> origin/develop
         // '모두 읽음' 버튼에 호버 효과 추가
         const readAllBtn = document.querySelector("#readAllNotiBtn");
         if (readAllBtn) {
@@ -306,7 +342,11 @@
 
         // 알림 목록 갱신 함수
         function loadNotifications() {
+<<<<<<< HEAD
             const notiBox = document.getElementById("notiBox");
+=======
+            const notiBox = document.querySelector(".noti-dropdown-container");
+>>>>>>> origin/develop
             if (notiBox) {
                 fetch("/noti.action")
                     .then(res => res.text())
@@ -322,11 +362,22 @@
         // 알림 카운트 업데이트 함수
         function updateNotificationCount() {
             const notiCount = document.getElementById("notiCount");
+<<<<<<< HEAD
             if (notiCount) {
                 fetch("/noti/count.action")
                     .then(res => res.text())
                     .then(count => {
                         const countNum = parseInt(count);
+=======
+            const notiCountMini = document.getElementById("notiCountMini");
+
+            fetch("/noti/count.action")
+                .then(res => res.text())
+                .then(count => {
+                    const countNum = parseInt(count);
+                    // 메인 헤더 카운트 업데이트
+                    if (notiCount) {
+>>>>>>> origin/develop
                         if (countNum > 0) {
                             notiCount.textContent = countNum;
                             notiCount.style.display = "inline-block";
@@ -339,6 +390,7 @@
                         } else {
                             notiCount.style.display = "none";
                         }
+<<<<<<< HEAD
                     })
                     .catch(error => {
                         console.error("Error updating notification count:", error);
@@ -355,12 +407,45 @@
                 e.preventDefault();
 
                 // 여기서는 단순히 읽음 효과만 적용 (실제 구현 시 서버에 읽음 처리 요청 필요)
+=======
+                    }
+
+                    // 미니 헤더 카운트 업데이트
+                    if (notiCountMini) {
+                        if (countNum > 0) {
+                            notiCountMini.textContent = countNum;
+                            notiCountMini.style.display = "inline-block";
+
+                            // 카운트 변경 시 애니메이션 효과
+                            notiCountMini.classList.add("pulse");
+                            setTimeout(() => {
+                                notiCountMini.classList.remove("pulse");
+                            }, 1000);
+                        } else {
+                            notiCountMini.style.display = "none";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error updating notification count:", error);
+                });
+        }
+
+        // 알림 아이템 클릭 이벤트 처리
+        document.querySelector(".notification-list")?.addEventListener("click", function(e) {
+            const notificationLink = e.target.closest('.notification-item-link');
+            if (notificationLink) {
+                e.preventDefault();
+
+                // 알림 읽음 효과 적용
+>>>>>>> origin/develop
                 const notificationItem = notificationLink.closest('.notification-item');
                 if (notificationItem && notificationItem.classList.contains('unread')) {
                     notificationItem.classList.remove('unread');
                     updateNotificationCount(); // 읽음 처리 후 카운트 업데이트
                 }
 
+<<<<<<< HEAD
                 // 링크 처리 로직 (원하는 대로 수정)
                 // window.location.href = notificationLink.getAttribute('href');
             }
@@ -385,6 +470,19 @@
     // 알림 카운트 배지 애니메이션 스타일 추가
     document.head.insertAdjacentHTML('beforeend', `
         <style>
+=======
+                // 필요 시 알림 링크 처리 로직 추가
+                // window.location.href = notificationLink.getAttribute('href');
+            }
+        });
+    });
+
+    // 알림 카운트 배지 애니메이션 스타일
+    if (!document.getElementById("noti-animation-style")) {
+        const styleElement = document.createElement("style");
+        styleElement.id = "noti-animation-style";
+        styleElement.textContent = `
+>>>>>>> origin/develop
             @keyframes pulse {
                 0% { transform: scale(1); }
                 50% { transform: scale(1.2); }
@@ -395,9 +493,18 @@
                 animation: pulse 0.5s ease;
             }
 
+<<<<<<< HEAD
             #notiBell {
                 transition: transform 0.2s ease;
             }
         </style>
     `);
+=======
+            #notiBell, #notiBellMini {
+                transition: transform 0.2s ease;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
+>>>>>>> origin/develop
 </script>

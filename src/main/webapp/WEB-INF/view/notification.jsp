@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-
 <style>
     /* 알림 드롭다운 컨테이너 */
     .notification-dropdown {
@@ -106,6 +105,10 @@
         background-color: #fafafa;
     }
 
+    .notification-item a {
+
+    }
+
     .notification-link {
         display: flex;
         padding: 16px;
@@ -190,6 +193,8 @@
     /* 반응형 처리 */
     @media (max-width: 576px) {
         .notification-dropdown {
+            position: relative;
+            width: 100%;
             position: fixed;
             top: 60px;
             right: 10px;
@@ -210,7 +215,7 @@
     <!-- 상단 제목 및 전체읽음 -->
     <div class="notification-header">
         <div class="header-title">
-            <i class="fa-solid fa-bell-on"></i>
+            <i class="fa-solid fa-bell"></i>
             <span>알림</span>
         </div>
         <button id="readAllNotiBtn" class="read-all-btn">
@@ -223,7 +228,8 @@
         <ul class="notification-list">
             <c:forEach var="noti" items="${notificationList}">
                 <li class="notification-item ${noti.isRead == 0 ? 'unread' : ''}">
-                    <a href="#" class="notification-link">
+                    <a href="#" class="notification-item-link">
+
                         <div class="noti-indicator"></div>
                         <div class="noti-content-wrapper">
                             <span class="noti-content">${noti.notiContent}</span>
@@ -246,6 +252,7 @@
         </ul>
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -306,7 +313,7 @@
 
         // 알림 목록 갱신 함수
         function loadNotifications() {
-            const notiBox = document.getElementById("notiBox");
+            const notiBox = document.querySelector(".noti-dropdown-container");
             if (notiBox) {
                 fetch("/noti.action")
                     .then(res => res.text())
@@ -322,12 +329,14 @@
         // 알림 카운트 업데이트 함수
         function updateNotificationCount() {
             const notiCount = document.getElementById("notiCount");
-            if (notiCount) {
-                fetch("/noti/count.action")
-                    .then(res => res.text())
-                    .then(count => {
-                        const countNum = parseInt(count);
-                        if (countNum > 0) {
+            const notiCountMini = document.getElementById("notiCountMini");
+
+            fetch("/noti/count.action")
+                .then(res => res.text())
+                .then(count => {
+                    const countNum = parseInt(count);
+                    // 메인 헤더 카운트 업데이트
+                    if (notiCount) {
                             notiCount.textContent = countNum;
                             notiCount.style.display = "inline-block";
 
@@ -339,6 +348,36 @@
                         } else {
                             notiCount.style.display = "none";
                         }
+                    }
+
+                    // 미니 헤더 카운트 업데이트
+                    if (notiCountMini) {
+                        if (countNum > 0) {
+                            notiCountMini.textContent = countNum;
+                            notiCountMini.style.display = "inline-block";
+
+                            // 카운트 변경 시 애니메이션 효과
+                            notiCountMini.classList.add("pulse");
+                            setTimeout(() => {
+                                notiCountMini.classList.remove("pulse");
+                            }, 1000);
+                        } else {
+                            notiCountMini.style.display = "none";
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Error updating notification count:", error);
+                });
+        }
+
+        // 알림 아이템 클릭 이벤트 처리
+        document.querySelector(".notification-list")?.addEventListener("click", function(e) {
+            const notificationLink = e.target.closest('.notification-item-link');
+            if (notificationLink) {
+                e.preventDefault();
+
+                // 알림 읽음 효과 적용
                     })
                     .catch(error => {
                         console.error("Error updating notification count:", error);
@@ -360,6 +399,18 @@
                     notificationItem.classList.remove('unread');
                     updateNotificationCount(); // 읽음 처리 후 카운트 업데이트
                 }
+
+                // 필요 시 알림 링크 처리 로직 추가
+                // window.location.href = notificationLink.getAttribute('href');
+            }
+        });
+    });
+
+    // 알림 카운트 배지 애니메이션 스타일
+    if (!document.getElementById("noti-animation-style")) {
+        const styleElement = document.createElement("style");
+        styleElement.id = "noti-animation-style";
+        styleElement.textContent = `
 
                 // 링크 처리 로직 (원하는 대로 수정)
                 // window.location.href = notificationLink.getAttribute('href');
@@ -395,9 +446,11 @@
                 animation: pulse 0.5s ease;
             }
 
-            #notiBell {
+            #notiBell, #notiBellMini {
                 transition: transform 0.2s ease;
             }
-        </style>
+        `;
+        document.head.appendChild(styleElement);
+    }
     `);
 </script>

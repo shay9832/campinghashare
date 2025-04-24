@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="icon" href="<c:url value='/favicon.ico' />" type="image/x-icon" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css" />
-
 </head>
 <body>
 
@@ -142,6 +141,7 @@
 
         <c:if test="${isUser}">
             <div class="user-menu">
+<<<<<<< HEAD
                 <a href="#" class="notification-link">
                     <div class="header__notification">
                         <i class="fa-solid fa-bell" id="notiBell" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i>
@@ -151,6 +151,21 @@
                 </a>
                 <!-- 알림 영역 (초기 숨김) -->
                 <div id="notiBox" style="display: none;"></div>
+=======
+                <!-- 종 아이콘과 알림 카운트 (수정된 부분) -->
+                <div class="notification-wrapper">
+                    <a href="#" class="notification-link">
+                        <div class="header__notification">
+                            <i class="fa-solid fa-bell" id="notiBell" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i>
+                            <span id="notiCount" class="noti-count-badge">0</span>
+                        </div>
+                        <span>알림</span>
+                    </a>
+                    <!-- 알림 영역 (초기 숨김) -->
+                    <div id="notiBox" class="noti-dropdown-container" style="display: none;"></div>
+                </div>
+
+>>>>>>> origin/develop
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>마이페이지</span></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>캠핑일지</span></a>
             </div>
@@ -277,6 +292,7 @@
                 <button class="add-equip"
                         onclick="location.href='${pageContext.request.contextPath}/equipregister-majorcategory.action'">내 장비 등록</button>
                 <a href="${pageContext.request.contextPath}/logout.action"><i class="fa-solid fa-right-from-bracket"></i> 로그아웃</a>
+<<<<<<< HEAD
                 <a href="#" class="notification-link">
                     <div class="header__notification">
                         <i class="fa-solid fa-bell" id="notiBellMini" style="position: relative; cursor: pointer;"></i>
@@ -285,6 +301,19 @@
                 </a>
                 <div id="notiBoxMini" style="display: none; position: fixed; z-index: 9999;"></div>
                 <div id="notiBox" style="display: none; position: absolute; top: 100%; right: 0;"></div>
+=======
+                <!-- 종 아이콘과 알림 카운트 (미니 헤더용) -->
+                <div class="notification-wrapper mini">
+                    <a href="#" class="notification-link mini">
+                        <div class="header__notification">
+                            <i class="fa-solid fa-bell" id="notiBellMini" style="position: relative; cursor: pointer;"></i>
+                            <span id="notiCountMini" class="noti-count-badge">0</span>
+                        </div>
+                    </a>
+                    <!-- 알림 영역 (초기 숨김) -->
+                    <div id="notiBoxMini" class="noti-dropdown-container" style="display: none;"></div>
+                </div>
+>>>>>>> origin/develop
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i></a>
             </c:when>
@@ -305,6 +334,7 @@
         const isUser = ${isUser};  // JSP에서 ${isUser} 값을 JavaScript로 전달
 
         if (isUser) {
+<<<<<<< HEAD
             const notiLink = document.querySelector('.notification-link');
             const notiBox = document.getElementById("notiBox");
             const notiCount = document.getElementById("notiCount");
@@ -324,11 +354,37 @@
                         notiBox.style.top = `${rect.bottom}px`;
                         notiBox.style.right = `${window.innerWidth - rect.right}px`;
 
+=======
+            // 메인 헤더 알림 요소
+            const notiLink = document.querySelector('.notification-link');
+            const notiBox = document.getElementById("notiBox");
+            const notiCount = document.getElementById("notiCount");
+
+            // 미니 헤더 알림 요소
+            const notiLinkMini = document.querySelector('.notification-link.mini');
+            const notiBoxMini = document.getElementById("notiBoxMini");
+            const notiCountMini = document.getElementById("notiCountMini");
+
+            // 메인 헤더 알림창 토글
+            if (notiLink && notiBox && notiCount) {
+                notiLink.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (notiBox.style.display === "none" || notiBox.style.display === "") {
+                        // 알림창 로드 및 표시
+>>>>>>> origin/develop
                         fetch("/noti.action")
                             .then(res => res.text())
                             .then(html => {
                                 notiBox.innerHTML = html;
                                 notiBox.style.display = "block";
+<<<<<<< HEAD
+=======
+
+                                // 미니 헤더의 알림창은 닫기
+                                if (notiBoxMini) notiBoxMini.style.display = "none";
+>>>>>>> origin/develop
                             });
                     } else {
                         notiBox.style.display = "none";
@@ -336,6 +392,7 @@
                 });
             }
 
+<<<<<<< HEAD
             // 미니 헤더 알림창 toggle (동일한 방식으로 구현)
             if (notiBellMini && notiBoxMini && notiCountMini) {
                 const miniNotiLink = notiBellMini.closest('.notification-link');
@@ -362,13 +419,41 @@
                         }
                     });
                 }
+=======
+            // 미니 헤더 알림창 토글
+            if (notiLinkMini && notiBoxMini && notiCountMini) {
+                notiLinkMini.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (notiBoxMini.style.display === "none" || notiBoxMini.style.display === "") {
+                        // 알림창 로드 및 표시
+                        fetch("/noti.action")
+                            .then(res => res.text())
+                            .then(html => {
+                                notiBoxMini.innerHTML = html;
+                                notiBoxMini.style.display = "block";
+
+                                // 메인 헤더의 알림창은 닫기
+                                if (notiBox) notiBox.style.display = "none";
+                            });
+                    } else {
+                        notiBoxMini.style.display = "none";
+                    }
+                });
+>>>>>>> origin/develop
             }
 
             // 페이지 로딩 시 읽지 않은 알림 수 가져오기
             fetch("/noti/count.action")
                 .then(res => res.text())
                 .then(count => {
+<<<<<<< HEAD
                     if (parseInt(count) > 0) {
+=======
+                    const countNum = parseInt(count);
+                    if (countNum > 0) {
+>>>>>>> origin/develop
                         // 메인 헤더와 미니 헤더의 알림 카운트 모두 업데이트
                         if (notiCount) {
                             notiCount.textContent = count;
@@ -385,11 +470,26 @@
                 });
 
             // 외부 클릭 시 알림창 닫기
+<<<<<<< HEAD
             document.addEventListener("click", (e) => {
                 if (notiBox && notiLink && !notiBox.contains(e.target) && !notiLink.contains(e.target)) {
                     notiBox.style.display = "none";
                 }
                 if (notiBoxMini && notiBellMini && !notiBoxMini.contains(e.target) && !notiBellMini.closest('.notification-link').contains(e.target)) {
+=======
+            document.addEventListener("click", function(e) {
+                // 메인 헤더 알림 영역 외부 클릭
+                if (notiBox && notiLink &&
+                    !notiBox.contains(e.target) &&
+                    !notiLink.contains(e.target)) {
+                    notiBox.style.display = "none";
+                }
+
+                // 미니 헤더 알림 영역 외부 클릭
+                if (notiBoxMini && notiLinkMini &&
+                    !notiBoxMini.contains(e.target) &&
+                    !notiLinkMini.contains(e.target)) {
+>>>>>>> origin/develop
                     notiBoxMini.style.display = "none";
                 }
             });
