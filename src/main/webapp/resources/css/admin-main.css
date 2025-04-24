@@ -1,56 +1,56 @@
 /* 기본 페이지 설정 - 여백 제거 및 기본 글꼴 설정 */
 body {
-    margin: 0; /* 바깥쪽 여백 제거 */
-    padding: 0; /* 안쪽 여백 제거 */
-    font-family: sans-serif; /* 고딕체 글꼴 사용 */
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
 }
 
 /* 상단 헤더 영역 스타일링 */
 #header {
-    height: 60px; /* 헤더 높이 설정 */
-    background-color: #3f861d; /* 헤더 배경색 (어두운 회색) */
-    color: white; /* 헤더 내 텍스트 색상 */
-    width: 100%; /* 헤더가 화면 가로 전체를 차지하도록 설정 */
-    padding: 10px; /* 헤더 내부 여백 */
-    box-sizing: border-box; /* 패딩을 포함한 크기 계산 방식 */
-    display: flex; /* 자식 요소 배치를 위한 플렉스 박스 사용 */
-    align-items: center; /* 자식 요소를 세로 중앙에 배치 */
+    height: 60px;
+    background-color: #3f861d;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
 }
 
 /* 헤더 내 제목 스타일링 */
 #header h1 {
-    margin: 0; /* 제목의 기본 여백 제거 */
-    font-size: 24px; /* 제목 글자 크기 설정 */
+    margin: 0;
+    font-size: 24px;
 }
 
 /* 메인 컨테이너 영역 스타일링 - 메뉴와 콘텐츠를 포함 */
 #container {
-    display: flex; /* 메뉴와 콘텐츠를 수평으로 배치 */
-    min-height: calc(100vh - 60px); /* 헤더를 제외한 화면 전체 높이를 차지하도록 설정 */
+    display: flex;
+    min-height: calc(100vh - 60px);
 }
 
 /* 왼쪽 메뉴 영역 스타일링 */
 #leftMenu {
-    padding: 30px; /* 내부 여백 */
-    border-right: 1px solid #ccc; /* 오른쪽에 경계선 추가 */
-    min-width: 150px; /* 메뉴 영역 너비 고정 */
-    background: #ffffff; /* 메뉴 배경색 (연한 회색) */
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* 오른쪽에 그림자 효과 - 수정됨 */
+    padding: 30px;
+    border-right: 1px solid #ccc;
+    min-width: 150px;
+    background: #ffffff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
 }
 
 /* 메뉴 버튼의 기본 스타일 - 하위 메뉴를 가진 버튼 */
 .menu-button {
-    display: block; /* 블록 레벨 요소로 설정 (가로 전체 차지) */
-    width: 100%; /* 부모 컨테이너의 너비 100% 차지 */
-    padding: 12px 15px; /* 내부 여백 (위아래 12px, 좌우 15px) */
-    margin-bottom: 15px; /* 하단 여백 */
-    text-align: left; /* 텍스트 왼쪽 정렬 */
-    background-color: white; /* 버튼 배경색 */
-    border: 1px solid #ddd; /* 테두리 설정 */
-    border-radius: 4px; /* 둥근 모서리 설정 */
-    cursor: pointer; /* 마우스 오버 시 손가락 커서 표시 */
-    transition: all 0.3s ease; /* 모든 변화에 0.3초 애니메이션 적용 */
-    position: relative; /* 상대적 위치 설정 (화살표 배치를 위함) */
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    text-align: left;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 /* 메뉴 버튼에 마우스를 올렸을 때의 스타일 */
@@ -61,18 +61,18 @@ body {
 
 /* 메뉴 버튼의 화살표 아이콘 생성 */
 .menu-button::after {
-    content: "▼"; /* 화살표 모양의 문자 추가 */
-    position: absolute; /* 절대 위치 설정 */
-    right: 15px; /* 오른쪽에서 15px 위치 */
-    top: 50%; /* 세로 중앙에 배치 */
-    transform: translateY(-50%); /* 정확한 세로 중앙 정렬을 위한 변환 */
-    font-size: 12px; /* 화살표 크기 */
-    transition: transform 0.3s ease; /* 회전 애니메이션 설정 */
+    content: "▼";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    transition: transform 0.3s ease;
 }
 
 /* 하위 메뉴가 열렸을 때 화살표 회전 */
 .menu-button.active::after {
-    transform: translateY(-50%) rotate(180deg); /* 화살표를 180도 회전하여 위쪽을 가리키게 함 */
+    transform: translateY(-50%) rotate(180deg);
 }
 
 /* 하위 메뉴 컨테이너 스타일링 */
@@ -105,27 +105,29 @@ body {
 
 /* 콘텐츠 영역 스타일링 */
 #content {
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    padding: 20px; /* 내부 여백 */
+    flex-grow: 1;
+    padding: 20px;
     background-color: #f5f5f5;
     overflow: auto;
 }
 
-/* 대시보드 그리드 레이아웃 */
+/* 대시보드 그리드 레이아웃 - 세로 배치로 수정 */
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);  /* 4개의 동일한 열 생성*/
-    grid-template-rows: auto auto auto; /* 높이는 내용에 따라 자동 조정 */
-    gap: 20px; /*위젯 사이의 간격*/
-    margin-bottom: 20px;
+    display: block !important; /* 블록 레이아웃으로 변경 */
+    width: 100% !important;
 }
 
-/*위젯 기본 스타일*/
+/* 위젯 스타일 */
 .widget {
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    background-color: white !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    margin-bottom: 20px !important;
+    width: 100% !important; /* 항상 전체 너비 */
 }
 
 /* 위젯 헤더 스타일 */
@@ -143,40 +145,15 @@ body {
     padding: 15px;
 }
 
-/* 각 위젯의 그리드 위치 지정 */
+/* 각 위젯의 크기 설정 - widget-large 클래스 처리 */
 .widget-large {
-    grid-column: 1/4; /* 1번 열부터 4번 열까지 차지 (전체 폭의 3/4) */
-    grid-row: 1; /* 첫 번째 행 */
+    width: 100% !important;
+    display: block !important;
 }
 
+/* 프로필 위젯 */
 .widget-profile {
-    grid-column: 4 / 5; /* 4번 열 */
-    grid-row: 1; /* 첫 번째 행 */
-}
-
-.widget-medium:nth-of-type(1) {
-    grid-column: 1/3; /* 1번 열부터 3번 열까지 차지 (전체 폭의 절반) */
-    grid-row: 2; /* 두 번째 행 */
-}
-
-.widget-medium:nth-of-type(2) {
-    grid-column: 3/5;
-    grid-row: 2;
-}
-
-.widget-small:nth-of-type(1) {
-    grid-column: 1/3;
-    grid-row: 3;
-}
-
-.widget-small:nth-of-type(2) {
-    grid-column: 3/5;
-    grid-row: 3;
-}
-
-.widget-chat {
-    grid-column: 4/5;
-    grid-row: 2 / 4;
+    width: 100% !important;
 }
 
 /* 뱃지 스타일 (게시물 숫자 표시) */
@@ -190,58 +167,131 @@ body {
 
 /* 차트 컨테이너 스타일 */
 .chart-container {
-    height: 300px;
-    position: relative;
+    height: 300px !important;
 }
 
-/* 중간 크기 화면에 대한 조정 */
-@media (max-width: 1200px) {
-    .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2개의 열로 변경 */
-    }
-
-    .widget-large {
-        grid-column: 1 / 3; /* 전체 폭 차지 */
-    }
-
-    .widget-profile {
-        grid-column: 1 / 3; /* 전체 폭 차지 */
-        grid-row: 2;
-    }
-
-    .widget-medium:nth-of-type(1) {
-        grid-column: 1 / 3; /* 전체 폭 차지 */
-        grid-row: 3;
-    }
-
-    .widget-medium:nth-of-type(2) {
-        grid-column: 1 / 3; /* 전체 폭 차지 */
-        grid-row: 4;
-    }
-
-    .widget-small:nth-of-type(1),
-    .widget-small:nth-of-type(2),
-    .widget-chat {
-        grid-column: 1 / 3; /* 전체 폭 차지 */
-        grid-row: auto; /* 자동으로 다음 행으로 배치 */
-    }
+/* 프로필 스타일링 */
+.profile-info {
+    margin-bottom: 15px;
 }
 
-/* 작은 화면에 대한 조정 */
-@media (max-width: 768px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr; /* 단일 열로 변경 */
-        gap: 15px; /* 간격 축소 */
-    }
-
-    /* 모든 위젯이 전체 폭을 차지하도록 설정 */
-    .widget {
-        grid-column: 1 / 2;
-        grid-row: auto;
-    }
+.profile-info p {
+    margin: 5px 0;
 }
 
-/* 추가적인 버튼 스타일 - submenu-btn */
+.profile-actions .logout-btn {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #f44336;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.profile-actions .logout-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* 탭 스타일링 */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.tab-btn {
+    padding: 8px 15px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: #3f861d;
+}
+
+.tab-btn.active {
+    color: #3f861d;
+    border-bottom: 2px solid #3f861d;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 테이블 스타일링 */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+
+
+.report-table th,
+.report-table td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.report-table th {
+    background-color: #f5f5f5;
+    font-weight: 500;
+}
+
+.report-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* 통계 요약 스타일 */
+.summary-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: space-around !important;
+    padding: 15px 0 !important;
+}
+
+.stat-item {
+    flex: 1 !important;
+    min-width: 100px !important;
+    text-align: center !important;
+    padding: 15px !important;
+    margin: 5px !important;
+    border-radius: 4px !important;
+    background-color: #f5f5f5 !important;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3f861d;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 폼 태그에 기본 마진과 패딩 제거 */
+.submenu form {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+/* 폼 내부 버튼 스타일 */
+.submenu form button,
 .submenu-btn {
     display: block;
     width: 100%;
@@ -258,54 +308,51 @@ body {
     font-family: 'Noto Sans KR', sans-serif;
 }
 
-/* 하위 메뉴 버튼 호버 효과 */
+/* 버튼 호버 효과 */
+.submenu form button:hover,
 .submenu-btn:hover {
     background-color: #f1f8e9;
     color: #3f861d;
     border-left: 2px solid #3f861d;
 }
 
-/* 현재 선택된 메뉴 스타일 */
+/* 현재 활성화된 버튼 스타일 */
+.submenu form button.active,
 .submenu-btn.active {
     color: #3f861d;
     font-weight: bold;
     border-left: 2px solid #3f861d;
 }
 
-/* 폼 태그에 기본 마진과 패딩 제거 */
-.submenu form {
-    margin: 0;
-    padding: 0;
-    display: block;
-}
+/* 모바일 화면에서의 레이아웃 조정 */
+@media (max-width: 768px) {
+    #container {
+        flex-direction: column;
+    }
 
-/* 폼 내부 버튼 스타일 - 원래 a 태그와 동일하게 */
-.submenu form button {
-    display: block;
-    width: 100%;
-    padding: 10px 10px 10px 25px;
-    text-align: left;
-    background-color: transparent;
-    border: none;
-    border-left: 1px solid #e0e0e0;
-    margin-left: 10px;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif;
-}
+    #leftMenu {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #ccc;
+        padding: 15px;
+    }
 
-/* 버튼 호버 효과 - 원래 a 태그와 동일하게 */
-.submenu form button:hover {
-    background-color: #f1f8e9;
-    color: #3f861d;
-    border-left: 2px solid #3f861d;
-}
+    .summary-stats {
+        flex-direction: column !important;
+    }
 
-/* 현재 활성화된 버튼 스타일 */
-.submenu form button.active {
-    color: #3f861d;
-    font-weight: bold;
-    border-left: 2px solid #3f861d;
+    .stat-item {
+        width: calc(100% - 10px) !important;
+        margin-bottom: 10px !important;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab-btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }
