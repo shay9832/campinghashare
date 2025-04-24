@@ -764,13 +764,7 @@ public class BoardController {
                 case 7: // 자유게시판
                     redirectUrl = "boardfree.action";
                     break;
-                case 8: // 장비 정보
-                    redirectUrl = "boardgear.action";
-                    break;
-                case 9: // 캠핑장 정보
-                    redirectUrl = "boardmarket.action";
-                    break;
-                case 10: // 고독한캠핑방
+                case 8: // 고독한캠핑방
                     redirectUrl = "boardimage.action";
                     break;
                 default:
@@ -1011,7 +1005,7 @@ public class BoardController {
                              Model model) {
 
         // 게시판 ID 설정
-        int boardId = 10;    // 고독한 캠핑방 ID
+        int boardId = 8;    // 고독한 캠핑방 ID
 
         // 공지사항 조회(최대 3개)
         List<BoardPostDTO> notice = boardPostService.listNotice();
@@ -1088,8 +1082,8 @@ public class BoardController {
                 model.addAttribute("replies", replies);
 
                 // 이전글, 다음글 ID 조회
-                int prevPostId = boardPostService.getPrevPostId(postId, 10); // 10은 고독한캠핑방 ID
-                int nextPostId = boardPostService.getNextPostId(postId, 10);
+                int prevPostId = boardPostService.getPrevPostId(postId, 8); // 8은 고독한캠핑방 ID
+                int nextPostId = boardPostService.getNextPostId(postId, 8);
                 model.addAttribute("prevPostId", prevPostId);
                 model.addAttribute("nextPostId", nextPostId);
 
@@ -1108,7 +1102,7 @@ public class BoardController {
         }
 
         // 게시판 ID 설정
-        int boardId = 10;    // 자유게시판 ID
+        int boardId = 8;    // 자유게시판 ID
 
         BoardPostDTO dto = new BoardPostDTO();
         dto.setBoardId(boardId);
@@ -1151,7 +1145,7 @@ public class BoardController {
                                              @ModelAttribute("adminId") String adminId) {
 
         Map<String, Object> result = new HashMap<>();
-        int boardId = 10;    // 고독한캠핑방 ID
+        int boardId = 8;    // 고독한캠핑방 ID
 
         // 클라이언트에서 전달받은 원본 게시글 번호 맵 파싱
         Map<String, String> originalPostNumbers = new HashMap<>();
@@ -1267,8 +1261,8 @@ public class BoardController {
 
         dto.setUserCode(userCode);
 
-        // 게시판 ID를 고독한캠핑방(10)으로 설정
-        dto.setBoardId(10);
+        // 게시판 ID를 고독한캠핑방(8)으로 설정
+        dto.setBoardId(8);
 
         // 중요: POST_LABEL_ID를 명시적으로 null로 설정
         dto.setPostLabelId(null);
@@ -1357,7 +1351,7 @@ public class BoardController {
             System.out.println("첨부파일 조회 완료: " + (attachments != null ? attachments.size() : "없음"));
 
             // 말머리 목록 조회
-            List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(10); // 고독한캠핑방 ID
+            List<BoardPostDTO> postLabels = boardPostService.getPostLabelsByBoardId(8); // 고독한캠핑방 ID
 
             model.addAttribute("post", post);
             model.addAttribute("postLabels", postLabels);
@@ -1384,8 +1378,8 @@ public class BoardController {
             // 사용자 코드 설정
             dto.setUserCode(userCode);
 
-            // 게시판 ID는 10 (고독한캠핑방)으로 설정
-            dto.setBoardId(10);
+            // 게시판 ID는 8 (고독한캠핑방)으로 설정
+            dto.setBoardId(8);
 
             System.out.println("게시글 수정 시작 - ID: " + dto.getPostId() + ", 제목: " + dto.getPostTitle());
 
