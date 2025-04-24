@@ -1,0 +1,98 @@
+.btn-group {
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 0;
+    height: 100%;
+    gap: 0 !important;
+}
+
+.filter-btn {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-right: none;
+    background-color: #f8f8f8;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 8px 12px;
+    margin: 0;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.filter-btn:last-child {
+    border-right: 1px solid #ddd;
+}
+
+.filter-btn.active {
+    background-color: #2C5F2D;
+    color: white;
+    border-color: #2C5F2D;
+}
+
+.filter-type-section {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.daterangepicker {
+    font-family: 'Noto Sans KR', sans-serif;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.175);
+    z-index: 9999 !important;
+}
+
+.daterangepicker .calendar-table {
+    border: none;
+}
+
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+    background-color: #2C5F2D;
+}
+
+.daterangepicker .drp-buttons .btn {
+    border-radius: 4px;
+    padding: 6px 12px;
+}
+
+.daterangepicker .drp-buttons .applyBtn {
+    background-color: #2C5F2D;
+    border-color: #2C5F2D;
+}
+
+body .daterangepicker {
+    position: absolute;
+    z-index: 9999 !important;
+}
+
+@media (max-width: 767px) {
+    .daterangepicker {
+        width: 280px;
+    }
+    .daterangepicker .drp-calendar {
+        max-width: 270px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .filter-container .filter-content {
+        justify-content: space-between;
+    }
+
+    .keyword-section {
+        max-width: 350px;
+    }
+
+    .filter-type-section,
+    .price-section,
+    .date-section,
+    .filter-button-container {
+        flex-shrink: 0;
+    }
+}
