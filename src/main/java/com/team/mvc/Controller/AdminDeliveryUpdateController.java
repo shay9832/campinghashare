@@ -95,6 +95,8 @@ public class AdminDeliveryUpdateController {
         try {
             IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
 
+            System.out.println(payId);
+
             // 운송장 번호 로깅
             System.out.println("요청된 운송장 번호: " + waybillNumber);
 
