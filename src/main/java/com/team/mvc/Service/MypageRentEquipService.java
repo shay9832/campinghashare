@@ -26,6 +26,7 @@ public class MypageRentEquipService implements IMypageRentEquipService {
         IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
         IEquipmentDAO equipmentDAO = sqlSession.getMapper(IEquipmentDAO.class);
         IAdminPaymentDAO adminPaymentDAO = sqlSession.getMapper(IAdminPaymentDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
 
         // 결과 객체 생성
         MyRentEquipDTO rentEquipDTO = new MyRentEquipDTO(userCode);
@@ -47,6 +48,12 @@ public class MypageRentEquipService implements IMypageRentEquipService {
             // 스토렌의 equipmentDTO 속성 설정
             int equipCode = storen.getEquip_code();
             EquipmentDTO equipment = equipmentDAO.getEquipmentByEquipCode(equipCode);
+            // 사진 넣어주기
+            List<AttachmentDTO> attachmentDTOList = attachmentDAO.listAttachmentByEquipCode(equipCode);
+            if (attachmentDTOList != null && !attachmentDTOList.isEmpty()) {
+                equipment.setAttachments(attachmentDTOList);
+            }
+
             storen.setEquipmentDTO(equipment);
 
             rentalItem.setStoren(storen);
@@ -81,7 +88,7 @@ public class MypageRentEquipService implements IMypageRentEquipService {
 
         // 원하는 순서대로 키 배열 정의
         String[] orderedKeys = {
-                "매칭중", "매칭승인대기", "매칭완료", "렌탈비결제전",
+                "매칭중", "매칭승인대기", "렌탈비결제전",
                 "렌탈비결제완료", "배송중", "대여중", "반납일임박",
                 "반납중", "검수중", "거래완료", "추가비용결제필요", "상태불명"
         };

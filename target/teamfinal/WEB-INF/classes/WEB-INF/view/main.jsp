@@ -331,21 +331,18 @@
                     <img src="${pageContext.request.contextPath}/resources/images/banner7.png" alt="배너1" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
                         <div class="banner-text">서비스 소개</div>
-                        <a href="#" class="service-intro-btn">서비스 소개</a>
                     </div>
                 </div>
                 <div class="banner-item">
                     <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="배너2" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
                         <div class="banner-text">특별 프로모션 - 30% 할인</div>
-                        <a href="#" class="service-intro-btn">자세히 보기</a>
                     </div>
                 </div>
                 <div class="banner-item">
                     <img src="${pageContext.request.contextPath}/resources/images/banner4.jpeg" alt="배너3" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
                         <div class="banner-text">신규 상품 소개</div>
-                        <a href="#" class="service-intro-btn">구경하기</a>
                     </div>
                 </div>
             </div>
