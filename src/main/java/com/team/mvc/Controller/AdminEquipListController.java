@@ -23,6 +23,7 @@ public class AdminEquipListController {
         model.addAttribute("getList", dao.getList());
         model.addAttribute("getLists", dao.getLists());
 
+
         return "admin-equipList";
     }
 }

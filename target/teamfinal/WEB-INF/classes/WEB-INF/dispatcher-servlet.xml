@@ -19,7 +19,7 @@
     <mvc:annotation-driven/>
 
     <!-- 정적 자원 매핑 -->
-    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:resources mapping="/resources/**" location="resources/" />
     <mvc:default-servlet-handler />
 
     <!-- 어노테이션 기반 MVC 설정 -->
