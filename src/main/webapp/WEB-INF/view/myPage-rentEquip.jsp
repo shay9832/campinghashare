@@ -218,7 +218,7 @@
                                         <c:set var="cssClass" value="active"/>
                                     </c:if>
                                     <c:choose>
-                                        <c:when test="${status.key eq '매칭중' || status.key eq '매칭승인대기' || status.key eq '매칭완료'
+                                        <c:when test="${status.key eq '매칭중' || status.key eq '매칭승인대기'
                                         || status.key eq '추가비용결제필요' || status.key eq '상태불명'}">
                                             <%-- 아무것도 하지 않음(continue처럼) --%>
                                         </c:when>
@@ -604,7 +604,7 @@
             // 결제 버튼 클릭 이벤트
             $('.btn-pay').off('click').on('click', function (e) {
                 e.preventDefault(); // 기본 동작 방지
-                var id = $(this).closest("tr").find("input[name='id']").val();
+                var id = $(this).closest("tr").find("input[name='id']").val()
                 // 결제 페이지로 이동
                 window.location.href = "storenmatching-rental-pay.action?rentalId=" + id + "&userCode=" + userCode + "&type=storen";
             });

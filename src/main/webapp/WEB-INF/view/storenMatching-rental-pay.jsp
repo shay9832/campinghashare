@@ -87,7 +87,6 @@
                                     </div>
                                 </c:forEach>
                             </c:if>
-                            <div class="image-placeholder"></div>
                         </div>
                     </div>
                 </div>

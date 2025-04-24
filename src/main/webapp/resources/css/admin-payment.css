@@ -217,14 +217,14 @@ body {
     border-left: 4px solid #ff9800; /* 스토렌 결제 - 주황색 */
 }
 
-/* 토글 스위치 컨테이너 - 수정 */
+/* 토글 스위치 컨테이너 */
 .toggle-container {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
 }
 
-/* 토글 스위치 버튼 그룹 - 수정 */
+/* 토글 스위치 버튼 그룹 */
 .toggle-button-group {
     display: flex;
     border-radius: 4px;

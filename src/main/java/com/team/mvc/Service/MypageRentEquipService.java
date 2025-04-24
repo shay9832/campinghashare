@@ -89,7 +89,7 @@ public class MypageRentEquipService implements IMypageRentEquipService {
 
         // 원하는 순서대로 키 배열 정의
         String[] orderedKeys = {
-                "매칭중", "매칭승인대기", "매칭완료", "렌탈비결제전",
+                "매칭중", "매칭승인대기", "렌탈비결제전",
                 "렌탈비결제완료", "배송중", "대여중", "반납일임박",
                 "반납중", "검수중", "거래완료", "추가비용결제필요", "상태불명"
         };
