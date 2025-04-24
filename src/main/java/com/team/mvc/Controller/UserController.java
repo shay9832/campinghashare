@@ -19,12 +19,6 @@ public class UserController {
     @Autowired
     private SqlSession sqlSession;
 
-//    @Autowired
-//    private IUserDAO userDAO;
-//
-//    @Autowired
-//    private BCryptPasswordEncoder passwordEncoder;
-
     // 서버 재시작 시 최초 페이지 설정
     @RequestMapping("/")
     public String rootRedirect() {
@@ -267,23 +261,22 @@ public class UserController {
         return "equipRegister";
     }
 
-//    // 비밀번호 확인 후 탈퇴 처리
-//    @RequestMapping(value = "/confirmAndExit.action", method = RequestMethod.POST)
-//    public String confirmAndExit(
-//            @RequestParam("userId") String userId,
-//            @RequestParam("userPw") String userPw,
-//            RedirectAttributes redirectAttributes) {
-//
-//        UserDTO user = userDAO.getUserById(userId);
-//
-//        if (user != null && passwordEncoder.matches(userPw, user.getUserPw())) {
-//            userDAO.disconnectUserCode(userId);
-//            redirectAttributes.addFlashAttribute("exitSuccess", true);
-//            return "redirect:/logout.action";
-//        } else {
-//            redirectAttributes.addFlashAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
-//            return "redirect:/exitUser.action";
-//        }
-//    }
+    @PostMapping("/mypage-exituser.action")
+    public String confirmAndExit(@RequestParam String userId,
+                                 @RequestParam String userPw,
+                                 RedirectAttributes redirect) {
 
+        IUserDAO dao = sqlSession.getMapper(IUserDAO.class);  // 이렇게 매번 생성해서 사용
+
+        int result = dao.checkPassword(userId, userPw);
+
+        if (result == 1) {
+            dao.disconnectUserCode(userId);
+            redirect.addFlashAttribute("exitSuccess", true);
+            return "redirect:/main.action";
+        } else {
+            redirect.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+            return "redirect:/myPage-exitUser.action";
+        }
+    }
 }

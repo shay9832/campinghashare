@@ -14,13 +14,15 @@ public class NotificationService {
     @Autowired
     private SqlSession sqlSession;
 
+    // 알림 목록 조회 (최근 7일 이내)
     public List<NotificationDTO> getNotificationsByUserCode(int userCode) {
         INotificationDAO dao = sqlSession.getMapper(INotificationDAO.class);
-        return dao.getNotificationsByUserCode(userCode);
+        return dao.getNotificationsByUserCode(userCode);  // 알림 목록 조회
     }
 
+    // 전체 알림 읽음 처리
     public void markAllAsRead(int userCode) {
         INotificationDAO dao = sqlSession.getMapper(INotificationDAO.class);
-        dao.insertReadLogForAll(userCode);
+        dao.insertReadLogForAll(userCode);  // 전체 읽음 처리 로그 삽입
     }
 }

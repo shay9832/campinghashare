@@ -14,12 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Controller
 public class InspecResultController {
@@ -28,70 +24,115 @@ public class InspecResultController {
     private SqlSession sqlSession;
 
     @RequestMapping("/inspec-result.action")
-    public String inspecResultByStorenId(@RequestParam("storen_id") Integer storenId, Model model) {
+    public String inspecResultByStorenId(@RequestParam("storen_id") Integer storenId,
+                                         @SessionAttribute("userCode") Integer loginUserCode,
+                                         Model model) {
         IInspecResultDAO inspecResultDAO = sqlSession.getMapper(IInspecResultDAO.class);
         IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
 
-        // storen_id로 platformDeliveryId와 platformDeliveryReturnId 찾기
+        // platformDeliveryId, platformDeliveryReturnId 조회
         Integer platformDeliveryId = inspecResultDAO.getDeliveryIdByStorenId(storenId);
         Integer platformDeliveryReturnId = inspecResultDAO.getReturnDeliveryIdByStorenId(storenId);
-
-        // 장비 코드 가져오기
         Integer equipCode = inspecResultDAO.getEquipCodeByStorenId(storenId);
 
         if (platformDeliveryId == null) {
-            // 배송 ID를 찾을 수 없는 경우 처리
-            return "redirect:/mypage-inspecList.action";
+            model.addAttribute("error", "검수 정보를 찾을 수 없습니다.");
+            return "error";
         }
 
-        // 검수 결과 데이터 로드
-        InspecResultDTO firstInspect = inspecResultDAO.getInspectResultByDeliveryId(platformDeliveryId);
-        List<InspecItemDetail> firstDetailList = inspecResultDAO.getItemListByDeliveryId(platformDeliveryId);
-        firstInspect.setItemList(firstDetailList);
+        // 1차 검수
+        InspecResultDTO firstInspect = null;
+        try {
+            firstInspect = inspecResultDAO.getInspectResultByDeliveryId(platformDeliveryId);
+            if (firstInspect != null) {
+                List<InspecItemDetail> list = inspecResultDAO.getItemListByDeliveryId(platformDeliveryId);
+                firstInspect.setItemList(list);
+                System.out.println("first itemList size = " + (list != null ? list.size() : "null"));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         model.addAttribute("firstInspect", firstInspect);
 
-        // 반환 배송 ID가 있는 경우 2차 검수 결과도 로드
-        if (platformDeliveryReturnId != null) {
-            InspecResultDTO secondInspect = inspecResultDAO.getInspectResultByReturnDeliveryId(platformDeliveryReturnId);
-            List<InspecItemDetail> secondDetailList = inspecResultDAO.getItemListByReturnDeliveryId(platformDeliveryReturnId);
-            secondInspect.setItemList(secondDetailList);
-            model.addAttribute("secondInspect", secondInspect);
+        // 2차 검수 (있을 경우)
+        InspecResultDTO secondInspect = null;
+        try {
+            if (platformDeliveryReturnId != null) {
+                secondInspect = inspecResultDAO.getInspectResultByReturnDeliveryId(platformDeliveryReturnId);
+                if (secondInspect != null) {
+                    secondInspect.setItemList(inspecResultDAO.getItemListByReturnDeliveryId(platformDeliveryReturnId));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("secondInspect", secondInspect);
+
+        // 장비 사진
+        try {
+            if (equipCode != null) {
+                List<AttachmentDTO> equipmentImages = attachmentDAO.listAttachmentByEquipCode(equipCode);
+                model.addAttribute("equipmentImages", equipmentImages);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        // 장비 사진 가져오기
-        if (equipCode != null) {
-            List<AttachmentDTO> equipmentImages = attachmentDAO.listAttachmentByEquipCode(equipCode);
-            model.addAttribute("equipmentImages", equipmentImages);
+        // storen 정보
+        StorenDTO storen = null;
+        try {
+            storen = storenDAO.getStorenByStorenId(storenId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        model.addAttribute("storen", storen);
+
+        // 로그인 유저가 소유자인지 판단
+        boolean isOwner = storen != null && storen.getUser_code() == loginUserCode;
+        model.addAttribute("isOwner", isOwner);
+
+        // 장비 등급 판단
+        String grade = null;
+        try {
+            grade = (platformDeliveryReturnId != null)
+                    ? inspecResultDAO.getFinalEquipGradeByReturnDeliveryId(platformDeliveryReturnId)
+                    : inspecResultDAO.getFinalEquipGradeByDeliveryId(platformDeliveryId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("equipGrade", grade);
+
+        // 반환 주소 등록 여부
+        boolean hasReturnAddress = false;
+        try {
+            hasReturnAddress = inspecResultDAO.hasReturnAddressByStorenId(storenId) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        model.addAttribute("hasReturnAddress", hasReturnAddress);
 
         model.addAttribute("storen_id", storenId);
-
         return "storenRegister-inspecResult";
     }
 
-    // F등급 장비 반환 주소 입력 페이지
     @RequestMapping(value = "/storenRegister-inspecResult-return.action", method = RequestMethod.GET)
     public String returnAddressForm(@RequestParam("storen_id") int storenId,
-                                    @ModelAttribute("userCode") Integer userCode,
+                                    @SessionAttribute("userCode") Integer userCode,
                                     Model model) {
         try {
             IStorenDAO dao = sqlSession.getMapper(IStorenDAO.class);
+            IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
 
-            // storen_id로 스토렌 정보 조회
             StorenDTO info = dao.getStorenByStorenId(storenId);
-
-            // 권한 검증: 로그인 사용자가 등록한 장비인지 확인
             if (info == null || info.getUser_code() != userCode) {
                 model.addAttribute("error", "접근 권한이 없습니다.");
                 return "error";
             }
 
-            // 사용자 정보 조회
-            IUserDAO userDAO = sqlSession.getMapper(IUserDAO.class);
             UserDTO user = userDAO.getFullUserInfoByUserCode(userCode);
-
             if (user != null) {
-                // UserDTO의 실제 필드명과 getter 메서드에 맞게 설정
                 model.addAttribute("recipient", user.getUserName());
                 model.addAttribute("tel", user.getUserTel());
                 model.addAttribute("zipCode", user.getZipCode());
@@ -100,7 +141,6 @@ public class InspecResultController {
             }
 
             model.addAttribute("storen_id", storenId);
-
             return "storenRegister-inspecResult-return";
 
         } catch (Exception e) {
