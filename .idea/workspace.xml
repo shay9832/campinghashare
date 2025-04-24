@@ -10,21 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/webContexts.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/webContexts.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f6c6c004-ee52-4104-a2c4-2205f1f8dfa5.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminMainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Controller/AdminMainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminAllService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Interface/IAdminAllService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/team/mvc/Service/AdminAllService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/team/mvc/Service/AdminAllService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/view/admin-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/resources/css/admin-main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminMainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Controller/AdminMainController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IAdminAllService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Interface/IAdminAllService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/team/mvc/Service/AdminAllService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/team/mvc/Service/AdminAllService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminMainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Controller/AdminMainController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IAdminAllService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Interface/IAdminAllService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Service/AdminAllService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/classes/com/team/mvc/Service/AdminAllService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/WEB-INF/view/admin-main.jsp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/teamfinal/resources/css/admin-main.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -276,7 +263,7 @@
       <workItem from="1745364825083" duration="16260000" />
       <workItem from="1745398262627" duration="271000" />
       <workItem from="1745413998502" duration="5335000" />
-      <workItem from="1745451180966" duration="4332000" />
+      <workItem from="1745451180966" duration="5770000" />
     </task>
     <servers />
   </component>
