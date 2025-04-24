@@ -604,7 +604,7 @@
             // 결제 버튼 클릭 이벤트
             $('.btn-pay').off('click').on('click', function (e) {
                 e.preventDefault(); // 기본 동작 방지
-                var id = $(this).closest("tr").find("input[name='id']").val()
+                var id = $(this).closest("tr").find("input[name='id']").val();
                 // 결제 페이지로 이동
                 window.location.href = "storenmatching-rental-pay.action?rentalId=" + id + "&userCode=" + userCode + "&type=storen";
             });

@@ -476,8 +476,24 @@
 
             return false; // 폼 제출 방지
         };
+    });
 
+    // 찜 버튼 클릭시
+    $(document).ready(function() {
+        // 좋아요 버튼 클릭 이벤트
+        $('.like-button').on('click', function(e) {
+            e.preventDefault(); // 링크의 기본 동작 방지
+            e.stopPropagation(); // 이벤트 버블링 방지 (부모 요소의 클릭 이벤트 방지)
 
+            var $icon = $(this).find('i');
+
+            // 색상 토글 (하트 색상 변경)
+            if ($icon.css('color') === 'rgb(242, 232, 207)' || $icon.css('color') === '#f2e8cf') {
+                $icon.css('color', '#ff0000'); // 빨간색으로 변경
+            } else {
+                $icon.css('color', '#f2e8cf'); // 원래 색상으로 변경
+            }
+        });
     });
 </script>
 </body>

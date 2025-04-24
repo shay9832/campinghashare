@@ -672,7 +672,9 @@
 
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1>
+                    </a>
+                </div>
                 <!-- 게시글 영역 -->
                 <div class="post-container">
                     <div class="post-header">
@@ -1426,7 +1428,6 @@
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
         newConfirmBtn.addEventListener('click', function () {
-
             // 모달 닫기
             closeAllModals();
 

@@ -3,74 +3,166 @@
  * 헤더 및 내비게이션 스타일 정의 (미니헤더 + 사이드바 포함)
  */
 
-/* 알림 관련 스타일 */
-.notification-wrapper {
+/* =============================
+   알림 드롭다운 스타일 (notification.jsp)
+   ============================= */
+
+.notification-dropdown {
+    width: 340px;
+    max-height: 460px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     position: relative;
-    display: inline-block;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 999;
+    border: 1px solid rgba(0,0,0,0.1);
+    animation: notiFadeIn 0.3s ease;
 }
 
-.notification-wrapper.mini {
+@keyframes notiFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notification-header {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+.header-title {
     display: flex;
     align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
 }
 
-.noti-count-badge {
-    position: absolute;
-    top: -6px;
-    right: -8px;
-    background: var(--color-coral);
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 0.75em;
-    text-align: center;
-    line-height: 18px;
-}
-
-.notification-link {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: var(--font-xs);
-    color: var(--text-primary);
-    transition: color var(--transition-normal);
-    text-decoration: none; /* 링크 밑줄 제거 */
-    cursor: pointer;
-}
-
-.notification-link.mini {
-    flex-direction: row;
-    align-items: center;
-}
-
-.notification-link:hover {
+.header-title i {
     color: var(--color-maple);
 }
 
-.notification-link:hover i {
-    transform: translateY(-2px);
-}
-
-.header__notification {
+.read-all-btn {
+    background: transparent;
+    border: none;
+    color: var(--color-maple);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 4px;
     display: flex;
-    position: relative;
+    align-items: center;
+    gap: 6px;
 }
 
-.noti-dropdown-container {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    z-index: 9999;
-    margin-top: 10px;
+.read-all-btn:hover {
+    background-color: #f8f1e6;
+    color: #b85a2a;
 }
 
-/* 미니 헤더용 알림 드롭다운 */
-.mini .noti-dropdown-container {
-    position: fixed;
-    right: auto;
-    margin-top: 0;
+.notification-list-container {
+    max-height: 380px;
+    overflow-y: auto;
 }
+
+.notification-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-item {
+    border-bottom: 1px solid #f2f2f2;
+    transition: all 0.2s ease;
+}
+
+.notification-item:hover {
+    background-color: #fafafa;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item-link {
+    display: flex;
+    padding: 16px;
+    text-decoration: none;
+    color: #333;
+    align-items: center;
+    gap: 12px;
+}
+
+.noti-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: transparent;
+    flex-shrink: 0;
+}
+
+.notification-item.unread .noti-indicator {
+    background-color: var(--color-coral);
+}
+
+.notification-item.unread {
+    background-color: #fff8f2;
+}
+
+.noti-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.noti-content {
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.notification-item.unread .noti-content {
+    font-weight: 600;
+}
+
+.noti-date {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #888;
+    gap: 5px;
+}
+
+.no-data {
+    padding: 32px 16px;
+}
+
+.empty-notification {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #aaa;
+    gap: 12px;
+}
+
+.empty-notification i {
+    font-size: 32px;
+}
+
+.empty-notification p {
+    font-size: 14px;
+    margin: 0;
+}
+
+
+
+
 
 /* 공통 헤더 */
 .header-container {

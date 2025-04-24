@@ -311,7 +311,6 @@
         const isUser = ${isUser};  // JSP에서 ${isUser} 값을 JavaScript로 전달
 
         if (isUser) {
-
             // 메인 헤더 알림 요소
             const notiLink = document.querySelector('.notification-link');
             const notiBox = document.getElementById("notiBox");
@@ -321,7 +320,6 @@
             const notiLinkMini = document.querySelector('.notification-link.mini');
             const notiBoxMini = document.getElementById("notiBoxMini");
             const notiCountMini = document.getElementById("notiCountMini");
-
 
             // 메인 헤더 알림창 toggle
             if (notiLink && notiBox && notiCount) {
@@ -341,7 +339,7 @@
                                 notiBox.innerHTML = html;
                                 notiBox.style.display = "block";
 
-                                // 미니 헤더의 알림창은 닫기
+                                // 미니 헤더의 알림창 닫기
                                 if (notiBoxMini) notiBoxMini.style.display = "none";
                             });
                     } else {
