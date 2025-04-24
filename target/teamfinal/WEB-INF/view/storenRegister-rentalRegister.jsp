@@ -166,9 +166,9 @@
                     <div class="notice-container">
                         <div class="notice-title">거래 시 주의사항</div>
                         <ul class="notice-list">
-                            <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
-                            <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
-                            <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
+                            <li><strong>배송은 모두 플랫폼 자체 배송으로 진행되며, 보관비 결제하신 후 즉시 수거 예정입니다.</strong></li>
+                            <li><strong>플랫폼 창고 도착 후 검수까지 3일 가량 소요됩니다.</strong></li>
+                            <li><strong>검수 결과가 A~E등급인 경우 스토렌 신청 가능하며, F등급일 경우 소유자분께 반환됩니다.</strong></li>
                         </ul>
                     </div>
 

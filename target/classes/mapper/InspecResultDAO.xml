@@ -136,4 +136,28 @@
                  JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
         WHERE ir.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
     </select>
+
+    <!-- platform_delivery_id로 등급 조회 -->
+    <select id="getFinalEquipGradeByDeliveryId" resultType="string" parameterType="int">
+        SELECT EG.EQUIP_GRADE_NAME
+        FROM INSPEC_RESULT IR
+                 JOIN EQUIP_GRADE EG ON IR.EQUIP_GRADE_ID = EG.EQUIP_GRADE_ID
+        WHERE IR.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+    </select>
+
+    <!-- platform_delivery_return_id로 등급 조회 -->
+    <select id="getFinalEquipGradeByReturnDeliveryId" resultType="string" parameterType="int">
+        SELECT EG.EQUIP_GRADE_NAME
+        FROM INSPEC_RESULT IR
+                 JOIN EQUIP_GRADE EG ON IR.EQUIP_GRADE_ID = EG.EQUIP_GRADE_ID
+        WHERE IR.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+    </select>
+
+    <!-- 반환 주소 입력 완료 여부 -->
+    <select id="hasReturnAddressByStorenId" resultType="int" parameterType="int">
+        SELECT COUNT(*)
+        FROM STOREN_LAST_RETURN
+        WHERE STOREN_ID = #{storenId}
+    </select>
+
 </mapper>
