@@ -3,6 +3,44 @@
  * 헤더 및 내비게이션 스타일 정의 (미니헤더 + 사이드바 포함)
  */
 
+.noti-count-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: var(--color-coral);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.75em;
+    text-align: center;
+    line-height: 18px;
+}
+
+.notification-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: var(--font-xs);
+    color: var(--text-primary);
+    transition: color var(--transition-normal);
+    text-decoration: none; /* 링크 밑줄 제거 */
+    cursor: pointer;
+}
+
+.notification-link:hover {
+    color: var(--color-maple);
+}
+
+.notification-link:hover i {
+    transform: translateY(-2px);
+}
+
+.header__notification {
+    display: flex;
+    position: relative;
+}
+
 /* 공통 헤더 */
 .header-container {
     position: relative;
