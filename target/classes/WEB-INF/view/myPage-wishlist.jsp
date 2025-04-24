@@ -140,7 +140,7 @@
                                             </c:choose>
                                             <button class="like-button" data-id="${storen.storen_id}" data-type="storen"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
                                         </div>
-                                        <a href="storen_matching_request.action?storenId=${storen.storen_id}" class="product-link">
+                                        <a href="storenmatching-request.action?storenId=${storen.storen_id}" class="product-link">
                                             <div class="product-info">
                                                 <p class="product-title">${storen.storen_title}</p>
                                                 <p class="product-brand">${storen.equipmentDTO.brand}</p>

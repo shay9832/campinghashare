@@ -438,10 +438,10 @@
                 <tr class="table-row matching-row rental-header" data-id="${storen.storen_id}" data-expanded="false">
                   <td>${storen.storen_id}</td>
                   <td class="title-cell rental-title">
-                    <a href="storenmatching-request.action?id=${storen.storen_id}" class="rental-link">${storen.storen_title}</a>
+                    <a href="storenmatching-request.action?storenId=${storen.storen_id}" class="rental-link">${storen.storen_title}</a>
                   </td>
                   <td>
-                    <a href="equipment-detail.action?id=${storen.equip_code}" class="equipment-link">${storen.equip_code}</a>
+                    <a href="#" class="equipment-link">${storen.equip_code}</a>
                   </td>
                   <td class="title-cell">${storen.equipmentDTO.equip_name}</td>
                   <td>${storen.rental_start_date}</td>
