@@ -369,13 +369,20 @@
                                         </td>
                                         <td>
                                             <div class="product-image">
-                                                <img src="images/product-placeholder.jpg" alt="상품 이미지">
+                                                <c:choose>
+                                                    <c:when test="${!empty item.storen.equipmentDTO.attachments && item.storen.equipmentDTO.attachments.size() > 0}">
+                                                        <img src="${item.storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="product-placeholder"></div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="equipment-info-container">
                                                 <div class="equipment-info-text">스토렌ID : ${item.storen.storen_id}</div>
-                                                <a href="storenmatching-request.action?storen_id=${item.storen.storen_id}" class="equipment-name">${item.storen.storen_title}</a>
+                                                <a href="storenmatching-request.action?storenId=${item.storen.storen_id}" class="equipment-name">${item.storen.storen_title}</a>
                                                 <div class="equipment-info-text">${item.storen.equipmentDTO.majorCategory} > ${item.storen.equipmentDTO.middleCategory}</div>
                                                 <div class="equipment-info-text">${item.storen.equipmentDTO.brand}</div>
                                                 <div class="equipment-info-text">${item.storen.created_date}</div>
@@ -597,9 +604,9 @@
             // 결제 버튼 클릭 이벤트
             $('.btn-pay').off('click').on('click', function (e) {
                 e.preventDefault(); // 기본 동작 방지
-                var id = $(this).closest("tr").find("input[name='id']").val();
+                var id = $(this).closest("tr").find("input[name='id']").val()
                 // 결제 페이지로 이동
-                window.location.href = "rentalmatching-rental-pay.action?rentalI=" + id + "&userCode=" + userCode + "&type=storen";
+                window.location.href = "storenmatching-rental-pay.action?rentalId=" + id + "&userCode=" + userCode + "&type=storen";
             });
 
             // 분실 신고 이벤트

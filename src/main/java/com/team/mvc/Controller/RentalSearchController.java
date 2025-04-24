@@ -29,7 +29,7 @@ public class RentalSearchController {
     // 스토렌 장비검색 페이지
     @RequestMapping("/rentalsearch-main.action")
     public String rentalSearchMain(@RequestParam(value = "page", defaultValue = "1") int page,
-                                   @RequestParam(value = "size", defaultValue = "100") int size,
+                                   @RequestParam(value = "size", defaultValue = "16") int size,
                                    @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
                                    @RequestParam(value = "tab", required = false, defaultValue = "all") String tab,
                                    @RequestParam(value = "minPrice", required = false, defaultValue = "0") int minPrice,
