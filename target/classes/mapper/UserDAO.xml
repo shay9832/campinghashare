@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mvc.Interface.IUserDAO">
+    <resultMap id="UserInfoMap" type="com.team.mvc.DTO.UserDTO">
+        <result property="userCode" column="USER_CODE"></result>
+        <result property="userId" column="USER_ID"></result>
+        <result property="password" column="USER_PW"></result>
+        <result property="userName" column="USER_NAME"></result>
+        <result property="nickname" column="CURRENT_NICKNAME"></result>
+        <result property="userTel" column="USER_TEL"></result>
+        <result property="userEmail" column="USER_EMAIL"></result>
+        <result property="emailConsent" column="EMAIL_CONSENT"></result>
+        <result property="totalPoint" column="TOTAL_POINTS"></result>
+        <result property="totalTrust" column="TRUST_SCORE"></result>
+        <result property="zipCode" column="ZIPCODE"></result>
+        <result property="address1" column="ADDRESS1"></result>
+        <result property="address2" column="ADDRESS2"></result>
+        <result property="userGrade" column="USER_GRADE"></result>
+        <result property="nicknameChange" column="ALLOWED_NICKNAME_CHANGE"></result>
+        <result property="totalProfit" column="TOTAL_PROFIT"></result>
+        <result property="postCount" column="postCount"></result>
+        <result property="commentCount" column="commentCount"></result>
+        <result property="equipmentCount" column="couponCount"></result>
+        <result property="matchingCount" column="matched_payment_case_count"></result>
+        <result property="nextUserGrade" column="NEXT_USER_GRADE"></result>
+        <result property="remainPoint" column="REMAIN_POINT"></result>
+        <result property="remainTrust" column="REMAIN_TRUST"></result>
+    </resultMap>
+
+    <!-- USER_CODE 시퀀스 조회 -->
+    <select id="getNextUserCode" resultType="int">
+        SELECT USER_CODE_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+    <!-- USER_CODE 등록 -->
+    <insert id="insertUserCode" parameterType="int">
+        INSERT INTO USER_CODE (USER_CODE) VALUES (#{userCode})
+    </insert>
+
+    <!-- 사용자 등록 -->
+    <insert id="insertUser" parameterType="com.team.mvc.DTO.UserDTO">
+        INSERT INTO USERS (
+            USER_ID, USER_PW, USER_NAME, USER_TEL,
+            USER_CODE, SIGNUP_TYPE_ID, CREATED_DATE
+        )
+        VALUES (
+                   #{userId}, #{password}, #{userName}, #{userTel},
+                   #{userCode}, 1, SYSDATE
+               )
+    </insert>
+
+    <!-- 닉네임 로그 등록 -->
+    <insert id="insertNicknameLog" parameterType="com.team.mvc.DTO.UserDTO">
+        INSERT INTO NICKNAME_LOG (
+            NICKNAME_LOG_ID, USER_CODE, NICKNAME, LAST_UPDATED_DATE
+        )
+        VALUES (
+                   NICKNAME_LOG_SEQ.NEXTVAL, #{userCode}, #{nickname}, SYSDATE
+               )
+    </insert>
+
+    <!-- 이름과 전화번호 중복 확인 -->
+    <select id="getUserCountByNameTel" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_NAME = #{userName}
+          AND USER_TEL = #{userTel}
+    </select>
+
+    <!-- ID 중복 체크 -->
+    <select id="getUserCountById" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <!-- 닉네임 중복 체크 -->
+    <select id="getUserCountByNickname" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM NICKNAME_LOG
+        WHERE NICKNAME = #{nickname}
+    </select>
+
+    <!-- 이름+전화번호+아이디로 사용자 존재 여부 확인 -->
+    <select id="getUserCountByIdNameTel" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_ID = #{userId}
+          AND USER_NAME = #{userName}
+          AND USER_TEL = #{userTel}
+    </select>
+
+
+
+    <!-- 로그인 사용자 조회 -->
+    <select id="getUserByIdAndPw" parameterType="com.team.mvc.DTO.UserDTO"
+            resultType="com.team.mvc.DTO.UserDTO">
+        SELECT U.USER_ID, U.USER_CODE, U.USER_NAME, U.USER_TEL, N.NICKNAME
+        FROM USERS U
+                 LEFT JOIN (
+            SELECT USER_CODE, NICKNAME
+            FROM NICKNAME_LOG
+            WHERE NICKNAME_LOG_ID IN (
+                SELECT MAX(NICKNAME_LOG_ID)
+                FROM NICKNAME_LOG
+                GROUP BY USER_CODE
+            )
+        ) N ON U.USER_CODE = N.USER_CODE
+        WHERE U.USER_ID = #{userId} AND U.USER_PW = #{password}
+    </select>
+
+    <select id="getFullUserInfoByUserCode" resultMap="UserInfoMap">
+        SELECT
+            U.USER_CODE,
+            U.USER_ID,
+            U.USER_PW,
+            U.USER_NAME,
+            U.USER_TEL,
+            U.USER_EMAIL,
+            U.EMAIL_CONSENT,
+            NVL(N.NICKNAME, '') AS CURRENT_NICKNAME,
+            A.ZIPCODE,
+            A.ADDRESS1,
+            A.ADDRESS2
+        FROM USERS U
+                 LEFT JOIN (
+            SELECT USER_CODE, NICKNAME
+            FROM NICKNAME_LOG
+            WHERE NICKNAME_LOG_ID IN (
+                SELECT MAX(NICKNAME_LOG_ID)
+                FROM NICKNAME_LOG
+                GROUP BY USER_CODE
+            )
+        ) N ON U.USER_CODE = N.USER_CODE
+                 LEFT JOIN (
+            SELECT *
+            FROM ADDRESS_LOG
+            WHERE (USER_CODE, LAST_UPDATED_DATE) IN (
+                SELECT USER_CODE, MAX(LAST_UPDATED_DATE)
+                FROM ADDRESS_LOG
+                GROUP BY USER_CODE
+            )
+        ) A ON U.USER_CODE = A.USER_CODE
+        WHERE U.USER_CODE = #{userCode}
+    </select>
+
+    <!-- 유저코드로 유저 찾아오기 -->
+    <select id="getUserByUserCode" resultType="com.team.mvc.DTO.UserDTO" resultMap="UserInfoMap">
+        SELECT *
+        FROM VW_USER_WITH_POINT_TRUST
+        WHERE USER_CODE = #{userCode}
+    </select>
+
+
+
+    <!-- 해당 유저의 주소 신규 등록 -->
+    <insert id="insertAddress">
+        INSERT INTO ADDRESS_LOG(ADDRESS_ID, USER_CODE, ZIPCODE, ADDRESS1, ADDRESS2, LAST_UPDATED_DATE)
+        VALUES(ADDRESS_LOG_SEQ.NEXTVAL, #{userCode}, #{zipCode}, #{address1}, #{address2}, SYSDATE)
+    </insert>
+
+    <!-- 비밀번호 업데이트 -->
+    <update id="updateUserPassword">
+        UPDATE USERS
+        SET USER_PW = #{newPassword}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <!-- 유저코드로 유저id 가져오기 -->
+    <select id="getUserIdByUserCode">
+        SELECT USER_ID
+        FROM USERS
+        WHERE USER_CODE=#{userCode}
+    </select>
+
+    <!-- 유저코드로 유저비밀번호 가져오기 -->
+    <select id="getUserPwByUserCode">
+        SELECT USER_PW
+        FROM USERS
+        WHERE USER_CODE=#{userCode}
+    </select>
+
+    <!-- 유저코드로 마이페이지 메인에 필요한 유저정보 전부 가져오기 -->
+    <select id="getUserByUserCodeForMain" resultMap="UserInfoMap">
+        SELECT
+            vwu.*,
+            ui."게시물수" AS postCount,
+            ui."댓글수" AS commentCount,
+            ui."장비등록수" AS equipmentCount,
+            ui."보유쿠폰수" AS couponCount,
+            (
+                SELECT COUNT(*)
+                FROM VW_RENTAL_APPLICANT vra
+                WHERE vra.USER_CODE = vwu.user_code
+                  AND vra.TRANSACTION_TYPE IN ('스토렌_매칭완료')
+                  AND vra.PAYMENT_STATUS IN ('결제대기', '결제완료')
+            ) AS matched_payment_case_count
+        FROM
+            user_info ui
+                JOIN
+            VW_USER_WITH_POINT_TRUST vwu
+            ON ui."회원코드" = vwu.user_code
+        WHERE vwu.user_code = #{userCode}
+    </select>
+
+    <!-- 비밀번호 검증용 사용자 조회 -->
+    <select id="getUserById" resultType="com.team.mvc.DTO.UserDTO" parameterType="String">
+        SELECT * FROM USERS
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <!-- 회원 탈퇴 처리: USER_CODE 연결 끊기 -->
+    <update id="disconnectUserCode" parameterType="String">
+        UPDATE USERS
+        SET USER_CODE = NULL
+        WHERE USER_ID = #{userId}
+    </update>
+
+
+</mapper>
