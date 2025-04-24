@@ -9,7 +9,10 @@
 </head>
 
 <body>
-<jsp:include page="/WEB-INF/view/admin-header.jsp" />
+<!-- 헤더 영역 - 페이지 상단 타이틀 -->
+<div id="header">
+    <h1>관리자 시스템</h1>
+</div>
 
 <!-- 메인 컨테이너 -->
 <div id="container">

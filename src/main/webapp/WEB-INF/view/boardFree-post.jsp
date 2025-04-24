@@ -632,12 +632,12 @@
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 <!-- 디버깅용 정보 (테스트 후 제거) -->
-<c:if test="${not empty sessionScope.userCode}">
-    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">
-        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.userCode},
-        일치 여부: ${post.userCode == sessionScope.userCode}
-    </div>
-</c:if>
+<%--<c:if test="${not empty sessionScope.userCode}">--%>
+<%--    <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+<%--        게시글 작성자: ${post.userCode}, 로그인 사용자: ${sessionScope.userCode},--%>
+<%--        일치 여부: ${post.userCode == sessionScope.userCode}--%>
+<%--    </div>--%>
+<%--</c:if>--%>
 
 
 <div class="page-wrapper">

@@ -40,29 +40,20 @@
             margin : 0 auto 20px;
         }
 
-        .banner-slide {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            transition: transform 1s ease-in-out;
-        }
-
-        .banner-item {
-            flex: 0 0 100%;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f9f9f9;
-        }
-
         .banner-content {
             text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 2;
         }
 
         .banner-text {
-            color: #333;
+            color: #404040;
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 15px;
@@ -257,25 +248,23 @@
             color: #FFC107;
         }
 
-        /* 푸터 배너 */
-        .footer-banner {
+        /* 하단 미니배너 스타일 */
+        .footer-mini-banner {
             width: 100%;
             height: 80px;
-            position: relative;
-            overflow: hidden;
-            margin: 20px 0;
-            border: 1px solid #eee;
-            background-color: #f9f9f9;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            padding: 10px;
+            margin-top: 30px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
         }
 
-        .footer-banner-text {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
+        .mini-banner-item {
+            width: 48%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
         }
 
         /* 슬라이더 버튼 */
@@ -334,23 +323,26 @@
 
     <!-- 메인 콘텐츠 영역 -->
     <div class="container">
-        <!-- 메인 배너 -->
+        <!-- 배너 슬라이드 -->
         <div class="main-banner">
             <button class="banner-prev"><i class="fas fa-chevron-left"></i></button>
             <div class="banner-slide">
                 <div class="banner-item">
+                    <img src="${pageContext.request.contextPath}/resources/images/banner7.png" alt="배너1" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
-                        <div class="banner-text">서비스 소개 / 이벤트 배너</div>
+                        <div class="banner-text">서비스 소개</div>
                         <a href="#" class="service-intro-btn">서비스 소개</a>
                     </div>
                 </div>
                 <div class="banner-item">
+                    <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="배너2" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
                         <div class="banner-text">특별 프로모션 - 30% 할인</div>
                         <a href="#" class="service-intro-btn">자세히 보기</a>
                     </div>
                 </div>
                 <div class="banner-item">
+                    <img src="${pageContext.request.contextPath}/resources/images/banner4.jpeg" alt="배너3" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
                         <div class="banner-text">신규 상품 소개</div>
                         <a href="#" class="service-intro-btn">구경하기</a>
@@ -668,8 +660,9 @@
         </div>
 
         <!-- 하단 배너 -->
-        <div class="footer-banner">
-            <div class="footer-banner-text">배너</div>
+        <div class="footer-mini-banner">
+            <img src="${pageContext.request.contextPath}/resources/images/banner1.jpg" alt="미니배너 1" class="mini-banner-item">
+            <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="미니배너 2" class="mini-banner-item">
         </div>
     </div>
 
@@ -682,6 +675,96 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    $(document).ready(function() {
+        // 배너 슬라이드 CSS 강제 수정
+        $(".banner-slide").css({
+            "display": "flex",
+            "width": "300%", // 3개의 배너를 위한 너비
+            "height": "100%",
+            "transition": "transform 1s ease-in-out"
+        });
+
+        $(".banner-item").css({
+            "flex": "0 0 100%", // 부모 컨테이너의 1/3이 아닌 전체 main-banner의 100%를 차지하도록
+            "width": "100%",
+            "height": "100%",
+            "position": "relative"
+        });
+
+        // main-banner의 너비를 고정
+        $(".main-banner").css({
+            "width": "100%",
+            "overflow": "hidden"
+        });
+
+        // 배너 관련 변수
+        var bannerIndex = 0;
+        var bannerCount = $(".banner-item").length;
+        var autoSlideInterval;
+
+        console.log("Banner items found:", bannerCount);
+
+        // 배너 위치 업데이트 함수
+        function updateBannerPosition() {
+            // 이제 각 배너가 100%이므로 100%씩 이동
+            $(".banner-slide").css("transform", "translateX(-" + (bannerIndex * 100) + "%)");
+            console.log("Banner position updated to:", bannerIndex);
+        }
+
+        // 이전 배너 버튼 클릭 이벤트
+        $(".banner-prev").off("click").on("click", function(e) {
+            e.preventDefault();
+            bannerIndex = (bannerIndex - 1 + bannerCount) % bannerCount;
+            updateBannerPosition();
+
+            // 자동 슬라이드 재시작
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+
+            console.log("Prev clicked, new index:", bannerIndex);
+        });
+
+        // 다음 배너 버튼 클릭 이벤트
+        $(".banner-next").off("click").on("click", function(e) {
+            e.preventDefault();
+            bannerIndex = (bannerIndex + 1) % bannerCount;
+            updateBannerPosition();
+
+            // 자동 슬라이드 재시작
+            clearInterval(autoSlideInterval);
+            startAutoSlide();
+
+            console.log("Next clicked, new index:", bannerIndex);
+        });
+
+        // 자동 슬라이드 시작 함수
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(function() {
+                bannerIndex = (bannerIndex + 1) % bannerCount;
+                updateBannerPosition();
+                console.log("Auto slide triggered, new index:", bannerIndex);
+            }, 5000);
+        }
+
+        // 배너에 마우스 올리면 자동 전환 멈춤
+        $(".main-banner").hover(
+            function() {
+                clearInterval(autoSlideInterval);
+                console.log("Auto slide paused");
+            },
+            function() {
+                startAutoSlide();
+                console.log("Auto slide resumed");
+            }
+        );
+
+        // 초기 배너 위치 설정 및 자동 슬라이드 시작
+        updateBannerPosition();
+        startAutoSlide();
+    });
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         // 좋아요 버튼 토글
@@ -693,11 +776,7 @@
                 $(this).css('color', '#f2e8cf');
             }
         });
-    });
-</script>
 
-<script>
-    $(document).ready(function() {
         // 거래/커뮤니티 토글
         $(".toggle-tab-btn").click(function() {
             $(".toggle-tab-btn").removeClass("active");
@@ -806,33 +885,6 @@
             $(this).addClass('active');
         });
 
-        // 메인 배너 슬라이더
-        var bannerIndex = 0;
-        var bannerItems = $(".banner-item").length;
-
-        // 배너 위치 업데이트 함수
-        function updateBannerPosition() {
-            $(".banner-slide").css("transform", "translateX(-" + (bannerIndex * 100) + "%)");
-        }
-
-        // 이전 배너 버튼 클릭 이벤트
-        $(".banner-prev").click(function() {
-            bannerIndex = (bannerIndex - 1 + bannerItems) % bannerItems;
-            updateBannerPosition();
-        });
-
-        // 다음 배너 버튼 클릭 이벤트
-        $(".banner-next").click(function() {
-            bannerIndex = (bannerIndex + 1) % bannerItems;
-            updateBannerPosition();
-        });
-
-        // 자동 배너 전환 (5초마다)
-        setInterval(function() {
-            bannerIndex = (bannerIndex + 1) % bannerItems;
-            updateBannerPosition();
-        }, 5000);
-
         // MD Pick 슬라이더 네비게이션
         $("#md-picks .slider-prev").click(function() {
             var container = $(this).siblings(".slider-container");
@@ -875,7 +927,6 @@
 
         // 처음에 0번째 슬라이드 보이도록 강제 렌더링
         updateReviewPosition();
-
     });
 
     window.applyFilter = function () {
@@ -889,10 +940,7 @@
             confirmButtonColor: '#2C5F2D'
         });
     };
-
-
-
-
 </script>
+
 </body>
 </html>

@@ -20,4 +20,13 @@ public interface IInspecResultDAO {
 
     // 스토렌 상태 업데이트
     int updateStorenStatus(int storenId, String status);
+
+    // platformDeliveryId 기준으로 장비 등급 조회
+    public String getFinalEquipGradeByDeliveryId(@Param("platformDeliveryId") int platformDeliveryId);
+
+    // platformDeliveryReturnId 기준으로 장비 등급 조회
+    public String getFinalEquipGradeByReturnDeliveryId(@Param("platformDeliveryReturnId") int platformDeliveryReturnId);
+
+    // 반환 주소 입력 여부 확인용 메서드
+    public int hasReturnAddressByStorenId(@Param("storenId") int storenId);
 }

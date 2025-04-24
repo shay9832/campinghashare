@@ -1,35 +1,60 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.team.mvc.Interface.INotificationDAO">
 
-    <select id="getNotificationsByUserCode" resultType="com.team.mvc.DTO.NotificationDTO">
-        SELECT N.NOTI_ID,
-               N.USER_CODE,
-               T.NOTI_CONTENT AS MESSAGE,
-               TO_CHAR(N.CREATED_DATE, 'YYYY-MM-DD HH24:MI') AS CREATED_DATE,
-               CASE
-                   WHEN C.NOTI_ID IS NOT NULL THEN 'Y'
-                   ELSE 'N'
-                   END AS IS_READ
+    <!-- 알림 목록 (최근 7일 이내, 최신순 정렬) -->
+    <select id="getRecentNotifications" resultType="com.team.mvc.DTO.NotificationDTO">
+        SELECT N.NOTI_ID, N.USER_CODE, N.NOTI_TYPE_ID, N.CREATED_DATE,
+               T.NOTI_TYPE_NAME, T.NOTI_CONTENT,
+               CASE WHEN C.NOTI_ID IS NULL THEN 0 ELSE 1 END AS isRead
         FROM NOTI N
-                 JOIN NOTI_TYPE T ON N.NOTI_TYPE_ID = T.NOTI_TYPE_ID
-                 LEFT JOIN NOTI_CHECK_LOG C ON N.NOTI_ID = C.NOTI_ID
+                 INNER JOIN NOTI_TYPE T ON N.NOTI_TYPE_ID = T.NOTI_TYPE_ID
+                 LEFT OUTER JOIN NOTI_CHECK_LOG C ON N.NOTI_ID = C.NOTI_ID
         WHERE N.USER_CODE = #{userCode}
+          AND N.CREATED_DATE >= SYSDATE - 7
         ORDER BY N.CREATED_DATE DESC
     </select>
 
-    <insert id="insertReadLogForAll">
-        INSERT INTO NOTI_CHECK_LOG(NOTI_CHECK_LOG_ID, NOTI_ID, CHECKED_DATE)
+    <!-- 읽지 않은 알림 개수 -->
+    <select id="getUnreadNotificationCount" resultType="int">
+        SELECT COUNT(*)
+        FROM NOTI N
+        WHERE N.USER_CODE = #{userCode}
+          AND N.CREATED_DATE >= SYSDATE - 7
+          AND NOT EXISTS (
+            SELECT 1 FROM NOTI_CHECK_LOG C
+            WHERE C.NOTI_ID = N.NOTI_ID
+        )
+    </select>
+
+    <!-- 전체 읽음 처리: 체크되지 않은 알림에 대해 INSERT -->
+    <insert id="markAllNotificationsAsRead">
+        INSERT INTO NOTI_CHECK_LOG (NOTI_CHECK_LOG_ID, NOTI_ID, CHECKED_DATE)
         SELECT NOTI_CHECK_LOG_SEQ.NEXTVAL, N.NOTI_ID, SYSDATE
         FROM NOTI N
         WHERE N.USER_CODE = #{userCode}
+          AND N.CREATED_DATE >= SYSDATE - 7
           AND NOT EXISTS (
             SELECT 1 FROM NOTI_CHECK_LOG C
             WHERE C.NOTI_ID = N.NOTI_ID
         )
     </insert>
+
+    <!-- NOTI_CHECK_LOG 테이블에 읽음 처리 로그 추가-->
+    <insert id="insertReadLogForAll">
+        INSERT INTO NOTI_CHECK_LOG (NOTI_CHECK_LOG_ID, NOTI_ID, CHECKED_DATE)
+        SELECT NOTI_CHECK_LOG_SEQ.NEXTVAL, N.NOTI_ID, SYSDATE
+        FROM NOTI N
+        WHERE N.USER_CODE = #{userCode}
+          AND N.CREATED_DATE >= SYSDATE - 7
+          AND NOT EXISTS (
+            SELECT 1 FROM NOTI_CHECK_LOG C
+            WHERE C.NOTI_ID = N.NOTI_ID
+        )
+    </insert>
+
 
 </mapper>
