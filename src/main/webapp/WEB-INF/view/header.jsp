@@ -142,7 +142,7 @@
 
         <c:if test="${isUser}">
             <div class="user-menu">
-                <!-- 종 아이콘과 알림 카운트 (수정된 부분) -->
+                <!-- 종 아이콘과 알림 카운트 -->
                 <div class="notification-wrapper">
                     <a href="#" class="notification-link">
                         <div class="header__notification">
@@ -154,15 +154,6 @@
                     <!-- 알림 영역 (초기 숨김) -->
                     <div id="notiBox" class="noti-dropdown-container" style="display: none;"></div>
                 </div>
-                <a href="#" class="notification-link">
-                    <div class="header__notification">
-                        <i class="fa-solid fa-bell" id="notiBell" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i>
-                        <span id="notiCount" class="noti-count-badge">0</span>
-                    </div>
-                    <span>알림</span>
-                </a>
-                <!-- 알림 영역 (초기 숨김) -->
-                <div id="notiBox" style="display: none;"></div>
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>마이페이지</span></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book" style="height: 20px !important; width: auto !important; font-size: 20px !important;"></i> <span>캠핑일지</span></a>
             </div>
@@ -300,14 +291,6 @@
                     <!-- 알림 영역 (초기 숨김) -->
                     <div id="notiBoxMini" class="noti-dropdown-container" style="display: none;"></div>
                 </div>
-                <a href="#" class="notification-link">
-                    <div class="header__notification">
-                        <i class="fa-solid fa-bell" id="notiBellMini" style="position: relative; cursor: pointer;"></i>
-                        <span id="notiCountMini" class="noti-count-badge">0</span>
-                    </div>
-                </a>
-                <div id="notiBoxMini" style="display: none; position: fixed; z-index: 9999;"></div>
-                <div id="notiBox" style="display: none; position: absolute; top: 100%; right: 0;"></div>
                 <a href="${pageContext.request.contextPath}/mypage-main.action"><i class="fa-solid fa-user"></i></a>
                 <a href="${pageContext.request.contextPath}/mypage-diary.action"><i class="fa-solid fa-book"></i></a>
             </c:when>
@@ -339,20 +322,6 @@
             const notiBoxMini = document.getElementById("notiBoxMini");
             const notiCountMini = document.getElementById("notiCountMini");
 
-            // 메인 헤더 알림창 토글
-            if (notiLink && notiBox && notiCount) {
-                notiLink.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    if (notiBox.style.display === "none" || notiBox.style.display === "") {
-                        // 알림창 로드 및 표시
-            const notiLink = document.querySelector('.notification-link');
-            const notiBox = document.getElementById("notiBox");
-            const notiCount = document.getElementById("notiCount");
-            const notiBellMini = document.getElementById("notiBellMini");
-            const notiBoxMini = document.getElementById("notiBoxMini");
-            const notiCountMini = document.getElementById("notiCountMini");
 
             // 메인 헤더 알림창 toggle
             if (notiLink && notiBox && notiCount) {
@@ -383,7 +352,7 @@
 
             // 미니 헤더 알림창 토글
             if (notiLinkMini && notiBoxMini && notiCountMini) {
-                notiLinkMini.addEventListener("click", function(e) {
+                notiLinkMini.addEventListener("click", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -402,32 +371,6 @@
                         notiBoxMini.style.display = "none";
                     }
                 });
-            // 미니 헤더 알림창 toggle (동일한 방식으로 구현)
-            if (notiBellMini && notiBoxMini && notiCountMini) {
-                const miniNotiLink = notiBellMini.closest('.notification-link');
-                if (miniNotiLink) {
-                    miniNotiLink.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        if (notiBoxMini.style.display === "none" || notiBoxMini.style.display === "") {
-                            // 위치 조정: 알림 아이콘 바로 아래에 표시
-                            const rect = miniNotiLink.getBoundingClientRect();
-                            notiBoxMini.style.position = "fixed";
-                            notiBoxMini.style.top = `${rect.bottom}px`;
-                            notiBoxMini.style.right = `${window.innerWidth - rect.right}px`;
-
-                            fetch("/noti.action")
-                                .then(res => res.text())
-                                .then(html => {
-                                    notiBoxMini.innerHTML = html;
-                                    notiBoxMini.style.display = "block";
-                                });
-                        } else {
-                            notiBoxMini.style.display = "none";
-                        }
-                    });
-                }
             }
 
             // 페이지 로딩 시 읽지 않은 알림 수 가져오기
@@ -436,7 +379,6 @@
                 .then(count => {
                     const countNum = parseInt(count);
                     if (countNum > 0) {
-                    if (parseInt(count) > 0) {
                         // 메인 헤더와 미니 헤더의 알림 카운트 모두 업데이트
                         if (notiCount) {
                             notiCount.textContent = count;
@@ -453,18 +395,6 @@
                 });
 
             // 외부 클릭 시 알림창 닫기
-            document.addEventListener("click", function(e) {
-                // 메인 헤더 알림 영역 외부 클릭
-                if (notiBox && notiLink &&
-                    !notiBox.contains(e.target) &&
-                    !notiLink.contains(e.target)) {
-                    notiBox.style.display = "none";
-                }
-
-                // 미니 헤더 알림 영역 외부 클릭
-                if (notiBoxMini && notiLinkMini &&
-                    !notiBoxMini.contains(e.target) &&
-                    !notiLinkMini.contains(e.target)) {
             document.addEventListener("click", (e) => {
                 if (notiBox && notiLink && !notiBox.contains(e.target) && !notiLink.contains(e.target)) {
                     notiBox.style.display = "none";
