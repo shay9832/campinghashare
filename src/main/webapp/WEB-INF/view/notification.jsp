@@ -9,7 +9,7 @@
         max-height: 460px;
         background: #fff;
         box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        position: relative; /* absolute에서 relative로 변경 */
+        position: relative; /* 여기를 absolute에서 relative로 변경 */
         border-radius: 12px;
         overflow: hidden;
         z-index: 999;
@@ -106,6 +106,10 @@
     }
 
     .notification-item a {
+
+    }
+
+    .notification-link {
         display: flex;
         padding: 16px;
         text-decoration: none;
@@ -191,15 +195,21 @@
         .notification-dropdown {
             position: relative;
             width: 100%;
+            position: fixed;
+            top: 60px;
+            right: 10px;
+            left: 10px;
+            width: calc(100% - 20px);
             max-height: calc(100vh - 120px);
             border-radius: 8px;
         }
 
-        .notification-item a {
+        .notification-link {
             padding: 12px 16px;
         }
     }
 </style>
+
 
 <div class="notification-dropdown">
     <!-- 상단 제목 및 전체읽음 -->
@@ -219,6 +229,7 @@
             <c:forEach var="noti" items="${notificationList}">
                 <li class="notification-item ${noti.isRead == 0 ? 'unread' : ''}">
                     <a href="#" class="notification-item-link">
+
                         <div class="noti-indicator"></div>
                         <div class="noti-content-wrapper">
                             <span class="noti-content">${noti.notiContent}</span>
@@ -242,8 +253,23 @@
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // 알림 메뉴 외부 클릭 시 닫기
+        document.addEventListener("click", function(e) {
+            const notiBox = document.getElementById("notiBox");
+            const notiBell = document.getElementById("notiBell");
+
+            if (notiBox && notiBell) {
+                if (!notiBox.contains(e.target) && e.target !== notiBell && !notiBell.contains(e.target)) {
+                    notiBox.style.display = "none";
+                }
+            }
+        });
+
         // '모두 읽음' 버튼에 호버 효과 추가
         const readAllBtn = document.querySelector("#readAllNotiBtn");
         if (readAllBtn) {
@@ -311,7 +337,6 @@
                     const countNum = parseInt(count);
                     // 메인 헤더 카운트 업데이트
                     if (notiCount) {
-                        if (countNum > 0) {
                             notiCount.textContent = countNum;
                             notiCount.style.display = "inline-block";
 
@@ -353,6 +378,22 @@
                 e.preventDefault();
 
                 // 알림 읽음 효과 적용
+                    })
+                    .catch(error => {
+                        console.error("Error updating notification count:", error);
+                    });
+            }
+        }
+
+        // 알림 아이템에 이벤트 위임으로 클릭 이벤트 처리
+        document.querySelector("#notiBox")?.addEventListener("click", function(e) {
+            const notificationLink = e.target.closest('.notification-link');
+            if (notificationLink) {
+                // 알림 클릭 시 처리 로직을 여기에 추가할 수 있음
+                // 예: 특정 페이지로 이동, 알림 읽음 처리 등
+                e.preventDefault();
+
+                // 여기서는 단순히 읽음 효과만 적용 (실제 구현 시 서버에 읽음 처리 요청 필요)
                 const notificationItem = notificationLink.closest('.notification-item');
                 if (notificationItem && notificationItem.classList.contains('unread')) {
                     notificationItem.classList.remove('unread');
@@ -370,6 +411,31 @@
         const styleElement = document.createElement("style");
         styleElement.id = "noti-animation-style";
         styleElement.textContent = `
+
+                // 링크 처리 로직 (원하는 대로 수정)
+                // window.location.href = notificationLink.getAttribute('href');
+            }
+        });
+
+        // 페이지 로드 시 초기 알림 카운트 로드
+        updateNotificationCount();
+
+        // 알림 아이콘에 호버 효과
+        const notiBell = document.getElementById("notiBell");
+        if (notiBell) {
+            notiBell.addEventListener("mouseenter", function() {
+                this.style.transform = "scale(1.05)";
+            });
+
+            notiBell.addEventListener("mouseleave", function() {
+                this.style.transform = "scale(1)";
+            });
+        }
+    });
+
+    // 알림 카운트 배지 애니메이션 스타일 추가
+    document.head.insertAdjacentHTML('beforeend', `
+        <style>
             @keyframes pulse {
                 0% { transform: scale(1); }
                 50% { transform: scale(1.2); }
@@ -386,4 +452,5 @@
         `;
         document.head.appendChild(styleElement);
     }
+    `);
 </script>

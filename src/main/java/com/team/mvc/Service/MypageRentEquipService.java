@@ -48,6 +48,7 @@ public class MypageRentEquipService implements IMypageRentEquipService {
             // 스토렌의 equipmentDTO 속성 설정
             int equipCode = storen.getEquip_code();
             EquipmentDTO equipment = equipmentDAO.getEquipmentByEquipCode(equipCode);
+
             // 사진 넣어주기
             List<AttachmentDTO> attachmentDTOList = attachmentDAO.listAttachmentByEquipCode(equipCode);
             if (attachmentDTOList != null && !attachmentDTOList.isEmpty()) {

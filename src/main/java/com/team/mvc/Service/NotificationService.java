@@ -26,4 +26,3 @@ public class NotificationService {
         dao.insertReadLogForAll(userCode);  // 전체 읽음 처리 로그 삽입
     }
 }
-

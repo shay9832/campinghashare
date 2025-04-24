@@ -87,8 +87,6 @@ public class RentalSearchController {
             filteredList = storenList;
         }
 
-        model.addAttribute("storenList", filteredList);
-        model.addAttribute("activeTab", tab);
 
         // 전체 스토렌 장비 수 (필터링된 목록 기준)
         int totalStorenCount = filteredList.size();
@@ -96,8 +94,22 @@ public class RentalSearchController {
         // 페이징 처리
         Pagenation pagenation = new Pagenation(page, totalStorenCount, size, 10);
 
+        // 페이징에 따라 데이터 필터링 - 여기가 중요한 부분!
+        int startIndex = (page - 1) * size;
+        int endIndex = Math.min(startIndex + size, filteredList.size());
+
+        // 현재 페이지에 해당하는 데이터만 추출
+        List<StorenDTO> pagedList =
+                (startIndex < filteredList.size()) ?
+                        filteredList.subList(startIndex, endIndex) :
+                        new ArrayList<>();
+
+
+        model.addAttribute("storenList", pagedList);
+        model.addAttribute("activeTab", tab);
         model.addAttribute("totalStorenCount", totalStorenCount);
         model.addAttribute("pagenation", pagenation);
+
         /* 검색어 및 필터 유지 */
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("minPrice", minPrice);
