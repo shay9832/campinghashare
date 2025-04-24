@@ -212,12 +212,18 @@
         WHERE USER_ID = #{userId}
     </select>
 
+    <select id="checkPassword" resultType="int">
+        SELECT COUNT(*)
+        FROM USERS
+        WHERE USER_ID = #{userId}
+          AND USER_PW = #{userPw}
+    </select>
+
     <!-- 회원 탈퇴 처리: USER_CODE 연결 끊기 -->
-    <update id="disconnectUserCode" parameterType="String">
+    <update id="disconnectUserCode">
         UPDATE USERS
         SET USER_CODE = NULL
         WHERE USER_ID = #{userId}
     </update>
-
 
 </mapper>

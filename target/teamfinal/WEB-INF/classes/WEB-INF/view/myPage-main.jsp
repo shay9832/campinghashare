@@ -301,7 +301,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="mypage-leave.action" class="sidebar-link title">
+                <a href="mypage-exituser.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>

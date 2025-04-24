@@ -519,7 +519,7 @@
             const inspectionId = $(this).data('id');
 
             // 알림창 표시 후 페이지 이동
-            alert('거래 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
+            // alert('거래 ID ' + inspectionId + '의 상세 정보를 조회합니다.');
 
             // 원래 링크로 이동
             window.location.href = $(this).attr('href');
