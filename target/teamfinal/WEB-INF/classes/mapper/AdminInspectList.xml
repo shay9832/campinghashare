@@ -26,10 +26,12 @@
                 ELSE '검수완료'
                 END as inspectState
         FROM PLATFORM_DELIVERY pd
-                 LEFT JOIN PAY p ON pd.PAY_ID = p.PAY_ID
-                 LEFT JOIN EQUIPMENT_REGISTRATION e ON p.STOREN_ID = e.EQUIP_ID OR p.STORAGE_ID = e.EQUIP_ID
-                 LEFT JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
-                 LEFT JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+                 JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 LEFT JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 LEFT JOIN STORAGE st ON p.STORAGE_ID = st.STORAGE_ID
+                 INNER JOIN EQUIPMENT_REGISTRATION e ON (s.EQUIP_CODE = e.EQUIP_CODE OR st.EQUIP_CODE = e.EQUIP_CODE)
+                 INNER JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 INNER JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
             /* INSPEC_LIST와 1:1 관계로 조인 (가장 최근에 등록된 검수 정보만) */
                  LEFT JOIN (
             SELECT * FROM (
@@ -45,6 +47,8 @@
                  LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
         WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL
           AND (ir.INSPEC_RESULT_ID IS NULL OR ir.PLATFORM_DELIVERY_RETURN_ID IS NULL)
+          AND e.EQUIP_CODE IS NOT NULL
+          AND e.EQUIP_CODE != 0
         ORDER BY pd.PLATFORM_DELIVERY_ID DESC
     </select>
 
@@ -72,9 +76,11 @@
         FROM PLATFORM_DELIVERY_RETURN pdr
                  JOIN PLATFORM_DELIVERY pd ON pdr.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
                  JOIN PAY p ON pd.PAY_ID = p.PAY_ID
-                 JOIN EQUIPMENT_REGISTRATION e ON p.STOREN_ID = e.EQUIP_ID OR p.STORAGE_ID = e.EQUIP_ID
-                 JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
-                 JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+                 JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 LEFT JOIN STORAGE st ON p.STORAGE_ID = st.STORAGE_ID
+                 INNER JOIN EQUIPMENT_REGISTRATION e ON (s.EQUIP_CODE = e.EQUIP_CODE OR st.EQUIP_CODE = e.EQUIP_CODE)
+                 INNER JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 INNER JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
             /* INSPEC_LIST와 1:1 관계로 조인 (가장 최근에 등록된 검수 정보만) */
                  LEFT JOIN (
             SELECT * FROM (
@@ -89,6 +95,8 @@
                  LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
                  LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
         WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
+          AND e.EQUIP_CODE IS NOT NULL
+          AND e.EQUIP_CODE != 0
         ORDER BY pdr.PLATFORM_DELIVERY_RETURN_ID DESC
     </select>
 
@@ -168,9 +176,6 @@
         </if>
     </select>
 
-
-
-
     <!-- 검수 항목별 결과 조회 -->
     <select id="getInspectionItemResults" resultType="com.team.mvc.DTO.AdminInspectListDTO">
         SELECT
@@ -208,7 +213,6 @@
              #{inspecGradeId, jdbcType=NUMERIC},
              SYSDATE)
     </insert>
-
 
     <!-- 검수 통계 조회 -->
     <select id="getTotalInspectionCount" resultType="int">

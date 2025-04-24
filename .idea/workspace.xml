@@ -9,7 +9,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="" />
+    <list default="true" id="dc8562a8-7709-4a44-b096-a4ca705b4656" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/AdminInspectList.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -252,7 +255,7 @@
       <workItem from="1745366363227" duration="15182000" />
       <workItem from="1745412327702" duration="10281000" />
       <workItem from="1745452811213" duration="5656000" />
-      <workItem from="1745480032239" duration="1094000" />
+      <workItem from="1745480032239" duration="13075000" />
     </task>
     <servers />
   </component>
