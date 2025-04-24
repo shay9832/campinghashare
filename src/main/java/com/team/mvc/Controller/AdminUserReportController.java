@@ -4,9 +4,10 @@ import com.team.mvc.Interface.IAdminUserReportDAO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AdminUserReportController {
@@ -14,9 +15,8 @@ public class AdminUserReportController {
     @Autowired
     private SqlSession sqlSession;
 
-
     @RequestMapping(value="/admin-userReport.action",method = RequestMethod.GET)
-    public String adminUserReport(Model model){
+    public String adminUserReport(@ModelAttribute("adminId") String adminId, Model model){
 
         IAdminUserReportDAO adminUserReportDAO = sqlSession.getMapper(IAdminUserReportDAO.class);
 

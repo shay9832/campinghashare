@@ -165,16 +165,12 @@
     }
   </style>
 </head>
-
 <body>
-<!-- 헤더 영역 - 페이지 상단 타이틀 표시 -->
-<div id="header">
-  <h1>관리자 시스템</h1>
-</div>
+<jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
 <!-- 메인 컨테이너 -->
 <div id="container">
-  <!-- 좌측 메뉴 영역 - 원본 그대로 유지 -->
+  <!-- 좌측 메뉴 영역 -->
   <div id="leftMenu">
     <!-- 장비 관리 메뉴 -->
     <button class="menu-button">장비 관리</button>

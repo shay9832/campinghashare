@@ -1,0 +1,265 @@
+package com.team.mvc.DTO;
+
+public class UserDTO {
+    private Integer userCode;
+    private String userId;
+    private String password;
+    private Integer signupTypeId;
+    private String userName;
+    private String nickname;
+    private String userTel;
+    private String userEmail;               //이메일 추가(null일 때는 '미입력')
+    private String emailConsent;            //이메일 수신동의 추가(1일 때만 '동의', 아닐 땐 '미동의')
+    private int totalPoint;                 //현재 누적 포인트
+    private int totalTrust;                 //현재 누적 신뢰도
+    private String zipCode;                 //우편번호
+    private String address1;                //주소1
+    private String address2;                //주소2 (주소 상세)
+    private String adminId;
+    private boolean admin;
+
+    private String userGrade;               //회원 등급
+    private int nicknameChange;             //닉네임 변경 횟수
+    private int totalProfit;                //총 수익
+
+    private int postCount;                  //등록게시물 수
+    private int commentCount;               //등록댓글 수
+    private int equipmentCount;             //등록장비 수
+    private int couponCount;                //보유쿠폰 수
+    private int matchingCount;              //매칭승인되어 결제대기/결제완료된 수
+
+    private String nextUserGrade;           //다음 등급명
+    private int remainPoint;                //다음 등급까지 필요한 포인트
+    private int remainTrust;                //다음 등급까지 필요한 신뢰도
+
+    public UserDTO() {}
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getUserTel() {
+        return userTel;
+    }
+
+    public void setUserTel(String userTel) {
+        this.userTel = userTel;
+    }
+
+    public Integer getUserCode() { return userCode; }
+
+    public void setUserCode(Integer userCode) { this.userCode = userCode; }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userCode=" + userCode +
+                ", userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", userName='" + userName + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", userTel='" + userTel + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", emailConsent='" + emailConsent + '\'' +
+                ", totalPoint=" + totalPoint +
+                ", totalTrust=" + totalTrust +
+                ", zipCode='" + zipCode + '\'' +
+                ", address1='" + address1 + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", adminId='" + adminId + '\'' +
+                ", admin=" + admin +
+                '}';
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getEmailConsent() {
+        return emailConsent;
+    }
+
+    public void setEmailConsent(String emailConsent) {
+        this.emailConsent = emailConsent;
+    }
+
+    public int getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(int totalPoint) {
+        this.totalPoint = totalPoint;
+    }
+
+    public int getTotalTrust() {
+        return totalTrust;
+    }
+
+    public void setTotalTrust(int totalTrust) {
+        this.totalTrust = totalTrust;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getAddress1() {
+        return address1;
+    }
+
+    public void setAddress1(String address1) {
+        this.address1 = address1;
+    }
+
+    public String getAddress2() {
+        return address2;
+    }
+
+    public void setAddress2(String address2) {
+        this.address2 = address2;
+    }
+
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public Integer getSignupTypeId() { return signupTypeId; }
+
+    public void setSignupTypeId(Integer signupTypeId) { this.signupTypeId = signupTypeId; }
+
+    public String getUserGrade() {
+        return userGrade;
+    }
+
+    public void setUserGrade(String userGrade) {
+        this.userGrade = userGrade;
+    }
+
+    public int getNicknameChange() {
+        return nicknameChange;
+    }
+
+    public void setNicknameChange(int nicknameChange) {
+        this.nicknameChange = nicknameChange;
+    }
+
+    public int getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(int totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
+    public int getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(int postCount) {
+        this.postCount = postCount;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public int getEquipmentCount() {
+        return equipmentCount;
+    }
+
+    public void setEquipmentCount(int equipmentCount) {
+        this.equipmentCount = equipmentCount;
+    }
+
+    public int getCouponCount() {
+        return couponCount;
+    }
+
+    public void setCouponCount(int couponCount) {
+        this.couponCount = couponCount;
+    }
+
+    public int getMatchingCount() {
+        return matchingCount;
+    }
+
+    public void setMatchingCount(int matchingCount) {
+        this.matchingCount = matchingCount;
+    }
+
+    public String getNextUserGrade() {
+        return nextUserGrade;
+    }
+
+    public void setNextUserGrade(String nextUserGrade) {
+        this.nextUserGrade = nextUserGrade;
+    }
+
+    public int getRemainPoint() {
+        return remainPoint;
+    }
+
+    public void setRemainPoint(int remainPoint) {
+        this.remainPoint = remainPoint;
+    }
+
+    public int getRemainTrust() {
+        return remainTrust;
+    }
+
+    public void setRemainTrust(int remainTrust) {
+        this.remainTrust = remainTrust;
+    }
+}

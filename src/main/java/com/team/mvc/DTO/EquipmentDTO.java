@@ -1,11 +1,24 @@
 package com.team.mvc.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EquipmentDTO {
-    private int equip_id, equip_code, user_code, category_id, equip_name_id, original_price,brandId;
+    private int equip_id, user_code, category_id, equip_name_id, original_price, brandId ;
+    private Integer equip_code;
     private String created_date;
 
     private String equip_name, majorCategory, middleCategory, brand;
 
+    // 첨부파일 추가
+    private List<AttachmentDTO> attachments;
+
+    // 검색 및 정렬, 페이징 관련
+    private String searchKeyword;
+    private String sortType;
+    private Pagenation pagenation;
+
+    // getter/setter
 
     public int getEquip_id() {
         return equip_id;
@@ -13,14 +26,6 @@ public class EquipmentDTO {
 
     public void setEquip_id(int equip_id) {
         this.equip_id = equip_id;
-    }
-
-    public int getEquip_code() {
-        return equip_code;
-    }
-
-    public void setEquip_code(int equip_code) {
-        this.equip_code = equip_code;
     }
 
     public int getUser_code() {
@@ -53,6 +58,14 @@ public class EquipmentDTO {
 
     public void setOriginal_price(int original_price) {
         this.original_price = original_price;
+    }
+
+    public Integer getEquip_code() {
+        return equip_code;
+    }
+
+    public void setEquip_code(Integer equip_code) {
+        this.equip_code = equip_code;
     }
 
     public String getCreated_date() {
@@ -101,5 +114,37 @@ public class EquipmentDTO {
 
     public void setBrandId(int brandId) {
         this.brandId = brandId;
+    }
+
+    public List<AttachmentDTO> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<AttachmentDTO> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getSearchKeyword() {
+        return searchKeyword;
+    }
+
+    public void setSearchKeyword(String searchKeyword) {
+        this.searchKeyword = searchKeyword;
+    }
+
+    public String getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(String sortType) {
+        this.sortType = sortType;
+    }
+
+    public Pagenation getPagenation() {
+        return pagenation;
+    }
+
+    public void setPagenation(Pagenation pagenation) {
+        this.pagenation = pagenation;
     }
 }

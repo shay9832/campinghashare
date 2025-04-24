@@ -1,79 +1,33 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page import="com.team.mvc.DTO.MatchingRequestDTO" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    // 장비 정보를 저장할 변수
-    String equipmentCategory = "텐트/쉘터";
-    String equipmentSubCategory = "텐트";
-    String brand = "스노우피크";
-    String equipmentName = "스노우피크 텐트 65주년 리빙 쉘 프로 이너 룸 세트 TP-653";
-    String equipmentGrade = "C";
-
-    // 배송지 정보 저장할 변수
-    String recipient = "고길동";
-    String tel = "010-0000-0000";
-    String zipCode = "04001";
-    String address1 = "서울 마포구 월드컵북로 21";
-    String address2 = "풍성빌딩 쌍용강북교육센터 0층 0강의실";
-
-    // 렌탈 정보 저장
-    String rentalPeriod = "2025.06.04 ~ 2025.06.10 (7일)";
-    int rentalCost = 175000;
-    int discountAmount = 20000;
-    int finalPayment = rentalCost - discountAmount;
-
-    // 배송지 정보
-    String renter = "고둘리";
-    String renterTel = "010-0000-0000";
-    String renterZipCode = "00000";
-    String renterAddress1 = "경기도 부천시 원미구 상1동";
-    String renterAddress2 = "412-3번지 둘리의 거리";
-
     // 천 단위 콤마 형식 지정
     java.text.NumberFormat formatter = java.text.NumberFormat.getInstance();
+
+    // 렌탈 금액 천 단위 콤마 형식 위해 먼저 꺼내오기
+    MatchingRequestDTO matchingRequestDTO = (MatchingRequestDTO)request.getAttribute("matching");
+    String rentalCostStr = "";
+    if (matchingRequestDTO != null) {
+        rentalCostStr = formatter.format(matchingRequestDTO.getRental_pay());
+    }
 %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스토렌 신청 (렌탈비 결제)</title>
+
+    <title>storenMatching-rental-pay.jsp</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // 결제 수단 버튼 선택 처리
-            $(".form-check-input").click(function() {
-                // 모든 결제 옵션에서 active 클래스 제거
-                $(".form-check-input").prop("checked", false);
-                // 선택된 결제 옵션에 active 클래스 추가
-                $(this).prop("checked", true);
-            });
-
-            // 쿠폰 적용 버튼 클릭 이벤트
-            $(".btn-secondary").click(function() {
-                // 실제 구현 시 쿠폰 적용 모달 또는 페이지 이동 처리
-                alert("쿠폰 적용 기능은 구현 예정입니다.");
-            });
-
-            // 체크박스 토글 처리
-            $("#confirm_order").change(function() {
-                if($(this).is(":checked")) {
-                    $(".btn-primary").prop("disabled", false);
-                } else {
-                    $(".btn-primary").prop("disabled", true);
-                }
-            });
-
-            // 초기 상태에서 결제 버튼 비활성화
-            $(".btn-primary").prop("disabled", true);
-        });
-    </script>
 </head>
 <body>
 
 <!-- 헤더 포함 -->
-<jsp:include page="header.jsp"></jsp:include>
+<jsp:include page="header.jsp"/>
 
 <main class="main-content container">
     <div class="storen-container">
@@ -88,24 +42,24 @@
                 <div class="form-row">
                     <label class="form-label">받는사람</label>
                     <div class="form-input">
-                        <span class="info-text"><%= renter %></span>
+                        <span class="info-text">${user.userName}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">휴대전화</label>
                     <div class="form-input">
-                        <span class="info-text"><%= renterTel %></span>
+                        <span class="info-text">${user.userTel}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">주소</label>
                     <div class="form-input">
                         <div class="zipcode-row">
-                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="<%= renterZipCode %>">
+                            <input type="text" id="postcode" class="form-control" placeholder="우편번호" value="${user.zipCode}">
                             <button onclick="execDaumPostcode()" class="btn">우편번호 찾기</button>
                         </div>
-                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="<%= renterAddress1 %>" readonly>
-                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="<%= renterAddress2 %>">
+                        <input type="text" id="address" class="form-control mt-2" placeholder="주소" value="${user.address1}" readonly="readonly">
+                        <input type="text" id="detailAddress" class="form-control mt-2" placeholder="상세주소" value="${user.address2}">
 
                         <!-- 우편번호 검색 API 컨테이너 (기본 숨김) -->
                         <div id="wrap" style="display:none;border:1px solid;width:500px;height:300px;margin:5px 0;position:relative">
@@ -134,44 +88,44 @@
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(대)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentCategory %></span>
+                        <span class="info-text">${storen.equipmentDTO.majorCategory}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">카테고리(중)</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentSubCategory %></span>
+                        <span class="info-text">${storen.equipmentDTO.middleCategory}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">브랜드</label>
                     <div class="form-input">
-                        <span class="info-text"><%= brand %></span>
+                        <span class="info-text">${storen.equipmentDTO.brand}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">장비명</label>
                     <div class="form-input">
-                        <span class="info-text"><%= equipmentName %></span>
+                        <span class="info-text">${storen.equipmentDTO.equip_name}</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">장비 등급</label>
                     <div class="form-input">
-                        <span class="grade-badge grade-<%= equipmentGrade %>"><%= equipmentGrade %></span>
-                        <a href="storenRegister-inspecResult.jsp" class="text-link">(상세 내용 보기)</a>
+                        <span class="grade-badge grade-" + ${storen.equip_grade}>${storen.equip_grade}</span>
+                        <a href="storenregister-inspecresult.action" class="text-link">(상세 내용 보기)</a>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">렌탈 기간</label>
                     <div class="form-input">
-                        <span class="info-text"><%= rentalPeriod %></span>
+                        <span class="info-text">${matching.rental_start_date} ~ ${matching.rental_end_date} (${matching.rental_duration}일)</span>
                     </div>
                 </div>
                 <div class="form-row mt-3">
                     <label class="form-label">총 렌탈 비용</label>
                     <div class="form-input">
-                        <span class="info-text"><%= formatter.format(rentalCost) %>원</span>
+                        <span class="info-text"><%= rentalCostStr %>원</span>
                     </div>
                 </div>
             </div>
@@ -186,13 +140,19 @@
                 <div class="form-row">
                     <label class="form-label">보유 쿠폰</label>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
-                        <div>3장</div>
+                        <div>${couponList.size()}장</div>
                         <button class="btn btn-secondary">쿠폰 적용</button>
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">쿠폰 할인 금액</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
+                    <div class="col-6 text-right text-coral" id="couponPrice">- 0원</div>
+                </div>
+                <div id="appliedCouponInfo" style="display: none; margin-top: 10px;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span id="appliedCouponName" class="text-secondary"></span>
+                        <button id="cancelCoupon" class="btn btn-sm btn-danger">적용 취소</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -205,7 +165,7 @@
             <div class="card-body">
                 <div class="row mb-2">
                     <div class="col-6">주문상품</div>
-                    <div class="col-6 text-right"><%= formatter.format(rentalCost) %>원</div>
+                    <div class="col-6 text-right" id="originalPrice"><%= rentalCostStr %>원</div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">배송비</div>
@@ -213,12 +173,12 @@
                 </div>
                 <div class="row mb-2">
                     <div class="col-6">할인</div>
-                    <div class="col-6 text-right text-coral">-<%= formatter.format(discountAmount) %>원</div>
+                    <div class="col-6 text-right text-coral" id="discountPrice">- 0원</div>
                 </div>
                 <hr class="my-3">
                 <div class="row">
                     <div class="col-6 font-weight-bold">최종 결제 금액</div>
-                    <div class="col-6 text-right font-weight-bold text-primary"><%= formatter.format(finalPayment) %>원</div>
+                    <div class="col-6 text-right font-weight-bold text-primary" id="finalPrice"><%= rentalCostStr %>원</div>
                 </div>
             </div>
         </div>
@@ -262,14 +222,327 @@
 
         <!-- 이전/다음 버튼 -->
         <div class="button-container">
-            <a href="storenMatching-request.jsp" class="btn">이전</a>
-            <a href="storenMatching-rental-pay-complete.jsp" class="btn btn-primary" disabled>결제하기</a>
+            <a href="mypage-matchinglist.action" class="btn">이전</a>
+            <button class="btn btn-primary pay-now-btn">결제하기</button>
         </div>
     </div>
 </main>
 
+<%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 div@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
+<!-- 쿠폰 선택 패널 - 기본적으로 숨김 -->
+<div id="couponPanel" class="info-section card" style="display: none; position: absolute; width: 80%; max-width: 800px; z-index: 1000; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title">쿠폰 선택</h3>
+        <button type="button" class="close" id="closeCouponPanel" style="background: none; border: none; font-size: 1.5rem;">&times;</button>
+    </div>
+    <div class="card-body">
+        <!-- 쿠폰 유의사항 섹션 -->
+        <div class="mb-4">
+            <h4 class="font-medium mb-2">쿠폰 관련 유의 사항</h4>
+            <div class="text-secondary">
+                <ul class="list-disc pl-4">
+                    <li>쿠폰은 주문 당 1장만 사용 가능합니다.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 쿠폰 리스트 섹션 -->
+        <div style="max-height: 300px;" class="overflow-auto">
+            <table class="table">
+                <thead>
+                <tr class="bg-primary text-light" style="position: sticky; top: 0; z-index: 1;">
+                    <th class="p-2 text-center small" style="width: 33.33%;">할인율</th>
+                    <th class="p-2 text-center small" style="width: 33.33%;">쿠폰명</th>
+                    <th class="p-2 text-center small" style="width: 33.33%;">참고사항</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 쿠폰 리스트 -->
+                <c:forEach var="coupon" items="${couponList}">
+                    <tr class="coupon-row border-bottom" style="cursor: pointer;"
+                        data-coupon-id="${coupon.coupon_id}"
+                        data-discount="${coupon.coupon_discount}"
+                        data-name="${coupon.coupon_name}">
+                        <td class="p-3" style="width: 33.33%;">
+                            <div class="form-check form-check-inline justify-content-center">
+                                <input type="radio" name="coupon_name" id="coupon_${coupon.coupon_id}"
+                                       class="coupon-radio form-check-input"
+                                       data-discount="${coupon.coupon_discount}"
+                                       data-name="${coupon.coupon_name}"
+                                       data-coupon-id="${coupon.coupon_id}">
+                                <label for="coupon_${coupon.coupon_id}" class="form-check-label">${coupon.coupon_discount}% 할인</label>
+                            </div>
+                        </td>
+                        <td class="p-3" style="width: 33.33%;">${coupon.coupon_name}</td>
+                        <td class="p-3" style="width: 33.33%;">
+                            <ul class="mb-0">
+                                <li>최대 할인율: ${coupon.coupon_discount}%</li>
+                                <li>만료 예정 일자: ${coupon.coupon_end_date}까지</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 버튼 영역 -->
+        <div class="button-container d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn" id="cancelCouponBtn">취소</button>
+            <button type="button" class="btn btn-secondary" id="resetCouponBtn">초기화</button>
+            <button type="button" class="btn btn-primary" id="applyCouponBtn">적용</button>
+        </div>
+    </div>
+</div>
+
+<!-- 배경 오버레이 -->
+<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;"></div>
+<%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 div@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
+
 <!-- 푸터 포함 -->
-<jsp:include page="footer.jsp"></jsp:include>
+<jsp:include page="footer.jsp"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 사용자의 원래 주소 정보 저장
+        const originalZipCode = "${user.zipCode}";
+        const originalAddress1 = "${user.address1}";
+        const originalAddress2 = "${user.address2}";
+
+
+        // 초기 상태에서 결제 버튼 비활성화
+        $(".btn-primary.pay-now-btn").prop("disabled", true);
+
+        // 결제 수단 버튼 선택 처리
+        $("input[name='payment_method']").click(function() {
+            // 모든 결제 옵션에서 체크 해제
+            $("input[name='payment_method']").prop("checked", false);
+            // 선택된 결제 옵션 체크
+            $(this).prop("checked", true);
+        });
+
+        <%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 기능@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
+        // 쿠폰 적용 버튼 클릭 이벤트
+        $(".btn-secondary").click(function() {
+            // 현재 버튼의 위치 가져오기
+            const buttonOffset = $(this).offset();
+            const buttonHeight = $(this).outerHeight();
+
+            // 쿠폰 패널 위치 설정 (버튼 바로 아래)
+            $("#couponPanel").css({
+                position: "absolute",
+                top: (buttonOffset.top + buttonHeight) + "px",
+                left: "50%",
+                transform: "translateX(-50%)",
+                zIndex: 1000
+            });
+
+            // 쿠폰 패널과 오버레이 표시
+            $("#couponPanel").show();
+            $("#overlay").show();
+        });
+
+        // 취소 버튼 클릭 이벤트
+        $("#cancelCouponBtn, #closeCouponPanel, #overlay").click(function() {
+            // 쿠폰 패널과 오버레이 숨기기
+            $("#couponPanel").hide();
+            $("#overlay").hide();
+        });
+
+        // 쿠폰 행 클릭 이벤트
+        $(document).on('click', '.coupon-row', function() {
+            // 해당 행의 라디오 버튼 체크
+            const radioBtn = $(this).find('input[type="radio"]');
+            // 모든 라디오 버튼 초기화
+            $('input[name="coupon_name"]').prop('checked', false);
+            // 클릭한 행의 라디오 버튼 체크
+            radioBtn.prop('checked', true);
+        });
+
+        // 라디오 버튼 클릭 시 이벤트 버블링 방지
+        $(document).on('click', '.coupon-radio', function(e) {
+            e.stopPropagation();
+        });
+
+        // 적용 버튼 클릭 시 버블링 방지
+        $("#applyCouponBtn, #resetCouponBtn").click(function(e) {
+            e.stopPropagation();
+        });
+
+        // 쿠폰 패널 내부 클릭 시 패널 닫힘 방지
+        $("#couponPanel").click(function(e) {
+            e.stopPropagation();
+        });
+
+        // 초기화 버튼 클릭 이벤트
+        $("#resetCouponBtn").click(function() {
+            // 선택된 라디오 버튼 초기화
+            $('input[name="coupon_name"]').prop('checked', false);
+        });
+
+        // 적용 버튼 클릭 이벤트
+        $("#applyCouponBtn").click(function() {
+            const selectedCoupon = $('input[name="coupon_name"]:checked');
+
+            if (selectedCoupon.length > 0) {
+                // 선택된 쿠폰 정보 가져오기
+                const discountAmount = selectedCoupon.data('discount');
+                const couponName = selectedCoupon.data('name');
+
+                // 쿠폰 할인 금액 표시 업데이트
+                updateCouponDiscount(discountAmount, couponName);
+
+                // 쿠폰 패널과 오버레이 숨기기
+                $("#couponPanel").hide();
+                $("#overlay").hide();
+            } else {
+                alert("쿠폰을 선택해주세요.");
+            }
+        });
+
+        // 할인 금액 업데이트 및 최종 금액 계산 함수 (퍼센트 계산)
+        function updateCouponDiscount(discountRate, couponName) {
+            // 상품 가격 가져오기 (천 단위 콤마 제거 후 숫자로 변환)
+            const productPriceText = $("#originalPrice").text();
+            const productPrice = parseInt(productPriceText.replace(/[^0-9]/g, ''));
+
+            // 할인 금액 계산 (퍼센트 기준)
+            const discountAmount = Math.floor(productPrice * (discountRate / 100));
+
+            // 쿠폰 할인 금액 표시 업데이트
+            const formattedDiscount = new Intl.NumberFormat('ko-KR').format(discountAmount);
+            $("#couponPrice").html('- ' + formattedDiscount + '원');
+            $("#discountPrice").html('- ' + formattedDiscount + '원');
+
+            // 쿠폰명 표시 및 적용 취소 버튼 표시
+            $("#appliedCouponName").text('적용된 쿠폰: ' + couponName);
+            $("#appliedCouponInfo").show();
+
+            // 쿠폰명 저장
+            if (!$("#selectedCouponName").length) {
+                $("body").append('<input type="hidden" id="selectedCouponName" value="">');
+                $("body").append('<input type="hidden" id="selectedDiscountRate" value="">');
+            }
+            $("#selectedCouponName").val(couponName);
+            $("#selectedDiscountRate").val(discountRate);
+
+            // 최종 결제 금액 계산 (상품가격 - 할인금액)
+            const finalAmount = productPrice - discountAmount;
+            const formattedFinalAmount = new Intl.NumberFormat('ko-KR').format(finalAmount);
+
+            // 최종 결제 금액 업데이트
+            $("#finalPrice").text(formattedFinalAmount + '원');
+        }
+
+        // 쿠폰 취소 버튼 클릭 이벤트
+        $(document).on('click', '#cancelCoupon', function() {
+            // 쿠폰 할인 금액 초기화
+            $("#couponPrice").html(`- 0원`);
+            $("#discountPrice").html(`- 0원`);
+
+            // 쿠폰 정보 숨김
+            $("#appliedCouponInfo").hide();
+
+            // 쿠폰 선택 해제
+            $('input[name="coupon_name"]').prop('checked', false);
+
+            // 쿠폰 정보 초기화
+            $("#selectedCouponName").val('');
+            $("#selectedDiscountRate").val('');
+
+            // 최종 금액 원래대로 복원
+            const productPriceText = $("#originalPrice").text();
+            const productPrice = parseInt(productPriceText.replace(/[^0-9]/g, ''));
+            const formattedPrice = new Intl.NumberFormat('ko-KR').format(productPrice);
+            $("#finalPrice").text(formattedPrice + '원');
+        });
+        <%-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@쿠폰 기능@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ --%>
+
+        <%-- @@@@@@@@@@@@@@@@@@@@ 컨트롤러로 값 넘기기 - AJAX 처리 : RentPayController 참고 @@@@@@@@@@@@@@@@@@@@ --%>
+        // 지불하기 버튼 클릭 이벤트
+        $(".pay-now-btn").click(function(e) {  // e 파라미터 추가
+            e.preventDefault(); // 기본 이벤트 방지
+            e.stopPropagation(); // 상위 요소로 이벤트 전파 방지
+
+            // 최종 결제 금액 가져오기
+            const finalAmountText = $("#finalPrice").text();
+            const finalAmount = parseInt(finalAmountText.replace(/[^0-9]/g, ''));
+
+            // 선택된 쿠폰 가져오기
+            const selectedRadio = $('input[name="coupon_name"]:checked');
+            const selectedCouponId = selectedRadio.length > 0 ? selectedRadio.data('coupon-id') : null;
+
+            //선택된 coupon이 없어서 couponId가 null일 때, 프론트에서는 null이 담겨도
+            //ajax로 넘어갈 때는 null을 문자열로 반환하므로 ""이 넘어가는 문제 발생
+            //때문에 선택된 coupon이 없을 때는 아예 컨트롤러에서 couponId를 받을 수 없도록, ajaxData를 따로 정리
+            const ajaxData = {
+                methodName: $('input[name="payment_method"]:checked').val(),
+                requestId: ${matching.matching_req_id},
+                amount: finalAmount,
+                addressChanged: false
+            };
+
+            //선택된 coupon이 있을 때는 ajaxData에 couponId를 추가
+            if (selectedCouponId !== null) {
+                ajaxData.couponId = selectedCouponId;
+            }
+
+            //주소값이 변경되었을 때는 ajaxData에 바뀐 주소 추가
+            currentZipCode = $("#postcode").val();
+            currentAddress1 = $("#address").val();
+            currentAddress2 = $("#detailAddress").val();
+
+            // 주소 정보가 변경되었다면 AJAX 데이터에 추가
+            if (currentZipCode !== originalZipCode || currentAddress2 !== originalAddress2) {
+                ajaxData.zipCode = currentZipCode;
+                ajaxData.address1 = currentAddress1;
+                ajaxData.address2 = currentAddress2;
+                ajaxData.addressChanged = true;
+            }
+
+            // 결제 AJAX 요청
+            $.ajax({
+                url: '/api/payment/storen-rent',        //각자 AJAX 주소에 맞춰서 수정 필요
+                type: 'POST',
+                data: ajaxData,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.payId != null && response.payId > 0) {
+                        alert('결제가 완료되었습니다.');
+                        // 결제 완료 페이지로 이동
+                        window.location.href = "storenmatching-rental-pay-complete.action?payId=" + response.payId + "&requestId=" + ${matching.matching_req_id};
+                    } else {
+                        alert('결제 중 오류가 발생했습니다: ' + (response.message || '알 수 없는 오류'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("결제 실패:", error);
+                    alert('결제 중 오류가 발생했습니다.');
+                }
+            });
+        });
+        <%-- @@@@@@@@@@@@@@@@@@@@ 컨트롤러로 값 넘기기 - AJAX 처리 : RentPayController 참고 @@@@@@@@@@@@@@@@@@@@ --%>
+
+        // 체크박스 토글 처리
+        $("#confirm_order").change(function() {
+            if($(this).is(":checked")) {
+                // 체크박스 체크 시 결제 버튼 활성화
+                $(".btn-primary.pay-now-btn").prop("disabled", false);
+                // 주문 확인 메시지 표시
+                $("#orderConfirmMessage").show();
+            } else {
+                // 체크박스 해제 시 결제 버튼 비활성화
+                $(".btn-primary.pay-now-btn").prop("disabled", true);
+                // 주문 확인 메시지 숨김
+                $("#orderConfirmMessage").hide();
+            }
+        });
+
+
+
+    });
+</script>
 
 <!-- 다음 우편번호/주소 API 소스 코드 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>

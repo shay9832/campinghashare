@@ -3,8 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
 
+  <!-- Spring Context 초기화 -->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- 콘솔 UTF-8 설정용 리스너 -->
+  <listener>
+    <listener-class>com.team.mvc.config.ConsoleEncodingInitListener</listener-class>
   </listener>
 
   <context-param>
@@ -19,6 +25,13 @@
       <param-name>contextConfigLocation</param-name>
       <param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
     </init-param>
+
+    <multipart-config>
+      <max-file-size>52428800</max-file-size>         <!-- 50MB = 50 * 1024 * 1024 -->
+      <max-request-size>209715200</max-request-size>  <!-- 200MB = 200 * 1024 * 1024 -->
+      <file-size-threshold>0</file-size-threshold>     <!-- 임시 파일 저장 임계값 -->
+    </multipart-config>
+
     <load-on-startup>1</load-on-startup>
   </servlet>
 
@@ -27,6 +40,8 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
+  <!-- 필터 -->
+  <!-- UTF-8 인코딩 필터-->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -40,24 +55,43 @@
     </init-param>
   </filter>
 
-  <!-- 필터 정의 -->
-  <filter>
-    <filter-name>adminSessionFilter</filter-name>
-    <filter-class>com.team.mvc.Filter.AdminSessionFilter</filter-class>
-  </filter>
-
-  <!-- 필터 매핑 - 모든 admin- URL에 적용 -->
-  <filter-mapping>
-    <filter-name>adminSessionFilter</filter-name>
-    <url-pattern>/admin-*</url-pattern>
-  </filter-mapping>
-
-  <!-- admin-login.action은 필터에서 예외 처리됨 -->
-
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <!-- 관리자 로그인 필터 -->
+  <filter>
+    <filter-name>adminSessionFilter</filter-name>
+    <filter-class>com.team.mvc.Filter.AdminSessionFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>adminSessionFilter</filter-name>
+    <url-pattern>/admin-*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>adminSessionFilter</filter-name>
+    <url-pattern>/admin/*</url-pattern>
+  </filter-mapping>
+
+  <!-- 유저 로그인 필터 -->
+  <filter>
+    <filter-name>userSessionFilter</filter-name>
+    <filter-class>com.team.mvc.Filter.UserSessionFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>userSessionFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- 세션 설정 : 기본 유효시간, 보호, 세션 추적방식 지정 -->
+  <session-config>
+    <session-timeout>30</session-timeout>  <!-- 세션 타임아웃 30분 설정 -->
+    <cookie-config>
+      <http-only>true</http-only>  <!-- 쿠키를 HttpOnly로 설정. 클라이언트 사이드에서 접근 불가 -->
+      <secure>false</secure>  <!-- HTTPS일 경우 true로 설정 필요 -->
+    </cookie-config>
+  </session-config>
 
 </web-app>

@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,13 +18,236 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mypage-sidebar.css">
     <!-- 제이쿼리 사용 CDN 방식 -->
     <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <style>
+        /* 테이블에만 적용되는 스타일 */
+        #boardfree-table th,
+        #boardfree-table td {
+            width: auto !important;
+            min-width: auto !important;
+        }
+
+        /* 게시판 특화 스타일 */
+        .board-category-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-semibold);
+            margin-right: 8px;
+        }
+
+        .board-category-tag.question {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.review {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .board-category-tag.chat {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .board-category-tag.notice {
+            background-color: #fff9c4;
+            color: #ffa000;
+        }
+
+        .board-category-tag.freeboard {
+            background-color: #e3f2fd;
+            color: #0066cc;
+        }
+
+        .board-category-tag.solocamping {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .notice-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: var(--color-error);
+            color: var(--color-white);
+        }
+
+        .hot-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .hot-number {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-xxs);
+            font-weight: var(--font-bold);
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .title-cell {
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-left: 10px;
+        }
+
+        .title-cell a:hover {
+            text-decoration: underline;
+            color: var(--color-maple);
+        }
+
+        .board-row.notice {
+            background-color: #fff8e1;
+        }
+
+        .board-row.hot-post {
+            background-color: #ffebee;
+        }
+
+        .icon-heart {
+            color: var(--color-error);
+        }
+
+        .icon-eye {
+            color: var(--text-secondary);
+        }
+
+        .icon-comment {
+            color: var(--color-info);
+        }
+
+        .table-icon {
+            margin-right: 5px;
+        }
+
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-medium);
+            background-color: var(--bg-secondary);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: var(--font-xs);
+        }
+
+        .filter-btn:hover {
+            background-color: var(--color-gray-200);
+        }
+
+        .filter-btn.active {
+            background-color: var(--color-beige-light);
+            border-color: var(--color-maple);
+            color: var(--color-maple);
+            font-weight: var(--font-semibold);
+        }
+
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: var(--font-sm);
+        }
+        .empty-state-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px; /* 슬라이더와 비슷한 높이로 조정 */
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-secondary);
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            width: 100%;
+            height: 80%;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: var(--color-gray-300);
+        }
+
+        .empty-state p {
+            font-size: var(--font-md);
+            margin-bottom: 15px;
+        }
+
+        .empty-state .empty-action {
+            font-size: var(--font-sm);
+            padding: 8px 16px;
+            border-color: var(--color-maple-light);
+            color: var(--color-maple);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .empty-state .empty-action:hover {
+            background-color: var(--color-maple);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 두 컬럼 레이아웃 스타일 */
+         .two-column-layout-transaction {
+             display: flex;
+             justify-content: space-between;
+             gap: 4%;
+             flex-wrap: wrap;
+         }
+
+        /* 반응형을 위한 미디어 쿼리 */
+        @media (max-width: 768px) {
+            .two-column-layout .transaction-content {
+                width: 100% !important;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* 타이틀 스타일 */
+        .content-subtitle {
+            font-size: var(--font-lg);
+            font-weight: var(--font-semibold);
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 <!-- 헤더 인클루드 (JSP 방식) -->
 <jsp:include page="header.jsp" />
 
 <div class="container container-wide mypage-container section">
-
     <!-- 마이페이지 사이드바 -->
     <div class="sidebar">
         <div class="sidebar-title">마이 페이지</div>
@@ -32,9 +257,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
-                    <li><a href="myPage-trust.jsp" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="myPage-point.jsp" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -42,41 +267,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내가 소유한 장비</a></li>
-                    <li><a href="myPage-inspecList.jsp" class="sidebar-link">검수 결과 조회</a></li>
-                    <li><a href="myPage-delivery.jsp" class="sidebar-link">배송 조회/내역</a></li>
-                    <li><a href="myPage-matchingList.jsp" class="sidebar-link">매칭 조회/내역</a></li>
-                    <li><a href="myPage-rentEquip.jsp" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
+                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="myPage-wishlist.jsp" class="sidebar-link title">
+                <a href="mypage-wishlist.action" class="sidebar-link title">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-exituser.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -94,23 +319,23 @@
             <div class="user-info-section">
                 <div class="user-info-content">
                     <div class="user-details">
-                        <h3>가나초콜릿 님</h3>
+                        <h3>${user.nickname} 님</h3>
                         <div class="user-status">
-                            <span>회원 등급: 자연인</span>
-                            <span class="profit-info">총 수익 +0,000,000원</span>
+                            <span>회원 등급: ${user.userGrade}</span>
+                            <span class="profit-info">총 수익 +${user.totalProfit}원</span>
                         </div>
                         <div class="user-stats">
                             <div class="stat-item">
                                 <span class="stat-label">포인트:</span>
-                                <span class="stat-value">000</span>
+                                <span class="stat-value">${user.totalPoint}</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">신뢰도:</span>
-                                <span class="stat-value">00%</span>
+                                <span class="stat-value">${user.totalTrust}%</span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">쿠폰:</span>
-                                <span class="stat-value">00개</span>
+                                <span class="stat-value">${user.couponCount}개</span>
                             </div>
                         </div>
                     </div>
@@ -118,41 +343,310 @@
             </div>
         </div>
 
+        <!-- 거래 내역 섹션 제목 -->
+        <div class="section-header">거래 내역</div>
+
         <!-- 거래 내역 탭 섹션 -->
-        <div class="tab-nav">
-            <button class="tab-link active">
-                <i class="fa fa-exchange-alt"></i> 등록 장비 내역: 0건
-            </button>
-            <button class="tab-link">
-                <i class="fa fa-shopping-cart"></i> 대여 장비 내역: 0건
-            </button>
-            <button class="tab-link">
-                <i class="fa fa-clipboard-list"></i> 찜 내역: 0건
-            </button>
-            <button class="tab-link">
-                <i class="fa fa-comments"></i> 1:1 문의 내역: 0건
-            </button>
-        </div>
-        <div class="content-box">
-            <div class="transaction-content">
-                <p class="no-content">등록한 장비가 없습니다.</p>
+        <div class="two-column-layout-transaction content-box">
+            <!-- 등록 장비 내역 콘텐츠 -->
+            <div class="transaction-content" id="registerEquip-content" style="width:48%;">
+                <h4 class="content-subtitle">
+                    <i class="fa fa-exchange-alt"></i> 등록 장비 내역: ${user.equipmentCount}건
+                </h4>
+                <div class="info-line">
+                    <span class="info-text">최근 등록된 ${myEquipMap.size()}개의 장비를 간략하게 조회 중입니다.</span>
+                    <a href="mypage-myequip.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
+                </div>
+                <c:choose>
+                    <c:when test="${not empty myEquipMap and myEquipMap.size() > 0}">
+                        <div class="custom-table">
+                            <table class="table">
+                                <tbody>
+                                <c:forEach var="entry" items="${myEquipMap}">
+                                    <%-- key, value를 개별 변수에 저장 --%>
+                                    <c:set var="key" value="${entry.key}" />
+                                    <c:set var="val" value="${entry.value}" />
+                                    <c:choose>
+                                        <%-- 해당 장비가 스토렌일 때 --%>
+                                        <c:when test="${fn:contains(key, 'storen')}">
+                                            <tr class="table-row">
+                                                <td style="width: 20%;">
+                                                    <div class="product-image">
+                                                        <c:choose>
+                                                        <c:when test="${val.equipmentDTO.attachments.get(0) != null && !empty val.equipmentDTO.attachments}">
+                                                            <img src="${val.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="product-placeholder"></div>
+                                                        </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 55%;">
+                                                    <div class="equipment-info-container">
+                                                        <input type="hidden" name="storen_id" value="${val.storen_id}">
+                                                        <a href="#" class="equipment-name"><c:choose>
+                                                            <c:when test="${not empty val.storen_title}">
+                                                                ${val.storen_title}
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                ${val.equipmentDTO.equip_name}
+                                                            </c:otherwise>
+                                                        </c:choose></a>
+                                                        <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
+                                                        <div class="equipment-info-text">${val.equipmentDTO.brand}</div>
+                                                        <div class="status-badge storen-status-badge">${val.status}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <div class="button-group-vertical">
+                                                        <button class="btn-sm btn-storen" onclick="location.href='mypage-myequip.action'">스토렌 정보 확인</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                        <c:when test="${fn:contains(key, 'general')}">
+                                            <tr class="table-row">
+                                                <td style="width: 20%;">
+                                                    <div class="product-image">
+                                                        <c:choose>
+                                                            <c:when test="${val.attachments.get(0) != null && !empty val.attachments}">
+                                                                <img src="${val.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="product-placeholder"></div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 55%;">
+                                                    <div class="equipment-info-container">
+                                                        <input type="hidden" name="equip_code" value="${val.equip_code}">
+                                                        <a href="#" class="equipment-name">${val.equip_name}</a>
+                                                        <div class="equipment-info-text">${val.majorCategory} > ${val.middleCategory}</div>
+                                                        <div class="equipment-info-text">${val.brand}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <div class="button-group-vertical">
+                                                        <button class="btn-sm btn-storen" onclick="location.href='storenRegister-storage-info.action?equip_code=${val.equip_code}'">스토렌 신청</button>
+                                                        <button class="btn-sm btn-rental">렌탈 신청</button>
+                                                        <button class="btn-sm btn-storage">보관 신청</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                    </c:choose>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <%-- 등록 장비가 없을 때 --%>
+                        <div class="empty-state">
+                            <i class="fa fa-box-open"></i>
+                            <p>등록한 장비가 없습니다.</p>
+                            <a href="equipment-register.action" class="empty-action">장비 등록하러 가기</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <!-- 대여 장비 내역 콘텐츠 -->
+            <div class="transaction-content" id="rentEquip-content" style="width:48%;"> <!-- 너비 48%로 조정, display:none 제거 -->
+                <h4 class="content-subtitle">
+                    <i class="fa fa-shopping-cart"></i> 대여 장비 내역: ${user.matchingCount}건
+                </h4>
+                <div class="info-line">
+                    <span class="info-text">최근 대여한 ${rentEquipMap.size()}개의 장비를 간략하게 조회 중입니다.</span>
+                    <a href="mypage-rentequip.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
+                </div>
+                <c:choose>
+                    <c:when test="${not empty rentEquipMap and rentEquipMap.size() > 0}">
+                        <div class="custom-table">
+                            <table class="table">
+                                <tbody>
+                                <c:forEach var="entry" items="${rentEquipMap}">
+                                    <%-- key, value를 개별 변수에 저장 --%>
+                                    <c:set var="key" value="${entry.key}" />
+                                    <c:set var="val" value="${entry.value}" />
+                                    <c:choose>
+                                        <%-- 해당 장비가 스토렌일 때 --%>
+                                        <c:when test="${fn:contains(key, 'storen')}">
+                                            <tr class="table-row">
+                                                <td style="width: 20%;">
+                                                    <div class="product-image">
+                                                        <c:choose>
+                                                            <c:when test="${val.equipmentDTO.attachments.get(0) != null && !empty val.equipmentDTO.attachments}">
+                                                                <img src="${val.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="product-placeholder"></div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 55%;">
+                                                    <div class="equipment-info-container">
+                                                        <input type="hidden" name="rental_id" value="${val.storen_id}">
+                                                        <a href="#" class="equipment-name"><c:choose>
+                                                            <c:when test="${not empty val.storen_title}">
+                                                                ${val.storen_title}
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                ${val.equipmentDTO.equip_name}
+                                                            </c:otherwise>
+                                                        </c:choose></a>
+                                                        <div class="equipment-info-text">${val.equipmentDTO.majorCategory} > ${val.equipmentDTO.middleCategory}</div>
+                                                        <div class="equipment-info-text">대여기간: ${val.matchingDTO.rental_start_date} ~ ${val.matchingDTO.rental_end_date}</div>
+                                                        <div class="status-badge matching-status-badge">${val.matching_status_detail}</div>
+                                                    </div>
+                                                </td>
+                                                <td style="width: 25%;">
+                                                    <div class="button-group-vertical">
+                                                        <button class="btn-sm btn-rental" onclick="location.href='mypage-rentequip.action'">대여 정보 확인</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                    </c:choose>
+                                </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <%-- 등록 장비가 없을 때 --%>
+                        <div class="empty-state">
+                            <i class="fa fa-shopping-cart"></i>
+                            <p>대여한 장비가 없습니다.</p>
+                            <a href="rentalsearch-main.action" class="empty-action">장비 대여하러 가기</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 
+
         <!-- 내가 작성한 글/댓글 탭 섹션 -->
         <div class="tab-nav">
-            <button class="tab-link active">
-                <i class="fa fa-pen"></i> 내가 작성한 글: 0건
+            <button class="tab-link active" id="mypost-tab">
+                <i class="fa fa-pen"></i> 내가 작성한 글: ${user.postCount}건
             </button>
-            <button class="tab-link">
-                <i class="fa fa-comment"></i> 내가 작성한 댓글: 0건
+            <button class="tab-link" id="mycomment-tab">
+                <i class="fa fa-comment"></i> 내가 작성한 댓글: ${user.commentCount}건
             </button>
         </div>
         <div class="content-box">
-            <div class="post-content">
-                <p class="no-content">작성한 글이 없습니다.</p>
+            <!-- 내가 작성한 글 콘텐츠 -->
+            <div class="post-content" id="mypost-content">
+                <div class="info-line">
+                    <span class="info-text">최근 작성한 ${postList.size()}개의 게시글을 간략하게 조회 중입니다.</span>
+                    <a href="mypage-mypost.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
+                </div>
+                <c:choose>
+                <c:when test="${not empty postList and postList.size() > 0}">
+                <table class="w-100 board-table">
+                    <thead>
+                    <tr class="border-bottom">
+                        <th width="15%" class="p-2 text-center">게시판</th>
+                        <th width="50%" class="p-2 text-center">제목</th>
+                        <th width="15%" class="p-2 text-center">작성일</th>
+                        <th width="10%" class="p-2 text-center">조회</th>
+                        <th width="10%" class="p-2 text-center">추천</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            <c:forEach var="post" items="${postList}">
+                                <tr class="board-row border-bottom">
+                                    <td class="p-2 text-center">
+                                        <span class="board-category-tag freeboard">${post.boardName}</span>
+                                    </td>
+                                    <td class="p-2 title-cell">
+                                        <c:choose>
+                                        <c:when test="${fn:contains(post.boardName, '자유')}">
+                                        <a href="boardfree-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="boardimage-post.action?postId=${post.postId}">${post.postTitle}</a>
+                                        </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="p-2 text-center">${post.createdDate}</td>
+                                    <td class="p-2 text-center">${post.viewCount}</td>
+                                    <td class="p-2 text-center">
+                                        <i class="fa-solid fa-heart table-icon icon-heart"></i>${post.recommendCount}
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                    </tbody>
+                </table>
+                        </c:when>
+                        <c:otherwise>
+                            <%-- 등록한 글이 없을 때 --%>
+                            <div class="empty-state">
+                                <i class="fa fa-file-alt"></i>
+                                <p>작성한 게시글이 없습니다.</p>
+                                <a href="boardfree-main.action" class="empty-action">게시글 작성하러 가기</a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+            </div>
+
+            <!-- 내가 작성한 댓글 콘텐츠 -->
+            <div class="post-content" id="mycomment-content" style="display: none;">
+                <div class="info-line">
+                    <span class="info-text">최근 작성한 ${commentList.size()}개의 댓글을 간략하게 조회 중입니다.</span>
+                    <a href="mypage-mypost.action" class="view-more-link">전체보기 <i class="fa fa-angle-right"></i></a>
+                </div>
+                <c:choose>
+                <c:when test="${not empty commentList and commentList.size() > 0}">
+                <table class="w-100 board-table">
+                    <thead>
+                    <tr class="border-bottom">
+                        <th width="60%" class="p-2 text-center">댓글 내용</th>
+                        <th width="25%" class="p-2 text-center">원글 제목</th>
+                        <th width="15%" class="p-2 text-center">작성일</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                            <c:forEach var="comment" items="${commentList}">
+                                <tr class="board-row border-bottom">
+                                    <td class="p-2 comment-cell">
+                                        <c:choose>
+                                            <c:when test="${fn:contains(post.boardName, '자유')}">
+                                            <a href="boardfree-post.action?postId=${comment.postId}">${comment.replyContent}</a>
+                                    </td>
+                                    <td class="p-2 text-center">
+                                        <a href="boardfree-post.action?postId=${comment.postId}">${comment.replyPostDTO.postTitle}</a>
+                                            </c:when>
+                                            <c:otherwise>
+                                        <a href="boardimage-post.action?postId=${comment.postId}">${comment.replyContent}</a>
+                                    </td>
+                                    <td class="p-2 text-center">
+                                        <a href="boardimage-post.action?postId=${comment.postId}">${comment.replyPostDTO.postTitle}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="p-2 text-center">${comment.createdDate}</td>
+                                </tr>
+                            </c:forEach>
+                    </tbody>
+                </table>
+                        </c:when>
+                        <c:otherwise>
+                            <%-- 등록한 댓글이 없을 때 --%>
+                            <div class="empty-state">
+                                <i class="fa fa-comment-dots"></i>
+                                <p>작성한 댓글이 없습니다.</p>
+                                <a href="boardfree-main.action" class="empty-action">게시판으로 이동하기</a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
             </div>
         </div>
+
 
         <!-- 이용 내역 섹션 -->
         <div class="section-header">이용 내역</div>
@@ -162,20 +656,20 @@
                 <div class="urgent-header">즉시 확인 필요</div>
                 <div class="urgent-content">
                     <a href="#" class="urgent-item">
-                        <div class="item-label">검수 결과 확인</div>
-                        <div class="item-count">3</div>
+                        <div class="item-label">보관비 결제 대기</div>
+                        <div class="item-count">${emergencyMap["보관비 결제 대기"]}</div>
+                    </a>
+                    <a href="#" class="urgent-item">
+                        <div class="item-label">검수 결과 확인(입고/반환)</div>
+                        <div class="item-count">${emergencyMap["검수 결과 확인"]}</div>
                     </a>
                     <a href="#" class="urgent-item">
                         <div class="item-label">매칭 승인 대기</div>
-                        <div class="item-count">5</div>
+                        <div class="item-count">${emergencyMap["매칭 승인 대기"]}</div>
                     </a>
                     <a href="#" class="urgent-item">
-
-                        <div class="item-label">주가 비용 결제 대기</div>
-
-                        <div class="item-label">추가 비용 결제 대기</div>
-
-                        <div class="item-count">2</div>
+                        <div class="item-label">문제 상황 발생</div>
+                        <div class="item-count">${emergencyMap["문제 상황 발생"]}</div>
                     </a>
                 </div>
             </div>
@@ -188,46 +682,26 @@
                     <div class="status-row">
                         <div class="status-type">스토렌</div>
                         <div class="chevron-arrows">
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">배송대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
-                                <span class="arrow-label">배송 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
-                                <span class="arrow-label">검수 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
-                                <span class="arrow-label">보관 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">매칭대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">승인대기</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">렌탈 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
-                            <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
-                                <span class="arrow-label">반환 중</span>
-                                <div class="arrow-chevron"></div>
-                            </a>
+                            <c:if test="${!empty storenStatusMap}">
+                                <c:forEach var="status" items="${storenStatusMap}">
+                                    <c:set var="cssClass" value=""/>
+                                    <c:if test="${status.value > 0}">
+                                        <c:set var="cssClass" value="active"/>
+                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${status.key eq '보관비 결제 대기' || status.key eq '상태 불명' || status.key eq '강제 반환'}">
+                                            <%-- 아무것도 하지 않음(continue처럼) --%>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="#" class="arrow-step ${cssClass}" data-status="${status.key}">
+                                                <span class="arrow-badge">${status.value}</span>
+                                                <span class="arrow-label">${status.key}</span>
+                                                <div class="arrow-chevron"></div>
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
 
@@ -236,27 +710,27 @@
                         <div class="status-type">렌탈</div>
                         <div class="chevron-arrows">
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">매칭대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">승인대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">렌탈 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">반환 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
@@ -268,27 +742,27 @@
                         <div class="status-type">보관</div>
                         <div class="chevron-arrows">
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송대기</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">1</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">배송 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">3</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">검수 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
-                            <a href="#" class="arrow-step active">
-                                <span class="arrow-badge">5</span>
+                            <a href="#" class="arrow-step">
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">보관 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
                             <a href="#" class="arrow-step">
-                                <span class="arrow-badge">2</span>
+                                <span class="arrow-badge">0</span>
                                 <span class="arrow-label">반환 중</span>
                                 <div class="arrow-chevron"></div>
                             </a>
@@ -302,64 +776,58 @@
         <div class="product-list-section">
             <div class="section-header-with-link">
                 <h3>찜 목록</h3>
-                <a href="#" class="view-all-link">전체보기</a>
+                <a href="mypage-wishlist.action" class="view-all-link">전체보기</a>
             </div>
-            <div class="product-slider-container">
-                <button class="slider-nav-button prev-button">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-
-                <div class="product-slider">
-                    <!-- 아이템 프리뷰 아이템들 -->
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="아이템 이미지">
+            <c:choose>
+                <c:when test="${not empty wishlist and wishlist.size() > 0}">
+                    <div class="product-slider-container">
+                        <button class="slider-nav-button prev-button">
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <div class="product-slider">
+                            <c:forEach var="wish" items="${wishlist}">
+                                <div class="product-card">
+                                    <div class="product-image">
+                                        <c:choose>
+                                            <c:when test="${wish.equipmentDTO.attachments.get(0) != null && !empty wish.equipmentDTO.attachments}">
+                                                <img src="${wish.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="product-placeholder"></div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="product-title"><c:choose>
+                                            <c:when test="${not empty val.storen_title}">
+                                                ${wish.storen_title}
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${wish.equipmentDTO.equip_name}
+                                            </c:otherwise>
+                                        </c:choose></div>
+                                        <div class="product-brand">${wish.equipmentDTO.brand}</div>
+                                        <div class="product-price">${wish.daily_rent_price}원</div>
+                                    </div>
+                                </div>
+                            </c:forEach>
                         </div>
-                        <div class="product-info">
-                            <div class="product-title">코베아 KOVEA W 4인용 거실형 텐트 패밀리 텐트</div>
-                            <div class="product-brand">코베아몰</div>
-                            <div class="product-price">30,000원</div>
+                        <button class="slider-nav-button next-button">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="empty-state-container">
+                        <div class="empty-state">
+                                <i class="fa-solid fa-heart-crack"></i>
+                                <p>찜한 상품이 없습니다</p>
+                                <div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>
+                            <a href="rentalsearch-main.action" class="empty-action mt-5">찜하러 가기</a>
                         </div>
                     </div>
-
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="아이템 이미지">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-title">몬테라 sleeping bag 800+ 침낭</div>
-                            <div class="product-brand">아웃도어스</div>
-                            <div class="product-price">15,000원</div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="아이템 이미지">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-title">캠핑 테이블 접이식 야외 바베큐 테이블</div>
-                            <div class="product-brand">캠핑매니아</div>
-                            <div class="product-price">12,000원</div>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-image">
-                            <img src="${pageContext.request.contextPath}/resources/images/placeholder-image.jpg" alt="아이템 이미지">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-title">헬리녹스 캠핑 체어 경량 의자</div>
-                            <div class="product-brand">아웃도어스</div>
-                            <div class="product-price">8,000원</div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="slider-nav-button next-button">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>
@@ -371,6 +839,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+
+        // 글/댓글 탭 전환 기능
+        $('#mypost-tab').click(function() {
+            $(this).addClass('active');
+            $('#mycomment-tab').removeClass('active');
+            $('#mypost-content').show();
+            $('#mycomment-content').hide();
+        });
+
+        $('#mycomment-tab').click(function() {
+            $(this).addClass('active');
+            $('#mypost-tab').removeClass('active');
+            $('#mycomment-content').show();
+            $('#mypost-content').hide();
+        });
+
+        // 모든 소유한 장비 상태 배지를 순회하며 클래스 적용
+        $('.storen-status-badge').each(function() {
+            const status = $(this).text().trim();
+            const statusClass = getStorenStatusBadgeClass(status);
+            $(this).addClass(statusClass);
+        });
+
+        // 모든 대여한 장비 상태 배지를 순회하며 클래스 적용
+        $('.matching-status-badge').each(function() {
+            const status = $(this).text().trim();
+            const statusClass = getMatchingStatusBadgeClass(status);
+            $(this).addClass(statusClass);
+        });
+    });
     // 다음 찜 아이템 카드로 이동 기능 구현
     $(document).ready(function() {
         const $slider = $('.product-slider');
@@ -394,6 +893,64 @@
             $slider.animate({ scrollLeft: currentScroll }, 100);
         });
     });
+
+    function getStorenStatusBadgeClass(status) {
+        switch(status) {
+            case '보관비 결제 대기':
+                return 'status-payment-waiting';
+            case '배송 대기':
+                return 'status-shipping-waiting';
+            case '배송 중':
+                return 'status-shipping';
+            case '검수 중':
+                return 'status-inspection';
+            case '보관 중':
+                return 'status-storage';
+            case '강제 반환':
+                return 'status-forced-return';
+            case '승인 대기':
+                return 'status-approval-waiting';
+            case '결제 대기':
+                return 'status-waiting-payment';
+            case '렌탈 중':
+                return 'status-rental';
+            case '반납 중':
+                return 'status-returning';
+            case '거래 완료':
+                return 'status-completed';
+            case '최종 반환':
+                return 'status-final-return';
+            case '상태 불명':
+            default:
+                return 'status-unknown';
+        }
+    }
+
+    // 상태에 따른 CSS 클래스 반환 함수
+    function getMatchingStatusBadgeClass(status) {
+        switch(status) {
+            case '렌탈비결제전':
+                return 'status-rental-payment-waiting';
+            case '렌탈비결제완료':
+                return 'status-rental-payment-completed';
+            case '배송중':
+                return 'status-shipping-in-progress';
+            case '대여중':
+                return 'status-renting';
+            case '반납일임박':
+                return 'status-return-approaching';
+            case '반납중':
+                return 'status-returning-in-progress';
+            case '검수중':
+                return 'status-inspecting';
+            case '거래완료':
+                return 'status-transaction-completed';
+            case '추가비용결제필요':
+                return 'status-additional-payment-required';
+            default:
+                return 'status-unknown';
+        }
+    }
 </script>
 </body>
 </html>

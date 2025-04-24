@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="com.team.mvc.DTO.RegisterStorenDTO" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
     DecimalFormat formatter = new DecimalFormat("#,###");
 
@@ -13,18 +14,6 @@
     String brand = equipInfo != null ? equipInfo.getBrand() : "N/A";
     String equipName = equipInfo != null ? equipInfo.getEquip_name() : "N/A";
     int originalPrice = equipInfo != null ? equipInfo.getOriginal_price() : 0;
-
-    // 평균 가격 예시는 고정값 (향후 DB에서 계산되면 바꾸면 됨)
-    int averagePrice = 2500000;
-
-    // 가격 차이 퍼센트 계산
-    int priceDiffPercentage = 0;
-    String priceDiffArrow = "";
-    if (averagePrice > 0) {
-        priceDiffPercentage = (int)(((originalPrice - averagePrice) / (double)averagePrice) * 100);
-        priceDiffArrow = priceDiffPercentage >= 0 ? "▲" : "▼";
-        priceDiffPercentage = Math.abs(priceDiffPercentage);
-    }
 %>
 <html>
 <head>
@@ -36,6 +25,9 @@
         $(document).ready(function() {
             let count = 1;
             let dailyPrice = 3000;
+
+            // 페이지 로딩 시 초기 총 보관 비용 계산
+            updateRentalPrice();
 
             $('.size-option').click(function() {
                 $('.size-option').removeClass('active');
@@ -73,11 +65,22 @@
                 $('#totalPrice').text(total.toLocaleString());
                 $('#selectedTotalPrice').val(total);
             }
+
+            // 툴팁 이벤트 처리 추가
+            $(document).on('mouseenter', '.tooltip-trigger', function () {
+                $(this).find('.tooltip-content').stop().fadeIn(200);
+            });
+
+            $(document).on('mouseleave', '.tooltip-trigger', function () {
+                $(this).find('.tooltip-content').stop().fadeOut(200);
+            });
         });
     </script>
 </head>
 <body>
+
 <jsp:include page="header.jsp"></jsp:include>
+
 <main class="main-content container">
     <div class="storen-container">
         <h1 class="page-title page-title-storen-register">스토렌 신청(보관 정보 입력)</h1>
@@ -92,8 +95,13 @@
                     <label class="form-label">장비 사진</label>
                     <div class="form-input">
                         <div class="image-upload d-flex gap-3">
-                            <div class="image-placeholder"></div>
-                            <div class="image-placeholder"></div>
+                            <c:if test="${not empty info.photoList}">
+                                <c:forEach var="photo" items="${info.photoList}" varStatus="status">
+                                    <div class="photo-preview">
+                                        <img src="${pageContext.request.contextPath}${photo.attachmentPath}" alt="장비 사진 ${status.index + 1}" />
+                                    </div>
+                                </c:forEach>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -105,19 +113,22 @@
                 <div class="form-row">
                     <label class="form-label">신품가격</label>
                     <div class="form-input d-flex align-items-center">
-                        <span class="info-text"><%= equipInfo.getOriginal_price() %> 원</span>
-                        <div class="d-flex align-items-center ml-4">
-                            <span class="price-diff">평균 대비 <%= priceDiffPercentage %>%<%= priceDiffArrow %></span>
-                            <span class="text-secondary ml-2">평균 신품 가격 <%= formatter.format(averagePrice) %>원</span>
-                            <div class="info-icon tooltip-trigger ml-2">
-                                <i class="fa-solid fa-circle-question"></i>
-                                <div class="tooltip-content">이 가격은 최근 등록된 동일 상품의 평균 가격입니다.</div>
+                        <span class="info-text"><%= formatter.format(equipInfo.getOriginal_price()) %> 원</span>
+
+                        <!-- 평균 가격 비교 정보 -->
+                        <c:if test="${avgNewPrice > 0}">
+                            <div class="d-flex align-items-center ml-4">
+                                <span class="price-diff ${priceDiffClass}">평균 대비 ${priceDiff}%${priceDiffSymbol}</span>
+                                <span class="text-secondary ml-2">평균 신품 가격 ${formattedAvgPrice}원</span>
+                                <div class="info-icon tooltip-trigger ml-2">
+                                    <i class="fa-solid fa-circle-question"></i>
+                                    <div class="tooltip-content">유저들이 입력한 평균 신품 가격 기준입니다.</div>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                 </div>
                 <div class="form-row text-center text-tertiary font-italic">
-                    ※ 상단 정보는 '내 소유 장비 목록' 메뉴에서 수정 가능
                 </div>
             </div>
         </div>
@@ -182,21 +193,16 @@
         </div>
     </div>
 
-    <!-- 버튼 컨테이너 -->
+    <!-- form 전송 시 hidden 파라미터 -->
     <form action="storenRegister-storage-pay.action" method="GET" id="storenForm">
-        <!-- 파라미터 이름 맞추기 -->
-        <input type="hidden" name="equip_id" value="<%= equipInfo.getEquip_id() %>">
-        <input type="hidden" name="equipName" value="<%= equipName %>">
-        <input type="hidden" name="majorCategory" value="<%= majorCategory %>">
-        <input type="hidden" name="middleCategory" value="<%= middleCategory %>">
-        <input type="hidden" name="brand" value="<%= brand %>">
+        <input type="hidden" name="equip_code" value="<%= equipInfo.getEquip_code() %>">
         <input type="hidden" id="selectedSize" name="equipSize" value="M">
         <input type="hidden" id="selectedDays" name="storageDays" value="1">
         <input type="hidden" id="selectedTotalPrice" name="storageCost" value="90000">
 
         <div class="button-container">
-            <a href="#" class="btn">이전</a>
-            <button type="submit" class="btn btn-primary">다음</button>
+            <a href="${pageContext.request.contextPath}/mypage-myequip.action" class="btn">이전</a>
+            <button type="submit" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/storenRegister-storage-pay.action?equip_code=${equipCode}'">다음</button>
         </div>
     </form>
 </main>

@@ -12,16 +12,16 @@
 
     <!-- 브랜드 이름으로 브랜드 정보 조회 -->
     <select id="getBrandByName" resultType="com.team.mvc.DTO.BrandDTO">
-        SELECT BRAND_ID as brandId
-             , BRAND_NAME as brandName
+        SELECT BRAND_ID as brandId,
+               BRAND_NAME as brandName
         FROM BRAND
-        WHERE BRAND_NAME = #{brandName}
+        WHERE BRAND_NAME = <![CDATA[ #{brandName} ]]>
     </select>
 
     <!-- 브랜드 ID로 브랜드 정보 조회 -->
     <select id="getBrandById" resultType="com.team.mvc.DTO.BrandDTO">
-        SELECT BRAND_ID as brandId
-             , BRAND_NAME as brandName
+        SELECT BRAND_ID as brandId,
+               BRAND_NAME as brandName
         FROM BRAND
         WHERE BRAND_ID = #{brandId}
     </select>

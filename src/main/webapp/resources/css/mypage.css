@@ -235,6 +235,172 @@
     color: white;
 }
 
+
+/* 장비 상태 뱃지 스타일 */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-md);
+    font-size: var(--font-xxs);
+    font-weight: var(--font-medium);
+    text-align: center; !important;
+    white-space: nowrap;
+    margin-right: 0.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+/* 보관비 결제 대기 - 강조 색상 (주의 필요) */
+.status-payment-waiting {
+    background-color: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+    border: 1px solid var(--color-warning);
+}
+
+/* 배송 대기 - 기본 진행 상태 */
+.status-badge.status-shipping-waiting {
+    background-color: var(--color-beige-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-beige);
+}
+
+/* 배송 중 - 진행 상태 */
+.status-shipping {
+    background-color: var(--color-slate);
+    color: var(--color-white);
+    border: 1px solid var(--color-slate);
+}
+
+/* 검수 중 - 진행 상태 */
+.status-inspection {
+    background-color: var(--color-mustard);
+    color: var(--color-white);
+    border: 1px solid var(--color-mustard);
+}
+
+/* 보관 중 - 안정적 상태 */
+.status-storage {
+    background-color: var(--color-maple-light);
+    color: var(--color-white);
+    border: 1px solid var(--color-maple);
+}
+
+/* 강제 반환 - 경고 상태 */
+.status-forced-return {
+    background-color: var(--alert-error-bg);
+    color: var(--alert-error-text);
+    border: 1px solid var(--color-error);
+}
+
+/* 승인 대기 - 대기 상태 */
+.status-approval-waiting {
+    background-color: var(--color-mustard-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-mustard);
+}
+
+/* 결제 대기 - 주의 필요 */
+.status-waiting-payment {
+    background-color: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+    border: 1px solid var(--color-warning);
+}
+
+/* 렌탈 중 - 활성 상태 */
+.status-rental {
+    background-color: var(--color-sage);
+    color: var(--color-white);
+    border: 1px solid var(--color-sage);
+}
+
+/* 반납 중 - 진행 상태 */
+.status-returning {
+    background-color: var(--color-coral-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-coral);
+}
+
+/* 거래 완료 - 완료 상태 */
+.status-completed {
+    background-color: var(--alert-success-bg);
+    color: var(--alert-success-text);
+    border: 1px solid var(--color-success);
+}
+
+/* 최종 반환 - 완료 상태 */
+.status-final-return {
+    background-color: var(--alert-info-bg);
+    color: var(--alert-info-text);
+    border: 1px solid var(--color-info);
+}
+
+/* 상태 불명 - 오류 상태 */
+.status-unknown {
+    background-color: var(--color-gray-300);
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-400);
+}
+/* 렌탈비결제전 - 주의 필요 */
+.status-badge.status-rental-payment-waiting {
+    background-color: var(--alert-warning-bg);
+    color: var(--alert-warning-text);
+    border: 1px solid var(--color-warning);
+}
+
+/* 렌탈비결제완료 - 진행 상태 */
+.status-badge.status-rental-payment-completed {
+    background-color: var(--color-beige-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-beige);
+}
+
+/* 배송중 - 진행 상태 */
+.status-badge.status-shipping-in-progress {
+    background-color: var(--color-slate);
+    color: var(--color-white);
+    border: 1px solid var(--color-slate);
+}
+
+/* 대여중 - 활성 상태 */
+.status-badge.status-renting {
+    background-color: var(--color-sage);
+    color: var(--color-white);
+    border: 1px solid var(--color-sage);
+}
+
+/* 반납일임박 - 주의 필요 */
+.status-badge.status-return-approaching {
+    background-color: var(--color-mustard);
+    color: var(--color-white);
+    border: 1px solid var(--color-mustard);
+}
+
+/* 반납중 - 진행 상태 */
+.status-badge.status-returning-in-progress {
+    background-color: var(--color-coral-light);
+    color: var(--text-primary);
+    border: 1px solid var(--color-coral);
+}
+
+/* 검수중 - 진행 상태 */
+.status-badge.status-inspecting {
+    background-color: var(--color-slate);
+    color: var(--text-primary);
+    border: 1px solid var(--color-slate);
+}
+
+/* 거래완료 - 완료 상태 */
+.status-badge.status-transaction-completed {
+    background-color: var(--alert-success-bg);
+    color: var(--alert-success-text);
+    border: 1px solid var(--color-success);
+}
+
+/* 추가비용결제필요 - 경고 상태 */
+.status-badge.status-additional-payment-required {
+    background-color: var(--alert-error-bg);
+    color: var(--alert-error-text);
+    border: 1px solid var(--color-error);
+}
+
 /* ===== 검색 컨테이너 스타일 ===== */
 .search-container {
     display: flex;
@@ -388,7 +554,7 @@
 }
 
 /* 장비 이름 */
-.equipment-name {
+.equipment-name, .equipment-price{
     font-weight: 700;
     font-size: 15px;
     color: #333;
@@ -408,29 +574,10 @@
 }
 
 /* 장비 카테고리 */
-.equipment-category {
-    font-size: 12px;
-    color: #666;
+.equipment-info-text {
+    font-size: var(--font-xxs);
+    color: var(--text-tertiary);
     margin-bottom: 2px;
-}
-
-/* 장비 브랜드 */
-.equipment-brand {
-    font-size: 12px;
-    color: #888;
-}
-
-/* 등록 날짜 */
-.equipment-date {
-    font-size: 12px;
-    color: #666;
-    margin-top: 3px;
-}
-
-/* 장비 등급 */
-.equipment-grade {
-    font-size: 13px;
-    color: #666;
 }
 
 /* ===== 물품 이미지 스타일 ===== */
@@ -450,31 +597,31 @@
 }
 
 /* ===== 공통 상태 배지 스타일 ===== */
-.status-badge {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 13px; /* 신규 값으로 설정 */
-    font-weight: 500;
-}
+/*.status-badge {*/
+/*    display: inline-block;*/
+/*    padding: 5px 10px;*/
+/*    border-radius: 4px;*/
+/*    font-size: 13px; !* 신규 값으로 설정 *!*/
+/*    font-weight: 500;*/
+/*}*/
 
-/* 기존 상태 배지 */
-.status-shipping {
-    background-color: #ffe8cc;
-    color: #996633;
-}
+/*!* 기존 상태 배지 *!*/
+/*.status-shipping {*/
+/*    background-color: #ffe8cc;*/
+/*    color: #996633;*/
+/*}*/
 
-.status-checking {
-    background-color: #e1e9f9;
-    color: #4d6ea8;
-}
+/*.status-checking {*/
+/*    background-color: #e1e9f9;*/
+/*    color: #4d6ea8;*/
+/*}*/
 
-.status-storage {
-    background-color: #f9e1e1;
-    color: #a84d4d;
-}
+/*.status-storage {*/
+/*    background-color: #f9e1e1;*/
+/*    color: #a84d4d;*/
+/*}*/
 
-/* 추가 상태 배지 */
+/*!* 추가 상태 배지 *!*/
 .status-pending {
     background-color: #fff4e5;
     color: #ff8a00;
@@ -485,40 +632,40 @@
     color: #0077cc;
 }
 
-.status-completed {
-    background-color: #e8f5e8;
-    color: #4caf50;
-}
+/*.status-completed {*/
+/*    background-color: #e8f5e8;*/
+/*    color: #4caf50;*/
+/*}*/
 
-.status-waiting {
-    background-color: #f7f7e5;
-    color: #8d8d2a;
-}
+/*.status-waiting {*/
+/*    background-color: #f7f7e5;*/
+/*    color: #8d8d2a;*/
+/*}*/
 
-.status-rental {
-    background-color: #e1efff;
-    color: #3a7bd5;
-}
+/*.status-rental {*/
+/*    background-color: #e1efff;*/
+/*    color: #3a7bd5;*/
+/*}*/
 
-.status-approval {
-    background-color: #e5f7e5;
-    color: #2a8d2a;
-}
+/*.status-approval {*/
+/*    background-color: #e5f7e5;*/
+/*    color: #2a8d2a;*/
+/*}*/
 
-.status-matching {
-    background-color: #f37b21;
-    color: white;
-}
+/*.status-matching {*/
+/*    background-color: #f37b21;*/
+/*    color: white;*/
+/*}*/
 
-.status-renting {
-    background-color: #4d6ea8;
-    color: white;
-}
+/*.status-renting {*/
+/*    background-color: #4d6ea8;*/
+/*    color: white;*/
+/*}*/
 
-.status-returning {
-    background-color: #d9534f;
-    color: white;
-}
+/*.status-returning {*/
+/*    background-color: #d9534f;*/
+/*    color: white;*/
+/*}*/
 
 /* ===== 등급/신뢰도 배지 스타일 ===== */
 .grade-badge {
@@ -531,24 +678,24 @@
     min-width: 60px;
 }
 
-.grade-A, .trust-score.high {
+.trust-score.high {
     background-color: #e8f5e8;
     color: #1a8917;
 }
 
-.grade-B, .trust-score.medium {
+.trust-score.medium {
     background-color: #e6f3ff;
     color: #0077cc;
 }
 
-.grade-C, .trust-score.low {
+.trust-score.low {
     background-color: #fff4e5;
     color: #ff8a00;
 }
 
-.grade-D {
-    background-color: #ffe6e6;
-    color: #d32f2f;
+.grade-NA {
+    background-color: #adb5bd;
+    color: white;
 }
 
 /* ===== 드롭다운 스타일 ===== */
@@ -609,119 +756,174 @@
     justify-content: center;
 }
 
-/* 수직 버튼 그룹 */
+/* 버튼 그룹 - 수직 배치 */
 .button-group-vertical {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 
-/* 기본 버튼 스타일 - mypage.css 스타일 유지 */
+.button-group-vertical .btn-sm {
+    width: 100%;
+}
+
+/* 기본 버튼 스타일 */
 .btn-sm {
-    padding: 4px 10px;
+    padding: 6px 12px;
     font-size: 13px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    background-color: white;
-    color: #555;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     text-align: center;
+    font-weight: var(--font-medium);
+    box-shadow: var(--shadow-sm);
 }
 
-.btn-sm:hover {
-    background-color: #2C5F2D;
-    color: white;
-    border-color: #2C5F2D;
-}
-
-/* 버튼 종류별 스타일 - mypage.css 스타일 유지 */
-.btn-edit {
-    background-color: #f8f9fa;
-}
-
-.btn-delete {
-    background-color: #f8f9fa;
-}
-
+/* 서비스 신청 버튼 그룹 */
 .btn-storen {
     background-color: var(--color-coral);
-    color: var(--text-light);
+    color: var(--color-white);
+    border-color: var(--color-coral);
+}
+
+.btn-storen:hover {
+    background-color: var(--color-tan);
+    border-color: var(--color-tan);
+    transform: translateY(-2px);
 }
 
 .btn-rental {
     background-color: var(--color-mustard);
-    color: var(--text-light);
+    color: var(--color-white);
+    border-color: var(--color-mustard);
+}
+
+.btn-rental:hover {
+    background-color: #d1a636; /* 더 진한 머스타드 */
+    border-color: #d1a636;
+    transform: translateY(-2px);
 }
 
 .btn-storage {
     background-color: var(--color-maple);
-    color: var(--text-light);
+    color: var(--color-white);
+    border-color: var(--color-maple);
 }
 
-/* 추가 버튼 스타일 */
+.btn-storage:hover {
+    background-color: #354b2e; /* 더 진한 메이플 */
+    border-color: #354b2e;
+    transform: translateY(-2px);
+}
+
+/* 기능 버튼 그룹 */
 .btn-shipping {
-    background-color: #e6f3ff;
-    color: #0077cc;
-    border: 1px solid #d5e9f7;
+    background-color: #89a0b0; /* 더 밝은 슬레이트 블루 */
+    color: var(--color-white);
+    border-color: #89a0b0;
+}
+
+.btn-shipping:hover {
+    background-color: var(--color-slate);
+    border-color: var(--color-slate);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-inspection {
-    background-color: #fff4e5;
-    color: #ff8a00;
-    border: 1px solid #f7e9d5;
+    background-color: #adb6a2; /* 더 밝은 세이지 그린 */
+    color: var(--color-white);
+    border-color: #adb6a2;
+}
+
+.btn-inspection:hover {
+    background-color: var(--color-sage);
+    border-color: var(--color-sage);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-pay, .btn-repay {
+    background-color: var(--color-coral-light);
+    color: var(--text-primary);
+    border-color: var(--color-coral-light);
+}
+
+.btn-pay:hover, .btn-repay:hover{
+    background-color: var(--color-coral);
+    color: var(--color-white);
+    border-color: var(--color-coral);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-return {
-    background-color: #f5e8e8;
-    color: #a55a5a;
-    border: 1px solid #efd7d7;
+    background-color: var(--color-beige-light);
+    color: var(--text-primary);
+    border-color: var(--color-beige-light);
+}
+
+.btn-return:hover {
+    background-color: var(--color-beige);
+    border-color: var(--color-beige);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-approval {
-    background-color: #e8e8f5;
-    color: #5a55a5;
-    border: 1px solid #d7d7ef;
+    background-color: var(--color-mustard-light);
+    color: var(--text-primary);
+    border-color: var(--color-mustard-light);
 }
 
+.btn-approval:hover {
+    background-color: var(--color-mustard);
+    color: var(--color-white);
+    border-color: var(--color-mustard);
+    box-shadow: var(--shadow-md);
+}
+
+/* 승인/거절 버튼 */
 .btn-approve {
-    background-color: #e8f5e8;
-    color: #4caf50;
-    border-color: #c8e6c9;
+    background-color: var(--color-success);
+    color: var(--color-white);
+    border-color: var(--color-success);
 }
 
 .btn-approve:hover {
-    background-color: #4caf50;
-    color: white;
-    border-color: #4caf50;
+    background-color: #3d8b40;
+    border-color: #3d8b40;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-reject {
-    background-color: #ffe6e6;
-    color: #d32f2f;
-    border-color: #ffcdd2;
+    background-color: var(--color-error);
+    color: var(--color-white);
+    border-color: var(--color-error);
 }
 
 .btn-reject:hover {
     background-color: #d32f2f;
-    color: white;
     border-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 /* 위험 버튼 스타일 */
 .btn-danger {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: var(--color-error);
+    border-color: var(--color-error);
     color: white;
-    padding: 5px 10px;
+    padding: 6px 12px;
     font-size: 13px;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-md);
+    transition: all 0.3s ease;
+    font-weight: var(--font-medium);
 }
 
 .btn-danger:hover {
-    background-color: #bb2d3b;
-    border-color: #b02a37;
+    background-color: #c62828;
+    border-color: #c62828;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 /* 원형 버튼 스타일 */
@@ -729,25 +931,39 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #2C5F2D;
+    background-color: var(--color-maple);
     color: white;
     border: none;
-    box-shadow: 0 2px 10px rgba(44, 95, 45, 0.3);
+    box-shadow: var(--shadow-md);
     font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     margin-left: auto;
     margin-top: 20px;
 }
 
 .btn-circle:hover {
-    background-color: #224d23;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(44, 95, 45, 0.4);
+    background-color: #354b2e;
+    transform: translateY(-3px) rotate(90deg);
+    box-shadow: var(--shadow-lg);
 }
+
+/* 비활성화 버튼 스타일 */
+.btn-sm[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--color-gray-200) !important;
+    color: var(--color-gray-600) !important;
+    border-color: var(--color-gray-300) !important;
+    box-shadow: none !important;
+    transform: none !important;
+    pointer-events: none !important;
+}
+
+
 
 /* ===== 공통 체크박스 스타일 ===== */
 /* 체크박스 컬럼 스타일 */
@@ -930,6 +1146,23 @@
     background-color: rgba(233, 114, 80, 0.1);
 }
 
+/* urgent-item 필터링 중 스타일 */
+.urgent-item.filtering {
+    background-color: var(--color-beige-light);
+    border-left: 3px solid var(--color-maple);
+    box-shadow: var(--shadow-md);
+}
+
+.urgent-item.filtering .item-label {
+    color: var(--color-maple);
+    font-weight: var(--font-semibold);
+}
+
+.urgent-item.filtering .item-count {
+    background-color: var(--color-maple);
+    color: var(--color-white);
+}
+
 .item-label {
     margin-right: 10px;
 }
@@ -1074,6 +1307,53 @@
 
 .arrow-step.active:hover .arrow-chevron {
     background-color: #ffd700;
+}
+
+/* 필터링 중인 화살표 스타일 */
+.arrow-step.filtering {
+    box-shadow: 0 0 0 2px var(--color-maple);
+    position: relative;
+}
+
+.arrow-step.filtering::after {
+    content: '✓';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--color-maple);
+    color: white;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 10px;
+    line-height: 16px;
+    text-align: center;
+}
+
+/* 필터 알림 스타일 */
+.filter-notice {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-left: 3px solid var(--color-maple);
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.btn-clear-filter {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-maple);
+    color: var(--color-maple);
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.btn-clear-filter:hover {
+    background-color: var(--color-maple);
+    color: var(--color-white);
 }
 
 /* ===== 상품 카드 및 슬라이더 스타일 ===== */

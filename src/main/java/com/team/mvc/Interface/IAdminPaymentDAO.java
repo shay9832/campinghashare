@@ -3,6 +3,7 @@ package com.team.mvc.Interface;
 import com.team.mvc.DTO.AdminPaymentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
 import java.util.List;
@@ -88,5 +89,18 @@ public interface IAdminPaymentDAO {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("keyword") String keyword
+    );
+
+    /**
+     * 쿠폰 적용하여 결제하기(쿠폰없이 결제도 가능)
+     **/
+    void insertPayment(Map<String, Object> paramMap);
+
+    /**
+     * 거래id로 특정 결제 정보만 조회
+     **/
+    AdminPaymentDTO getPaymentsByTransactionId(
+            @Param("type") String type,
+            @Param("transactionId") int transactionId
     );
 }

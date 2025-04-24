@@ -4,22 +4,37 @@ import com.team.mvc.DTO.EquipmentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @Mapper
 public interface IEquipmentDAO {
 
-    int insertEquipCode();
+    int insertEquipCode(EquipmentDTO dto);
 
-    int getLastEquipId();
+    List<Map<String, Object>> listEquipNamesByBrand(@Param("brandId") int brandId);
 
-    int addEquipment(EquipmentDTO dto);
+    // 장비명 ID 조회
+    Integer getEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);
 
-    // 장비명 검색
-    Integer searchEquipNameId(@Param("brandId") int brandId, @Param("equipName") String equipName);
+    int insertEquipmentRegistration(EquipmentDTO dto);
 
-    // 브랜드가 '기타'일 경우
-    Integer insertEquip(@Param("brandId") int brandId, @Param("equipName") String equipName);
+    // 회원코드로 장비 리스트 조회 (해당 회원이 가진 일반 장비 리스트)
+    ArrayList<EquipmentDTO> listByUserCode(int user_code);
+
+    // 회원코드로 장비 리스트 조회(최근 등록된 순으로 count건 조회)
+    List<EquipmentDTO> listRecentEquipmentByUserCode(@Param("userCode") int userCode, @Param("count") int count);
 
     Integer searchCategoryId(@Param("majorCategory") int majorCategory, @Param("middleCategory") String middleCategory);
 
 
+    // 전체 장비 리스트 조회
+    List<EquipmentDTO> listEquip();
+
+    // 장비명id로 장비명 검색
+    String getEquipNameById(int equip_name_id);
+
+    // 장비코드로 장비정보 가져오기
+    EquipmentDTO getEquipmentByEquipCode(int equip_code);
 }

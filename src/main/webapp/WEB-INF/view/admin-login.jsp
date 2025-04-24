@@ -1,119 +1,109 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>관리자 로그인</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
         .login-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            padding: 40px;
+            max-width: 480px;
+            margin: 20px auto;
+            padding: 0;
         }
 
-        h1 {
+        .login-logo {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .form-group {
+        .login-logo img {
+            width: 90px;
+            height: 60px;
             margin-bottom: 20px;
         }
 
-        label {
+        .login-title {
+            font-size: var(--font-lg);
+            font-weight: var(--font-bold);
+            color: var(--color-maple);
+        }
+
+        .login-input {
+            width: 100%;
+            max-width: 320px;
+            height: 35px;
+            padding: 0 12px;
+            margin: 0 auto 10px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-sm);
             display: block;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 8px;
         }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            box-sizing: border-box;
+        .login-input::placeholder {
+            font-size: var(--font-sm);
+            font-family: inherit;
+            color: var(--text-secondary);
+            opacity: 1;
         }
 
-        button {
+        .login-button {
             width: 100%;
-            padding: 12px;
-            background-color: #4a6da7;
+            max-width: 320px;
+            height: 35px;
+            padding: 0;
+            background-color: #3f861d;
             color: white;
             border: none;
-            border-radius: 4px;
-            font-size: 16px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-md);
             cursor: pointer;
-            transition: background-color 0.3s;
+            margin: 0 auto 10px;
+            display: block;
         }
 
-        button:hover {
-            background-color: #3a5a8c;
-        }
-
-        .alert {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .logo img {
-            height: 60px;
+        .login-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            font-size: var(--font-sm);
         }
     </style>
 </head>
 <body>
-<div class="login-container">
-    <div class="logo">
-        <!-- 로고 이미지를 넣을 수 있습니다 -->
-        <h1>관리자 시스템</h1>
-    </div>
+<div class="page-wrapper">
+    <main class="main-content">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="${pageContext.request.contextPath}/resources/images/logo.png" alt="로고">
+                <h1 class="login-title">관리자 로그인</h1>
+            </div>
 
-    <!-- 에러 메시지 표시 -->
-    <c:if test="${not empty error}">
-        <div class="alert">
-                ${error}
+            <form action="${pageContext.request.contextPath}/admin-login.action" method="post">
+                <input type="text" name="adminId" placeholder="아이디" class="login-input" required>
+                <input type="password" name="adminPw" placeholder="비밀번호" class="login-input" required>
+                <button type="submit" class="login-button">로그인</button>
+            </form>
+
+            <div class="login-options">
+                <a href="${pageContext.request.contextPath}/admin-registerid.action" class="text-secondary">관리자 등록</a>
+            </div>
         </div>
-    </c:if>
-
-    <form action="${pageContext.request.contextPath}/admin-login.action" method="post">
-        <div class="form-group">
-            <label for="adminId">관리자 ID</label>
-            <input type="text" id="adminId" name="adminId" required>
-        </div>
-
-        <div class="form-group">
-            <label for="password">비밀번호</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-
-        <button type="submit">로그인</button>
-    </form>
+    </main>
 </div>
+
+<c:if test="${not empty loginError}">
+    <script>
+        alert('${loginError}');
+    </script>
+</c:if>
+
 </body>
 </html>

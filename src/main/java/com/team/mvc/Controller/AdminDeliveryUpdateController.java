@@ -1,4 +1,3 @@
-
 package com.team.mvc.Controller;
 
 import com.team.mvc.DTO.AdminDeliveryUpdateDTO;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
 import java.time.LocalDate;
@@ -35,7 +35,7 @@ public class AdminDeliveryUpdateController {
     }
 
     @RequestMapping(value = "/admin-deliveryUpdate.action", method = RequestMethod.GET)
-    public String getAllDeliveries(Model model) {
+    public String getAllDeliveries(@ModelAttribute("adminId") String adminId, Model model) {
         // SqlSession을 통해 매퍼 인터페이스 직접 호출
         IAdminDeliveryUpdateDAO dao = sqlSession.getMapper(IAdminDeliveryUpdateDAO.class);
 
@@ -82,7 +82,7 @@ public class AdminDeliveryUpdateController {
 
     // 배송 업데이트 POST 메서드
     @RequestMapping(value="/admin-deliveryUpdate.action", method=RequestMethod.POST)
-    public String updateDelivery(
+    public String updateDelivery(@ModelAttribute("adminId") String adminId,
             @RequestParam(value="newDeliveryStartDate", required=false) String newDeliveryStartDate,
             @RequestParam(value="deliveryEndDate", required=false) String deliveryEndDate,
             @RequestParam(value="deliveryId", required=false) Long deliveryId,
@@ -212,7 +212,7 @@ public class AdminDeliveryUpdateController {
 
     // 새 배송 생성 메서드
     @RequestMapping(value="/admin-createDelivery.action", method=RequestMethod.POST)
-    public String createDelivery(
+    public String createDelivery(@ModelAttribute("adminId") String adminId,
             @RequestParam(value="newDeliveryStartDate", required=false) String newDeliveryStartDate,
             @RequestParam(value="deliveryEndDate", required=false) String deliveryEndDate,
             @RequestParam(value="payId", required=false) Integer payId,

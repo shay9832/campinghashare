@@ -5,9 +5,7 @@ public class CategoryDTO {
     private String category_name;
     private Integer parent_category_id;  // Integer 사용 (null 허용)
 
-
-
-    //getter
+    // getter, setter
 
     public int getCategory_id() {
         return category_id;

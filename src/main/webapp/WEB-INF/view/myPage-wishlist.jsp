@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -32,9 +33,9 @@
                     <span>회원 관리</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-infoEdit-passwordCheck.jsp" class="sidebar-link">회원 정보 수정</a></li>
-                    <li><a href="myPage-trust.jsp" class="sidebar-link">신뢰도</a></li>
-                    <li><a href="myPage-point.jsp" class="sidebar-link">포인트</a></li>
+                    <li><a href="mypage-infoedit-passwordcheck.action" class="sidebar-link">회원 정보 수정</a></li>
+                    <li><a href="mypage-trust.action" class="sidebar-link">신뢰도</a></li>
+                    <li><a href="mypage-point.action" class="sidebar-link">포인트</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
@@ -42,41 +43,41 @@
                     <span>이용 내역 조회</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="myPage-myEquip.jsp" class="sidebar-link">내가 소유한 장비</a></li>
-                    <li><a href="myPage-inspecList.jsp" class="sidebar-link">검수 결과 조회</a></li>
-                    <li><a href="myPage-delivery.jsp" class="sidebar-link">배송 조회/내역</a></li>
-                    <li><a href="myPage-matchingList.jsp" class="sidebar-link">매칭 조회/내역</a></li>
-                    <li><a href="myPage-rentEquip.jsp" class="sidebar-link">내가 대여한 장비</a></li>
-                    <li><a href="myPage-myPost.jsp" class="sidebar-link">내가 작성한 글</a></li>
+                    <li><a href="mypage-myequip.action" class="sidebar-link">내가 소유한 장비</a></li>
+                    <li><a href="mypage-inspecList.action" class="sidebar-link">검수 결과 조회</a></li>
+                    <li><a href="mypage-delivery.action" class="sidebar-link">배송 조회/내역</a></li>
+                    <li><a href="mypage-matchinglist.action" class="sidebar-link">매칭 조회/내역</a></li>
+                    <li><a href="mypage-rentequip.action" class="sidebar-link">내가 대여한 장비</a></li>
+                    <li><a href="mypage-mypost.action" class="sidebar-link">내가 작성한 글</a></li>
                 </ul>
             </li>
             <li class="sidebar-menu-item">
-                <a href="myPage-wishlist.jsp" class="sidebar-link title active">
+                <a href="mypage-wishlist.action" class="sidebar-link title active">
                     <span>찜</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="" class="sidebar-link title">
+                <a href="mypage-diary.action" class="sidebar-link title">
                     <span>나의 캠핑일지</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-bookmark.action" class="sidebar-link title">
                     <span>북마크</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-coupon.action" class="sidebar-link title">
                     <span>쿠폰 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-inquiry.action" class="sidebar-link title">
                     <span>1:1 문의 내역</span>
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#" class="sidebar-link title">
+                <a href="mypage-leave.action" class="sidebar-link title">
                     <span>회원 탈퇴</span>
                 </a>
             </li>
@@ -89,284 +90,108 @@
             <h2 class="page-title">찜 목록</h2>
         </div>
 
-        <!-- 검색 섹션 -->
-        <div class="search-container mb-4">
-            <input type="text" class="form-control" placeholder="어떤 장비를 찾으시나요?">
-            <button class="search-button">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
+        <!-- 매칭 신청 탭 컨테이너 -->
+        <div class="tab-container">
+            <div class="tabs">
+                <div class="tab ${activeTab == 'storen' ? 'active' : ''}" data-tab="storen" id="storen-tab">스토렌</div>
+                <div class="tab ${activeTab == 'rental' ? 'active' : ''}" data-tab="rental" id="rental-tab">렌탈</div>
+            </div>
 
-        <!-- 필터링 및 정렬 옵션 -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex flex-wrap align-items-center">
-                <div class="tab-nav">
-                    <a class="tab-link active" href="#">전체</a>
-                </div>
-                <div class="tab-nav">
-                    <a class="tab-link" href="#">텐트/쉘터</a>
-                </div>
-                <div class="tab-nav">
-                    <a class="tab-link" href="#">취침용품</a>
-                </div>
-                <div class="tab-nav">
-                    <a class="tab-link" href="#">캠핑가구</a>
-                </div>
-                <div class="tab-nav">
-                    <a class="tab-link" href="#">조명/전력장비</a>
+            <!-- 검색 섹션 -->
+            <div class="search-container mb-4">
+                <input type="text" class="form-control" placeholder="어떤 장비를 찾으시나요?">
+                <button class="search-button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <!-- 필터링 및 정렬 옵션 -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- 정렬 옵션 (오른쪽) -->
+                <div class="sort-container">
+                    <select class="form-control sort-select">
+                        <option>최신순</option>
+                        <option>높은가격순</option>
+                        <option>낮은가격순</option>
+                        <option>이름순</option>
+                    </select>
                 </div>
             </div>
 
-            <!-- 정렬 옵션 (오른쪽) -->
-            <div class="sort-container">
-                <select class="form-control sort-select">
-                    <option>최신순</option>
-                    <option>높은가격순</option>
-                    <option>낮은가격순</option>
-                    <option>이름순</option>
-                </select>
+            <!-- 찜 목록 카운트 -->
+            <p class="product-count mb-3">총 ${storenList.size()}개의 찜 항목이 있습니다.</p>
+
+            <!-- 상품 리스트 - 제품 카드 형태 -->
+            <div class="product-container">
+                <c:choose>
+                    <c:when test="${storenList != null && !empty storenList}">
+                            <ul>
+                            <c:forEach var="storen" items="${storenList}">
+                                <li>
+                                    <div class="product-card">
+                                        <div class="product-image">
+                                            <c:choose>
+                                                <c:when test="${storen.equipmentDTO.attachments.get(0) != null && !empty storen.equipmentDTO.attachments}">
+                                                    <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="product-placeholder"></div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <button class="like-button" data-id="${storen.storen_id}" data-type="storen"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
+                                        </div>
+                                        <a href="storenmatching-request.action?storenId=${storen.storen_id}" class="product-link">
+                                            <div class="product-info">
+                                                <p class="product-title">${storen.storen_title}</p>
+                                                <p class="product-brand">${storen.equipmentDTO.brand}</p>
+                                                <p class="product-category">${storen.equipmentDTO.majorCategory} > ${storen.equipmentDTO.middleCategory}</p>
+                                                <p class="product-price">${storen.daily_rent_price}원/일</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                            </c:forEach>
+                            </ul>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">
+                            <i class="fa-solid fa-heart-crack"></i>
+                            <p>찜한 상품이 없습니다</p>
+                            <div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>
+                            <a href="rentalsearch-main.action" class="empty-action mt-5">찜하러 가기</a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
-        </div>
 
-        <!-- 찜 목록 카운트 -->
-        <p class="product-count mb-3">총 12개의 찜 항목이 있습니다.</p>
-
-        <!-- 상품 리스트 - 제품 카드 형태 -->
-        <div class="product-container">
-            <ul>
-                <!-- 첫 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">코베아 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
-                            <p class="product-brand">코베아몰</p>
-                            <p class="product-category">텐트/쉘터</p>
-                            <p class="product-price">30,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 두 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">몬테라 sleeping bag 800+ 침낭</p>
-                            <p class="product-brand">아웃도어스</p>
-                            <p class="product-category">취침용품</p>
-                            <p class="product-price">15,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 세 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">캠핑 테이블 접이식 야외 바베큐 테이블</p>
-                            <p class="product-brand">캠핑매니아</p>
-                            <p class="product-category">캠핑가구</p>
-                            <p class="product-price">12,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 네 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">헬리녹스 캠핑 체어 경량 의자</p>
-                            <p class="product-brand">아웃도어스</p>
-                            <p class="product-category">캠핑가구</p>
-                            <p class="product-price">8,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 다섯 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">LED 랜턴 충전식 캠핑 조명 야외 조명</p>
-                            <p class="product-brand">라이팅월드</p>
-                            <p class="product-category">조명/전력장비</p>
-                            <p class="product-price">5,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 여섯 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">콜맨 투버너 스토브 휴대용 가스레인지</p>
-                            <p class="product-brand">콜맨코리아</p>
-                            <p class="product-category">조리장비</p>
-                            <p class="product-price">7,500원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 일곱 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">실내외겸용 코베아 히터 가스난로</p>
-                            <p class="product-brand">코베아몰</p>
-                            <p class="product-category">냉/난방장비</p>
-                            <p class="product-price">10,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 여덟 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">캠핑용 냉장고 아이스박스 쿨러</p>
-                            <p class="product-brand">캠핑매니아</p>
-                            <p class="product-category">냉/난방장비</p>
-                            <p class="product-price">9,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 아홉 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">캠핑 랜턴 LED 충전식 캠핑용품</p>
-                            <p class="product-brand">라이팅월드</p>
-                            <p class="product-category">조명/전력장비</p>
-                            <p class="product-price">8,500원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 열 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">네이쳐하이크 초경량 백패킹 텐트 1인용</p>
-                            <p class="product-brand">네이처몰</p>
-                            <p class="product-category">텐트/쉘터</p>
-                            <p class="product-price">12,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 열한 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">캠핑용 접이식 테이블 야외 피크닉</p>
-                            <p class="product-brand">아웃도어스</p>
-                            <p class="product-category">캠핑가구</p>
-                            <p class="product-price">7,000원/일</p>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- 열두 번째 찜 항목 -->
-                <li>
-                    <a href="storen_matching_request.jsp"></a>
-                    <div class="product-card">
-                        <div class="product-image">
-                            <div class="product-placeholder"></div>
-                            <button class="like-button"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>
-                        </div>
-                        <div class="product-info">
-                            <p class="product-title">코베아 버너 3단 멀티 고화력 가스레인지</p>
-                            <p class="product-brand">코베아몰</p>
-                            <p class="product-category">조리장비</p>
-                            <p class="product-price">6,500원/일</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <!-- 페이지네이션 -->
-        <div class="pagination-container d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="#">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
-            </ul>
+            <!-- 페이지네이션 -->
+            <div class="pagination-container d-flex justify-content-center mt-4">
+                <ul class="pagination">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -379,45 +204,69 @@
 
 <script>
     $(document).ready(function() {
-        // 좋아요 버튼 클릭 이벤트 (하트 아이콘)
-        $('.like-button').click(function() {
-            const $productCard = $(this).closest('.product-card');
-            const productTitle = $productCard.find('.product-title').text();
+        // URL에서 탭 정보 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        let tabFromUrl = urlParams.get('tab');
 
-            if(confirm('"' + productTitle + '" 상품을 찜 목록에서 삭제하시겠습니까?')) {
-                $productCard.closest('li').fadeOut(300, function() {
-                    $(this).remove();
-                    // 남은 찜 항목 수 업데이트
-                    updateWishlistCount();
-                });
+        // 메인 탭 초기화 (스토렌/렌탈)
+        let activeMainTab = tabFromUrl || "storen"; // URL 파라미터 또는 기본값
 
-                // 알림 메시지
-                alert('"' + productTitle + '" 상품이 찜 목록에서 삭제되었습니다.');
-            }
-        });
+        // 매칭 탭 전환 기능
+        $('.tab').on('click', function() {
+            const tabId = $(this).data('tab');
 
-        // 탭 필터 클릭 이벤트
-        $('.tab-link').click(function(e) {
-            e.preventDefault();
-            $('.tab-link').removeClass('active');
+            // 현재 활성화된 탭이면 아무것도 하지 않음
+            if(activeMainTab === tabId) return;
+
+            // 탭 활성화
+            $('.tab').removeClass('active');
             $(this).addClass('active');
 
-            const category = $(this).text().trim();
+            // 메인 탭 상태 저장
+            activeMainTab = tabId;
 
-            if (category === '전체') {
-                $('.product-card').closest('li').show();
-            } else {
-                $('.product-card').closest('li').hide();
-                $('.product-card').each(function() {
-                    const productCategory = $(this).find('.product-category').text();
-                    if (productCategory.includes(category)) {
-                        $(this).closest('li').show();
+            // 탭 전환 시 데이터 다시 로드
+            loadWishData(activeMainTab);
+        });
+
+        //좋아요 버튼 클릭 이벤트 (하트 아이콘)
+        $(document).on('click', '.like-button', function(e) {
+            e.preventDefault();         // 링크 이동 방지
+            e.stopPropagation();        // 이벤트 버블링 중지
+            const $productCard = $(this).closest('.product-card');
+            const productTitle = $productCard.find('.product-title').text();
+            const id = $(this).data('id');
+            const type = $(this).data('type');
+
+            if(confirm('"' + productTitle + '" 상품을 찜 목록에서 삭제하시겠습니까?')) {
+                // AJAX로 DB에서 삭제 요청
+                $.ajax({
+                    url: '/api/wish/delete',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        type: type
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            // 화면에서 요소 제거
+                            $productCard.closest('li').fadeOut(300, function() {
+                                $(this).remove();
+                                // 남은 찜 항목 수 업데이트
+                                updateWishlistCount();
+                            });
+
+                            // 알림 메시지
+                            alert('"' + productTitle + '" 상품이 찜 목록에서 삭제되었습니다.');
+                        } else {
+                            alert('삭제 중 오류가 발생했습니다: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('서버 통신 중 오류가 발생했습니다.');
                     }
                 });
             }
-
-            // 표시된 아이템 수 업데이트
-            updateVisibleCount();
         });
 
         // 정렬 옵션 변경 이벤트
@@ -431,7 +280,6 @@
                 const bInfo = $(b).find('.product-info');
 
                 if (sortOption === '최신순') {
-                    // 기존 순서 유지 (이 예제에서는 변경 없음)
                     return 0;
                 } else if (sortOption === '높은가격순') {
                     const aPrice = parseInt($(aInfo).find('.product-price').text().replace(/[^0-9]/g, ''));
@@ -482,18 +330,155 @@
             }
         });
 
-        // 찜 목록 개수 업데이트 함수
-        function updateWishlistCount() {
-            const count = $('.product-card').length;
-            $('.product-count').text('총 ' + count + '개의 찜 항목이 있습니다.');
+
+    });
+
+    // 찜 목록 개수 업데이트 함수
+    function updateWishlistCount() {
+        const count = $('.product-card').length;
+        $('.product-count').text('총 ' + count + '개의 찜 항목이 있습니다.');
+    }
+
+    // 현재 표시된 아이템 수 업데이트 함수
+    function updateVisibleCount() {
+        const visibleCount = $('.product-card:visible').length;
+        $('.product-count').text('총 ' + visibleCount + '개의 찜 항목이 표시되고 있습니다.');
+    }
+
+    function loadWishData(activeMainTab) {
+        let apiUrl = '';
+
+        // 메인 탭과 서브 탭에 따라 API URL 결정
+        if (activeMainTab === 'storen') {
+            apiUrl = '/api/wish/storen';
+        } else { // 렌탈 탭
+            apiUrl = '/api/wish/rental';
         }
 
-        // 현재 표시된 아이템 수 업데이트 함수
-        function updateVisibleCount() {
-            const visibleCount = $('.product-card:visible').length;
-            $('.product-count').text('총 ' + visibleCount + '개의 찜 항목이 표시되고 있습니다.');
-        }
-    });
+        console.log("데이터 로드 중:", apiUrl, "메인탭:", activeMainTab);
+
+        // 빈 테이블 초기화
+        let targetDiv= $('.product-container');
+
+        // AJAX 요청
+        $.ajax({
+            url: apiUrl,
+            type: 'GET',
+            dataType: 'json',
+            cache: false, // 캐시 사용 안 함
+            success: function(data) {
+                console.log("데이터 로드 성공:", data.length, "건");
+
+                if (data.length === 0) {
+                    // 데이터가 없는 경우
+                    // 찜 목록 개수 업데이트
+                    $('.product-count').text('총 ' + 0 + '개의 찜 항목이 있습니다.');
+
+                    targetDiv.html(
+                        '<div class="empty-state" style="width:100%;">' +
+                        '<i class="fa-solid fa-heart-crack"></i>' +
+                        '<p>찜한 상품이 없습니다</p>' +
+                        '<div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>' +
+                        '</div>');
+                    return;
+                }
+
+                // 데이터 렌더링
+                renderData(data, targetDiv);
+
+                // 찜 목록 개수 업데이트 함수
+                updateWishlistCount();
+            },
+            error: function(xhr, status, error) {
+                console.error("데이터 로드 실패:", error);
+
+                // 찜 목록 개수 업데이트
+                $('.product-count').text('총 ' + 0 + '개의 찜 항목이 있습니다.');
+
+                // 에러 메시지 표시
+                targetDiv.html(
+                    '<div class="alert alert-danger" style="width:100%;" role="alert">' +
+                    '<i class="fas fa-exclamation-circle me-2"></i>' +
+                    '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>' +
+                    '<div class="hint">대여하고 싶은 상품을 찾으면 하트를 눌러서 찜해주세요!</div>' +
+                    '</div>'
+                );
+            }
+        });
+    }
+
+    function renderData(data, targetDiv) {
+        let html = '';
+        const formatter = new Intl.NumberFormat('ko-KR');
+
+        html += '<ul>';
+        data.forEach(function(item) {
+            // imageSrc 변수 선언 및 기본값 설정
+            let imageSrc = '<div class="product-placeholder"></div>';
+
+            const attachments = item.equipmentDTO.attachments;
+            if (Array.isArray(attachments) && attachments.length > 0 && attachments[0].attachmentPath) {
+                imageSrc = `<img src="` + attachments[0].attachmentPath + `" alt="상품 이미지">`;
+            }
+            html +=
+                '<li>' +
+                '<div class="product-card">' +
+                '<div class="product-image">' +
+                imageSrc +
+                '<button class="like-button" data-id="' + item.storen_id + '" data-type="storen"><i class="fa-solid fa-heart" style="color: #e9745e;"></i></button>' +
+                '</div>' +
+                '<a href="storen_matching_request.action?storenId=' + item.storen_id + '" class="product-link">' +
+                '<div class="product-info">' +
+                '<p class="product-title">' + item.storen_title + '</p>' +
+                '<p class="product-brand">' + item.equipmentDTO.brand + '</p>' +
+                '<p class="product-category">' + item.equipmentDTO.majorCategory + ' > ' + item.equipmentDTO.middleCategory + '</p>' +
+                '<p class="product-price">' + formatter.format(parseInt(item.daily_rent_price)) + '원/일</p>' +
+                '</div>' +
+                '</a>' +
+                '</div>' +
+                '</li>';
+        });
+        html += '</ul>';
+        targetDiv.html(html);
+
+        // 좋아요 버튼 이벤트 다시 바인딩
+        $('.like-button').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const id = $(this).data('id');
+            const type = $(this).data('type');
+            const $productCard = $(this).closest('.product-card');
+            const productTitle = $productCard.find('.product-title').text();
+
+            if(confirm('"' + productTitle + '" 상품을 찜 목록에서 삭제하시겠습니까?')) {
+                $.ajax({
+                    url: '/api/wish/delete',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        type: type
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            $productCard.closest('li').fadeOut(300, function() {
+                                $(this).remove();
+                                updateWishlistCount();
+                            });
+                            alert('"' + productTitle + '" 상품이 찜 목록에서 삭제되었습니다.');
+                        } else {
+                            alert('삭제 중 오류가 발생했습니다: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('서버 통신 중 오류가 발생했습니다.');
+                    }
+                });
+            }
+        });
+    }
+
+
 </script>
 
 <style>
@@ -518,7 +503,7 @@
         border-radius: 50px;
         border: 1px solid #ddd;
         font-size: 14px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         transition: all 0.3s;
     }
 
@@ -636,6 +621,14 @@
         border-radius: 8px 8px 0 0;
         overflow: hidden;
     }
+    .product-image img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
     .product-placeholder {
         position: absolute;
@@ -654,8 +647,8 @@
         position: absolute;
         bottom: 10px;
         right: 10px;
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background-color: white;
         border: none;
@@ -665,7 +658,7 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s;
-        z-index: 2;
+        z-index: 10;
     }
 
     .like-button:hover {
@@ -758,6 +751,11 @@
         background-color: #f1f8f1;
         color: #2C5F2D;
         border-color: #2C5F2D;
+    }
+    .product-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
 
     /* 반응형 디자인 */

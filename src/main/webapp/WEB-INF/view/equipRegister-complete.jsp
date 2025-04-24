@@ -4,8 +4,8 @@
     String processName = "장비 등록";
 
     // 관련 메뉴명을 저장할 변수들 (메뉴 흐름에 따라 변경 가능)
-    String prevMenu = "내 장비 목록";
-    String nextMenu = "등록한 글 보기";
+    String prevMenu = "메인으로";
+    String nextMenu = "내가 소유한 장비";
 %>
 
 <!DOCTYPE html>
@@ -20,6 +20,7 @@
 
 </head>
 <body>
+
 <!-- 헤더 포함 -->
 <jsp:include page="header.jsp"></jsp:include>
 
@@ -33,8 +34,8 @@
 
         <!-- 버튼 컨테이너 -->
         <div class="button-container">
-            <a href="#" class="btn"><%= prevMenu %></a>
-            <a href="#" class="btn btn-primary"><%= nextMenu %></a>
+            <a href="main.action" class="btn">메인으로</a>
+            <a href="mypage-myequip.action" class="btn btn-primary">내가 소유한 장비</a>
         </div>
     </main>
 </div>

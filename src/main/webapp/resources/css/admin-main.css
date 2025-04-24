@@ -7,6 +7,10 @@ body {
 
 /* 상단 헤더 영역 스타일링 */
 #header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    justify-content: space-between;
     height: 60px;
     background-color: #3f861d;
     color: white;

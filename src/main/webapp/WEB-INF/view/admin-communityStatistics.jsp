@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: huni
-  Date: 25. 4. 7.
-  Time: 오전 10:25
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -15,10 +8,7 @@
 </head>
 
 <body>
-<!-- 헤더 영역 -->
-<div id="header">
-  <h1>관리자 시스템</h1>
-</div>
+<jsp:include page="/WEB-INF/view/admin-header.jsp" />
 
 <!-- 메인 컨테이너 -->
 <div id="container">
