@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
->>>>>>> origin/develop
 <dataSource name="final3team">
   <database-model serializer="dbm" dbms="ORACLE" family-id="ORACLE" format-version="4.53">
     <root id="1">
@@ -34,23 +30,13 @@
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <CreatedTimestamp>2025-03-26.22:37:01</CreatedTimestamp>
       <Current>1</Current>
-<<<<<<< HEAD
-      <LastIntrospectionL1Timestamp>2025-04-25.08:26:55</LastIntrospectionL1Timestamp>
-      <LastIntrospectionL2Timestamp>2025-04-25.08:26:55</LastIntrospectionL2Timestamp>
-      <LastIntrospectionL3Timestamp>2025-04-25.08:26:55</LastIntrospectionL3Timestamp>
+      <LastIntrospectionL1Timestamp>2025-04-25.12:07:34</LastIntrospectionL1Timestamp>
+      <LastIntrospectionL2Timestamp>2025-04-25.12:07:34</LastIntrospectionL2Timestamp>
+      <LastIntrospectionL3Timestamp>2025-04-25.12:07:34</LastIntrospectionL3Timestamp>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-04-24.14:26:57</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-04-24.18:07:41</LastIntrospectionLocalTimestamp>
       <LastIntrospectionVersion>200820</LastIntrospectionVersion>
-      <ModifiedTimestamp>2025-04-25.08:26:39</ModifiedTimestamp>
-=======
-      <LastIntrospectionL1Timestamp>2025-04-24.08:36:22</LastIntrospectionL1Timestamp>
-      <LastIntrospectionL2Timestamp>2025-04-24.08:36:22</LastIntrospectionL2Timestamp>
-      <LastIntrospectionL3Timestamp>2025-04-24.08:36:22</LastIntrospectionL3Timestamp>
-      <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-04-23.14:36:23</LastIntrospectionLocalTimestamp>
-      <LastIntrospectionVersion>200820</LastIntrospectionVersion>
-      <ModifiedTimestamp>2025-04-24.08:36:16</ModifiedTimestamp>
->>>>>>> origin/develop
+      <ModifiedTimestamp>2025-04-25.12:07:39</ModifiedTimestamp>
       <ObjectId>48</ObjectId>
     </schema>
     <schema id="10" parent="1" name="FLOWS_FILES">
@@ -70,15 +56,9 @@
     </schema>
     <schema id="15" parent="1" name="PUBLIC">
       <AutoIntrospectionLevel>1</AutoIntrospectionLevel>
-<<<<<<< HEAD
-      <LastIntrospectionL1Timestamp>2025-04-25.08:26:55</LastIntrospectionL1Timestamp>
+      <LastIntrospectionL1Timestamp>2025-04-25.12:07:34</LastIntrospectionL1Timestamp>
       <LastIntrospectionLevel>1</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-04-24.14:26:56</LastIntrospectionLocalTimestamp>
-=======
-      <LastIntrospectionL1Timestamp>2025-04-24.08:36:22</LastIntrospectionL1Timestamp>
-      <LastIntrospectionLevel>1</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-04-23.14:36:22</LastIntrospectionLocalTimestamp>
->>>>>>> origin/develop
+      <LastIntrospectionLocalTimestamp>2025-04-24.18:07:36</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
     </schema>
     <schema id="16" parent="1" name="SYS">
@@ -309,11 +289,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39729</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(37)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="50" parent="9" name="ATTACHMENT_CAMPING_DIARY_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -329,11 +305,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:19</ModifiedTimestamp>
       <ObjectId>39771</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(43)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(3)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="52" parent="9" name="ATTACHMENT_EVENT_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -349,11 +321,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:19</ModifiedTimestamp>
       <ObjectId>39766</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(61)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(5)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="54" parent="9" name="ATTACHMENT_RENTAL_REPLY_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -449,11 +417,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39692</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(38)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="66" parent="9" name="EQUIP_CODE_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -461,11 +425,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39691</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(38)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="67" parent="9" name="EQUIP_GRADE_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -521,11 +481,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39745</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(6)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="74" parent="9" name="INSPEC_GRADE_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -589,11 +545,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39735</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(10)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(7)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="82" parent="9" name="NOTI_CHECK_LOG_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -657,11 +609,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39703</ObjectId>
-<<<<<<< HEAD
-      <SequenceIdentity>1(40)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
+      <SequenceIdentity>1(41)</SequenceIdentity>
     </sequence>
     <sequence id="90" parent="9" name="PLATFORM_DELIVERY_RETURN_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -725,11 +673,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39742</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(46)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(17)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="98" parent="9" name="POST_VIEW_LOG_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -737,11 +681,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39744</ObjectId>
-<<<<<<< HEAD
-      <SequenceIdentity>1(464)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(58)</SequenceIdentity>
->>>>>>> origin/develop
+      <SequenceIdentity>1(465)</SequenceIdentity>
     </sequence>
     <sequence id="99" parent="9" name="RANK_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -757,11 +697,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39746</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(15)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(4)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="101" parent="9" name="RENTAL_MATCHING_DONE_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -865,11 +801,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39747</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(15)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(7)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="114" parent="9" name="REPORT_ACTION_TYPE_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -957,7 +889,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39698</ObjectId>
-      <SequenceIdentity>1(44)</SequenceIdentity>
+      <SequenceIdentity>1(48)</SequenceIdentity>
     </sequence>
     <sequence id="125" parent="9" name="STOREN_LAST_RETURN_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -973,7 +905,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39701</ObjectId>
-      <SequenceIdentity>1(4)</SequenceIdentity>
+      <SequenceIdentity>1(6)</SequenceIdentity>
     </sequence>
     <sequence id="127" parent="9" name="STOREN_MATCHING_REQ_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -981,7 +913,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39700</ObjectId>
-      <SequenceIdentity>1(8)</SequenceIdentity>
+      <SequenceIdentity>1(13)</SequenceIdentity>
     </sequence>
     <sequence id="128" parent="9" name="STOREN_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -989,11 +921,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:17</ModifiedTimestamp>
       <ObjectId>39693</ObjectId>
-<<<<<<< HEAD
-      <SequenceIdentity>1(39)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(2)</SequenceIdentity>
->>>>>>> origin/develop
+      <SequenceIdentity>1(41)</SequenceIdentity>
     </sequence>
     <sequence id="129" parent="9" name="SUSPENDED_USER_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -1025,11 +953,7 @@
       <DetailsLevel>2</DetailsLevel>
       <ModifiedTimestamp>2025-04-24.05:13:18</ModifiedTimestamp>
       <ObjectId>39736</ObjectId>
-<<<<<<< HEAD
       <SequenceIdentity>1(11)</SequenceIdentity>
-=======
-      <SequenceIdentity>1(8)</SequenceIdentity>
->>>>>>> origin/develop
     </sequence>
     <sequence id="133" parent="9" name="WISHLIST_SEQ">
       <CacheSize>-2147483648</CacheSize>
@@ -1979,10 +1903,6 @@
     </view>
     <view id="257" parent="9" name="VW_BOARD_ACTIVITY">
       <CreatedTimestamp>2025-03-28.23:12:34</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38606,38630,38632,38634</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Invalid>1</Invalid>
       <Modifiable>1</Modifiable>
@@ -1992,10 +1912,6 @@
     </view>
     <view id="258" parent="9" name="VW_BOARD_CATEGORY_MANAGEMENT">
       <CreatedTimestamp>2025-03-28.23:46:32</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38598,38628,38630</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Invalid>1</Invalid>
       <Modifiable>1</Modifiable>
@@ -2026,11 +1942,7 @@
       <DependsOnIds>39600,39602,39604,39606,39608,39616,39618,39624,39630,39632,39634,39636,39638,39640,39650,39654,39656,39658,39660,39662</DependsOnIds>
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
-<<<<<<< HEAD
       <ModifiedTimestamp>2025-04-25.04:37:07</ModifiedTimestamp>
-=======
-      <ModifiedTimestamp>2025-04-24.08:25:22</ModifiedTimestamp>
->>>>>>> origin/develop
       <ObjectId>23871</ObjectId>
       <SourceTextLength>13197</SourceTextLength>
     </view>
@@ -2072,10 +1984,6 @@
     </view>
     <view id="266" parent="9" name="VW_EVENT">
       <CreatedTimestamp>2025-03-28.21:23:00</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38610,38612,38674,38676,38680</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Invalid>1</Invalid>
       <Modifiable>1</Modifiable>
@@ -2112,11 +2020,10 @@
     </view>
     <view id="270" parent="9" name="VW_INSPEC_LIST_AND_PD">
       <CreatedTimestamp>2025-03-31.20:39:42</CreatedTimestamp>
-      <DependsOnIds>23464</DependsOnIds>
+      <DependsOnIds>23464,39582,39600,39602,39610,39630,39642,39644,39646,39648</DependsOnIds>
       <DetailsLevel>3</DetailsLevel>
-      <Invalid>1</Invalid>
       <Modifiable>1</Modifiable>
-      <ModifiedTimestamp>2025-04-20.23:10:06</ModifiedTimestamp>
+      <ModifiedTimestamp>2025-04-25.08:33:18</ModifiedTimestamp>
       <ObjectId>35893</ObjectId>
       <SourceTextLength>997</SourceTextLength>
     </view>
@@ -2176,10 +2083,6 @@
     </view>
     <view id="277" parent="9" name="VW_POINT_MANAGEMENT">
       <CreatedTimestamp>2025-03-28.23:37:49</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38612,38638,38640,38642,38644,38646,38648,38650,38658,38660,38674,38676</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Invalid>1</Invalid>
       <Modifiable>1</Modifiable>
@@ -2207,11 +2110,7 @@
     </view>
     <view id="280" parent="9" name="VW_RENTAL_AND_MATCHING">
       <CreatedTimestamp>2025-03-28.23:37:33</CreatedTimestamp>
-<<<<<<< HEAD
       <DependsOnIds>39608,39616,39618</DependsOnIds>
-=======
-      <DependsOnIds>38706,38714,38716</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-24.23:31:09</ModifiedTimestamp>
@@ -2239,10 +2138,6 @@
       <CreatedTimestamp>2025-04-14.07:35:26</CreatedTimestamp>
       <DependsOnIds>37875,39604,39608,39616,39618,39624,39630,39632,39658,39660,39662</DependsOnIds>
       <DetailsLevel>3</DetailsLevel>
-<<<<<<< HEAD
-=======
-      <Invalid>1</Invalid>
->>>>>>> origin/develop
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-24.08:36:48</ModifiedTimestamp>
       <ObjectId>37876</ObjectId>
@@ -2277,11 +2172,7 @@
     </view>
     <view id="287" parent="9" name="VW_REPLY_MANAGEMENT">
       <CreatedTimestamp>2025-03-28.23:33:34</CreatedTimestamp>
-<<<<<<< HEAD
       <DependsOnIds>39508,39540,39546,39548,39576,39578,39588</DependsOnIds>
-=======
-      <DependsOnIds>38606,38638,38644,38646,38674,38676,38686</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-24.18:52:54</ModifiedTimestamp>
@@ -2299,11 +2190,7 @@
     </view>
     <view id="289" parent="9" name="VW_REPORT_TYPE_ANALYSIS">
       <CreatedTimestamp>2025-03-28.23:07:06</CreatedTimestamp>
-<<<<<<< HEAD
       <DependsOnIds>39538,39542,39546</DependsOnIds>
-=======
-      <DependsOnIds>38636,38640,38644</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-24.18:53:43</ModifiedTimestamp>
@@ -2348,11 +2235,7 @@
     </view>
     <view id="294" parent="9" name="VW_STOREN_AND_MATCHING">
       <CreatedTimestamp>2025-03-28.23:49:18</CreatedTimestamp>
-<<<<<<< HEAD
       <DependsOnIds>39604,39624,39630,39650,39654,39658,39660,39662</DependsOnIds>
-=======
-      <DependsOnIds>38702,38722,38728,38748,38752,38756,38758,38760</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-24.23:31:09</ModifiedTimestamp>
@@ -2379,11 +2262,7 @@
     </view>
     <view id="297" parent="9" name="VW_STOREN_MATCHING_STATUS">
       <CreatedTimestamp>2025-04-22.21:48:38</CreatedTimestamp>
-<<<<<<< HEAD
       <DependsOnIds>39604,39624,39630,39632,39650,39654,39658,39660,39662,39666</DependsOnIds>
-=======
-      <DependsOnIds>38702,38722,38728,38730,38748,38752,38756,38758,38760,38764</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
       <ModifiedTimestamp>2025-04-25.00:01:03</ModifiedTimestamp>
@@ -2459,11 +2338,7 @@
       <DependsOnIds>33907,33908,39562,39566,39570,39574,39576,39580</DependsOnIds>
       <DetailsLevel>3</DetailsLevel>
       <Modifiable>1</Modifiable>
-<<<<<<< HEAD
       <ModifiedTimestamp>2025-04-25.04:37:03</ModifiedTimestamp>
-=======
-      <ModifiedTimestamp>2025-04-24.08:03:23</ModifiedTimestamp>
->>>>>>> origin/develop
       <ObjectId>37875</ObjectId>
       <SourceTextLength>4379</SourceTextLength>
     </view>
@@ -2487,10 +2362,6 @@
     </view>
     <view id="308" parent="9" name="V_POST_REPORT_MANAGE">
       <CreatedTimestamp>2025-03-27.06:21:51</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38630,38632,38636,38638,38640,38642,38676,38678,38680</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Errors>0:0:ORA-00904: &quot;A&quot;.&quot;ADMIN_NICKNAME&quot;: invalid identifier\n</Errors>
       <Invalid>1</Invalid>
@@ -2501,10 +2372,6 @@
     </view>
     <view id="309" parent="9" name="V_REPLY_REPORT_MANAGE">
       <CreatedTimestamp>2025-03-27.06:21:57</CreatedTimestamp>
-<<<<<<< HEAD
-=======
-      <DependsOnIds>38606,38632,38636,38638,38644,38646,38676,38678,38680</DependsOnIds>
->>>>>>> origin/develop
       <DetailsLevel>3</DetailsLevel>
       <Errors>0:0:ORA-00904: &quot;A&quot;.&quot;ADMIN_NICKNAME&quot;: invalid identifier\n</Errors>
       <Invalid>1</Invalid>
@@ -34381,23 +34248,12 @@
     </data-file>
     <data-file id="4292" parent="22" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\TEMP.DBF">
       <AutoExtensible>1</AutoExtensible>
-<<<<<<< HEAD
       <FileId>1</FileId>
       <FileSize>2560</FileSize>
       <IncrementBy>80</IncrementBy>
       <MaxSize>4194302</MaxSize>
       <Position>1</Position>
       <UserSize>2432</UserSize>
-=======
-      <AvailabilityStatus>A</AvailabilityStatus>
-      <FileId>2</FileId>
-      <FileSize>96000</FileSize>
-      <IncrementBy>1280</IncrementBy>
-      <MaxSize>4194302</MaxSize>
-      <OnlineStatus>E</OnlineStatus>
-      <Position>2</Position>
-      <UserSize>95872</UserSize>
->>>>>>> origin/develop
     </data-file>
     <data-file id="4293" parent="23" name="C:\ORACLEXE\APP\ORACLE\ORADATA\XE\UNDOTBS1.DBF">
       <AutoExtensible>1</AutoExtensible>
@@ -42025,7 +41881,6 @@ WAYBILL_ENTRY_DATE</ColNames>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5641" parent="252" name="회원_ID">
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
@@ -42035,17 +41890,6 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
     <column id="5643" parent="252" name="회원_전화번호">
-=======
-    <column id="5635" parent="252" name="회원_ID">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5636" parent="252" name="회원_이름">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5637" parent="252" name="회원_전화번호">
->>>>>>> origin/develop
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
@@ -42053,11 +41897,7 @@ WAYBILL_ENTRY_DATE</ColNames>
       <Position>5</Position>
       <StoredType>VARCHAR2(40 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5645" parent="252" name="가입유형">
-=======
-    <column id="5639" parent="252" name="가입유형">
->>>>>>> origin/develop
       <Position>6</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
@@ -42129,142 +41969,81 @@ WAYBILL_ENTRY_DATE</ColNames>
       <Position>23</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5663" parent="253" name="회원_코드">
-=======
-    <column id="5657" parent="253" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5664" parent="253" name="장비등록_장비코드">
-=======
-    <column id="5658" parent="253" name="장비등록_장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5665" parent="253" name="렌탈_ID">
-=======
-    <column id="5659" parent="253" name="렌탈_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5666" parent="254" name="회원_코드">
-=======
-    <column id="5660" parent="254" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5667" parent="254" name="장비등록_장비코드">
-=======
-    <column id="5661" parent="254" name="장비등록_장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5668" parent="254" name="보관_ID">
-=======
-    <column id="5662" parent="254" name="보관_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5669" parent="255" name="회원_코드">
-=======
-    <column id="5663" parent="255" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5670" parent="255" name="장비등록_장비코드">
-=======
-    <column id="5664" parent="255" name="장비등록_장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5671" parent="255" name="스토렌_ID">
-=======
-    <column id="5665" parent="255" name="스토렌_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5672" parent="256" name="게시판ID">
-=======
-    <column id="5666" parent="256" name="게시판 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5673" parent="256" name="카테고리명">
-=======
-    <column id="5667" parent="256" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5674" parent="256" name="관리등급">
-=======
-    <column id="5668" parent="256" name="관리등급">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5675" parent="256" name="게시판">
-=======
-    <column id="5669" parent="256" name="게시판">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5676" parent="256" name="말머리">
-=======
-    <column id="5670" parent="256" name="말머리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5677" parent="257" name="게시판명">
-=======
-    <column id="5671" parent="257" name="게시판명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5678" parent="257" name="게시글수">
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -42278,150 +42057,78 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5681" parent="258" name="게시판카테고리">
-=======
-    <column id="5672" parent="257" name="게시글수">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5673" parent="257" name="댓글수">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5674" parent="257" name="조회수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5675" parent="258" name="게시판카테고리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5682" parent="258" name="게시판이름">
-=======
-    <column id="5676" parent="258" name="게시판이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5683" parent="258" name="말머리이름">
-=======
-    <column id="5677" parent="258" name="말머리이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5684" parent="259" name="브랜드ID">
-=======
-    <column id="5678" parent="259" name="브랜드ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5685" parent="259" name="브랜드명">
-=======
-    <column id="5679" parent="259" name="브랜드명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5686" parent="259" name="장비명ID">
-=======
-    <column id="5680" parent="259" name="장비명ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5687" parent="259" name="장비명">
-=======
-    <column id="5681" parent="259" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5688" parent="260" name="보유쿠폰ID">
-=======
-    <column id="5682" parent="260" name="보유쿠폰ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5689" parent="260" name="회원코드">
-=======
-    <column id="5683" parent="260" name="회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5690" parent="260" name="회원닉네임">
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
     <column id="5691" parent="260" name="쿠폰이름">
-=======
-    <column id="5684" parent="260" name="회원닉네임">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5685" parent="260" name="쿠폰이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5692" parent="260" name="쿠폰종류">
-=======
-    <column id="5686" parent="260" name="쿠폰종류">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5693" parent="260" name="쿠폰할인율">
       <Position>6</Position>
       <StoredType>NUMBER(3)|0s</StoredType>
     </column>
     <column id="5694" parent="260" name="쿠폰유효개월수">
-=======
-    <column id="5687" parent="260" name="쿠폰할인율">
-      <Position>6</Position>
-      <StoredType>NUMBER(3)|0s</StoredType>
-    </column>
-    <column id="5688" parent="260" name="쿠폰유효개월수">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(2)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5695" parent="260" name="쿠폰발행일">
-=======
-    <column id="5689" parent="260" name="쿠폰발행일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5696" parent="260" name="쿠폰만료일">
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
@@ -42559,285 +42266,89 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
     <column id="5730" parent="263" name="EQUIP_ID">
-=======
-    <column id="5690" parent="260" name="쿠폰만료일">
-      <Position>9</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5691" parent="260" name="쿠폰사용완료일">
-      <Position>10</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5692" parent="261" name="배송종류">
-      <Position>1</Position>
-      <StoredType>VARCHAR2(22 byte)|0s</StoredType>
-    </column>
-    <column id="5693" parent="261" name="발송인">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5694" parent="261" name="수취인">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5695" parent="261" name="스토렌ID">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5696" parent="261" name="보관ID">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5697" parent="261" name="렌탈매칭완료ID">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5698" parent="261" name="렌탈ID">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5699" parent="261" name="배송ID">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5700" parent="261" name="장비명">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5701" parent="261" name="운송사이름">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5702" parent="261" name="운송장번호">
-      <Position>11</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5703" parent="261" name="배송시작일">
-      <Position>12</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5704" parent="261" name="배송종료일">
-      <Position>13</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5705" parent="261" name="검수결과처리일">
-      <Position>14</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5706" parent="261" name="검수결과처리유형">
-      <Position>15</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5707" parent="262" name="배송종류">
-      <Position>1</Position>
-      <StoredType>VARCHAR2(22 byte)|0s</StoredType>
-    </column>
-    <column id="5708" parent="262" name="발송인">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5709" parent="262" name="수취인">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5710" parent="262" name="스토렌ID">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5711" parent="262" name="보관ID">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5712" parent="262" name="렌탈매칭완료ID">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5713" parent="262" name="렌탈ID">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5714" parent="262" name="배송ID">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5715" parent="262" name="장비명">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5716" parent="262" name="운송사이름">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5717" parent="262" name="운송장번호">
-      <Position>11</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5718" parent="262" name="배송시작일">
-      <Position>12</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5719" parent="262" name="배송종료일">
-      <Position>13</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5720" parent="262" name="검수결과처리일">
-      <Position>14</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5721" parent="262" name="검수결과처리유형">
-      <Position>15</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5722" parent="263" name="EQUIP_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5731" parent="263" name="EQUIP_CODE">
-=======
-    <column id="5723" parent="263" name="EQUIP_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5732" parent="263" name="USER_CODE">
-=======
-    <column id="5724" parent="263" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5733" parent="263" name="CATEGORY_ID">
-=======
-    <column id="5725" parent="263" name="CATEGORY_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5734" parent="263" name="MAJOR_CATEGORY_NAME">
-=======
-    <column id="5726" parent="263" name="MAJOR_CATEGORY_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5735" parent="263" name="MIDDLE_CATEGORY_NAME">
-=======
-    <column id="5727" parent="263" name="MIDDLE_CATEGORY_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5736" parent="263" name="EQUIP_NAME_ID">
-=======
-    <column id="5728" parent="263" name="EQUIP_NAME_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5737" parent="263" name="EQUIP_NAME">
-=======
-    <column id="5729" parent="263" name="EQUIP_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5738" parent="263" name="BRAND_NAME">
-=======
-    <column id="5730" parent="263" name="BRAND_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5739" parent="263" name="ORIGINAL_PRICE">
-=======
-    <column id="5731" parent="263" name="ORIGINAL_PRICE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(9)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5740" parent="263" name="CREATED_DATE">
-=======
-    <column id="5732" parent="263" name="CREATED_DATE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5741" parent="264" name="카테고리명">
-=======
-    <column id="5733" parent="264" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5742" parent="264" name="장비등급">
-=======
-    <column id="5734" parent="264" name="장비등급">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>CHAR(1 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5743" parent="264" name="장비수">
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5744" parent="265" name="카테고리명">
-=======
-    <column id="5735" parent="264" name="장비수">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5736" parent="265" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5745" parent="265" name="브랜드명">
-=======
-    <column id="5737" parent="265" name="브랜드명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5746" parent="265" name="장비명">
-=======
-    <column id="5738" parent="265" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5747" parent="265" name="장비등록건수">
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -42847,236 +42358,128 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5749" parent="266" name="이벤트 ID">
-=======
-    <column id="5739" parent="265" name="장비 등록건수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5740" parent="265" name="평균신품가">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5741" parent="266" name="이벤트 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5750" parent="266" name="관리자 ID">
-=======
-    <column id="5742" parent="266" name="관리자 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5751" parent="266" name="이벤트명">
-=======
-    <column id="5743" parent="266" name="이벤트명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5752" parent="266" name="이벤트 시작일">
-=======
-    <column id="5744" parent="266" name="이벤트 시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5753" parent="266" name="이벤트 종료일">
-=======
-    <column id="5745" parent="266" name="이벤트 종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5754" parent="266" name="응모한 회원코드">
-=======
-    <column id="5746" parent="266" name="응모한 회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5755" parent="266" name="응모한 회원닉네임">
-=======
-    <column id="5747" parent="266" name="응모한 회원닉네임">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5756" parent="266" name="이벤트 응모 포인트">
       <Position>8</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5757" parent="266" name="응모일">
-=======
-    <column id="5748" parent="266" name="이벤트 응모 포인트">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5749" parent="266" name="응모일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5758" parent="267" name="이벤트 ID">
-=======
-    <column id="5750" parent="267" name="이벤트 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5759" parent="267" name="관리자 ID">
-=======
-    <column id="5751" parent="267" name="관리자 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5760" parent="267" name="이벤트명">
-=======
-    <column id="5752" parent="267" name="이벤트명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5761" parent="267" name="이벤트 시작일">
-=======
-    <column id="5753" parent="267" name="이벤트 시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5762" parent="267" name="이벤트 종료일">
-=======
-    <column id="5754" parent="267" name="이벤트 종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5763" parent="267" name="당첨된 응모ID">
-=======
-    <column id="5755" parent="267" name="당첨된 응모ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5764" parent="267" name="당첨된 회원코드">
-=======
-    <column id="5756" parent="267" name="당첨된 회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5765" parent="267" name="당첨된 회원닉네임">
-=======
-    <column id="5757" parent="267" name="당첨된 회원닉네임">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5766" parent="268" name="인기 게시글 ID">
-=======
-    <column id="5758" parent="268" name="인기 게시글 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5767" parent="268" name="게시판명">
-=======
-    <column id="5759" parent="268" name="게시판명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5768" parent="268" name="말머리">
-=======
-    <column id="5760" parent="268" name="말머리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5769" parent="268" name="게시글 제목">
-=======
-    <column id="5761" parent="268" name="게시글 제목">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5770" parent="268" name="게시글 내용">
       <Position>5</Position>
       <StoredType>VARCHAR2(3000 byte)|0s</StoredType>
     </column>
     <column id="5771" parent="268" name="첨부파일 경로">
-=======
-    <column id="5762" parent="268" name="게시글 내용">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(3000 byte)|0s</StoredType>
-    </column>
-    <column id="5763" parent="268" name="첨부파일 경로">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>VARCHAR2(300 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5772" parent="268" name="작성자">
-=======
-    <column id="5764" parent="268" name="작성자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5773" parent="268" name="작성일">
-=======
-    <column id="5765" parent="268" name="작성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5774" parent="268" name="조회수">
       <Position>9</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -43086,67 +42489,35 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5776" parent="269" name="게시물 ID">
-=======
-    <column id="5766" parent="268" name="조회수">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5767" parent="268" name="추천">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5768" parent="269" name="게시물 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5777" parent="269" name="게시판 카테고리">
-=======
-    <column id="5769" parent="269" name="게시판 카테고리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5778" parent="269" name="게시판 이름">
-=======
-    <column id="5770" parent="269" name="게시판 이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5779" parent="269" name="말머리 이름">
-=======
-    <column id="5771" parent="269" name="말머리 이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5780" parent="269" name="인기글 지정일">
-=======
-    <column id="5772" parent="269" name="인기글 지정일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5781" parent="269" name="회원 닉네임">
-=======
-    <column id="5773" parent="269" name="회원 닉네임">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5782" parent="270" name="장비코드">
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -43168,34 +42539,10 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
     <column id="5787" parent="270" name="관리자ID">
-=======
-    <column id="5774" parent="270" name="장비코드">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5775" parent="270" name="검수유형">
-      <Position>2</Position>
-      <StoredType>CHAR(12 byte)|0s</StoredType>
-    </column>
-    <column id="5776" parent="270" name="장비명">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5777" parent="270" name="카테고리명">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5778" parent="270" name="검수항목">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5779" parent="270" name="관리자ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5788" parent="270" name="검수결과">
       <Position>7</Position>
       <StoredType>CHAR(3 byte)|0s</StoredType>
@@ -43217,70 +42564,30 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>CHAR(15 byte)|0s</StoredType>
     </column>
     <column id="5793" parent="271" name="장비명">
-=======
-    <column id="5780" parent="270" name="검수결과">
-      <Position>7</Position>
-      <StoredType>CHAR(3 byte)|0s</StoredType>
-    </column>
-    <column id="5781" parent="270" name="검수코멘트">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(300 byte)|0s</StoredType>
-    </column>
-    <column id="5782" parent="270" name="검수상태">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(15 byte)|0s</StoredType>
-    </column>
-    <column id="5783" parent="271" name="장비코드">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5784" parent="271" name="검수유형">
-      <Position>2</Position>
-      <StoredType>CHAR(15 byte)|0s</StoredType>
-    </column>
-    <column id="5785" parent="271" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5794" parent="271" name="카테고리명">
-=======
-    <column id="5786" parent="271" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5795" parent="271" name="검수항목">
-=======
-    <column id="5787" parent="271" name="검수항목">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5796" parent="271" name="관리자ID">
-=======
-    <column id="5788" parent="271" name="관리자ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5797" parent="271" name="검수결과">
-=======
-    <column id="5789" parent="271" name="검수결과">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>CHAR(3 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5798" parent="271" name="검수코멘트">
       <Position>8</Position>
       <StoredType>VARCHAR2(300 byte)|0s</StoredType>
@@ -43342,128 +42649,40 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
     <column id="5813" parent="273" name="게시글 ID">
-=======
-    <column id="5790" parent="271" name="검수코멘트">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(300 byte)|0s</StoredType>
-    </column>
-    <column id="5791" parent="271" name="검수상태">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(15 byte)|0s</StoredType>
-    </column>
-    <column id="5792" parent="272" name="거래ID">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5793" parent="272" name="배송ID">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5794" parent="272" name="장비코드">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5795" parent="272" name="검수유형">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(22 byte)|0s</StoredType>
-    </column>
-    <column id="5796" parent="272" name="장비명">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5797" parent="272" name="대분류카테명">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5798" parent="272" name="중분류카테명">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5799" parent="272" name="검수상태">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(15 byte)|0s</StoredType>
-    </column>
-    <column id="5800" parent="272" name="검수결과장비등급">
-      <Position>9</Position>
-      <StoredType>CHAR(1 byte)|0s</StoredType>
-    </column>
-    <column id="5801" parent="272" name="검수처리유형이름">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5802" parent="272" name="검수일">
-      <Position>11</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5803" parent="272" name="유저코드">
-      <Position>12</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5804" parent="272" name="유저닉네임">
-      <Position>13</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5805" parent="273" name="게시글 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5814" parent="273" name="회원코드">
-=======
-    <column id="5806" parent="273" name="회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5815" parent="273" name="말머리">
-=======
-    <column id="5807" parent="273" name="말머리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5816" parent="273" name="제목">
-=======
-    <column id="5808" parent="273" name="제목">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5817" parent="273" name="첨부파일 경로">
-=======
-    <column id="5809" parent="273" name="첨부파일 경로">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(300 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5818" parent="273" name="작성일">
-=======
-    <column id="5810" parent="273" name="작성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5819" parent="273" name="작성자">
-=======
-    <column id="5811" parent="273" name="작성자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5820" parent="273" name="조회수">
       <Position>8</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -43489,56 +42708,20 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
     <column id="5826" parent="275" name="결제방법">
-=======
-    <column id="5812" parent="273" name="조회수">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5813" parent="273" name="추천">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5814" parent="274" name="게시판명">
-      <Position>1</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5815" parent="274" name="신규 게시글수">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5816" parent="275" name="회원코드">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5817" parent="275" name="회원닉네임">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5818" parent="275" name="결제방법">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5827" parent="275" name="결제금액">
-=======
-    <column id="5819" parent="275" name="결제금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5828" parent="275" name="결제일자">
-=======
-    <column id="5820" parent="275" name="결제일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5829" parent="275" name="결제취소일">
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
@@ -43564,38 +42747,10 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5835" parent="276" name="PAY_ID">
-=======
-    <column id="5821" parent="275" name="결제취소일">
-      <Position>6</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5822" parent="275" name="결제취소사유">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5823" parent="275" name="보관ID">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5824" parent="275" name="스토렌ID">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5825" parent="275" name="렌탈매칭완료ID">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5826" parent="275" name="스토렌매칭완료ID">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5827" parent="276" name="PAY_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5836" parent="276" name="결제종류">
       <Position>2</Position>
       <StoredType>VARCHAR2(25 byte)|0s</StoredType>
@@ -43605,66 +42760,34 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5838" parent="277" name="포인트로그ID">
-=======
-    <column id="5828" parent="276" name="결제종류">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(25 byte)|0s</StoredType>
-    </column>
-    <column id="5829" parent="276" name="장비코드">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5830" parent="277" name="포인트로그ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5839" parent="277" name="회원코드">
-=======
-    <column id="5831" parent="277" name="회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5840" parent="277" name="회원닉네임">
-=======
-    <column id="5832" parent="277" name="회원닉네임">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5841" parent="277" name="포인트변동유형">
-=======
-    <column id="5833" parent="277" name="포인트변동유형">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5842" parent="277" name="변동포인트">
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5843" parent="277" name="생성일">
-=======
-    <column id="5834" parent="277" name="변동포인트">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5835" parent="277" name="생성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5844" parent="277" name="이벤트응모ID">
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -43698,64 +42821,20 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
     <column id="5852" parent="278" name="카테고리명">
-=======
-    <column id="5836" parent="277" name="이벤트응모ID">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5837" parent="277" name="응모포인트">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5838" parent="277" name="게시글신고ID">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5839" parent="277" name="게시글처리유형">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5840" parent="277" name="댓글신고ID">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5841" parent="277" name="댓글처리유형">
-      <Position>12</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5842" parent="277" name="렌탈댓글신고ID">
-      <Position>13</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5843" parent="277" name="렌탈처리유형">
-      <Position>14</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5844" parent="278" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5853" parent="278" name="브랜드명">
-=======
-    <column id="5845" parent="278" name="브랜드명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5854" parent="278" name="장비명">
-=======
-    <column id="5846" parent="278" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5855" parent="278" name="일반 렌탈건수">
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -43769,87 +42848,43 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5858" parent="279" name="게시물ID">
-=======
-    <column id="5847" parent="278" name="일반 렌탈건수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5848" parent="278" name="스토렌 렌탈건수">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5849" parent="278" name="총 렌탈수">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5850" parent="279" name="게시물ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5859" parent="279" name="USER_CODE">
-=======
-    <column id="5851" parent="279" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5860" parent="279" name="회원닉네임">
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
     <column id="5861" parent="279" name="게시물제목">
-=======
-    <column id="5852" parent="279" name="회원닉네임">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5853" parent="279" name="게시물제목">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5862" parent="279" name="게시물내용">
       <Position>5</Position>
       <StoredType>VARCHAR2(3000 byte)|0s</StoredType>
     </column>
     <column id="5863" parent="279" name="게시물생성일">
-=======
-    <column id="5854" parent="279" name="게시물내용">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(3000 byte)|0s</StoredType>
-    </column>
-    <column id="5855" parent="279" name="게시물생성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5864" parent="279" name="게시판카테고리">
-=======
-    <column id="5856" parent="279" name="게시판카테고리">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5865" parent="279" name="게시판이름">
-=======
-    <column id="5857" parent="279" name="게시판이름">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5866" parent="279" name="말머리이름">
       <Position>9</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
@@ -43903,93 +42938,25 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
     <column id="5879" parent="280" name="신청자코드">
-=======
-    <column id="5858" parent="279" name="말머리이름">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5859" parent="279" name="게시물조회수">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5860" parent="279" name="인기글지정여부">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5861" parent="279" name="추천수">
-      <Position>12</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5862" parent="279" name="댓글수">
-      <Position>13</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5863" parent="279" name="북마크수">
-      <Position>14</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5864" parent="279" name="첨부파일수">
-      <Position>15</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5865" parent="279" name="게시글신고건수">
-      <Position>16</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5866" parent="279" name="게시글신고처리유형">
-      <Position>17</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5867" parent="279" name="블라인드여부">
-      <Position>18</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5868" parent="280" name="렌탈ID">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5869" parent="280" name="장비코드">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5870" parent="280" name="렌탈제목">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5871" parent="280" name="신청자코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5880" parent="280" name="렌탈시작일">
-=======
-    <column id="5872" parent="280" name="렌탈시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5881" parent="280" name="렌탈종료일">
-=======
-    <column id="5873" parent="280" name="렌탈종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5882" parent="280" name="매칭신청일">
-=======
-    <column id="5874" parent="280" name="매칭신청일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5883" parent="280" name="승인여부">
       <Position>8</Position>
       <StoredType>VARCHAR2(9 byte)|0s</StoredType>
@@ -44031,89 +42998,29 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>DATE|0s</StoredType>
     </column>
     <column id="5893" parent="282" name="평가자_ID">
-=======
-    <column id="5875" parent="280" name="승인여부">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(9 byte)|0s</StoredType>
-    </column>
-    <column id="5876" parent="280" name="승인일자">
-      <Position>9</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5877" parent="281" name="장비코드">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5878" parent="281" name="장비명">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5879" parent="281" name="소유자회원코드">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5880" parent="281" name="렌탈ID">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5881" parent="281" name="렌탈제목">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5882" parent="281" name="결제금액">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5883" parent="281" name="결제여부">
-      <Position>7</Position>
-      <StoredType>CHAR(12 byte)|0s</StoredType>
-    </column>
-    <column id="5884" parent="281" name="결제일자">
-      <Position>8</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5885" parent="282" name="평가자_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5894" parent="282" name="피평가자_ID">
-=======
-    <column id="5886" parent="282" name="피평가자_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5895" parent="282" name="만족도_점수">
-=======
-    <column id="5887" parent="282" name="만족도_점수">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(1)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5896" parent="282" name="만족도_코멘트">
       <Position>4</Position>
       <StoredType>VARCHAR2(500 byte)|0s</StoredType>
     </column>
     <column id="5897" parent="282" name="만족도_생성일">
-=======
-    <column id="5888" parent="282" name="만족도_코멘트">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(500 byte)|0s</StoredType>
-    </column>
-    <column id="5889" parent="282" name="만족도_생성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5898" parent="282" name="렌탈매칭완료_ID">
       <Position>6</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -44191,152 +43098,44 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5917" parent="284" name="평가자_ID">
-=======
-    <column id="5890" parent="282" name="렌탈매칭완료_ID">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5891" parent="282" name="렌탈제목">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5892" parent="282" name="렌탈ID">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5893" parent="282" name="장비코드">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5894" parent="283" name="TRANSACTION_ID">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5895" parent="283" name="TRANSACTION_TYPE">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(22 byte)|0s</StoredType>
-    </column>
-    <column id="5896" parent="283" name="USER_CODE">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5897" parent="283" name="USER_NICKNAME">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5898" parent="283" name="RENTAL_START_DATE">
-      <Position>5</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5899" parent="283" name="RENTAL_END_DATE">
-      <Position>6</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5900" parent="283" name="RENTAL_DURATION">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5901" parent="283" name="RENTAL_PAY">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5902" parent="283" name="TRUST">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5903" parent="283" name="RENTAL_HISTORY">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5904" parent="283" name="REQUESTED_DATE">
-      <Position>11</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5905" parent="283" name="PAYMENT_DATE">
-      <Position>12</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5906" parent="283" name="PAYMENT_STATUS">
-      <Position>13</Position>
-      <StoredType>VARCHAR2(12 byte)|0s</StoredType>
-    </column>
-    <column id="5907" parent="283" name="MATCHING_REQ_ID">
-      <Position>14</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5908" parent="283" name="MATCHING_DONE_ID">
-      <Position>15</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5909" parent="284" name="평가자_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5918" parent="284" name="피평가자_ID">
-=======
-    <column id="5910" parent="284" name="피평가자_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5919" parent="284" name="만족도_점수">
-=======
-    <column id="5911" parent="284" name="만족도_점수">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(1)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5920" parent="284" name="만족도_코멘트">
       <Position>4</Position>
       <StoredType>VARCHAR2(500 byte)|0s</StoredType>
     </column>
     <column id="5921" parent="284" name="만족도_생성일">
-=======
-    <column id="5912" parent="284" name="만족도_코멘트">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(500 byte)|0s</StoredType>
-    </column>
-    <column id="5913" parent="284" name="만족도_생성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5922" parent="285" name="카테고리명">
-=======
-    <column id="5914" parent="285" name="카테고리명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5923" parent="285" name="브랜드명">
-=======
-    <column id="5915" parent="285" name="브랜드명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5924" parent="285" name="장비명">
-=======
-    <column id="5916" parent="285" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5925" parent="285" name="렌탈건수">
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -44346,117 +43145,61 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5927" parent="286" name="댓글ID">
-=======
-    <column id="5917" parent="285" name="렌탈건수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5918" parent="285" name="평균 렌탈가">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5919" parent="286" name="댓글 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5928" parent="286" name="상위댓글ID">
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5929" parent="286" name="회원코드">
-=======
-    <column id="5920" parent="286" name="상위댓글 ID">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5921" parent="286" name="회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5930" parent="286" name="회원닉네임">
-=======
-    <column id="5922" parent="286" name="회원닉네임">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5931" parent="286" name="게시물ID">
-=======
-    <column id="5923" parent="286" name="게시물 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5932" parent="286" name="댓글내용">
       <Position>6</Position>
       <StoredType>VARCHAR2(600 byte)|0s</StoredType>
     </column>
     <column id="5933" parent="286" name="작성일">
-=======
-    <column id="5924" parent="286" name="댓글내용">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(600 byte)|0s</StoredType>
-    </column>
-    <column id="5925" parent="286" name="작성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5934" parent="286" name="대댓글여부">
       <Position>8</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="5935" parent="287" name="댓글 ID">
-=======
-    <column id="5926" parent="286" name="대댓글여부">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5927" parent="287" name="댓글 ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5936" parent="287" name="댓글 내용">
       <Position>2</Position>
       <StoredType>VARCHAR2(600 byte)|0s</StoredType>
     </column>
     <column id="5937" parent="287" name="댓글 작성일">
-=======
-    <column id="5928" parent="287" name="댓글 내용">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(600 byte)|0s</StoredType>
-    </column>
-    <column id="5929" parent="287" name="댓글 작성일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5938" parent="287" name="회원 코드">
-=======
-    <column id="5930" parent="287" name="회원 코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5939" parent="287" name="회원 닉네임">
       <Position>5</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
@@ -44518,74 +43261,10 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>DATE|0s</StoredType>
     </column>
     <column id="5954" parent="289" name="신고유형">
-=======
-    <column id="5931" parent="287" name="회원 닉네임">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5932" parent="287" name="첨부파일 수">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5933" parent="287" name="댓글 신고 접수 건수">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5934" parent="287" name="댓글 신고 처리 유형">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5935" parent="287" name="블라인드 여부">
-      <Position>9</Position>
-      <StoredType>CHAR(1 byte)|0s</StoredType>
-    </column>
-    <column id="5936" parent="288" name="신고접수ID">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5937" parent="288" name="신고자닉네임">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5938" parent="288" name="피신고자닉네임">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5939" parent="288" name="분류">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5940" parent="288" name="신고유형">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5941" parent="288" name="신고내용">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(600 byte)|0s</StoredType>
-    </column>
-    <column id="5942" parent="288" name="신고일">
-      <Position>7</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5943" parent="288" name="관리자ID">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="5944" parent="288" name="처리상태">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(12 byte)|0s</StoredType>
-    </column>
-    <column id="5945" parent="288" name="처리일">
-      <Position>10</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="5946" parent="289" name="신고유형">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>VARCHAR2(60 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5955" parent="289" name="게시글 신고수">
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -44619,109 +43298,45 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>CHAR(6 byte)|0s</StoredType>
     </column>
     <column id="5963" parent="291" name="STOREN_ID">
-=======
-    <column id="5947" parent="289" name="게시글 신고수">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5948" parent="289" name="댓글 신고수">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5949" parent="289" name="총 신고수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5950" parent="290" name="EQUIP_CODE">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5951" parent="290" name="EQUIP_NAME">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5952" parent="290" name="BRAND_NAME">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="5953" parent="290" name="CATEGORY_NAME">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="5954" parent="290" name="TYPE">
-      <Position>5</Position>
-      <StoredType>CHAR(6 byte)|0s</StoredType>
-    </column>
-    <column id="5955" parent="291" name="STOREN_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5964" parent="291" name="EQUIP_CODE">
-=======
-    <column id="5956" parent="291" name="EQUIP_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5965" parent="291" name="USER_CODE">
-=======
-    <column id="5957" parent="291" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5966" parent="291" name="SIZE_ID">
-=======
-    <column id="5958" parent="291" name="SIZE_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5967" parent="291" name="EQUIP_SIZE_NAME">
-=======
-    <column id="5959" parent="291" name="EQUIP_SIZE_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(10 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5968" parent="291" name="REQUIRED_SPACE">
-=======
-    <column id="5960" parent="291" name="REQUIRED_SPACE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>NUMBER(2)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5969" parent="291" name="DAILY_STORAGE_FEE">
-=======
-    <column id="5961" parent="291" name="DAILY_STORAGE_FEE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(6)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5970" parent="291" name="STORE_MONTH">
-=======
-    <column id="5962" parent="291" name="STORE_MONTH">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>NUMBER(2)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5971" parent="291" name="STOREN_TITLE">
       <Position>9</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
@@ -44771,152 +43386,60 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(23 byte)|0s</StoredType>
     </column>
     <column id="5983" parent="292" name="장비코드">
-=======
-    <column id="5963" parent="291" name="STOREN_TITLE">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5964" parent="291" name="STOREN_CONTENT">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(1000 byte)|0s</StoredType>
-    </column>
-    <column id="5965" parent="291" name="DAILY_RENT_PRICE">
-      <Position>11</Position>
-      <StoredType>NUMBER(8)|0s</StoredType>
-    </column>
-    <column id="5966" parent="291" name="CREATED_DATE">
-      <Position>12</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5967" parent="291" name="INSPEC_COMPLETED_DATE">
-      <Position>13</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5968" parent="291" name="RENTAL_START_DATE">
-      <Position>14</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5969" parent="291" name="RENTAL_END_DATE">
-      <Position>15</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5970" parent="291" name="FINAL_RETURN_DATE">
-      <Position>16</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="5971" parent="291" name="MATCHING_REQUEST_COUNT">
-      <Position>17</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5972" parent="291" name="MATCHING_STATUS">
-      <Position>18</Position>
-      <StoredType>VARCHAR2(18 byte)|0s</StoredType>
-    </column>
-    <column id="5973" parent="291" name="EQUIP_GRADE">
-      <Position>19</Position>
-      <StoredType>CHAR(1 byte)|0s</StoredType>
-    </column>
-    <column id="5974" parent="291" name="STATUS">
-      <Position>20</Position>
-      <StoredType>VARCHAR2(23 byte)|0s</StoredType>
-    </column>
-    <column id="5975" parent="292" name="장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5984" parent="292" name="장비명">
-=======
-    <column id="5976" parent="292" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5985" parent="292" name="스토렌ID">
-=======
-    <column id="5977" parent="292" name="스토렌ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5986" parent="292" name="유형">
-=======
-    <column id="5978" parent="292" name="유형">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5987" parent="292" name="기존렌탈종료일">
-=======
-    <column id="5979" parent="292" name="기존렌탈종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5988" parent="292" name="배송시작일">
-=======
-    <column id="5980" parent="292" name="배송시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5989" parent="292" name="청구대상자코드">
-=======
-    <column id="5981" parent="292" name="청구대상자코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5990" parent="292" name="추가결제금액">
-=======
-    <column id="5982" parent="292" name="추가결제금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>NUMBER(9)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5991" parent="292" name="결제일">
-=======
-    <column id="5983" parent="292" name="결제일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5992" parent="293" name="장비코드">
-=======
-    <column id="5984" parent="293" name="장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5993" parent="293" name="장비명">
-=======
-    <column id="5985" parent="293" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5994" parent="293" name="스토렌매칭완료ID">
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -44926,40 +43449,20 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>CHAR(6 byte)|0s</StoredType>
     </column>
     <column id="5996" parent="293" name="청구대상자코드">
-=======
-    <column id="5986" parent="293" name="스토렌매칭완료ID">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5987" parent="293" name="문제유형">
-      <Position>4</Position>
-      <StoredType>CHAR(6 byte)|0s</StoredType>
-    </column>
-    <column id="5988" parent="293" name="청구대상자코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5997" parent="293" name="추가결제금액">
-=======
-    <column id="5989" parent="293" name="추가결제금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>NUMBER(9)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5998" parent="293" name="결제일">
-=======
-    <column id="5990" parent="293" name="결제일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="5999" parent="294" name="스토렌ID">
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -44973,53 +43476,25 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
     <column id="6002" parent="294" name="스토렌매칭신청자코드">
-=======
-    <column id="5991" parent="294" name="스토렌ID">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5992" parent="294" name="장비_코드">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="5993" parent="294" name="스토렌_제목">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="5994" parent="294" name="스토렌매칭신청자코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6003" parent="294" name="렌탈_시작일">
-=======
-    <column id="5995" parent="294" name="렌탈_시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6004" parent="294" name="렌탈_종료일">
-=======
-    <column id="5996" parent="294" name="렌탈_종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6005" parent="294" name="매칭신청일">
-=======
-    <column id="5997" parent="294" name="매칭신청일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6006" parent="294" name="승인여부">
       <Position>8</Position>
       <StoredType>VARCHAR2(9 byte)|0s</StoredType>
@@ -45061,153 +43536,65 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>DATE|0s</StoredType>
     </column>
     <column id="6016" parent="296" name="장비코드">
-=======
-    <column id="5998" parent="294" name="승인여부">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(9 byte)|0s</StoredType>
-    </column>
-    <column id="5999" parent="294" name="승인_일자">
-      <Position>9</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6000" parent="295" name="장비코드">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6001" parent="295" name="장비명">
-      <Position>2</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="6002" parent="295" name="소유자회원코드">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6003" parent="295" name="스토렌ID">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6004" parent="295" name="렌탈제목">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="6005" parent="295" name="결제금액">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6006" parent="295" name="결제여부">
-      <Position>7</Position>
-      <StoredType>CHAR(12 byte)|0s</StoredType>
-    </column>
-    <column id="6007" parent="295" name="결제일자">
-      <Position>8</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6008" parent="296" name="장비코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6017" parent="296" name="장비명">
-=======
-    <column id="6009" parent="296" name="장비명">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6018" parent="296" name="스토렌ID">
-=======
-    <column id="6010" parent="296" name="스토렌ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6019" parent="296" name="문제유형">
-=======
-    <column id="6011" parent="296" name="문제유형">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6020" parent="296" name="기존렌탈종료일">
-=======
-    <column id="6012" parent="296" name="기존렌탈종료일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6021" parent="296" name="배송시작일">
-=======
-    <column id="6013" parent="296" name="배송시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6022" parent="296" name="기존장비등급">
-=======
-    <column id="6014" parent="296" name="기존장비등급">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6023" parent="296" name="변경된장비등급">
-=======
-    <column id="6015" parent="296" name="변경된장비등급">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6024" parent="296" name="청구대상자코드">
-=======
-    <column id="6016" parent="296" name="청구대상자코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6025" parent="296" name="추가결제금액">
-=======
-    <column id="6017" parent="296" name="추가결제금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(9)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6026" parent="296" name="결제일">
-=======
-    <column id="6018" parent="296" name="결제일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6027" parent="297" name="STOREN_ID">
-=======
-    <column id="6019" parent="297" name="STOREN_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6028" parent="297" name="USER_CODE">
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -45253,137 +43640,53 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="6039" parent="299" name="STOREN_ID">
-=======
-    <column id="6020" parent="297" name="USER_CODE">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6021" parent="297" name="DETAILED_MATCHING_STATUS">
-      <Position>3</Position>
-      <StoredType>VARCHAR2(24 byte)|0s</StoredType>
-    </column>
-    <column id="6022" parent="298" name="WAITING_PAYMENT_COUNT">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6023" parent="298" name="WAITING_DELIVERY_COUNT">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6024" parent="298" name="IN_DELIVERY_COUNT">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6025" parent="298" name="IN_INSPECTION_COUNT">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6026" parent="298" name="IN_STORAGE_COUNT">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6027" parent="298" name="WAITING_APPROVAL_COUNT">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6028" parent="298" name="WAITING_RENTAL_PAYMENT_COUNT">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6029" parent="298" name="IN_RENTAL_COUNT">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6030" parent="298" name="IN_RETURN_COUNT">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6031" parent="299" name="STOREN_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6040" parent="299" name="EQUIP_CODE">
-=======
-    <column id="6032" parent="299" name="EQUIP_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6041" parent="299" name="USER_CODE">
-=======
-    <column id="6033" parent="299" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6042" parent="299" name="STOREN_TITLE">
       <Position>4</Position>
       <StoredType>VARCHAR2(90 byte)|0s</StoredType>
     </column>
     <column id="6043" parent="299" name="CREATED_DATE">
-=======
-    <column id="6034" parent="299" name="STOREN_TITLE">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(90 byte)|0s</StoredType>
-    </column>
-    <column id="6035" parent="299" name="CREATED_DATE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6044" parent="299" name="STATUS">
       <Position>6</Position>
       <StoredType>VARCHAR2(23 byte)|0s</StoredType>
     </column>
     <column id="6045" parent="300" name="관리자회원코드">
-=======
-    <column id="6036" parent="299" name="STATUS">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(23 byte)|0s</StoredType>
-    </column>
-    <column id="6037" parent="300" name="관리자회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6046" parent="300" name="관리자ID">
-=======
-    <column id="6038" parent="300" name="관리자ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6047" parent="300" name="활동정지유저코드">
-=======
-    <column id="6039" parent="300" name="활동정지유저코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6048" parent="300" name="활동정지시작일">
-=======
-    <column id="6040" parent="300" name="활동정지시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6049" parent="300" name="활동정지상태">
       <Position>5</Position>
       <StoredType>VARCHAR2(12 byte)|0s</StoredType>
@@ -45417,64 +43720,20 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
     <column id="6057" parent="302" name="USER_CODE">
-=======
-    <column id="6041" parent="300" name="활동정지상태">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(12 byte)|0s</StoredType>
-    </column>
-    <column id="6042" parent="301" name="끌올일자">
-      <Position>1</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6043" parent="301" name="렌탈ID">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6044" parent="301" name="렌탈생성일">
-      <Position>3</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6045" parent="301" name="스토렌ID">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6046" parent="301" name="스토렌생성일">
-      <Position>5</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6047" parent="301" name="검수처리일">
-      <Position>6</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6048" parent="301" name="검수처리유형">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="6049" parent="302" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6058" parent="302" name="USER_ID">
-=======
-    <column id="6050" parent="302" name="USER_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6059" parent="302" name="USER_NAME">
-=======
-    <column id="6051" parent="302" name="USER_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6060" parent="302" name="현재닉네임">
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
@@ -45504,42 +43763,10 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="6067" parent="302" name="가입일">
-=======
-    <column id="6052" parent="302" name="현재닉네임">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6053" parent="302" name="RANK_ID">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6054" parent="302" name="RANK_NAME">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6055" parent="302" name="RANK_ATTACHMENT_PATH">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(300 byte)|0s</StoredType>
-    </column>
-    <column id="6056" parent="302" name="총포인트">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6057" parent="302" name="신용점수">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6058" parent="302" name="닉네임변경횟수">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6059" parent="302" name="가입일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6068" parent="302" name="사용가능쿠폰수">
       <Position>12</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -45549,84 +43776,44 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>CHAR(12 byte)|0s</StoredType>
     </column>
     <column id="6070" parent="303" name="SUSPENDED_USER_ID">
-=======
-    <column id="6060" parent="302" name="사용가능쿠폰수">
-      <Position>12</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6061" parent="302" name="회원상태">
-      <Position>13</Position>
-      <StoredType>CHAR(12 byte)|0s</StoredType>
-    </column>
-    <column id="6062" parent="303" name="SUSPENDED_USER_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6071" parent="303" name="USER_CODE">
-=======
-    <column id="6063" parent="303" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6072" parent="303" name="USER_ID">
-=======
-    <column id="6064" parent="303" name="USER_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6073" parent="303" name="USER_NAME">
-=======
-    <column id="6065" parent="303" name="USER_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6074" parent="303" name="USER_TEL">
-=======
-    <column id="6066" parent="303" name="USER_TEL">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6075" parent="303" name="USER_EMAIL">
       <Position>6</Position>
       <StoredType>VARCHAR2(40 byte)|0s</StoredType>
     </column>
     <column id="6076" parent="303" name="SUSPENDED_START_DATE">
-=======
-    <column id="6067" parent="303" name="USER_EMAIL">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(40 byte)|0s</StoredType>
-    </column>
-    <column id="6068" parent="303" name="SUSPENDED_START_DATE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6077" parent="303" name="SUSPENDED_BY_ADMIN">
-=======
-    <column id="6069" parent="303" name="SUSPENDED_BY_ADMIN">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6078" parent="303" name="POST_REPORT_COUNT">
       <Position>9</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -45684,106 +43871,30 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>VARCHAR2(600 byte)|0s</StoredType>
     </column>
     <column id="6092" parent="305" name="USER_CODE">
-=======
-    <column id="6070" parent="303" name="POST_REPORT_COUNT">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6071" parent="303" name="REPLY_REPORT_COUNT">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6072" parent="303" name="RENTAL_REPLY_REPORT_COUNT">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6073" parent="304" name="REPORT_TYPE">
-      <Position>1</Position>
-      <StoredType>VARCHAR2(19 byte)|0s</StoredType>
-    </column>
-    <column id="6074" parent="304" name="REPORT_ID">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6075" parent="304" name="USER_CODE">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6076" parent="304" name="USER_ID">
-      <Position>4</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="6077" parent="304" name="USER_NAME">
-      <Position>5</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6078" parent="304" name="ADMIN_ID">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="6079" parent="304" name="ACTION_TYPE">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(20 byte)|0s</StoredType>
-    </column>
-    <column id="6080" parent="304" name="REPORT_DATE">
-      <Position>8</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6081" parent="304" name="ACTION_DATE">
-      <Position>9</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6082" parent="304" name="REPORT_TYPE_NAME">
-      <Position>10</Position>
-      <StoredType>VARCHAR2(60 byte)|0s</StoredType>
-    </column>
-    <column id="6083" parent="304" name="REPORT_CONTENT">
-      <Position>11</Position>
-      <StoredType>VARCHAR2(600 byte)|0s</StoredType>
-    </column>
-    <column id="6084" parent="305" name="USER_CODE">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6093" parent="305" name="USER_ID">
-=======
-    <column id="6085" parent="305" name="USER_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6094" parent="305" name="USER_PW">
-=======
-    <column id="6086" parent="305" name="USER_PW">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>VARCHAR2(128 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6095" parent="305" name="USER_NAME">
-=======
-    <column id="6087" parent="305" name="USER_NAME">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6096" parent="305" name="USER_TEL">
-=======
-    <column id="6088" parent="305" name="USER_TEL">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>VARCHAR2(30 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6097" parent="305" name="USER_EMAIL">
       <Position>6</Position>
       <StoredType>VARCHAR2(40 byte)|0s</StoredType>
@@ -45845,227 +43956,95 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
     <column id="6112" parent="306" name="회원_코드">
-=======
-    <column id="6089" parent="305" name="USER_EMAIL">
-      <Position>6</Position>
-      <StoredType>VARCHAR2(40 byte)|0s</StoredType>
-    </column>
-    <column id="6090" parent="305" name="EMAIL_CONSENT">
-      <Position>7</Position>
-      <StoredType>VARCHAR2(9 byte)|0s</StoredType>
-    </column>
-    <column id="6091" parent="305" name="JOIN_DATE">
-      <Position>8</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="6092" parent="305" name="CURRENT_NICKNAME">
-      <Position>9</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6093" parent="305" name="TOTAL_POINTS">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6094" parent="305" name="TRUST_SCORE">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6095" parent="305" name="ZIPCODE">
-      <Position>12</Position>
-      <StoredType>VARCHAR2(10 byte)|0s</StoredType>
-    </column>
-    <column id="6096" parent="305" name="ADDRESS1">
-      <Position>13</Position>
-      <StoredType>VARCHAR2(200 byte)|0s</StoredType>
-    </column>
-    <column id="6097" parent="305" name="ADDRESS2">
-      <Position>14</Position>
-      <StoredType>VARCHAR2(200 byte)|0s</StoredType>
-    </column>
-    <column id="6098" parent="305" name="USER_GRADE">
-      <Position>15</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6099" parent="305" name="NEXT_USER_GRADE">
-      <Position>16</Position>
-      <StoredType>VARCHAR2(30 byte)|0s</StoredType>
-    </column>
-    <column id="6100" parent="305" name="ALLOWED_NICKNAME_CHANGE">
-      <Position>17</Position>
-      <StoredType>NUMBER(1)|0s</StoredType>
-    </column>
-    <column id="6101" parent="305" name="TOTAL_PROFIT">
-      <Position>18</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6102" parent="305" name="REMAIN_POINT">
-      <Position>19</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6103" parent="305" name="REMAIN_TRUST">
-      <Position>20</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6104" parent="306" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6113" parent="306" name="스토렌_ID">
-=======
-    <column id="6105" parent="306" name="스토렌_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6114" parent="306" name="스토렌_매칭_완료_ID">
-=======
-    <column id="6106" parent="306" name="스토렌_매칭_완료_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6115" parent="306" name="스토렌_결제_금액">
-=======
-    <column id="6107" parent="306" name="스토렌_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6116" parent="306" name="보관_결제_금액">
-=======
-    <column id="6108" parent="306" name="보관_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6117" parent="306" name="보관_결제_일자">
-=======
-    <column id="6109" parent="306" name="보관_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6118" parent="306" name="렌탈_결제_금액">
-=======
-    <column id="6110" parent="306" name="렌탈_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6119" parent="306" name="렌탈_결제_일자">
-=======
-    <column id="6111" parent="306" name="렌탈_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6120" parent="306" name="회원가입일">
-=======
-    <column id="6112" parent="306" name="회원가입일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6121" parent="306" name="검수_결과_ID">
-=======
-    <column id="6113" parent="306" name="검수_결과_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6122" parent="306" name="검수_결과_처리일">
-=======
-    <column id="6114" parent="306" name="검수_결과_처리일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6123" parent="306" name="게시글_신고접수_ID">
-=======
-    <column id="6115" parent="306" name="게시글_신고접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6124" parent="306" name="게시글_신고일">
-=======
-    <column id="6116" parent="306" name="게시글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6125" parent="306" name="댓글_신고_접수_ID">
-=======
-    <column id="6117" parent="306" name="댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>14</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6126" parent="306" name="댓글_신고일">
-=======
-    <column id="6118" parent="306" name="댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6127" parent="306" name="렌탈_댓글_신고_접수_ID">
-=======
-    <column id="6119" parent="306" name="렌탈_댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>16</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6128" parent="306" name="렌탈_댓글_신고일">
-=======
-    <column id="6120" parent="306" name="렌탈_댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6129" parent="306" name="회원_ID">
-=======
-    <column id="6121" parent="306" name="회원_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>18</Position>
       <StoredType>VARCHAR2(20 byte)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6130" parent="307" name="신규회원수">
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
@@ -46251,615 +44230,240 @@ WAYBILL_ENTRY_DATE</ColNames>
       <StoredType>UNDEFINED|0s</StoredType>
     </column>
     <column id="6176" parent="310" name="회원_코드">
-=======
-    <column id="6122" parent="307" name="신규회원수">
-      <Position>1</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6123" parent="307" name="스토렌결제수">
-      <Position>2</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6124" parent="307" name="스토렌결제액">
-      <Position>3</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6125" parent="307" name="보관결제수">
-      <Position>4</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6126" parent="307" name="보관결제액">
-      <Position>5</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6127" parent="307" name="렌탈결제수">
-      <Position>6</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6128" parent="307" name="렌탈결제액">
-      <Position>7</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6129" parent="307" name="총결제건수">
-      <Position>8</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6130" parent="307" name="총결제금액">
-      <Position>9</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6131" parent="307" name="검수건수">
-      <Position>10</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6132" parent="307" name="게시글신고수">
-      <Position>11</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6133" parent="307" name="댓글신고수">
-      <Position>12</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6134" parent="307" name="렌탈댓글신고수">
-      <Position>13</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6135" parent="307" name="총신고건수">
-      <Position>14</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6136" parent="307" name="총회원수">
-      <Position>15</Position>
-      <StoredType>NUMBER(*)|0s</StoredType>
-    </column>
-    <column id="6137" parent="307" name="집계일자">
-      <Position>16</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6138" parent="308" name="POST_REPORT_ID">
-      <Position>1</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6139" parent="308" name="POST_ID">
-      <Position>2</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6140" parent="308" name="POST_TITLE">
-      <Position>3</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6141" parent="308" name="POST_CONTENT">
-      <Position>4</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6142" parent="308" name="BOARD_NAME">
-      <Position>5</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6143" parent="308" name="REPORTER_ID">
-      <Position>6</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6144" parent="308" name="REPORTER_NICKNAME">
-      <Position>7</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6145" parent="308" name="POST_WRITER_NICKNAME">
-      <Position>8</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6146" parent="308" name="REPORT_TYPE_NAME">
-      <Position>9</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6147" parent="308" name="REPORT_CONTENT">
-      <Position>10</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6148" parent="308" name="REPORTED_DATE">
-      <Position>11</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6149" parent="308" name="ACTION_COMPLETED_DATE">
-      <Position>12</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6150" parent="308" name="HANDLED_BY_ADMIN">
-      <Position>13</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6151" parent="308" name="REPORT_ACTION_TYPE_NAME">
-      <Position>14</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6152" parent="308" name="STATUS">
-      <Position>15</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6153" parent="309" name="REPLY_REPORT_ID">
-      <Position>1</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6154" parent="309" name="REPLY_ID">
-      <Position>2</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6155" parent="309" name="REPLY_CONTENT">
-      <Position>3</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6156" parent="309" name="POST_ID">
-      <Position>4</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6157" parent="309" name="POST_TITLE">
-      <Position>5</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6158" parent="309" name="REPORTER_ID">
-      <Position>6</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6159" parent="309" name="REPORTER_NICKNAME">
-      <Position>7</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6160" parent="309" name="REPLY_WRITER_NICKNAME">
-      <Position>8</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6161" parent="309" name="REPORT_TYPE_NAME">
-      <Position>9</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6162" parent="309" name="REPORT_CONTENT">
-      <Position>10</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6163" parent="309" name="REPORTED_DATE">
-      <Position>11</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6164" parent="309" name="ACTION_COMPLETED_DATE">
-      <Position>12</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6165" parent="309" name="HANDLED_BY_ADMIN">
-      <Position>13</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6166" parent="309" name="REPORT_ACTION_TYPE_NAME">
-      <Position>14</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6167" parent="309" name="STATUS">
-      <Position>15</Position>
-      <StoredType>UNDEFINED|0s</StoredType>
-    </column>
-    <column id="6168" parent="310" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6177" parent="310" name="스토렌_ID">
-=======
-    <column id="6169" parent="310" name="스토렌_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6178" parent="310" name="스토렌_매칭_완료_ID">
-=======
-    <column id="6170" parent="310" name="스토렌_매칭_완료_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6179" parent="310" name="스토렌_결제_금액">
-=======
-    <column id="6171" parent="310" name="스토렌_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6180" parent="310" name="보관_결제_금액">
-=======
-    <column id="6172" parent="310" name="보관_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6181" parent="310" name="보관_결제_일자">
-=======
-    <column id="6173" parent="310" name="보관_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6182" parent="310" name="렌탈_결제_금액">
-=======
-    <column id="6174" parent="310" name="렌탈_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6183" parent="310" name="렌탈_결제_일자">
-=======
-    <column id="6175" parent="310" name="렌탈_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6184" parent="310" name="회원가입일">
-=======
-    <column id="6176" parent="310" name="회원가입일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6185" parent="310" name="검수_결과_ID">
-=======
-    <column id="6177" parent="310" name="검수_결과_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6186" parent="310" name="검수_결과_처리일">
-=======
-    <column id="6178" parent="310" name="검수_결과_처리일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6187" parent="310" name="배송_시작일">
-=======
-    <column id="6179" parent="310" name="배송_시작일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6188" parent="310" name="배송_종료일">
       <Position>13</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
     <column id="6189" parent="311" name="회원_코드">
-=======
-    <column id="6180" parent="310" name="배송_종료일">
-      <Position>13</Position>
-      <StoredType>DATE|0s</StoredType>
-    </column>
-    <column id="6181" parent="311" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6190" parent="311" name="스토렌_ID">
-=======
-    <column id="6182" parent="311" name="스토렌_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6191" parent="311" name="스토렌_매칭_완료_ID">
-=======
-    <column id="6183" parent="311" name="스토렌_매칭_완료_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6192" parent="311" name="스토렌_결제_금액">
-=======
-    <column id="6184" parent="311" name="스토렌_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6193" parent="311" name="보관_결제_금액">
-=======
-    <column id="6185" parent="311" name="보관_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6194" parent="311" name="보관_결제_일자">
-=======
-    <column id="6186" parent="311" name="보관_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6195" parent="311" name="렌탈_결제_금액">
-=======
-    <column id="6187" parent="311" name="렌탈_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6196" parent="311" name="렌탈_결제_일자">
-=======
-    <column id="6188" parent="311" name="렌탈_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6197" parent="311" name="회원가입일">
-=======
-    <column id="6189" parent="311" name="회원가입일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6198" parent="311" name="검수_결과_ID">
-=======
-    <column id="6190" parent="311" name="검수_결과_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6199" parent="311" name="검수_결과_처리일">
-=======
-    <column id="6191" parent="311" name="검수_결과_처리일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6200" parent="312" name="회원_코드">
-=======
-    <column id="6192" parent="312" name="회원_코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6201" parent="312" name="스토렌_ID">
-=======
-    <column id="6193" parent="312" name="스토렌_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6202" parent="312" name="스토렌_매칭_완료_ID">
-=======
-    <column id="6194" parent="312" name="스토렌_매칭_완료_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6203" parent="312" name="스토렌_결제_금액">
-=======
-    <column id="6195" parent="312" name="스토렌_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6204" parent="312" name="보관_결제_금액">
-=======
-    <column id="6196" parent="312" name="보관_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6205" parent="312" name="보관_결제_일자">
-=======
-    <column id="6197" parent="312" name="보관_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6206" parent="312" name="렌탈_결제_금액">
-=======
-    <column id="6198" parent="312" name="렌탈_결제_금액">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6207" parent="312" name="렌탈_결제_일자">
-=======
-    <column id="6199" parent="312" name="렌탈_결제_일자">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>8</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6208" parent="312" name="회원가입일">
-=======
-    <column id="6200" parent="312" name="회원가입일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6209" parent="312" name="검수_결과_ID">
-=======
-    <column id="6201" parent="312" name="검수_결과_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>10</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6210" parent="312" name="검수_결과_처리일">
-=======
-    <column id="6202" parent="312" name="검수_결과_처리일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6211" parent="312" name="게시글_신고접수_ID">
-=======
-    <column id="6203" parent="312" name="게시글_신고접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>12</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6212" parent="312" name="게시글_신고일">
-=======
-    <column id="6204" parent="312" name="게시글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>13</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6213" parent="312" name="댓글_신고_접수_ID">
-=======
-    <column id="6205" parent="312" name="댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>14</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6214" parent="312" name="댓글_신고일">
-=======
-    <column id="6206" parent="312" name="댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>15</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6215" parent="312" name="렌탈_댓글_신고_접수_ID">
-=======
-    <column id="6207" parent="312" name="렌탈_댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>16</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6216" parent="312" name="렌탈_댓글_신고일">
-=======
-    <column id="6208" parent="312" name="렌탈_댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>17</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6217" parent="313" name="회원코드">
-=======
-    <column id="6209" parent="313" name="회원코드">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6218" parent="313" name="게시글_신고접수_ID">
-=======
-    <column id="6210" parent="313" name="게시글_신고접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6219" parent="313" name="게시글_신고일">
-=======
-    <column id="6211" parent="313" name="게시글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6220" parent="313" name="댓글_신고_접수_ID">
-=======
-    <column id="6212" parent="313" name="댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6221" parent="313" name="댓글_신고일">
-=======
-    <column id="6213" parent="313" name="댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>DATE|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6222" parent="313" name="렌탈_댓글_신고_접수_ID">
-=======
-    <column id="6214" parent="313" name="렌탈_댓글_신고_접수_ID">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>6</Position>
       <StoredType>NUMBER(*)|0s</StoredType>
     </column>
-<<<<<<< HEAD
     <column id="6223" parent="313" name="렌탈_댓글_신고일">
-=======
-    <column id="6215" parent="313" name="렌탈_댓글_신고일">
->>>>>>> origin/develop
       <NotNull>1</NotNull>
       <Position>7</Position>
       <StoredType>DATE|0s</StoredType>

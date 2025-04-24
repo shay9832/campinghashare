@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mvc.Interface.IAdminInspectListDAO">
+
+    <!-- 1차 검수 목록 조회 수정 쿼리 - 중복 제거, 검수 코멘트 표시, 최신순 정렬 -->
+    <select id="getList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            e.EQUIP_CODE as equipCode,
+            pd.PLATFORM_DELIVERY_ID as platformDeliveryId,
+            '입고검수' as inspectName,
+            en.EQUIP_NAME as equipName,
+            c.CATEGORY_NAME as categoryName,
+            (SELECT MIN(ii.INSPEC_ITEM_NAME)
+             FROM INSPEC_ITEM ii
+                      JOIN CATE_INSPEC ci ON ii.INSPEC_ITEM_ID = ci.INSPEC_ITEM_ID
+                      JOIN INSPEC_LIST il2 ON ci.CATE_INSPEC_ID = il2.CATE_INSPEC_ID
+             WHERE il2.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID) as inspectList,
+            COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
+            eg.EQUIP_GRADE_NAME as finalGrade,
+            CASE
+                WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
+                WHEN eg.EQUIP_GRADE_NAME = 'F' THEN '사용자반납'
+                ELSE '검수완료'
+                END as inspectState
+        FROM PLATFORM_DELIVERY pd
+                 JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 LEFT JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 LEFT JOIN STORAGE st ON p.STORAGE_ID = st.STORAGE_ID
+                 INNER JOIN EQUIPMENT_REGISTRATION e ON (s.EQUIP_CODE = e.EQUIP_CODE OR st.EQUIP_CODE = e.EQUIP_CODE)
+                 INNER JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 INNER JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+            /* INSPEC_LIST와 1:1 관계로 조인 (가장 최근에 등록된 검수 정보만) */
+                 LEFT JOIN (
+            SELECT * FROM (
+                              SELECT
+                                  il.*,
+                                  ROW_NUMBER() OVER (PARTITION BY PLATFORM_DELIVERY_ID ORDER BY INSPEC_LIST_ID DESC) as rn
+                              FROM INSPEC_LIST il
+                          ) WHERE rn = 1
+        ) il ON pd.PLATFORM_DELIVERY_ID = il.PLATFORM_DELIVERY_ID
+                 LEFT JOIN INSPEC_RESULT ir ON pd.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
+                 LEFT JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+                 LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+                 LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL
+          AND (ir.INSPEC_RESULT_ID IS NULL OR ir.PLATFORM_DELIVERY_RETURN_ID IS NULL)
+          AND e.EQUIP_CODE IS NOT NULL
+          AND e.EQUIP_CODE != 0
+        ORDER BY pd.PLATFORM_DELIVERY_ID DESC
+    </select>
+
+    <!-- 2차 검수 목록 조회 (반환 검수) 수정 쿼리 - 중복 제거, 검수 코멘트 표시, 최신순 정렬 -->
+    <select id="getListr" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            e.EQUIP_CODE as equipCode,
+            '스토렌반환검수' as inspectName,
+            en.EQUIP_NAME as equipName,
+            pd.PLATFORM_DELIVERY_ID as platformDeliveryId,
+            pdr.PLATFORM_DELIVERY_RETURN_ID as platformDeliveryReturnId,
+            c.CATEGORY_NAME as categoryName,
+            (SELECT MIN(ii.INSPEC_ITEM_NAME)
+             FROM INSPEC_ITEM ii
+                      JOIN CATE_INSPEC ci ON ii.INSPEC_ITEM_ID = ci.INSPEC_ITEM_ID
+                      JOIN INSPEC_LIST il2 ON ci.CATE_INSPEC_ID = il2.CATE_INSPEC_ID
+             WHERE il2.PLATFORM_DELIVERY_RETURN_ID = pdr.PLATFORM_DELIVERY_RETURN_ID) as inspectList,
+            COALESCE(a.ADMIN_ID, 'ADMIN1') as adminId,
+            eg.EQUIP_GRADE_NAME as finalGrade,
+            CASE
+                WHEN ir.INSPEC_RESULT_ID IS NULL THEN '검수대기'
+                WHEN eg.EQUIP_GRADE_NAME = 'F' THEN '사용자반납'
+                ELSE '검수완료'
+                END as inspectState
+        FROM PLATFORM_DELIVERY_RETURN pdr
+                 JOIN PLATFORM_DELIVERY pd ON pdr.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
+                 JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 LEFT JOIN STORAGE st ON p.STORAGE_ID = st.STORAGE_ID
+                 INNER JOIN EQUIPMENT_REGISTRATION e ON (s.EQUIP_CODE = e.EQUIP_CODE OR st.EQUIP_CODE = e.EQUIP_CODE)
+                 INNER JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 INNER JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+            /* INSPEC_LIST와 1:1 관계로 조인 (가장 최근에 등록된 검수 정보만) */
+                 LEFT JOIN (
+            SELECT * FROM (
+                              SELECT
+                                  il.*,
+                                  ROW_NUMBER() OVER (PARTITION BY PLATFORM_DELIVERY_RETURN_ID ORDER BY INSPEC_LIST_ID DESC) as rn
+                              FROM INSPEC_LIST il
+                          ) WHERE rn = 1
+        ) il ON pdr.PLATFORM_DELIVERY_RETURN_ID = il.PLATFORM_DELIVERY_RETURN_ID
+                 LEFT JOIN INSPEC_RESULT ir ON pdr.PLATFORM_DELIVERY_RETURN_ID = ir.PLATFORM_DELIVERY_RETURN_ID
+                 LEFT JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+                 LEFT JOIN ADMINS a ON il.ADMIN_ID = a.ADMIN_ID
+                 LEFT JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
+          AND e.EQUIP_CODE IS NOT NULL
+          AND e.EQUIP_CODE != 0
+        ORDER BY pdr.PLATFORM_DELIVERY_RETURN_ID DESC
+    </select>
+
+    <!-- 검수 항목 조회 -->
+    <select id="getItemList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            INSPEC_ITEM_ID as inspecItemId,
+            INSPEC_ITEM_NAME as inspecItemName,
+            INSPEC_ITEM_DESC_HIGH as inspecItemDescHigh,
+            INSPEC_ITEM_DESC_MID as inspecItemDescMid,
+            INSPEC_ITEM_DESC_LOW as inspecItemDescLow
+        FROM INSPEC_ITEM
+    </select>
+
+    <!-- 검수 등급 조회 -->
+    <select id="getGradeList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            INSPEC_GRADE_ID as inspecGradeId,
+            INSPEC_GRADE_NAME as inspecGradeName,
+            INSPEC_GRADE_DEDUCTION as inspecGradeDeduction
+        FROM INSPEC_GRADE
+        ORDER BY INSPEC_GRADE_ID
+    </select>
+
+    <!-- 장비 목록 조회 -->
+    <select id="getEquipList" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+            e.EQUIP_CODE as equipCode,
+            en.EQUIP_NAME as equipName,
+            c.CATEGORY_NAME as categoryName
+        FROM EQUIPMENT_REGISTRATION e
+                 JOIN EQUIP_NAME en ON e.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 JOIN CATEGORY c ON e.CATEGORY_ID = c.CATEGORY_ID
+    </select>
+
+    <!-- 확장된 검수 결과 등록 프로시저 호출 -->
+    <update id="callINSPECT_RESULT">
+        {CALL INSPECT_RESULT(
+                #{platformDeliveryId, jdbcType=INTEGER, mode=IN},
+                #{platformDeliveryReturnId, jdbcType=INTEGER, mode=IN},
+                #{inspecGradeId, jdbcType=INTEGER, mode=IN},
+                #{equipGradeId, jdbcType=INTEGER, mode=IN},
+                #{adminId, jdbcType=VARCHAR, mode=IN}
+              )}
+    </update>
+
+    <!-- 반환 ID에 해당하는 원래 배송 ID 조회 -->
+    <select id="getDeliveryIdFromReturnId" resultType="int">
+        SELECT PLATFORM_DELIVERY_ID
+        FROM PLATFORM_DELIVERY_RETURN
+        WHERE PLATFORM_DELIVERY_RETURN_ID = #{returnId}
+    </select>
+
+    <!-- 검수 결과 상세 조회 추가 -->
+    <select id="getInspectionResult" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+        ir.INSPEC_RESULT_ID as inspecResultId,
+        il.INSPEC_COMMENT as inspectComment,
+        ig.INSPEC_GRADE_NAME as inspectResult,
+        eg.EQUIP_GRADE_NAME as finalGrade
+        FROM INSPEC_RESULT ir
+        JOIN INSPEC_LIST il ON (
+        (ir.PLATFORM_DELIVERY_ID = il.PLATFORM_DELIVERY_ID AND ir.PLATFORM_DELIVERY_ID IS NOT NULL) OR
+        (ir.PLATFORM_DELIVERY_RETURN_ID = il.PLATFORM_DELIVERY_RETURN_ID AND ir.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL)
+        )
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE
+        <if test="platformDeliveryId != null">
+            ir.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+            <if test="platformDeliveryReturnId == null">
+                AND ir.PLATFORM_DELIVERY_RETURN_ID IS NULL
+            </if>
+        </if>
+        <if test="platformDeliveryReturnId != null">
+            ir.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+        </if>
+    </select>
+
+    <!-- 검수 항목별 결과 조회 -->
+    <select id="getInspectionItemResults" resultType="com.team.mvc.DTO.AdminInspectListDTO">
+        SELECT
+        il.INSPEC_LIST_ID as inspecListId,
+        il.INSPEC_COMMENT as inspectComment,
+        ii.INSPEC_ITEM_ID as inspecItemId,
+        ii.INSPEC_ITEM_NAME as inspecItemName,
+        ig.INSPEC_GRADE_ID as inspecGradeId,
+        ig.INSPEC_GRADE_NAME as inspecGradeName
+        FROM INSPEC_LIST il
+        JOIN CATE_INSPEC ci ON il.CATE_INSPEC_ID = ci.CATE_INSPEC_ID
+        JOIN INSPEC_ITEM ii ON ci.INSPEC_ITEM_ID = ii.INSPEC_ITEM_ID
+        JOIN INSPEC_GRADE ig ON il.INSPEC_GRADE_ID = ig.INSPEC_GRADE_ID
+        WHERE
+        <if test="platformDeliveryId != null">
+            il.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+        </if>
+        <if test="platformDeliveryReturnId != null">
+            il.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+        </if>
+        ORDER BY il.INSPEC_LIST_ID
+    </select>
+
+    <insert id="insertInspecListItem">
+        INSERT INTO INSPEC_LIST
+        (INSPEC_LIST_ID, INSPEC_COMMENT, CATE_INSPEC_ID, PLATFORM_DELIVERY_ID,
+         PLATFORM_DELIVERY_RETURN_ID, ADMIN_ID, INSPEC_GRADE_ID, INSPECTION_DATE)
+        VALUES
+            ((SELECT NVL(MAX(INSPEC_LIST_ID), 0) + 1 FROM INSPEC_LIST),
+             #{inspecComment, jdbcType=VARCHAR},
+             #{cateInspecId, jdbcType=NUMERIC},
+             #{platformDeliveryId, jdbcType=NUMERIC},
+             #{platformDeliveryReturnId, jdbcType=NUMERIC},
+             #{adminId, jdbcType=VARCHAR},
+             #{inspecGradeId, jdbcType=NUMERIC},
+             SYSDATE)
+    </insert>
+
+    <!-- 검수 통계 조회 -->
+    <select id="getTotalInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT pd.PLATFORM_DELIVERY_ID
+                 FROM PLATFORM_DELIVERY pd
+                 WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL
+                 UNION
+                 SELECT pdr.PLATFORM_DELIVERY_RETURN_ID
+                 FROM PLATFORM_DELIVERY_RETURN pdr
+                 WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
+             )
+    </select>
+
+    <select id="getCompletedInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM INSPEC_RESULT ir
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE eg.EQUIP_GRADE_NAME != 'F'
+    </select>
+
+    <select id="getReturnedInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM INSPEC_RESULT ir
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE eg.EQUIP_GRADE_NAME = 'F'
+    </select>
+
+    <select id="getPendingInspectionCount" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT pd.PLATFORM_DELIVERY_ID
+                 FROM PLATFORM_DELIVERY pd
+                          LEFT JOIN INSPEC_RESULT ir ON pd.PLATFORM_DELIVERY_ID = ir.PLATFORM_DELIVERY_ID
+                 WHERE pd.PLATFORM_DELIVERY_ID IS NOT NULL AND ir.INSPEC_RESULT_ID IS NULL
+                 UNION
+                 SELECT pdr.PLATFORM_DELIVERY_RETURN_ID
+                 FROM PLATFORM_DELIVERY_RETURN pdr
+                          LEFT JOIN INSPEC_RESULT ir ON pdr.PLATFORM_DELIVERY_RETURN_ID = ir.PLATFORM_DELIVERY_RETURN_ID
+                 WHERE pdr.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL AND ir.INSPEC_RESULT_ID IS NULL
+             )
+    </select>
+</mapper>

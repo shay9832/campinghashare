@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mvc.Interface.IInspecResultDAO">
+
+    <!-- 공통: 검수 항목 매핑 -->
+    <resultMap id="inspecItemDetailMap" type="com.team.mvc.DTO.InspecResultDTO$InspecItemDetail">
+        <result property="itemName" column="itemName"/>
+        <result property="gradeName" column="gradeName"/>
+        <result property="deduction" column="deduction"/>
+        <result property="comment" column="comment"/>
+        <result property="inspecItemDescHigh" column="inspecItemDescHigh"/>
+        <result property="inspecItemDescMid" column="inspecItemDescMid"/>
+        <result property="inspecItemDescLow" column="inspecItemDescLow"/>
+    </resultMap>
+
+    <!-- 1차 검수 항목 -->
+    <select id="getItemListByDeliveryId" parameterType="int" resultMap="inspecItemDetailMap">
+        SELECT
+            II.INSPEC_ITEM_NAME "itemName",
+            IG.INSPEC_GRADE_NAME "gradeName",
+            IG.INSPEC_GRADE_DEDUCTION "deduction",
+            IL.INSPEC_COMMENT "comment",
+            II.INSPEC_ITEM_DESC_HIGH "inspecItemDescHigh",
+            II.INSPEC_ITEM_DESC_MID "inspecItemDescMid",
+            II.INSPEC_ITEM_DESC_LOW "inspecItemDescLow"
+        FROM INSPEC_LIST IL
+                 INNER JOIN INSPEC_GRADE IG ON IL.INSPEC_GRADE_ID = IG.INSPEC_GRADE_ID
+                 INNER JOIN CATE_INSPEC CI ON IL.CATE_INSPEC_ID = CI.CATE_INSPEC_ID
+                 INNER JOIN INSPEC_ITEM II ON CI.INSPEC_ITEM_ID = II.INSPEC_ITEM_ID
+        WHERE IL.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+    </select>
+
+    <!-- 2차 검수 항목 -->
+    <select id="getItemListByReturnDeliveryId" parameterType="int" resultMap="inspecItemDetailMap">
+        SELECT
+            II.INSPEC_ITEM_NAME "itemName",
+            IG.INSPEC_GRADE_NAME "gradeName",
+            IG.INSPEC_GRADE_DEDUCTION "deduction",
+            IL.INSPEC_COMMENT "comment",
+            II.INSPEC_ITEM_DESC_HIGH "inspecItemDescHigh",
+            II.INSPEC_ITEM_DESC_MID "inspecItemDescMid",
+            II.INSPEC_ITEM_DESC_LOW "inspecItemDescLow"
+        FROM INSPEC_LIST IL
+                 INNER JOIN INSPEC_GRADE IG ON IL.INSPEC_GRADE_ID = IG.INSPEC_GRADE_ID
+                 INNER JOIN CATE_INSPEC CI ON IL.CATE_INSPEC_ID = CI.CATE_INSPEC_ID
+                 INNER JOIN INSPEC_ITEM II ON CI.INSPEC_ITEM_ID = II.INSPEC_ITEM_ID
+        WHERE IL.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+    </select>
+
+    <!-- storen_id를 통해 입고 배송 ID 조회 -->
+    <select id="getDeliveryIdByStorenId" parameterType="int" resultType="java.lang.Integer">
+        SELECT IR.PLATFORM_DELIVERY_ID
+        FROM INSPEC_RESULT IR
+                 JOIN PLATFORM_DELIVERY PD ON IR.PLATFORM_DELIVERY_ID = PD.PLATFORM_DELIVERY_ID
+                 JOIN PAY P ON PD.PAY_ID = P.PAY_ID
+                 JOIN STOREN S ON P.STOREN_ID = S.STOREN_ID
+        WHERE S.STOREN_ID = #{storenId} AND IR.PLATFORM_DELIVERY_RETURN_ID IS NULL
+          AND ROWNUM = 1
+    </select>
+
+    <!-- storen_id를 통해 반환 배송 ID 조회 -->
+    <select id="getReturnDeliveryIdByStorenId" parameterType="int" resultType="java.lang.Integer">
+        SELECT IR.PLATFORM_DELIVERY_RETURN_ID
+        FROM INSPEC_RESULT IR
+                 JOIN PLATFORM_DELIVERY_RETURN PDR ON IR.PLATFORM_DELIVERY_RETURN_ID = PDR.PLATFORM_DELIVERY_RETURN_ID
+                 JOIN PLATFORM_DELIVERY PD ON PDR.PLATFORM_DELIVERY_ID = PD.PLATFORM_DELIVERY_ID
+                 JOIN PAY P ON PD.PAY_ID = P.PAY_ID
+                 JOIN STOREN S ON P.STOREN_ID = S.STOREN_ID
+        WHERE S.STOREN_ID = #{storenId} AND IR.PLATFORM_DELIVERY_RETURN_ID IS NOT NULL
+          AND ROWNUM = 1
+    </select>
+
+    <!-- storen_id를 통해 장비 코드 조회 -->
+    <select id="getEquipCodeByStorenId" parameterType="int" resultType="java.lang.Integer">
+        SELECT EQUIP_CODE
+        FROM STOREN
+        WHERE STOREN_ID = #{storenId}
+    </select>
+
+    <!-- 1차 검수 결과 조회 -->
+    <select id="getInspectResultByDeliveryId" parameterType="int" resultType="com.team.mvc.DTO.InspecResultDTO">
+        SELECT
+            er.EQUIP_ID as equipId,
+            en.EQUIP_NAME as equipName,
+            b.BRAND_NAME as brandName,
+            er.ORIGINAL_PRICE as originalPrice,
+            parent.CATEGORY_NAME as majorCategory,
+            child.CATEGORY_NAME as middleCategory,
+            es.EQUIP_SIZE_NAME as equipSize,
+            eg.EQUIP_GRADE_NAME as gradeName,
+            (SELECT MAX(il.INSPECTION_DATE)
+             FROM INSPEC_LIST il
+             WHERE il.PLATFORM_DELIVERY_ID = #{platformDeliveryId}) as inspectionDate
+        FROM INSPEC_RESULT ir
+                 JOIN PLATFORM_DELIVERY pd ON ir.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
+                 JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 JOIN EQUIP_CODE ec ON s.EQUIP_CODE = ec.EQUIP_CODE
+                 JOIN EQUIPMENT_REGISTRATION er ON ec.EQUIP_CODE = er.EQUIP_CODE
+                 JOIN EQUIP_NAME en ON er.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 JOIN BRAND b ON en.BRAND_ID = b.BRAND_ID
+                 JOIN CATEGORY child ON er.CATEGORY_ID = child.CATEGORY_ID
+                 JOIN CATEGORY parent ON child.PARENT_CATEGORY_ID = parent.CATEGORY_ID
+                 JOIN EQUIP_SIZE es ON s.SIZE_ID = es.EQUIP_SIZE_ID
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE ir.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+    </select>
+
+    <!-- 2차 검수 결과 조회 -->
+    <select id="getInspectResultByReturnDeliveryId" parameterType="int" resultType="com.team.mvc.DTO.InspecResultDTO">
+        SELECT
+            er.EQUIP_ID as equipId,
+            en.EQUIP_NAME as equipName,
+            b.BRAND_NAME as brandName,
+            er.ORIGINAL_PRICE as originalPrice,
+            parent.CATEGORY_NAME as majorCategory,
+            child.CATEGORY_NAME as middleCategory,
+            es.EQUIP_SIZE_NAME as equipSize,
+            eg.EQUIP_GRADE_NAME as gradeName,
+            (SELECT MAX(il.INSPECTION_DATE)
+             FROM INSPEC_LIST il
+             WHERE il.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}) as inspectionDate
+        FROM INSPEC_RESULT ir
+                 JOIN PLATFORM_DELIVERY_RETURN pdr ON ir.PLATFORM_DELIVERY_RETURN_ID = pdr.PLATFORM_DELIVERY_RETURN_ID
+                 JOIN PLATFORM_DELIVERY pd ON pdr.PLATFORM_DELIVERY_ID = pd.PLATFORM_DELIVERY_ID
+                 JOIN PAY p ON pd.PAY_ID = p.PAY_ID
+                 JOIN STOREN s ON p.STOREN_ID = s.STOREN_ID
+                 JOIN EQUIP_CODE ec ON s.EQUIP_CODE = ec.EQUIP_CODE
+                 JOIN EQUIPMENT_REGISTRATION er ON ec.EQUIP_CODE = er.EQUIP_CODE
+                 JOIN EQUIP_NAME en ON er.EQUIP_NAME_ID = en.EQUIP_NAME_ID
+                 JOIN BRAND b ON en.BRAND_ID = b.BRAND_ID
+                 JOIN CATEGORY child ON er.CATEGORY_ID = child.CATEGORY_ID
+                 JOIN CATEGORY parent ON child.PARENT_CATEGORY_ID = parent.CATEGORY_ID
+                 JOIN EQUIP_SIZE es ON s.SIZE_ID = es.EQUIP_SIZE_ID
+                 JOIN EQUIP_GRADE eg ON ir.EQUIP_GRADE_ID = eg.EQUIP_GRADE_ID
+        WHERE ir.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+    </select>
+
+    <!-- platform_delivery_id로 등급 조회 -->
+    <select id="getFinalEquipGradeByDeliveryId" resultType="string" parameterType="int">
+        SELECT EG.EQUIP_GRADE_NAME
+        FROM INSPEC_RESULT IR
+                 JOIN EQUIP_GRADE EG ON IR.EQUIP_GRADE_ID = EG.EQUIP_GRADE_ID
+        WHERE IR.PLATFORM_DELIVERY_ID = #{platformDeliveryId}
+    </select>
+
+    <!-- platform_delivery_return_id로 등급 조회 -->
+    <select id="getFinalEquipGradeByReturnDeliveryId" resultType="string" parameterType="int">
+        SELECT EG.EQUIP_GRADE_NAME
+        FROM INSPEC_RESULT IR
+                 JOIN EQUIP_GRADE EG ON IR.EQUIP_GRADE_ID = EG.EQUIP_GRADE_ID
+        WHERE IR.PLATFORM_DELIVERY_RETURN_ID = #{platformDeliveryReturnId}
+    </select>
+
+    <!-- 반환 주소 입력 완료 여부 -->
+    <select id="hasReturnAddressByStorenId" resultType="int" parameterType="int">
+        SELECT COUNT(*)
+        FROM STOREN_LAST_RETURN
+        WHERE STOREN_ID = #{storenId}
+    </select>
+
+</mapper>
