@@ -1,0 +1,210 @@
+/*
+ * arrow-buttons.css
+ * 화살표 모양의 버튼 스타일 정의
+ */
+
+/* 화살표 단계 컨테이너 */
+.arrow-steps {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: var(--spacing-md) 0;
+    align-items: center;
+    gap: 0;
+}
+
+/* 화살표 버튼 기본 스타일 */
+.btn-arrow-right,
+.btn-arrow-left {
+    position: relative;
+    padding-left: 18px;
+    padding-right: 18px;
+    background-color: var(--color-gray-200);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-medium);
+    margin-right: 12px;
+    z-index: 1;
+    font-size: var(--font-xxs);
+    height: 30px;
+    display: flex;
+    align-items: center;
+    text-transform: none;
+    transition: all var(--transition-normal);
+}
+
+/* 오른쪽 화살표 스타일 */
+.btn-arrow-right {
+    padding-left: 22px;
+    padding-right: 10px;
+}
+
+/* 왼쪽 화살표 스타일 */
+.btn-arrow-left {
+    padding-right: 22px;
+    padding-left: 10px;
+}
+
+/* 화살표 모양 생성 (before, after로 사각형 2개 생성) */
+.btn-arrow-right:before,
+.btn-arrow-right:after,
+.btn-arrow-left:before,
+.btn-arrow-left:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    width: 22px;
+    height: 22px;
+    background: inherit;
+    border: inherit;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+    border-radius: 0px 4px 0px 0px;
+}
+
+/* 오른쪽 화살표 회전 */
+.btn-arrow-right:before,
+.btn-arrow-right:after {
+    transform: rotate(45deg);
+}
+
+/* 왼쪽 화살표 회전 */
+.btn-arrow-left:before,
+.btn-arrow-left:after {
+    transform: rotate(225deg);
+}
+
+/* 화살표 위치 조정 */
+.btn-arrow-right:before,
+.btn-arrow-left:before {
+    left: -11px;
+}
+
+.btn-arrow-right:after,
+.btn-arrow-left:after {
+    right: -11px;
+}
+
+/* Z-인덱스로 화살표 포인터 앞으로 가져오기 */
+.btn-arrow-right:after,
+.btn-arrow-left:before {
+    z-index: 2;
+}
+
+/* 화살표 꼬리 배경 숨기기 */
+.btn-arrow-right:before,
+.btn-arrow-left:after {
+    background-color: var(--bg-primary);
+}
+
+/* 마지막 버튼은 화살표 없음 */
+.arrow-steps .btn:last-child {
+    margin-right: 0;
+}
+
+/* 활성 상태 스타일 */
+.btn-arrow-right.active,
+.btn-arrow-left.active {
+    background-color: var(--color-mustard);
+    color: var(--color-white);
+    border-color: var(--color-mustard);
+    font-weight: var(--font-medium);
+    z-index: 3;
+}
+
+/* 호버 효과 */
+.btn-arrow-right:hover,
+.btn-arrow-left:hover {
+    background-color: var(--color-beige);
+    border-color: var(--color-beige);
+    color: var(--text-primary);
+}
+
+/* 활성화된 버튼 호버 효과 유지 */
+.btn-arrow-right.active:hover,
+.btn-arrow-left.active:hover {
+    background-color: var(--color-mustard);
+    border-color: var(--color-mustard);
+    color: var(--color-white);
+}
+
+/* 비활성화 버튼 */
+.btn-arrow-right.disabled,
+.btn-arrow-left.disabled {
+    background-color: var(--color-gray-100);
+    border-color: var(--border-light);
+    color: var(--text-tertiary);
+    cursor: not-allowed;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .arrow-steps {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: var(--spacing-sm);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+    }
+
+    .arrow-steps::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
+    }
+
+    .btn-arrow-right,
+    .btn-arrow-left {
+        white-space: nowrap;
+        font-size: 10px;
+        padding-left: 15px;
+        padding-right: 8px;
+        height: 26px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-right:after,
+    .btn-arrow-left:before,
+    .btn-arrow-left:after {
+        width: 18px;
+        height: 18px;
+        top: 3px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-left:before {
+        left: -9px;
+    }
+
+    .btn-arrow-right:after,
+    .btn-arrow-left:after {
+        right: -9px;
+    }
+}
+
+@media (max-width: 576px) {
+    .btn-arrow-right,
+    .btn-arrow-left {
+        padding-left: 12px;
+        padding-right: 6px;
+        margin-right: 10px;
+        font-size: 9px;
+        height: 24px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-right:after,
+    .btn-arrow-left:before,
+    .btn-arrow-left:after {
+        width: 16px;
+        height: 16px;
+        top: 3px;
+    }
+
+    .btn-arrow-right:before,
+    .btn-arrow-left:before {
+        left: -8px;
+    }
+
+    .btn-arrow-right:after,
+    .btn-arrow-left:after {
+        right: -8px;
+    }
+}

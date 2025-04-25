@@ -32,11 +32,15 @@
                 <div class="card-body">
                     <div class="form-row">
                         <label class="form-label">받는 사람</label>
-                        <div class="form-input">${addressInfo.userName}</div>
+                        <div class="form-input">
+                            <c:out value="${addressInfo.userName}" default="이름 미입력" />
+                        </div>
                     </div>
                     <div class="form-row">
                         <label class="form-label">휴대 전화</label>
-                        <div class="form-input">${addressInfo.userTel}</div>
+                        <div class="form-input">
+                            <c:out value="${addressInfo.userTel}" default="번호 미입력" />
+                        </div>
                     </div>
                     <div class="form-row">
                         <label class="form-label">주소</label>

@@ -108,6 +108,7 @@
             object-fit: contain;
             display: block;
         }
+
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -620,7 +621,8 @@
 
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방</h1></a>
+                    <a href="boardimage.action"><h1 class="page-title"><i class="fa-solid fa-person-hiking"></i> 고독한캠핑방
+                    </h1></a>
                 </div>
 
                 <!-- 게시글 영역 -->
@@ -641,7 +643,9 @@
                         </div>
                         <div class="post-actions-right">
                             <c:if test="${isAuthor}">
-                                <button class="update-btn" onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정</button>
+                                <button class="update-btn"
+                                        onclick="location.href='boardimage-update.action?postId=${post.postId}'">수정
+                                </button>
                             </c:if>
                             <c:if test="${isAuthor || not empty sessionScope.loginAdmin}">
                                 <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
@@ -731,13 +735,9 @@
                                                 <div class="comment-input-area">
                                                     <textarea class="comment-reply-input" rows="4"
                                                               placeholder="댓글을 작성해주세요"></textarea>
-                                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte
-                                                    </div>
                                                     <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
-                                                        <div>
-                                                            <button class="btn btn-outline-primary btn-sm"><i
-                                                                    class="fa-solid fa-paperclip"></i>첨부파일
-                                                            </button>
+                                                        <div class="charCounter text-right mt-1 text-secondary">
+                                                            0/1000byte
                                                         </div>
                                                         <div>
                                                             <button class="btn btn-sm cancel-reply">취소</button>
@@ -784,14 +784,17 @@
                                                             <div class="comment-input-area">
                                                                 <textarea class="comment-reply-input" rows="4"
                                                                           placeholder="댓글을 작성해주세요"></textarea>
-                                                                <div class="charCounter text-right mt-1 text-secondary">
-                                                                    0/1000byte
-                                                                </div>
-                                                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                                                                    <button class="btn btn-sm cancel-reply">취소</button>
-                                                                    <button class="btn btn-primary btn-sm reply-submit"
-                                                                            data-parent-id="${reply.replyId}">등록
-                                                                    </button>
+                                                                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                                                                    <div class="charCounter text-right mt-1 text-secondary">
+                                                                        0/1000byte
+                                                                    </div>
+                                                                    <div>
+                                                                        <button class="btn btn-sm cancel-reply">취소
+                                                                        </button>
+                                                                        <button class="btn btn-primary btn-sm reply-submit"
+                                                                                data-parent-id="${reply.replyId}">등록
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -816,10 +819,12 @@
                     <div class="p-3">
                         <textarea id="contentArea" class="form-control mb-2" rows="3"
                                   placeholder="댓글을 작성해주세요"></textarea>
-                        <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
-                        <div class="d-flex justify-content-between">
-                            <button class="btn btn-outline-primary"><i class="fa-solid fa-paperclip"></i>첨부파일</button>
-                            <button class="btn btn-primary" id="commentSubmit" data-post-id="${post.postId}">등록</button>
+                        <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                            <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-primary" id="commentSubmit" data-post-id="${post.postId}">등록
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1609,6 +1614,7 @@
             }
         });
     }
+
     // 취소 및 닫기 버튼 설정 함수
     function setupCancelButtons() {
         // 취소 버튼 이벤트 리스너 교체

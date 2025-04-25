@@ -4,13 +4,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CampingHaShare - 스토렌 서비스 설명</title>
+  <title>CampingHaShare - 캠핑 장비 공유 플랫폼</title>
   <!-- 외부 라이브러리 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
   <!-- 메인 CSS 로드 (모든 스타일시트 통합) -->
   <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
   <style>
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .section-title .view-all {
+      font-size: 16px;
+      color: var(--color-maple);
+      text-decoration: none;
+    }
+
+    .item-slider {
+      position: relative;
+    }
+
+    .slider-container {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+    }
+
+    .product-card {
+      flex: 0 0 auto;
+      width: 240px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 180px;
+      background-color: #eee;
+      position: relative;
+    }
+
+    .product-placeholder {
+      width: 100%;
+      height: 100%;
+      background: #ddd url('/resources/images/banner1.jpg') center/cover no-repeat;
+    }
+
+    .product-info {
+      padding: 15px;
+      text-align: left;
+    }
+
+    .product-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .product-brand, .product-category {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 3px;
+    }
+
+    .product-price {
+      font-size: 15px;
+      font-weight: bold;
+      color: var(--color-maple);
+    }
+
+    .slider-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      padding: 10px;
+      border-radius: 50%;
+      z-index: 10;
+    }
+
+    .slider-prev {
+      left: -20px;
+    }
+
+    .slider-next {
+      right: -20px;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -30,86 +134,40 @@
       padding: 0 20px;
     }
 
-    header {
-      background-color: #fff;
-      color: #333;
-      padding: 20px 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+    /* 네비게이션 스타일 - 헤더는 include로 처리 */
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: var(--color-maple);
-    }
-
-    .nav-links {
-      display: flex;
-      list-style: none;
-    }
-
-    .nav-links li {
-      margin-left: 30px;
-    }
-
-    .nav-links a {
-      color: #333;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: var(--color-maple);
-    }
-
-    .login-btn, .signup-button {
-      padding: 8px 16px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s;
-      margin-left: 10px;
-    }
-
-    .login-btn {
-      color: #333;
-      border: 1px solid #ddd;
-    }
-
-    .signup-button {
-      background-color: var(--color-maple);
-      color: white;
-    }
-
-    .login-btn:hover {
-      background-color: #f0f0f0;
-    }
-
-    .signup-button:hover {
-      background-color: var(--color-maple);
-    }
-
+    /* 히어로 섹션 */
     .hero {
-      background: linear-gradient(var(--color-beige-light), var(--color-beige)), url('/api/placeholder/1200/600') center/cover;
-      padding: 100px 0;
+      background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('${pageContext.request.contextPath}/resources/images/camping-bg.jpg') center/cover;
+      padding: 120px 0 100px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('${pageContext.request.contextPath}/resources/images/pattern.png');
+      opacity: 0.05;
+      z-index: 0;
     }
 
     .hero_text-contain-2 {
       margin-bottom: 30px;
+      position: relative;
+      z-index: 1;
     }
 
     .gradient-hero1, .gradient-hero2 {
       font-size: 48px;
       margin-bottom: 10px;
       font-weight: 700;
+      letter-spacing: -0.5px;
     }
 
     .gradient-hero1 {
@@ -118,33 +176,52 @@
 
     .gradient-hero2 {
       color: var(--color-maple);
+      position: relative;
+      display: inline-block;
+    }
+
+    .gradient-hero2::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background-color: rgba(230, 115, 92, 0.2);
+      z-index: -1;
     }
 
     .hero_p-wrap {
       max-width: 700px;
       margin: 0 auto 40px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero_p-2 {
       font-size: 20px;
-      color: #666;
-      line-height: 1.6;
+      color: #555;
+      line-height: 1.7;
     }
 
     .hero_cta-button, .hero_cta-button-2 {
       display: inline-block;
-      padding: 15px 40px;
+      padding: 16px 42px;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 500;
+      font-size: 17px;
       transition: all 0.3s;
       margin: 0 10px;
+      position: relative;
+      z-index: 1;
     }
 
     .hero_cta-button {
       background-color: var(--color-maple);
       color: white;
       border: none;
+      box-shadow: 0 4px 10px rgba(230, 115, 92, 0.3);
     }
 
     .hero_cta-button-2 {
@@ -156,109 +233,217 @@
     .hero_cta-button:hover {
       background-color: var(--color-maple);
       transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(230, 115, 92, 0.4);
     }
 
     .hero_cta-button-2:hover {
-      background-color: #fff5f5;
+      background-color: rgba(230, 115, 92, 0.05);
       transform: translateY(-3px);
     }
 
+    /* 서비스 소개 섹션 */
     .decks {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #fff;
       display: flex;
       align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .decks::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background-color: rgba(230, 115, 92, 0.05);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .decks__text {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 50px;
       font-style: normal;
+      position: relative;
+      z-index: 1;
     }
 
     .decks__text-heading {
       font-size: 36px;
       color: #333;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       line-height: 1.3;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    .decks__text-heading::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--color-maple);
     }
 
     .decks__text-paragraph {
       color: #666;
       font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .decks__text-paragraph strong {
+      color: var(--color-maple);
     }
 
     .decks__wrapper {
       flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
+      gap: 25px;
       padding: 0 40px;
+      position: relative;
+      z-index: 1;
     }
 
     .decks__grid {
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
     }
 
     .decks__grid:hover {
       transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+
+    .decks__grid::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.2));
+      z-index: 1;
     }
 
     .decks__image {
       width: 100%;
-      height: auto;
-      display: block;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
     }
 
+    .decks__grid:hover .decks__image {
+      transform: scale(1.05);
+    }
+
+    /* 콘셉트 설명 섹션 */
     .formatting {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #f8f9fa;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .formatting::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      left: -50px;
+      width: 200px;
+      height: 200px;
+      background-color: rgba(230, 115, 92, 0.05);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .formatting__wrapper {
       display: flex;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .div-block-5 {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 50px;
+      position: relative;
+    }
+
+    .div-block-5::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: calc(100% - 40px);
+      height: calc(100% - 40px);
+      border: 2px dashed var(--color-maple);
+      border-radius: 12px;
+      z-index: 0;
+      opacity: 0.2;
     }
 
     .image-6 {
       width: 100%;
       height: auto;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
     }
 
     .formatting_text {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 50px;
     }
 
     .formatting__heading {
       font-size: 36px;
       color: #333;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      line-height: 1.2;
     }
 
     .heading_final {
       font-size: 36px;
       color: var(--color-maple);
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .heading_final::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background-color: rgba(230, 115, 92, 0.2);
+      z-index: -1;
     }
 
     .formatting__paragraph {
       color: #666;
       font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .formatting__paragraph--space {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 3px solid var(--color-maple);
     }
 
     .text-span-4 {
@@ -266,32 +451,50 @@
       font-weight: bold;
     }
 
+    /* 서비스 특징 섹션 */
     .integrations {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .integrations::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background-color: rgba(230, 115, 92, 0.05);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .integrations__wrapper {
       display: flex;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .integrations__text {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 50px;
     }
 
     .integrations__text-heading {
       font-size: 36px;
       color: #333;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
+      line-height: 1.2;
     }
 
     .integrations__text-paragraph {
       color: #666;
       font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      line-height: 1.7;
+      margin-bottom: 25px;
     }
 
     .text-span-5 {
@@ -301,30 +504,89 @@
 
     .div-block-3 {
       flex: 1;
-      padding: 0 40px;
+      padding: 0 50px;
+      position: relative;
+    }
+
+    .div-block-3::before {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      right: 30px;
+      width: 80px;
+      height: 80px;
+      background-color: var(--color-maple);
+      opacity: 0.1;
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .div-block-3::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 30px;
+      width: 60px;
+      height: 60px;
+      background-color: var(--color-maple);
+      opacity: 0.1;
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .image-5 {
       width: 100%;
       height: auto;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1;
     }
 
+    /* 이용 방법 섹션 */
     .how-it-works {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #f8f9fa;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how-it-works::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('${pageContext.request.contextPath}/resources/images/pattern.png');
+      opacity: 0.05;
+      z-index: 0;
     }
 
     .section-header {
-      margin-bottom: 50px;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
     }
 
     .section-header h2 {
       font-size: 36px;
       color: #333;
       margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .section-header h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: var(--color-maple);
     }
 
     .section-header p {
@@ -332,6 +594,7 @@
       max-width: 700px;
       margin: 0 auto;
       font-size: 18px;
+      line-height: 1.7;
     }
 
     .steps {
@@ -339,34 +602,52 @@
       justify-content: space-between;
       margin-top: 40px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background-color: #e5e5e5;
+      z-index: -1;
     }
 
     .step {
       flex-basis: 23%;
       text-align: center;
-      padding: 30px 20px;
+      padding: 40px 20px;
       background: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
       margin-bottom: 20px;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      z-index: 2;
     }
 
     .step:hover {
       transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     }
 
     .step-num {
-      display: inline-block;
-      width: 60px;
-      height: 60px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
       background-color: var(--color-maple);
       color: white;
       border-radius: 50%;
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
-      line-height: 60px;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 15px rgba(230, 115, 92, 0.3);
     }
 
     .step h3 {
@@ -378,29 +659,61 @@
     .step p {
       color: #666;
       font-size: 16px;
+      line-height: 1.6;
     }
 
+    /* 공유 가치 섹션 */
     .sharing {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #fff;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sharing::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background-color: rgba(230, 115, 92, 0.05);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .sharing__text {
-      margin-bottom: 40px;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
     }
 
     .sharing__text-heading {
       font-size: 36px;
       color: #333;
       margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .sharing__text-heading::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: var(--color-maple);
     }
 
     .sharing__text-paragraph {
       color: #666;
       font-size: 18px;
       max-width: 700px;
-      margin: 0 auto;
+      margin: 25px auto 0;
+      line-height: 1.7;
     }
 
     .text-span-8 {
@@ -411,75 +724,120 @@
     .div-block-6 {
       display: flex;
       justify-content: center;
-      margin-bottom: 40px;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
     }
 
     .div-block-7, .div-block-8, .div-block-9, .div-block-10 {
-      margin: 0 20px;
+      margin: 0 25px;
+      transition: transform 0.3s;
+    }
+
+    .div-block-7:hover, .div-block-8:hover, .div-block-9:hover, .div-block-10:hover {
+      transform: translateY(-5px);
     }
 
     .image-14, .image-15, .image-16, .image-17 {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
     }
 
     .sharing__wrapper {
-      max-width: 800px;
+      max-width: 900px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .sharing__image {
       width: 100%;
       height: auto;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     }
 
+    /* 인기 장비 섹션 */
     .news {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: #f8f9fa;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .news::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('${pageContext.request.contextPath}/resources/images/pattern.png');
+      opacity: 0.05;
+      z-index: 0;
     }
 
     .news__wrapper {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .news__card-content {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 60px;
     }
 
     .news__card-heading {
       font-size: 36px;
       color: #333;
       margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .news__card-heading::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: var(--color-maple);
     }
 
     .news__card-paragraph {
       color: #666;
       font-size: 18px;
       max-width: 700px;
-      margin: 0 auto 40px;
+      margin: 25px auto 40px;
+      line-height: 1.7;
     }
 
     .bbb-container-1 {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 40px;
+      gap: 25px;
+      margin-bottom: 60px;
     }
 
     .bbb-wrap-9 {
       background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
       overflow: hidden;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .bbb-wrap-9:hover {
       transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
     }
 
     .bbb-wrap-1-1 {
@@ -491,64 +849,106 @@
       width: 100%;
       height: 200px;
       object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .bbb-wrap-9:hover .bbb-pic-1 {
+      transform: scale(1.05);
     }
 
     .title-items {
-      padding: 15px 15px 5px;
+      padding: 20px 20px 5px;
       font-size: 16px;
       font-weight: bold;
       color: #333;
+      height: 70px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .bbb-text-9 {
-      padding: 0 15px;
+      padding: 0 20px 5px;
       font-size: 18px;
       color: var(--color-maple);
       font-weight: bold;
     }
 
     .bbb-text-1-2 {
-      padding: 0 15px 15px;
+      padding: 0 20px 20px;
       font-size: 14px;
       color: #888;
     }
 
     .news__card-button {
       display: inline-block;
-      padding: 15px 40px;
+      padding: 16px 42px;
       background-color: var(--color-maple);
       color: white;
       border-radius: 50px;
       text-decoration: none;
       font-weight: 500;
       transition: all 0.3s;
+      box-shadow: 0 8px 15px rgba(230, 115, 92, 0.3);
     }
 
     .news__card-button:hover {
       background-color: var(--color-maple);
       transform: translateY(-3px);
+      box-shadow: 0 12px 20px rgba(230, 115, 92, 0.4);
     }
 
     .news__card-buttontext {
       color: white;
-      font-size: 18px;
+      font-size: 17px;
     }
 
+    /* CTA 섹션 */
     .cta {
-      padding: 80px 0;
+      padding: 100px 0;
       background-color: var(--color-maple);
       color: white;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('${pageContext.request.contextPath}/resources/images/pattern.png');
+      opacity: 0.05;
+      z-index: 0;
+    }
+
+    .cta::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      z-index: 0;
     }
 
     .cta__container {
       max-width: 700px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .cta__heading {
-      font-size: 36px;
+      font-size: 38px;
       margin-bottom: 40px;
+      line-height: 1.3;
     }
 
     .cta_mobile_heading {
@@ -556,171 +956,47 @@
     }
 
     .cta-div {
-      margin-bottom: 20px;
-    }
-
-    .cta__input-wrapper {
-      display: flex;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .input-phone-number {
-      flex: 1;
-      position: relative;
-    }
-
-    .text-block-32 {
-      position: absolute;
-      top: 15px;
-      left: 20px;
-      color: #666;
-      font-size: 14px;
-    }
-
-    .cta__input {
-      width: 100%;
-      padding: 15px 20px 15px 120px;
-      border: none;
-      border-radius: 50px 0 0 50px;
-      font-size: 16px;
+      margin-top: 40px;
     }
 
     .cta__button {
-      padding: 15px 30px;
-      background-color: #333;
-      color: white;
+      display: inline-block;
+      padding: 18px 50px;
+      background-color: white;
+      color: var(--color-maple);
       border: none;
-      border-radius: 0 50px 50px 0;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: 500;
       cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
 
     .cta__button:hover {
-      background-color: #555;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
     }
 
-    .cta__disclaimer {
-      color: white;
-      font-size: 14px;
-      max-width: 500px;
-      margin: 20px auto 0;
-    }
-
-    .text-span-7 {
-      font-weight: bold;
-    }
-
-    .footer {
-      padding: 60px 0 30px;
-      background-color: #333;
-      color: white;
-    }
-
-    .footer__wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      padding: 0 20px;
-    }
-
-    .footer__credits {
-      flex: 1;
-    }
-
-    .footer__logo {
-      display: block;
-      margin-bottom: 20px;
-    }
-
-    .image {
-      height: 40px;
-    }
-
-    .footer__copyright {
-      font-size: 14px;
-      color: #aaa;
-      margin-bottom: 5px;
-    }
-
-    .footer__links-wrapper {
-      flex: 1;
-      padding-left: 40px;
-    }
-
-    .footer__heading {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: white;
-    }
-
-    .footer__link {
-      display: block;
-      color: #aaa;
-      text-decoration: none;
-      margin-bottom: 10px;
-      transition: color 0.3s;
-    }
-
-    .footer__link:hover {
-      color: white;
-    }
-
-    .footer__sm {
-      flex: 1;
-      padding-left: 40px;
-    }
-
-    .footer__heading-2 {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: white;
-    }
-
-    .footer__sm-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .footer__sm-link {
-      display: flex;
-      align-items: center;
-      color: #aaa;
-      text-decoration: none;
-      margin-bottom: 15px;
-      transition: color 0.3s;
-    }
-
-    .footer__sm-link:hover {
-      color: white;
-    }
-
-    .footer__sm-icon {
-      margin-right: 10px;
-      width: 20px;
-      height: 20px;
-    }
-
-    .insta-link {
-      font-size: 14px;
-    }
-
-    .image-52 {
-      width: 20px;
-      height: 20px;
-      margin-right: 10px;
-    }
-
+    /* 반응형 스타일 */
     @media (max-width: 991px) {
       .decks, .formatting__wrapper, .integrations__wrapper {
         flex-direction: column;
       }
 
       .decks__text, .formatting_text, .integrations__text {
-        margin-bottom: 40px;
+        margin-bottom: 60px;
         text-align: center;
+        padding: 0 20px;
+      }
+
+      .decks__text-heading::after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .div-block-5, .div-block-3 {
+        padding: 0 20px;
       }
 
       .bbb-container-1 {
@@ -733,8 +1009,8 @@
     }
 
     @media (max-width: 767px) {
-      .nav-links {
-        display: none;
+      .hero {
+        padding: 80px 0 60px;
       }
 
       .gradient-hero1, .gradient-hero2 {
@@ -745,8 +1021,19 @@
         font-size: 18px;
       }
 
+      .hero_cta-button, .hero_cta-button-2 {
+        display: block;
+        margin: 15px auto;
+        max-width: 80%;
+      }
+
+      .decks, .formatting, .integrations, .how-it-works, .sharing, .news {
+        padding: 70px 0;
+      }
+
       .decks__wrapper {
         grid-template-columns: 1fr;
+        padding: 0 20px;
       }
 
       .step {
@@ -755,6 +1042,7 @@
 
       .bbb-container-1 {
         grid-template-columns: 1fr;
+        padding: 0 20px;
       }
 
       .cta__heading {
@@ -767,26 +1055,13 @@
         margin-bottom: 40px;
       }
 
-      .cta__input-wrapper {
-        flex-direction: column;
+      .div-block-6 {
+        flex-wrap: wrap;
       }
 
-      .cta__input {
-        border-radius: 50px;
-        margin-bottom: 15px;
-      }
-
-      .cta__button {
-        border-radius: 50px;
-      }
-
-      .footer__wrapper {
-        flex-direction: column;
-      }
-
-      .footer__credits, .footer__links-wrapper, .footer__sm {
-        margin-bottom: 40px;
-        padding-left: 0;
+      .div-block-7, .div-block-8, .div-block-9, .div-block-10 {
+        flex-basis: 45%;
+        margin-bottom: 30px;
       }
     }
   </style>
@@ -798,39 +1073,11 @@
 <section class="hero">
   <div class="container">
     <div class="hero_text-contain-2">
-      <h1 class="gradient-hero1">보관하면서</h1>
-      <h1 class="gradient-hero2">수익까지 창출!</h1>
+      <h1 class="gradient-hero1">캠핑 장비 공유의 새로운 시작</h1>
+      <h1 class="gradient-hero2">보관하며 수익까지!</h1>
     </div>
     <div class="hero_p-wrap">
-      <p class="hero_p-2">사용하지 않는 캠핑장비를 스토렌에 맡기고<br>공간도 확보하고 보관 기간 동안 렌탈 수익도 얻으세요.</p>
-    </div>
-    <div>
-      <a href="#" class="hero_cta-button">캠핑장비 등록하기</a>
-      <a href="#" class="hero_cta-button-2">대여 가능 상품 보기</a>
-    </div>
-  </div>
-</section>
-
-<section class="decks">
-  <address class="decks__text">
-    <h2 class="decks__text-heading">지금 그 캠핑장비로<br>수익을 만들 수 있어요!</h2>
-    <p class="decks__text-paragraph">집에서 뒹굴고 있는 캠핑장비를 방치하지 말고 스토렌에 맡기세요!<br>
-      대여가 성사될 때마다 꼬박꼬박 수익을 만들 수 있을 거에요.<br>
-      불안하시다고요? 걱정하지 마세요!<br>
-      여러분의 장비는 '스토렌케어'라는 보험으로 보호됩니다.</p>
-  </address>
-  <div class="decks__wrapper">
-    <div class="decks__grid">
-      <img src="/api/placeholder/600/400" alt="캠핑 텐트" class="decks__image">
-    </div>
-    <div class="decks__grid">
-      <img src="/api/placeholder/600/400" alt="캠핑 의자" class="decks__image">
-    </div>
-    <div class="decks__grid">
-      <img src="/api/placeholder/600/400" alt="캠핑 테이블" class="decks__image">
-    </div>
-    <div class="decks__grid">
-      <img src="/api/placeholder/600/400" alt="캠핑 조리도구" class="decks__image">
+      <p class="hero_p-2">사용하지 않는 캠핑장비를 '캠핑하쉐어'에 맡기고<br>소중한 공간도 확보하고 보관 기간 동안 추가 수익도 얻으세요.</p>
     </div>
   </div>
 </section>
@@ -839,18 +1086,18 @@
   <div class="container">
     <div class="formatting__wrapper">
       <div class="div-block-5">
-        <img src="/api/placeholder/600/800" alt="캠핑장비 보관 이미지" class="image-6">
+        <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="캠핑장비 보관 이미지" class="image-6">
       </div>
       <div class="formatting_text">
         <h2 class="formatting__heading">필요한 곳에서,</h2>
         <h2 class="formatting__heading">필요한 캠핑장비를,</h2>
         <h2 class="heading_final">필요한 기간 동안</h2>
         <p class="formatting__paragraph formatting__paragraph--space">
-          "다음 캠핑 때는 무슨 장비가 필요할까? 새로 사자니 보관할 공간도 없는데..."<br>
+          "다음 캠핑 때는 무슨 장비가 필요할까? 보관할 공간도 없는데..."<br>
           "이번에 산 텐트 한 번 쓰고 다시 쓸 일이 있을까?"<br>
-          "캠핑 물품이 집안을 차지하는 공간이 너무 크네, 다른 용도로 써야 할텐데..."
+          "캠핑 물품이 차지하는 공간이 너무 크네, 다른 용도로 써야 할텐데..."
         </p>
-        <p class="formatting__paragraph">스토렌을 통해 필요한 만큼만 빌려쓰고, 사용하지 않는 장비는 <span class="text-span-4">수익을 창출</span>하세요!</p>
+        <p class="formatting__paragraph">스토렌을 통해 필요한 만큼만 빌려쓰고, 미사용 장비로 <span class="text-span-4">수익을 창출</span>하세요!</p>
       </div>
     </div>
   </div>
@@ -860,17 +1107,17 @@
   <div class="container">
     <div class="integrations__wrapper">
       <div class="integrations__text">
-        <h2 class="integrations__text-heading">방치 말고,</h2>
-        <h2 class="integrations__text-heading">팔지 말고,</h2>
+        <h2 class="integrations__text-heading">방치하지 말고,</h2>
+        <h2 class="integrations__text-heading">판매하지 말고,</h2>
         <h2 class="heading_final">스토렌에 맡기세요</h2>
         <p class="integrations__text-paragraph">
           집 한구석에 방치되고 있는 캠핑장비를<br>스토렌에 맡기고 수익을 창출해보세요.<br>
-          구매한 가격보다 더 큰 수익을 만들 수도 있습니다.
+          장기적으로 봤을 때 구매 가격 이상의 수익도 가능합니다.
         </p>
-        <p class="integrations__text-paragraph">스토렌을 통해 <span class="text-span-5">'보관'과 '렌탈'을 동시에</span> 경험하세요!</p>
+        <p class="integrations__text-paragraph">스토렌을 통해 <span class="text-span-5">'보관'과 '렌탈'을 동시에</span> 해결하세요!</p>
       </div>
       <div class="div-block-3">
-        <img src="/api/placeholder/600/600" alt="스토렌 서비스 이미지" class="image-5">
+        <img src="${pageContext.request.contextPath}/resources/images/banner10.jpg" alt="스토렌 서비스 이미지" class="image-5">
       </div>
     </div>
   </div>
@@ -886,22 +1133,22 @@
       <div class="step">
         <div class="step-num">1</div>
         <h3>장비 등록</h3>
-        <p>웹사이트에서 캠핑장비를 등록하고 스토렌 서비스를 신청합니다.</p>
+        <p>웹사이트에서 캠핑장비의 정보와 사진을 등록하고 스토렌 서비스를 신청합니다.</p>
       </div>
       <div class="step">
         <div class="step-num">2</div>
         <h3>수거 및 검수</h3>
-        <p>택배기사가 자택으로 방문해 장비를 수거하고, 전문가가 체크리스트에 따라 검수합니다.</p>
+        <p>택배기사가 방문하여 장비를 수거하고, 전문 담당자가 상태를 꼼꼼히 확인합니다.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <h3>보관 및 렌탈</h3>
-        <p>검수 완료된 장비는 보관되며, 렌탈 신청이 들어오면 자동으로 매칭됩니다.</p>
+        <p>검수 완료된 장비는 안전하게 보관되며, 렌탈 신청이 들어오면 자동으로 대여됩니다.</p>
       </div>
       <div class="step">
         <div class="step-num">4</div>
-        <h3>반환</h3>
-        <p>보관 기간이 끝나면 장비는 소유자에게 자동으로 반환됩니다.</p>
+        <h3>수익 & 반환</h3>
+        <p>대여 수익이 쌓이고, 보관 기간 종료 시 장비는 깨끗하게 정리되어 돌아옵니다.</p>
       </div>
     </div>
   </div>
@@ -910,99 +1157,98 @@
 <section class="sharing">
   <div class="container">
     <div class="sharing__text">
-      <h2 class="sharing__text-heading">스토렌과 시작하는<br>공유의 첫 걸음</h2>
-      <p class="sharing__text-paragraph">스토렌은 <span class="text-span-8">지속 가능한 소비</span>를 위해 노력하고 있습니다</p>
-    </div>
-    <div class="div-block-6">
-      <div class="div-block-7">
-        <img src="/api/placeholder/80/80" alt="환경 아이콘 1" class="image-14">
-      </div>
-      <div class="div-block-8">
-        <img src="/api/placeholder/80/80" alt="환경 아이콘 2" class="image-15">
-      </div>
-      <div class="div-block-9">
-        <img src="/api/placeholder/80/80" alt="환경 아이콘 3" class="image-16">
-      </div>
-      <div class="div-block-10">
-        <img src="/api/placeholder/80/80" alt="환경 아이콘 4" class="image-17">
-      </div>
+      <h2 class="sharing__text-heading">함께 나누는 캠핑 문화</h2>
+      <p class="sharing__text-paragraph">'캠핑하쉐어'는 <span class="text-span-8">지속 가능한 소비</span>를 위한 공유 경제를 지향합니다</p>
     </div>
     <div class="sharing__wrapper">
-      <img src="/api/placeholder/800/500" alt="환경 보호 이미지" class="sharing__image">
+      <img src="${pageContext.request.contextPath}/resources/images/banner9.jpg" alt="공유 캠핑 문화 이미지" class="sharing__image">
     </div>
   </div>
 </section>
 
-<section class="news">
+<%--<section class="news">--%>
+<%--  <div class="container">--%>
+<%--    <div class="news__wrapper">--%>
+<%--      <!-- 스토렌 MD Pick 섹션 -->--%>
+<%--      <div class="section-title">--%>
+<%--        <h2>스토렌 MD Pick!</h2>--%>
+<%--        <a href="${pageContext.request.contextPath}/rentalsearch-main.action?tab=storen" class="view-all">전체보기</a>--%>
+<%--      </div>--%>
+
+<%--      <div class="item-slider" id="md-picks">--%>
+<%--        <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>--%>
+<%--        <div class="slider-container">--%>
+<%--          <c:choose>--%>
+<%--            <c:when test="${not empty mdPickList}">--%>
+<%--              <c:forEach var="storen" items="${mdPickList}">--%>
+<%--                <div class="product-card">--%>
+<%--                  <div class="product-image">--%>
+<%--                    <c:choose>--%>
+<%--                      <c:when test="${!empty storen.equipmentDTO && !empty storen.equipmentDTO.attachments && storen.equipmentDTO.attachments.size() > 0}">--%>
+<%--                        <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지" style="width:100%; height:100%; object-fit: cover;">--%>
+<%--                      </c:when>--%>
+<%--                      <c:otherwise>--%>
+<%--                        <div class="product-placeholder"></div>--%>
+<%--                      </c:otherwise>--%>
+<%--                    </c:choose>--%>
+<%--                  </div>--%>
+<%--                  <div class="product-info">--%>
+<%--                    <p class="product-title">${storen.storen_title}</p>--%>
+<%--                    <c:if test="${!empty storen.equipmentDTO}">--%>
+<%--                      <p class="product-brand">${storen.equipmentDTO.brand}</p>--%>
+<%--                      <p class="product-category">${storen.equipmentDTO.majorCategory}</p>--%>
+<%--                    </c:if>--%>
+<%--                    <p class="product-price">${storen.daily_rent_price}원/일</p>--%>
+<%--                  </div>--%>
+<%--                </div>--%>
+<%--              </c:forEach>--%>
+<%--            </c:when>--%>
+<%--            <c:otherwise>--%>
+<%--              <p>추천할 스토렌 상품이 없습니다.</p>--%>
+<%--            </c:otherwise>--%>
+<%--          </c:choose>--%>
+<%--        </div>--%>
+<%--        <button class="slider-nav slider-next"><i class="fas fa-chevron-right"></i></button>--%>
+<%--      </div>--%>
+<%--    </div>--%>
+<%--  </div>--%>
+<%--</section>--%>
+
+<section class="cta">
   <div class="container">
-    <div class="news__wrapper">
-      <div class="news__card-content">
-        <h3 class="news__card-heading">인기 대여 캠핑 장비</h3>
-        <p class="news__card-paragraph">지금 스토렌에서 가장 인기 있는 캠핑 장비를 확인해보세요!</p>
-        <div class="bbb-container-1">
-          <div class="bbb-wrap-9">
-            <a href="#" class="bbb-wrap-1-1">
-              <img src="/api/placeholder/300/200" alt="텐트 세트" class="bbb-pic-1">
-            </a>
-            <div class="title-items">원터치 텐트 캠핑 세트</div>
-            <div class="bbb-text-9">8,000원 / 일</div>
-            <div class="bbb-text-1-2">50,400원 / 주</div>
-          </div>
-          <div class="bbb-wrap-9">
-            <a href="#" class="bbb-wrap-1-1">
-              <img src="/api/placeholder/300/200" alt="그리들" class="bbb-pic-1">
-            </a>
-            <div class="title-items">키친아트 IH 그리들 36cm</div>
-            <div class="bbb-text-9">3,000원 / 일</div>
-            <div class="bbb-text-1-2">18,900원 / 주</div>
-          </div>
-          <div class="bbb-wrap-9">
-            <a href="#" class="bbb-wrap-1-1">
-              <img src="/api/placeholder/300/200" alt="캠핑 의자" class="bbb-pic-1">
-            </a>
-            <div class="title-items">접이식 캠핑 체어 세트</div>
-            <div class="bbb-text-9">5,000원 / 일</div>
-            <div class="bbb-text-1-2">31,500원 / 주</div>
-          </div>
-          <div class="bbb-wrap-9">
-            <a href="#" class="bbb-wrap-1-1">
-              <img src="/api/placeholder/300/200" alt="코펠 세트" class="bbb-pic-1">
-            </a>
-            <div class="title-items">코베아 코펠 풀 세트</div>
-            <div class="bbb-text-9">4,000원 / 일</div>
-            <div class="bbb-text-1-2">25,200원 / 주</div>
-          </div>
-        </div>
-        <a href="#" class="news__card-button">
-          <div class="news__card-buttontext">대여하러 가기 >></div>
+    <div class="cta__container">
+      <h2 class="cta__heading">지금 바로 캠핑하쉐어와 함께하세요!</h2>
+      <h2 class="cta_mobile_heading">지금 바로<br>캠핑하쉐어와 함께하쉐요!</h2>
+      <div class="cta-div">
+        <a href="${pageContext.request.contextPath}/registeruser-tel.action" style="text-decoration: none; display: inline-block;">
+          <button class="cta__button">가입하기</button>
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="cta">
-  <div class="container">
-    <div class="cta__container">
-      <h2 class="cta__heading">스토렌 출시 소식, 가장 먼저 알려드릴게요!</h2>
-      <h2 class="cta_mobile_heading">스토렌 출시 소식,<br>가장 먼저 알려드릴게요!</h2>
-      <form class="cta-div">
-        <div class="cta__input-wrapper">
-          <div class="input-phone-number">
-            <div class="text-block-32">휴대폰 번호</div>
-            <input class="cta__input" placeholder="ex. 01012345678" type="tel" required>
-          </div>
-          <input type="submit" class="cta__button" value="등록하기">
-        </div>
-        <div class="cta__disclaimer">
-          <span class="text-span-7">서비스 출시 소식 알림</span>을 위한 수집으로, 기타 마케팅 수신 동의로 간주하지 않습니다.
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
 <!-- 푸터 인클루드 (JSP 방식) -->
 <jsp:include page="footer.jsp" />
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const slider = document.querySelector('#md-picks .slider-container');
+    const nextBtn = document.querySelector('#md-picks .slider-next');
+    const prevBtn = document.querySelector('#md-picks .slider-prev');
+
+    nextBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: 300, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      slider.scrollBy({ left: -300, behavior: 'smooth' });
+    });
+  });
+</script>
+
 </body>
 </html>

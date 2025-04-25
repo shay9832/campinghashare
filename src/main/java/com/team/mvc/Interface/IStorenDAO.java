@@ -80,4 +80,12 @@ public interface IStorenDAO {
     // 해당 유저의 찜 삭제
     int deleteMyWishByUserCodeStorenId(@Param("userCode") int userCode, @Param("storenId") int storenId);
 
+
+    // 최근 등록된 스토렌 장비 조회 (최신순, 상위 N개)
+    List<StorenDTO> listRecentStorenEquipment(@Param("limit") int limit);
+
+
+    List<StorenDTO> listRecentStorenWithEquipment(@Param("limit") int limit);
+
+
 }

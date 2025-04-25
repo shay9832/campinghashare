@@ -1,0 +1,217 @@
+/*
+ * container.css
+ * 레이아웃 컨테이너 및 구조 정의
+ */
+
+/* 메인 페이지 래퍼 */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* 표준 컨테이너 */
+.container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+}
+
+/* 좁은 컨테이너 */
+.container-narrow {
+    max-width: 960px;
+}
+
+/* 넓은 컨테이너 */
+.container-wide {
+    max-width: 1500px;
+}
+
+/* 유동적 컨테이너 */
+.container-fluid {
+    width: 100%;
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
+}
+
+/* 메인 콘텐츠 영역 */
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-xl);
+    min-height: 60vh;
+}
+
+/* 섹션 컨테이너 */
+.section {
+    margin-bottom: var(--spacing-xxl);
+}
+
+.section-sm {
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-lg {
+    margin-bottom: calc(var(--spacing-xxl) * 1.5);
+}
+
+/* 2열 레이아웃 (사이드바 + 메인) */
+.two-column-layout {
+    display: flex;
+    gap: var(--spacing-xl);
+}
+
+.main-column {
+    flex: 1;
+    min-width: 0; /* 텍스트 오버플로우 방지 */
+}
+
+/* 분할 컨테이너 */
+.split-container {
+    display: flex;
+    gap: var(--spacing-xl);
+}
+
+.split-item {
+    flex: 1;
+}
+
+/* 카드 그리드 레이아웃 */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+/* 중앙 정렬 컨테이너 */
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+}
+
+/* 페이지 제목 영역 */
+.page-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.page-title {
+    font-size: var(--font-xl);
+    font-weight: var(--font-bold);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-primary);
+}
+
+.page-description {
+    color: var(--text-secondary);
+    max-width: 800px;
+}
+
+/* 반응형 레이아웃 */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 720px;
+    }
+
+    .two-column-layout {
+        gap: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 540px;
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
+    }
+
+    .two-column-layout {
+        flex-direction: column;
+    }
+
+    .split-container {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .main-content {
+        padding-top: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-title {
+        font-size: var(--font-lg);
+    }
+}
+
+/* 유틸리티 컨테이너 클래스 */
+.content-box {
+    background-color: var(--bg-primary);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.content-box-sm {
+    padding: var(--spacing-md);
+}
+
+.content-box-lg {
+    padding: var(--spacing-xl);
+}
+
+/* 내부 여백 조정 */
+.no-padding {
+    padding: 0 !important;
+}
+
+.no-padding-top {
+    padding-top: 0 !important;
+}
+
+.no-padding-bottom {
+    padding-bottom: 0 !important;
+}
+
+/* 외부 여백 조정 */
+.no-margin {
+    margin: 0 !important;
+}
+
+.no-margin-top {
+    margin-top: 0 !important;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0 !important;
+}

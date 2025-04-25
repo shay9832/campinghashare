@@ -672,7 +672,8 @@
 
             <div class="main-column" style="flex: 1; padding-left: 5px;">
                 <div class="page-header mb-4">
-                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1></a>
+                    <a href="boardfree.action"><h1 class="page-title"><i class="fa-solid fa-comments"></i> 자유게시판</h1>
+                    </a>
                 </div>
                 <!-- 게시글 영역 -->
                 <div class="post-container">
@@ -692,7 +693,9 @@
                         </div>
                         <div class="post-actions-right">
                             <c:if test="${isAuthor}">
-                                <button class="update-btn" onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정</button>
+                                <button class="update-btn"
+                                        onclick="location.href='boardfree-update.action?postId=${post.postId}'">수정
+                                </button>
                             </c:if>
                             <c:if test="${isAuthor || not empty sessionScope.loginAdmin}">
                                 <button class="delete-post-btn" onclick="confirmDelete(${post.postId})">삭제</button>
@@ -704,23 +707,23 @@
 
 
                         <!-- 디버깅용 코드: 첨부파일 정보 출력 -->
-<%--                                                <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
-<%--                                                    <p>첨부파일 정보:</p>--%>
-<%--                                                    <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
-<%--                                                    <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
+                        <%--                                                <div style="background-color: #f8f9fa; padding: 10px; margin: 10px 0; border: 1px solid #ddd;">--%>
+                        <%--                                                    <p>첨부파일 정보:</p>--%>
+                        <%--                                                    <p>post.attachments 존재 여부: ${not empty post.attachments}</p>--%>
+                        <%--                                                    <p>첨부파일 개수: ${fn:length(post.attachments)}</p>--%>
 
-<%--                                                    <c:if test="${not empty post.attachments}">--%>
-<%--                                                        <ul>--%>
-<%--                                                            <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
-<%--                                                                <li>--%>
-<%--                                                                    첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
-<%--                                                                    경로: ${attachment.attachmentPath},--%>
-<%--                                                                    크기: ${attachment.attachmentSize}--%>
-<%--                                                                </li>--%>
-<%--                                                            </c:forEach>--%>
-<%--                                                        </ul>--%>
-<%--                                                    </c:if>--%>
-<%--                                                </div>--%>
+                        <%--                                                    <c:if test="${not empty post.attachments}">--%>
+                        <%--                                                        <ul>--%>
+                        <%--                                                            <c:forEach var="attachment" items="${post.attachments}" varStatus="status">--%>
+                        <%--                                                                <li>--%>
+                        <%--                                                                    첨부파일 ${status.index+1}: ${attachment.attachmentName},--%>
+                        <%--                                                                    경로: ${attachment.attachmentPath},--%>
+                        <%--                                                                    크기: ${attachment.attachmentSize}--%>
+                        <%--                                                                </li>--%>
+                        <%--                                                            </c:forEach>--%>
+                        <%--                                                        </ul>--%>
+                        <%--                                                    </c:if>--%>
+                        <%--                                                </div>--%>
 
                         <!-- 간단한 첨부파일 표시 시도 -->
                         <c:if test="${not empty post.attachments}">
@@ -801,16 +804,13 @@
                                                 <div class="comment-input-area">
                                                     <textarea class="comment-reply-input" rows="4"
                                                               placeholder="댓글을 작성해주세요"></textarea>
-                                                    <div class="charCounter text-right mt-1 text-secondary">0/1000byte
-                                                    </div>
                                                     <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
-                                                        <div>
-                                                            <button class="btn btn-outline-primary btn-sm"><i
-                                                                    class="fa-solid fa-paperclip"></i>첨부파일
-                                                            </button>
+                                                        <div class="charCounter text-right mt-1 text-secondary">
+                                                            0/1000byte
                                                         </div>
                                                         <div>
-                                                            <button class="btn btn-sm cancel-reply">취소</button>
+                                                            <button class="btn btn-sm cancel-reply">취소
+                                                            </button>
                                                             <button class="btn btn-primary btn-sm reply-submit"
                                                                     data-parent-id="${reply.replyId}">등록
                                                             </button>
@@ -854,14 +854,17 @@
                                                             <div class="comment-input-area">
                                                                 <textarea class="comment-reply-input" rows="4"
                                                                           placeholder="댓글을 작성해주세요"></textarea>
-                                                                <div class="charCounter text-right mt-1 text-secondary">
-                                                                    0/1000byte
-                                                                </div>
-                                                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
-                                                                    <button class="btn btn-sm cancel-reply">취소</button>
-                                                                    <button class="btn btn-primary btn-sm reply-submit"
-                                                                            data-parent-id="${reply.replyId}">등록
-                                                                    </button>
+                                                                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                                                                    <div class="charCounter text-right mt-1 text-secondary">
+                                                                        0/1000byte
+                                                                    </div>
+                                                                    <div>
+                                                                        <button class="btn btn-sm cancel-reply">취소
+                                                                        </button>
+                                                                        <button class="btn btn-primary btn-sm reply-submit"
+                                                                                data-parent-id="${reply.replyId}">등록
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -886,10 +889,10 @@
                     <div class="p-3">
                         <textarea id="contentArea" class="form-control mb-2" rows="3"
                                   placeholder="댓글을 작성해주세요"></textarea>
-                        <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
                         <div class="d-flex justify-content-between">
-                            <button class="btn btn-outline-primary"><i class="fa-solid fa-paperclip"></i>첨부파일</button>
-                            <button class="btn btn-primary" id="commentSubmit" data-post-id="${post.postId}">등록</button>
+                            <div class="charCounter text-right mt-1 text-secondary">0/1000byte</div>
+                            <button class="btn btn-primary" id="commentSubmit" data-post-id="${post.postId}">등록
+                            </button>
                         </div>
                     </div>
                 </div>

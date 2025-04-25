@@ -151,7 +151,8 @@
                             <!-- 날짜 범위를 위한 히든 필드 -->
                             <input type="hidden" name="startDate" id="hidden-start-date" value="${startDate}">
                             <input type="hidden" name="endDate" id="hidden-end-date" value="${endDate}">
-
+                            <!-- 페이지를 1로 리셋하는 히든 필드 (검색/필터 적용 시 사용) -->
+                            <input type="hidden" name="page" id="hidden-page" value="1">
 
                             <div class="input-label">키워드</div>
                             <div class="search-container">
@@ -262,7 +263,7 @@
                 <div class="d-flex gap-1">
                     <!-- 첫 페이지로 -->
                     <c:if test="${pagenation.pageNum > 1}">
-                        <a href="rentalsearch-main.action?page=1&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                        <a href="rentalsearch-main.action?page=1&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}${minPrice != 0 ? '&minPrice='.concat(minPrice) : ''}${maxPrice != 100000 ? '&maxPrice='.concat(maxPrice) : ''}${not empty startDate ? '&startDate='.concat(startDate) : ''}${not empty endDate ? '&endDate='.concat(endDate) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-angles-left"></i>
                         </a>
@@ -270,7 +271,7 @@
 
                     <!-- 이전 블록으로 -->
                     <c:if test="${pagenation.startPage > pagenation.blockSize}">
-                        <a href="rentalsearch-main.action?page=${pagenation.prevPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                        <a href="rentalsearch-main.action?page=${pagenation.prevPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}${minPrice != 0 ? '&minPrice='.concat(minPrice) : ''}${maxPrice != 100000 ? '&maxPrice='.concat(maxPrice) : ''}${not empty startDate ? '&startDate='.concat(startDate) : ''}${not empty endDate ? '&endDate='.concat(endDate) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-chevron-left"></i>
                         </a>
@@ -278,13 +279,13 @@
 
                     <!-- 페이지 번호 -->
                     <c:forEach var="i" begin="${pagenation.startPage}" end="${pagenation.endPage}">
-                        <a href="rentalsearch-main.action?page=${i}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                        <a href="rentalsearch-main.action?page=${i}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}${minPrice != 0 ? '&minPrice='.concat(minPrice) : ''}${maxPrice != 100000 ? '&maxPrice='.concat(maxPrice) : ''}${not empty startDate ? '&startDate='.concat(startDate) : ''}${not empty endDate ? '&endDate='.concat(endDate) : ''}"
                            class="btn ${pagenation.pageNum == i ? 'btn-primary' : ''} btn-sm">${i}</a>
                     </c:forEach>
 
                     <!-- 다음 블록으로 -->
                     <c:if test="${pagenation.endPage < pagenation.totalPage}">
-                        <a href="rentalsearch-main.action?page=${pagenation.nextPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                        <a href="rentalsearch-main.action?page=${pagenation.nextPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}${minPrice != 0 ? '&minPrice='.concat(minPrice) : ''}${maxPrice != 100000 ? '&maxPrice='.concat(maxPrice) : ''}${not empty startDate ? '&startDate='.concat(startDate) : ''}${not empty endDate ? '&endDate='.concat(endDate) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-chevron-right"></i>
                         </a>
@@ -292,7 +293,7 @@
 
                     <!-- 마지막 페이지로 -->
                     <c:if test="${pagenation.pageNum < pagenation.totalPage}">
-                        <a href="rentalsearch-main.action?page=${pagenation.totalPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}"
+                        <a href="rentalsearch-main.action?page=${pagenation.totalPage}&tab=${param.tab}${searchKeyword != null ? '&searchKeyword='.concat(searchKeyword) : ''}${minPrice != 0 ? '&minPrice='.concat(minPrice) : ''}${maxPrice != 100000 ? '&maxPrice='.concat(maxPrice) : ''}${not empty startDate ? '&startDate='.concat(startDate) : ''}${not empty endDate ? '&endDate='.concat(endDate) : ''}"
                            class="btn btn-sm">
                             <i class="fa-solid fa-angles-right"></i>
                         </a>
@@ -475,8 +476,24 @@
 
             return false; // 폼 제출 방지
         };
+    });
 
+    // 찜 버튼 클릭시
+    $(document).ready(function() {
+        // 좋아요 버튼 클릭 이벤트
+        $('.like-button').on('click', function(e) {
+            e.preventDefault(); // 링크의 기본 동작 방지
+            e.stopPropagation(); // 이벤트 버블링 방지 (부모 요소의 클릭 이벤트 방지)
 
+            var $icon = $(this).find('i');
+
+            // 색상 토글 (하트 색상 변경)
+            if ($icon.css('color') === 'rgb(242, 232, 207)' || $icon.css('color') === '#f2e8cf') {
+                $icon.css('color', '#ff0000'); // 빨간색으로 변경
+            } else {
+                $icon.css('color', '#f2e8cf'); // 원래 색상으로 변경
+            }
+        });
     });
 </script>
 </body>

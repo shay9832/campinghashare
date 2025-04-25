@@ -4,22 +4,46 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.team.mvc.Interface.IAdminEquipListDAO">
 
-    <select id="getList" resultType="com.team.mvc.DTO.AdminEquipListDTO">
-            SELECT EQUIP_CODE,EQUIP_NAME,MAJOR_CATEGORY_NAME,MIDDLE_CATEGORY_NAME,ORIGINAL_PRICE,CREATED_DATE
-            FROM VW_EQUIPMENT
+    <resultMap id="adminEquipListMap" type="com.team.mvc.DTO.AdminEquipListDTO">
+        <result property="STOREN_ID" column="STOREN_ID"/>
+        <result property="EQUIP_CODE" column="EQUIP_CODE"/>
+        <result property="USER_CODE" column="USER_CODE"/>
+        <result property="SIZE_ID" column="SIZE_ID"/>
+        <result property="EQUIP_SIZE_NAME" column="EQUIP_SIZE_NAME"/>
+        <result property="REQUIRED_SPACE" column="REQUIRED_SPACE"/>
+        <result property="DAILY_STORAGE_FEE" column="DAILY_STORAGE_FEE"/>
+        <result property="STORE_MONTH" column="STORE_MONTH"/>
+        <result property="STOREN_TITLE" column="STOREN_TITLE"/>
+        <result property="STOREN_CONTENT" column="STOREN_CONTENT"/>
+        <result property="DAILY_RENT_PRICE" column="DAILY_RENT_PRICE"/>
+        <result property="CREATED_DATE" column="CREATED_DATE"/>
+    </resultMap>
+
+    <!-- 일반 장비 resultMap -->
+    <resultMap id="equipListMap" type="com.team.mvc.DTO.AdminEquipListDTO">
+        <result property="EQUIP_CODE" column="EQUIP_CODE"/>
+        <result property="EQUIP_NAME" column="EQUIP_NAME"/>
+        <result property="MAJOR_CATEGORY_NAME" column="MAJOR_CATEGORY_NAME"/>
+        <result property="MIDDLE_CATEGORY_NAME" column="MIDDLE_CATEGORY_NAME"/>
+        <result property="ORIGINAL_PRICE" column="ORIGINAL_PRICE"/>
+        <result property="CREATED_DATE" column="CREATED_DATE"/>
+    </resultMap>
+
+    <!-- 일반 장비 리스트 쿼리 -->
+    <select id="getList" resultMap="equipListMap">
+        SELECT EQUIP_CODE, EQUIP_NAME, MAJOR_CATEGORY_NAME, MIDDLE_CATEGORY_NAME, ORIGINAL_PRICE, CREATED_DATE
+        FROM VW_EQUIPMENT
     </select>
 
-    <select id="getLists" resultType="com.team.mvc.DTO.AdminEquipListDTO">
-            SELECT STOREN_ID, EQUIP_CODE, USER_CODE
-                            , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
-                            , DAILY_STORAGE_FEE, STORE_MONTH
-                            , STOREN_TITLE, STOREN_CONTENT
-                            , DAILY_RENT_PRICE, CREATED_DATE
-            FROM VW_STOREN
+    <!-- 스토렌 장비 리스트 (resultMap 적용) -->
+    <select id="getLists" resultMap="adminEquipListMap">
+        SELECT STOREN_ID, EQUIP_CODE, USER_CODE
+             , SIZE_ID, EQUIP_SIZE_NAME, REQUIRED_SPACE
+             , DAILY_STORAGE_FEE, STORE_MONTH
+             , STOREN_TITLE, STOREN_CONTENT
+             , DAILY_RENT_PRICE, CREATED_DATE
+        FROM VW_STOREN
     </select>
+
 
 </mapper>
-
-
-
-

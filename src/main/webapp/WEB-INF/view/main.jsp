@@ -27,47 +27,50 @@
             box-shadow: none;
         }
 
-        /* 메인 배너 */
+        /* ===== 메인 배너 스타일 ===== */
         .main-banner {
             position: relative;
             width: 100%;
             height: 200px;
             overflow: hidden;
             border: 1px solid #e1e1e1;
+            margin: 0 auto 20px;
+        }
+
+        .banner-slide {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin : 0 auto 20px;
+            width: 300%; /* 배너 3개면 300% */
+            height: 100%;
+            transition: transform 0.5s ease;
+        }
+
+        .banner-item {
+            flex: 0 0 33.333%; /* 전체 너비의 1/3 */
+            height: 100%;
+            position: relative;
+        }
+
+        .banner-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .banner-content {
-            text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 2;
+            text-align: center;
+            z-index: 5;
+            width: 80%;
         }
 
         .banner-text {
-            color: #404040;
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 15px;
-        }
-
-        .service-intro-btn {
-            display: inline-block;
-            padding: 8px 15px;
-            background-color: white;
-            color: #333;
-            border-radius: 5px;
-            font-size: 14px;
-            text-decoration: none;
-            border: 1px solid #ddd;
+            text-shadow: 1px 1px 2px rgba(103, 103, 103, 0.7);
         }
 
         .banner-prev,
@@ -75,12 +78,19 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: none;
+            background: rgba(255, 255, 255, 0.7);
             border: none;
-            color: #999;
+            color: #333;
             font-size: 24px;
             cursor: pointer;
             z-index: 10;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .banner-prev {
@@ -89,6 +99,72 @@
 
         .banner-next {
             right: 10px;
+        }
+
+        /* ===== 하단 슬라이더 스타일 ===== */
+        .item-slider {
+            position: relative;
+            padding: 0 20px 20px;
+            overflow: hidden; /* 중요: overflow 설정 */
+        }
+
+        .slider-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: hidden; /* auto에서 hidden으로 변경 */
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            padding: 5px 0; /* 약간의 패딩 추가 */
+        }
+
+        .slider-prev,
+        .slider-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 5;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .slider-prev {
+            left: 5px;
+        }
+
+        .slider-next {
+            right: 5px;
+        }
+
+        .slider-prev:hover,
+        .slider-next:hover {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .item-slider {
+            position: relative;
+            padding: 0 20px 20px;
+        }
+
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 2;
         }
 
         /* 섹션 타이틀 */
@@ -109,20 +185,6 @@
             color: #2C5F2D;
             text-decoration: none;
             font-size: 14px;
-        }
-
-        /* 아이템 슬라이더 */
-        .item-slider {
-            position: relative;
-            padding: 0 20px 20px;
-        }
-
-        .slider-container {
-            display: flex;
-            gap: 15px;
-            overflow-x: hidden;
-            padding: 10px 0;
-            scroll-behavior: smooth;
         }
 
         /* 아이템 카드 */
@@ -260,32 +322,38 @@
             border-radius: 5px;
         }
 
-        .mini-banner-item {
+        .mini-banner-container {
             width: 48%;
+            height: 100%;
+            position: relative;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .mini-banner-item {
+            width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 5px;
         }
 
-        /* 슬라이더 버튼 */
-        .slider-nav {
+        .mini-banner-content {
             position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #999;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .slider-prev {
+            top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
-        .slider-next {
-            right: 0;
+        .mini-banner-text {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-shadow: 1px 1px 2px rgba(103, 103, 103, 0.7);
         }
 
         /* 반응형 스타일 */
@@ -328,21 +396,23 @@
             <button class="banner-prev"><i class="fas fa-chevron-left"></i></button>
             <div class="banner-slide">
                 <div class="banner-item">
-                    <img src="${pageContext.request.contextPath}/resources/images/banner7.png" alt="배너1" style="width:100%; height:100%; object-fit: cover;">
-                    <div class="banner-content">
-                        <div class="banner-text">서비스 소개</div>
-                    </div>
+                    <a href="${pageContext.request.contextPath}/serviceinfo-storen.action">
+                        <img src="${pageContext.request.contextPath}/resources/images/banner7.png" alt="배너1" style="width:100%; height:100%; object-fit: cover;">
+                        <div class="banner-content">
+                            <div class="banner-text" style="color:var(--color-maple);">서비스 소개</div>
+                        </div>
+                    </a>
                 </div>
                 <div class="banner-item">
                     <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="배너2" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
-                        <div class="banner-text">특별 프로모션 - 30% 할인</div>
+                        <div class="banner-text" style="color:var(--color-white);">특별 프로모션 - 30% 할인</div>
                     </div>
                 </div>
                 <div class="banner-item">
                     <img src="${pageContext.request.contextPath}/resources/images/banner4.jpeg" alt="배너3" style="width:100%; height:100%; object-fit: cover;">
                     <div class="banner-content">
-                        <div class="banner-text">신규 상품 소개</div>
+                        <div class="banner-text" style="color:var(--color-coral);">신규 상품 소개</div>
                     </div>
                 </div>
             </div>
@@ -421,99 +491,38 @@
         <div class="item-slider" id="md-picks">
             <button class="slider-nav slider-prev"><i class="fas fa-chevron-left"></i></button>
             <div class="slider-container">
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">코베아 KOVEA W 4인용 거실형 텐트 패밀리 텐트</p>
-                        <p class="product-brand">코베아</p>
-                        <p class="product-category">텐트/쉘터</p>
-                        <p class="product-price">35,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">몽벨 실리콘 다용기가 800 #5 BLUE 면글라켓 식기세트 코펠</p>
-                        <p class="product-brand">몽벨</p>
-                        <p class="product-category">주방용품</p>
-                        <p class="product-price">15,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">헬리녹스 HELINOX 테이블원 경량 접이식 캠핑 테이블</p>
-                        <p class="product-brand">헬리녹스</p>
-                        <p class="product-category">테이블</p>
-                        <p class="product-price">30,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">캠핑문 Campingmoon 캠핑 취사 랜턴 우드스토브 화로대</p>
-                        <p class="product-brand">캠핑문</p>
-                        <p class="product-category">랜턴/버너</p>
-                        <p class="product-price">25,000원/일</p>
-                    </div>
-                </div>
-
-                <!-- 두 번째 세트 (4개) -->
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">스노우피크 아메니티 돔 M 텐트 5인용</p>
-                        <p class="product-brand">스노우피크</p>
-                        <p class="product-category">텐트/쉘터</p>
-                        <p class="product-price">45,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">콜맨 퍼펙트 랜턴 295 LED 캠핑등</p>
-                        <p class="product-brand">콜맨</p>
-                        <p class="product-category">조명/랜턴</p>
-                        <p class="product-price">18,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">로고스 체어 캠핑 의자 접이식 릴렉스</p>
-                        <p class="product-brand">로고스</p>
-                        <p class="product-category">의자/테이블</p>
-                        <p class="product-price">12,000원/일</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image">
-                        <div class="product-placeholder"></div>
-                    </div>
-                    <div class="product-info">
-                        <p class="product-title">네이처하이크 침낭 코튼 사계절 백패킹</p>
-                        <p class="product-brand">네이처하이크</p>
-                        <p class="product-category">침낭/매트</p>
-                        <p class="product-price">20,000원/일</p>
-                    </div>
-                </div>
-            </div>
-            <button class="slider-nav slider-next"><i class="fas fa-chevron-right"></i></button>
+                <c:choose>
+                <c:when test="${!empty mdPickList && mdPickList.size() > 0}">
+                    <c:forEach var="storen" items="${mdPickList}">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <c:choose>
+                                    <c:when test="${!empty storen.equipmentDTO && !empty storen.equipmentDTO.attachments && storen.equipmentDTO.attachments.size() > 0}">
+                                        <img src="${storen.equipmentDTO.attachments.get(0).attachmentPath}" alt="상품 이미지" style="width:100%; height:100%; object-fit: cover;">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="product-placeholder"></div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div class="product-info">
+                                <p class="product-title">${storen.storen_title}</p>
+                                <c:if test="${!empty storen.equipmentDTO}">
+                                    <p class="product-brand">${storen.equipmentDTO.brand}</p>
+                                    <p class="product-category">${storen.equipmentDTO.majorCategory}</p>
+                                </c:if>
+                                <p class="product-price">${storen.daily_rent_price}원/일</p>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <p>추천할 스토렌 상품이 없습니다.</p>
+                </c:otherwise>
+            </c:choose>
         </div>
+        <button class="slider-nav slider-next"><i class="fas fa-chevron-right"></i></button>
+    </div>
 
         <!-- 한 줄 후기 섹션 -->
         <div class="review-section">
@@ -658,8 +667,18 @@
 
         <!-- 하단 배너 -->
         <div class="footer-mini-banner">
-            <img src="${pageContext.request.contextPath}/resources/images/banner1.jpg" alt="미니배너 1" class="mini-banner-item">
-            <img src="${pageContext.request.contextPath}/resources/images/banner2.jpg" alt="미니배너 2" class="mini-banner-item">
+            <div class="mini-banner-container">
+                <img src="${pageContext.request.contextPath}/resources/images/banner1.jpg" alt="미니배너 1" class="mini-banner-item">
+                <div class="mini-banner-content">
+                    <div class="mini-banner-text" style="color:var(--color-coral);">회원가입 시 할인 쿠폰 증정</div>
+                </div>
+            </div>
+            <div class="mini-banner-container">
+                <img src="${pageContext.request.contextPath}/resources/images/banner6.png" alt="미니배너 2" class="mini-banner-item">
+                <div class="mini-banner-content">
+                    <div class="mini-banner-text" style="color:var(--color-white);">캠핑장비 A to Z</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -672,93 +691,174 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.6.1/nouislider.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- 메인 배너 순환 및 화살표 동작 수정을 위한 자바스크립트 코드 -->
 <script>
-    $(document).ready(function() {
-        // 배너 슬라이드 CSS 강제 수정
-        $(".banner-slide").css({
-            "display": "flex",
-            "width": "300%", // 3개의 배너를 위한 너비
-            "height": "100%",
-            "transition": "transform 1s ease-in-out"
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        // 약간의 지연 후 실행 (모든 요소가 완전히 로드된 후)
+        setTimeout(function() {
 
-        $(".banner-item").css({
-            "flex": "0 0 100%", // 부모 컨테이너의 1/3이 아닌 전체 main-banner의 100%를 차지하도록
-            "width": "100%",
-            "height": "100%",
-            "position": "relative"
-        });
+            /* ===== 1. 메인 배너 슬라이드 기능 ===== */
+            var mainBanner = {
+                container: $('.main-banner'),
+                slide: $('.main-banner .banner-slide'),
+                items: $('.main-banner .banner-item'),
+                prevBtn: $('.main-banner .banner-prev'),
+                nextBtn: $('.main-banner .banner-next'),
+                currentIndex: 0,
+                timer: null,
+                totalItems: $('.main-banner .banner-item').length
+            };
 
-        // main-banner의 너비를 고정
-        $(".main-banner").css({
-            "width": "100%",
-            "overflow": "hidden"
-        });
+            console.log('메인 배너 초기화: 총 ' + mainBanner.totalItems + '개 배너');
 
-        // 배너 관련 변수
-        var bannerIndex = 0;
-        var bannerCount = $(".banner-item").length;
-        var autoSlideInterval;
-
-        console.log("Banner items found:", bannerCount);
-
-        // 배너 위치 업데이트 함수
-        function updateBannerPosition() {
-            // 이제 각 배너가 100%이므로 100%씩 이동
-            $(".banner-slide").css("transform", "translateX(-" + (bannerIndex * 100) + "%)");
-            console.log("Banner position updated to:", bannerIndex);
-        }
-
-        // 이전 배너 버튼 클릭 이벤트
-        $(".banner-prev").off("click").on("click", function(e) {
-            e.preventDefault();
-            bannerIndex = (bannerIndex - 1 + bannerCount) % bannerCount;
-            updateBannerPosition();
-
-            // 자동 슬라이드 재시작
-            clearInterval(autoSlideInterval);
-            startAutoSlide();
-
-            console.log("Prev clicked, new index:", bannerIndex);
-        });
-
-        // 다음 배너 버튼 클릭 이벤트
-        $(".banner-next").off("click").on("click", function(e) {
-            e.preventDefault();
-            bannerIndex = (bannerIndex + 1) % bannerCount;
-            updateBannerPosition();
-
-            // 자동 슬라이드 재시작
-            clearInterval(autoSlideInterval);
-            startAutoSlide();
-
-            console.log("Next clicked, new index:", bannerIndex);
-        });
-
-        // 자동 슬라이드 시작 함수
-        function startAutoSlide() {
-            autoSlideInterval = setInterval(function() {
-                bannerIndex = (bannerIndex + 1) % bannerCount;
-                updateBannerPosition();
-                console.log("Auto slide triggered, new index:", bannerIndex);
-            }, 5000);
-        }
-
-        // 배너에 마우스 올리면 자동 전환 멈춤
-        $(".main-banner").hover(
-            function() {
-                clearInterval(autoSlideInterval);
-                console.log("Auto slide paused");
-            },
-            function() {
-                startAutoSlide();
-                console.log("Auto slide resumed");
+            // 배너 위치 업데이트 함수
+            function updateMainBannerPosition() {
+                mainBanner.slide.css('transform', 'translateX(-' + (mainBanner.currentIndex * 33.333) + '%)');
+                console.log('메인 배너 위치 업데이트: ' + mainBanner.currentIndex);
             }
-        );
 
-        // 초기 배너 위치 설정 및 자동 슬라이드 시작
-        updateBannerPosition();
-        startAutoSlide();
+            // 다음 배너로 이동
+            function goToNextMainBanner() {
+                mainBanner.currentIndex = (mainBanner.currentIndex + 1) % mainBanner.totalItems;
+                updateMainBannerPosition();
+            }
+
+            // 이전 배너로 이동
+            function goToPrevMainBanner() {
+                mainBanner.currentIndex = (mainBanner.currentIndex - 1 + mainBanner.totalItems) % mainBanner.totalItems;
+                updateMainBannerPosition();
+            }
+
+            // 자동 슬라이드 시작
+            function startMainBannerAutoSlide() {
+                stopMainBannerAutoSlide();
+                mainBanner.timer = setInterval(goToNextMainBanner, 4000);
+            }
+
+            // 자동 슬라이드 중지
+            function stopMainBannerAutoSlide() {
+                if (mainBanner.timer) {
+                    clearInterval(mainBanner.timer);
+                    mainBanner.timer = null;
+                }
+            }
+
+            // 메인 배너 이벤트 설정
+            function setupMainBannerEvents() {
+                // 이전 버튼 클릭
+                mainBanner.prevBtn.off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    stopMainBannerAutoSlide();
+                    goToPrevMainBanner();
+                    startMainBannerAutoSlide();
+                    return false;
+                });
+
+                // 다음 버튼 클릭
+                mainBanner.nextBtn.off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    stopMainBannerAutoSlide();
+                    goToNextMainBanner();
+                    startMainBannerAutoSlide();
+                    return false;
+                });
+
+                // 마우스 오버/아웃
+                mainBanner.container.off('mouseenter mouseleave')
+                    .on('mouseenter', stopMainBannerAutoSlide)
+                    .on('mouseleave', startMainBannerAutoSlide);
+            }
+
+            // 메인 배너 초기화
+            function initMainBanner() {
+                updateMainBannerPosition();
+                setupMainBannerEvents();
+                startMainBannerAutoSlide();
+                console.log('메인 배너 초기화 완료');
+            }
+
+            /* ===== 2. 하단 슬라이더 기능 ===== */
+            function setupItemSliders() {
+                setupSlider('#md-picks');
+                setupSlider('#recent-products');
+                console.log('하단 슬라이더 초기화 완료');
+            }
+
+            // 개별 슬라이더 설정 함수
+            function setupSlider(sliderId) {
+                var $slider = $(sliderId);
+                var $container = $slider.find('.slider-container');
+                var $prevBtn = $slider.find('.slider-prev');
+                var $nextBtn = $slider.find('.slider-next');
+                var cardWidth = $slider.find('.product-card').first().outerWidth(true) || 235;
+                var visibleCards = Math.floor($container.width() / cardWidth);
+                var scrollAmount = cardWidth * Math.max(1, Math.floor(visibleCards / 2));
+
+                console.log(sliderId + ' 슬라이더 설정: 카드 너비 = ' + cardWidth + 'px, 보이는 카드 수 = ' + visibleCards);
+
+                $prevBtn.off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var currentScroll = $container.scrollLeft();
+                    $container.animate({
+                        scrollLeft: Math.max(0, currentScroll - scrollAmount)
+                    }, 300);
+                    return false;
+                });
+
+                $nextBtn.off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var currentScroll = $container.scrollLeft();
+                    var maxScroll = $container[0].scrollWidth - $container.width();
+                    $container.animate({
+                        scrollLeft: Math.min(maxScroll, currentScroll + scrollAmount)
+                    }, 300);
+                    return false;
+                });
+
+                $(window).on('resize', function() {
+                    cardWidth = $slider.find('.product-card').first().outerWidth(true) || 235;
+                    visibleCards = Math.floor($container.width() / cardWidth);
+                    scrollAmount = cardWidth * Math.max(1, Math.floor(visibleCards / 2));
+                });
+            }
+
+            /* ===== 3. 한 줄 후기 슬라이더 ===== */
+            function setupReviewSlider() {
+                var reviewIndex = 0;
+                var reviewItems = $(".review-item").length;
+                var reviewInterval;
+
+                function updateReviewPosition() {
+                    var offset = (100 / reviewItems) * reviewIndex;
+                    $(".review-slider").css("transform", "translateX(-" + offset.toFixed(2) + "%)");
+                }
+
+                function startReviewSlide() {
+                    if (reviewInterval) {
+                        clearInterval(reviewInterval);
+                    }
+
+                    reviewInterval = setInterval(function() {
+                        reviewIndex = (reviewIndex + 1) % reviewItems;
+                        updateReviewPosition();
+                    }, 3000);
+                }
+
+                updateReviewPosition();
+                startReviewSlide();
+                console.log('한 줄 후기 슬라이더 초기화 완료');
+            }
+
+            // 모든 슬라이더 초기화 실행
+            initMainBanner();
+            setupItemSliders();
+            setupReviewSlider();
+
+        }, 200); // 약간의 지연 (200ms) 추가하여 모든 요소가 렌더링된 후 실행
     });
 </script>
 

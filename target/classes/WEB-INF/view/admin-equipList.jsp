@@ -139,7 +139,6 @@
 
         <!-- 렌탈 타입 탭 메뉴 -->
         <div class="rental-type-tabs">
-            <div class="rental-tab active" data-tab="all-equipment">전체 장비</div>
             <div class="rental-tab" data-tab="store-rentals">스토렌</div>
             <div class="rental-tab" data-tab="regular-rentals">일반렌탈</div>
         </div>
@@ -193,110 +192,9 @@
             </div>
         </div>
 
-        <!-- 전체 장비 영역 -->
-        <div id="all-equipment" class="content-area active">
-            <!-- 장비 정보 요약 - 주요 통계 -->
-            <div class="equipment-count">
-                <div class="equipment-all">
-                    <span>총 장비 : <c:out value="${stats.totalCount}"/>대</span>
-                </div>
-                <div class="equipment-available">
-                    <span>대여 가능 : <c:out value="${stats.availableCount}"/>대</span>
-                </div>
-                <div class="equipment-rented">
-                    <span>대여 중 : <c:out value="${stats.rentedCount}"/>대</span>
-                </div>
-                <div class="equipment-maintenance">
-                    <span>정비 중 : <c:out value="${stats.maintenanceCount}"/>대</span>
-                </div>
-            </div>
-
-            <!-- 전체 선택 체크박스 -->
-            <div class="select-all-checkbox">
-                <input type="checkbox" id="selectAll"> <label for="selectAll">전체 선택</label>
-            </div>
-
-            <!-- 장비 목록 테이블 - 가로 스크롤 가능 -->
-            <div class="equipment-index">
-                <table class="main-menu">
-                    <thead>
-                    <tr>
-                        <!-- 간소화된 테이블 헤더 -->
-                        <th class="col-select">선택</th>
-                        <th class="col-code">장비코드 / 소유자</th>
-                        <th class="col-name">장비명</th>
-                        <th class="col-main-category">대분류</th>
-                        <th class="col-sub-category">중분류</th>
-                        <th class="col-avg-price">평균가격</th>
-                        <th class="col-reg-date">장비등록일</th>
-                        <th class="col-actions">관리</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- 일반렌탈 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
-
-                    <!-- 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
-<%--                    <c:forEach var="equip" items="${equipList}">--%>
-<%--                        <tr>--%>
-<%--                            <td class="checkbox-column"><input type="checkbox" value="${equip.equipId}"></td>--%>
-<%--                            <td>${equip.equipCode}</td>--%>
-<%--                            <td>--%>
-<%--                                <span class="rental-type-badge ${equip.rentalType eq 'STORE' ? 'type-store' : 'type-regular'}">--%>
-<%--                                        ${equip.rentalType eq 'STORE' ? '스토렌' : '일반렌탈'}--%>
-<%--                                </span>--%>
-<%--                            </td>--%>
-<%--                            <td>${equip.equipName}</td>--%>
-<%--                            <td>${equip.mainCategoryName}</td>--%>
-<%--                            <td>${equip.subCategoryName}</td>--%>
-<%--                            <td><span class="grade-badge grade-${equip.grade.toLowerCase()}">${equip.grade}</span></td>--%>
-<%--                            <td><fmt:formatNumber value="${equip.avgPrice}" pattern="#,###"/>원</td>--%>
-<%--                            <td>--%>
-<%--                                <span class="status-badge--%>
-<%--                                    ${equip.status eq 'AVAILABLE' ? 'status-available' :--%>
-<%--                                    equip.status eq 'RENTED' ? 'status-rented' : 'status-maintenance'}">--%>
-<%--                                        ${equip.status eq 'AVAILABLE' ? '대여가능' :--%>
-<%--                                                equip.status eq 'RENTED' ? '대여중' : '정비중'}--%>
-<%--                                </span>--%>
-<%--                            </td>--%>
-<%--                            <td>${equip.rentalCount}</td>--%>
-<%--                            <td><fmt:formatDate value="${equip.regDate}" pattern="yyyy-MM-dd"/></td>--%>
-<%--                            <td>${equip.ownerName}</td>--%>
-<%--                            <td>--%>
-<%--                                <button class="action-btn info-btn" data-equip-id="2">정보</button>--%>
-<%--                                <button class="action-btn inspect-btn" data-equip-id="2">검수</button>--%>
-<%--                            </td>--%>
-<%--                        </tr>--%>
-<%--                    </c:forEach>--%>
-                    </tbody>
-                </table>
-            </div>
-
-
-            <!-- 페이지네이션 -->
-            <div class="pagination" id="pagination">
-                <button class="page-btn first-page">&laquo;</button>
-                <button class="page-btn prev-page">&lt;</button>
-                <div class="page-numbers">
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${not empty regularPaging and regularPaging.totalPage > 0}">--%>
-<%--                            <c:forEach var="i" begin="${regularPaging.startPage}" end="${regularPaging.endPage}">--%>
-<%--                                <button class="page-btn ${i eq regularPaging.currentPage ? 'active' : ''}"--%>
-<%--                                        data-page="${i}">${i}</button>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
-<%--                            <button class="page-btn active" data-page="1">1</button>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
-                </div>
-                <button class="page-btn next-page">&gt;</button>
-                <button class="page-btn last-page">&raquo;</button>
-            </div>
-        </div>
 
         <!-- 스토렌 장비 영역 -->
-        <div id="store-rentals" class="content-area">
+        <div id="store-rentals" class="content-area active">
             <!-- 장비 정보 요약 - 주요 통계 -->
             <div class="equipment-count">
                 <div class="equipment-all">
@@ -369,18 +267,18 @@
                 <button class="page-btn first-page">&laquo;</button>
                 <button class="page-btn prev-page">&lt;</button>
                 <div class="page-numbers">
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${not empty storePaging and storePaging.totalPage > 0}">--%>
-<%--                            <c:forEach var="i" begin="${storePaging.startPage}" end="${storePaging.endPage}">--%>
-<%--                                <button class="page-btn ${i eq storePaging.currentPage ? 'active' : ''}"--%>
-<%--                                        data-page="${i}">${i}</button>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
-<%--                            <button class="page-btn active" data-page="1">1</button>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
+                    <%--                    <c:choose>--%>
+                    <%--                        <c:when test="${not empty storePaging and storePaging.totalPage > 0}">--%>
+                    <%--                            <c:forEach var="i" begin="${storePaging.startPage}" end="${storePaging.endPage}">--%>
+                    <%--                                <button class="page-btn ${i eq storePaging.currentPage ? 'active' : ''}"--%>
+                    <%--                                        data-page="${i}">${i}</button>--%>
+                    <%--                            </c:forEach>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:otherwise>--%>
+                    <%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
+                    <%--                            <button class="page-btn active" data-page="1">1</button>--%>
+                    <%--                        </c:otherwise>--%>
+                    <%--                    </c:choose>--%>
                 </div>
                 <button class="page-btn next-page">&gt;</button>
                 <button class="page-btn last-page">&raquo;</button>
@@ -413,20 +311,20 @@
             <!-- 장비 목록 테이블 - 가로 스크롤 가능 -->
             <div class="equipment-index">
                 <table class="main-menu">
-                <thead>
-                <tr>
-                    <!-- 간소화된 테이블 헤더 -->
-                    <th class="col-select">선택</th>
-                    <th class="col-code">장비코드 / 소유자</th>
-                    <th class="col-name">장비명</th>
-                    <th class="col-main-category">대분류</th>
-                    <th class="col-sub-category">중분류</th>
-                    <th class="col-avg-price">평균가격</th>
-                    <th class="col-reg-date">장비등록일</th>
-                    <th class="col-actions">관리</th>
-                </tr>
-                </thead>
-                <tbody>
+                    <thead>
+                    <tr>
+                        <!-- 간소화된 테이블 헤더 -->
+                        <th class="col-select">선택</th>
+                        <th class="col-code">장비코드 / 소유자</th>
+                        <th class="col-name">장비명</th>
+                        <th class="col-main-category">대분류</th>
+                        <th class="col-sub-category">중분류</th>
+                        <th class="col-avg-price">평균가격</th>
+                        <th class="col-reg-date">장비등록일</th>
+                        <th class="col-actions">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     <!-- 일반렌탈 장비 데이터 행 - JSTL로 조회된 데이터 표시 -->
                     <c:forEach var="equip" items="${getList}">
                         <tr>
@@ -449,18 +347,18 @@
                 <button class="page-btn first-page">&laquo;</button>
                 <button class="page-btn prev-page">&lt;</button>
                 <div class="page-numbers">
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${not empty regularPaging and regularPaging.totalPage > 0}">--%>
-<%--                            <c:forEach var="i" begin="${regularPaging.startPage}" end="${regularPaging.endPage}">--%>
-<%--                                <button class="page-btn ${i eq regularPaging.currentPage ? 'active' : ''}"--%>
-<%--                                        data-page="${i}">${i}</button>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
-<%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
-<%--                            <button class="page-btn active" data-page="1">1</button>--%>
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
+                    <%--                    <c:choose>--%>
+                    <%--                        <c:when test="${not empty regularPaging and regularPaging.totalPage > 0}">--%>
+                    <%--                            <c:forEach var="i" begin="${regularPaging.startPage}" end="${regularPaging.endPage}">--%>
+                    <%--                                <button class="page-btn ${i eq regularPaging.currentPage ? 'active' : ''}"--%>
+                    <%--                                        data-page="${i}">${i}</button>--%>
+                    <%--                            </c:forEach>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:otherwise>--%>
+                    <%--                            <!-- 데이터가 없거나 페이징 정보가 없을 경우 기본 페이지 번호 표시 -->--%>
+                    <%--                            <button class="page-btn active" data-page="1">1</button>--%>
+                    <%--                        </c:otherwise>--%>
+                    <%--                    </c:choose>--%>
                 </div>
                 <button class="page-btn next-page">&gt;</button>
                 <button class="page-btn last-page">&raquo;</button>
@@ -514,13 +412,6 @@
             });
         });
 
-        // 전체 선택 체크박스 이벤트 처리 - 전체 장비
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const checkboxes = document.querySelector('#all-equipment').querySelectorAll('.equipment-index input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
 
         // 전체 선택 체크박스 이벤트 처리 - 스토렌 장비
         document.getElementById('selectAllStore').addEventListener('change', function() {
@@ -686,7 +577,6 @@
         }
 
         // 각 탭별 페이지네이션 설정
-        setupPagination('pagination', null);
         setupPagination('storePagination', 'STORE');
         setupPagination('regularPagination', 'REGULAR');
 

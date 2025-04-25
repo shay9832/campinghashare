@@ -727,10 +727,10 @@ public class BoardController {
                     MultipartFile file = uploadFiles.get(i);
 
                     if (!file.isEmpty()) {
-                        // 파일명 중복 방지를 위한 uuid 추가
+                        // 타임스탬프 + 원본 파일명
                         String originalFileName = file.getOriginalFilename();
-                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String savedFileName = UUID.randomUUID().toString() + extension;
+                        long timestamp = System.currentTimeMillis();
+                        String savedFileName = timestamp + "_" + originalFileName;
 
                         // 파일 저장 경로 설정
                         File savedFile = new File(directory, savedFileName);
@@ -899,10 +899,10 @@ public class BoardController {
                         MultipartFile file = uploadFiles.get(i);
 
                         if (!file.isEmpty()) {
-                            // 파일명 중복 방지를 위한 uuid 추가
+                            // 타임스탬프 + 원본 파일명
                             String originalFileName = file.getOriginalFilename();
-                            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                            String savedFileName = UUID.randomUUID().toString() + extension;
+                            long timestamp = System.currentTimeMillis();
+                            String savedFileName = timestamp + "_" + originalFileName;
 
                             // 파일 저장 경로 설정
                             File savedFile = new File(directory, savedFileName);
@@ -1292,10 +1292,10 @@ public class BoardController {
                             continue; // 이미지 파일이 아닌 경우 스킵
                         }
 
-                        // 파일명 중복 방지를 위한 uuid 추가
+                        // 타임스탬프 + 원본 파일명
                         String originalFileName = file.getOriginalFilename();
-                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String savedFileName = UUID.randomUUID().toString() + extension;
+                        long timestamp = System.currentTimeMillis();
+                        String savedFileName = timestamp + "_" + originalFileName;
 
                         // 파일 저장 경로 설정
                         File savedFile = new File(directory, savedFileName);
@@ -1417,10 +1417,10 @@ public class BoardController {
                     MultipartFile file = uploadFiles.get(i);
 
                     if (!file.isEmpty()) {
-                        // 파일명 중복 방지를 위한 uuid 추가
+                        // 타임스탬프 + 원본 파일명
                         String originalFileName = file.getOriginalFilename();
-                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String savedFileName = UUID.randomUUID().toString() + extension;
+                        long timestamp = System.currentTimeMillis();
+                        String savedFileName = timestamp + "_" + originalFileName;
 
                         // 파일 저장 경로 설정
                         File savedFile = new File(directory, savedFileName);
@@ -1718,10 +1718,10 @@ public class BoardController {
                     MultipartFile file = uploadFiles.get(i);
 
                     if (!file.isEmpty()) {
-                        // 파일명 중복 방지를 위한 uuid 추가
+                        // 타임스탬프 + 원본 파일명
                         String originalFileName = file.getOriginalFilename();
-                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String savedFileName = UUID.randomUUID().toString() + extension;
+                        long timestamp = System.currentTimeMillis();
+                        String savedFileName = timestamp + "_" + originalFileName;
 
                         // 파일 저장 경로 설정
                         File savedFile = new File(directory, savedFileName);
@@ -1875,10 +1875,10 @@ public class BoardController {
                     MultipartFile file = uploadFiles.get(i);
 
                     if (!file.isEmpty()) {
-                        // 파일명 중복 방지를 위한 UUID 추가
+                        // 타임스탬프 + 원본 파일명
                         String originalFileName = file.getOriginalFilename();
-                        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                        String savedFileName = UUID.randomUUID().toString() + extension;
+                        long timestamp = System.currentTimeMillis();
+                        String savedFileName = timestamp + "_" + originalFileName;
 
                         // 파일 저장 경로 설정
                         File savedFile = new File(directory, savedFileName);
