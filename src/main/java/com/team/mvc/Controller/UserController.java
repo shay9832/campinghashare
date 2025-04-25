@@ -1,5 +1,11 @@
 package com.team.mvc.Controller;
 
+import com.team.mvc.Interface.IEquipmentDAO;
+import com.team.mvc.Interface.IAttachmentDAO;
+import com.team.mvc.DTO.AttachmentDTO;
+import com.team.mvc.DTO.EquipmentDTO;
+import com.team.mvc.DTO.StorenDTO;
+import com.team.mvc.Interface.IStorenDAO;
 import com.team.mvc.DTO.AdminDTO;
 import com.team.mvc.DTO.UserDTO;
 import com.team.mvc.Interface.IUserDAO;
@@ -12,6 +18,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import java.nio.charset.StandardCharsets;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.List;
+
 
 @Controller
 public class UserController {
@@ -28,8 +37,32 @@ public class UserController {
     // 스토렌 상품 설명 페이지
     @RequestMapping(value="/serviceinfo-storen.action")
     public String serviceinfostoren(Model model) {
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // VW_STOREN 기반으로 조회
+        List<StorenDTO> mdPickList = storenDAO.listRecentStorenWithEquipment(8);
+
+        // 각 장비에 첨부파일 추가 (main.jsp와 동일하게 처리)
+        for (StorenDTO storen : mdPickList) {
+            if (storen.getEquip_code() != null) {
+                List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(storen.getEquip_code());
+
+                // EquipmentDTO가 null인 경우 새로 생성
+                if (storen.getEquipmentDTO() == null) {
+                    EquipmentDTO temp = new EquipmentDTO();
+                    temp.setEquip_code(storen.getEquip_code());
+                    storen.setEquipmentDTO(temp);
+                }
+
+                storen.getEquipmentDTO().setAttachments(attachments);
+            }
+        }
+
+        model.addAttribute("mdPickList", mdPickList);
         return "serviceInfo-storen";
     }
+
     // 로그인 페이지 진입
     @RequestMapping(value = "/login-user.action", method = RequestMethod.GET)
     public String loginPage() {
@@ -79,9 +112,35 @@ public class UserController {
             model.addAttribute("admin", (AdminDTO) loginAdmin);
         }
 
-        // 로그인 안 된 상태라도 return "main" 허용
+        // 스토렌 DAO 가져오기
+        IStorenDAO storenDAO = sqlSession.getMapper(IStorenDAO.class);
+        IEquipmentDAO equipDAO = sqlSession.getMapper(IEquipmentDAO.class);
+        IAttachmentDAO attachmentDAO = sqlSession.getMapper(IAttachmentDAO.class);
+
+        // MD Pick - 최신 스토렌 장비 10개 조회
+        List<StorenDTO> mdPickList = storenDAO.listRecentStorenEquipment(10);
+
+        // 각 스토렌에 대응하는 EquipmentDTO 가져오기
+        for (StorenDTO storen : mdPickList) {
+            if (storen.getEquip_code() != null) {
+                // 장비 정보 가져오기
+                EquipmentDTO equipment = equipDAO.getEquipmentByEquipCode(storen.getEquip_code());
+
+                // 이미지 첨부파일 정보 가져오기
+                if (equipment != null) {
+                    List<AttachmentDTO> attachments = attachmentDAO.listAttachmentByEquipCode(storen.getEquip_code());
+                    equipment.setAttachments(attachments);
+                    storen.setEquipmentDTO(equipment);
+                }
+            }
+        }
+
+        // 모델에 추가
+        model.addAttribute("mdPickList", mdPickList);
+
         return "main";
     }
+
 
     // 로그아웃 처리
     @RequestMapping("/logout.action")

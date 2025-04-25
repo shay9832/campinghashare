@@ -409,4 +409,34 @@
         FROM WISHLIST
         WHERE USER_CODE=#{userCode} AND STOREN_ID=#{storenId}
     </delete>
+
+    <!-- 최근 등록된 스토렌 장비 조회 (최신순, 상위 N개) -->
+    <select id="listRecentStorenEquipment" resultMap="VWStorenResultMap">
+        SELECT *
+        FROM (
+        SELECT s.*
+        FROM VW_STOREN s
+        WHERE s.MATCHING_STATUS != '매칭완료'
+        AND s.EQUIP_GRADE IS NOT NULL
+        AND s.DAILY_RENT_PRICE IS NOT NULL
+        AND s.STOREN_TITLE IS NOT NULL
+        ORDER BY s.CREATED_DATE DESC
+        )
+        <![CDATA[ WHERE ROWNUM <= #{limit} ]]>
+    </select>
+
+    <select id="listRecentStorenWithEquipment" resultMap="VWStorenResultMap">
+        SELECT *
+        FROM (
+        SELECT s.*
+        FROM VW_STOREN s
+        WHERE s.MATCHING_STATUS != '매칭완료'
+        AND s.EQUIP_GRADE IS NOT NULL
+        AND s.DAILY_RENT_PRICE IS NOT NULL
+        AND s.STOREN_TITLE IS NOT NULL
+        ORDER BY s.CREATED_DATE DESC
+        )
+        <![CDATA[ WHERE ROWNUM <= #{limit} ]]>
+    </select>
+
 </mapper>

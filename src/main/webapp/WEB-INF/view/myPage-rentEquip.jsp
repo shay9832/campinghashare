@@ -218,7 +218,7 @@
                                         <c:set var="cssClass" value="active"/>
                                     </c:if>
                                     <c:choose>
-                                        <c:when test="${status.key eq '매칭중' || status.key eq '매칭승인대기' || status.key eq '매칭완료'
+                                        <c:when test="${status.key eq '매칭중' || status.key eq '매칭승인대기'
                                         || status.key eq '추가비용결제필요' || status.key eq '상태불명'}">
                                             <%-- 아무것도 하지 않음(continue처럼) --%>
                                         </c:when>

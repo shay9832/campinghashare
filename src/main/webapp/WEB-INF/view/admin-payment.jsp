@@ -760,10 +760,16 @@
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.set('page', page);
 
+        // 현재 타입 유지
+        const currentType = urlParams.get('type');
+        if (!currentType) {
+            urlParams.set('type', 'all'); // 기본값 설정
+        }
+
         // 현재 URL의 기본 경로 가져오기
         const basePath = window.location.pathname;
 
         // 새 URL로 이동
-        window.location.href = `${basePath}?${urlParams.toString()}`;
+        window.location.href = basePath + '?' + urlParams.toString();
     }
 </script>

@@ -94,7 +94,7 @@ public class RentalSearchController {
         // 페이징 처리
         Pagenation pagenation = new Pagenation(page, totalStorenCount, size, 10);
 
-        // 페이징에 따라 데이터 필터링 - 여기가 중요한 부분!
+        // 페이징에 따라 데이터 필터링
         int startIndex = (page - 1) * size;
         int endIndex = Math.min(startIndex + size, filteredList.size());
 

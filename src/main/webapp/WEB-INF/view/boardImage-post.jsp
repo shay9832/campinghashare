@@ -1268,7 +1268,7 @@
 
     // 댓글 삭제 이벤트 처리 - 모달 방식으로 변경
     document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             const replyId = this.getAttribute('data-id');
             confirmDeleteComment(replyId);
         });
@@ -1299,14 +1299,14 @@
         submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
 
         // 삭제 확인 버튼 이벤트
-        newSubmitBtn.addEventListener('click', function () {
+        newSubmitBtn.addEventListener('click', function() {
             // 모달 닫기
             closeModal(document.getElementById('reportModal'));
 
             // 삭제 요청 보내기
             sendAjaxRequest('api/reply/delete.action', 'POST', {
                 replyId: replyId
-            }, function (data) {
+            }, function(data) {
                 // 완료 모달 내용 설정
                 const iconElement = document.querySelector('#completionModal .popup-alert-icon i');
                 const iconContainer = document.querySelector('#completionModal .popup-alert-icon');
@@ -1348,7 +1348,7 @@
         const newConfirmBtn = confirmBtn.cloneNode(true);
         confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
 
-        newConfirmBtn.addEventListener('click', function () {
+        newConfirmBtn.addEventListener('click', function() {
             // 모달 닫기
             closeAllModals();
 
@@ -1407,7 +1407,7 @@
             // AJAX 요청으로 추천 상태 확인
             sendAjaxRequest('/api/post/checkRecommend.action', 'POST', {
                 postId: postId
-            }, function (response) {
+            }, function(response) {
                 console.log("추천 상태 확인 응답:", response); // 디버깅용
 
                 if (response.success) {
@@ -1647,7 +1647,7 @@
 
         if (bookmarkButton) {
             // 북마크 버튼 클릭 이벤트 추가
-            bookmarkButton.addEventListener('click', function () {
+            bookmarkButton.addEventListener('click', function() {
                 const postId = this.getAttribute('data-post-id');
                 const bookmarkIcon = this.querySelector('i');
                 const bookmarkStatus = document.getElementById('bookmarkStatus');
@@ -1667,7 +1667,7 @@
                 // AJAX 요청 통합 함수 사용
                 sendAjaxRequest('/api/post/bookmark.action', 'POST', {
                     postId: postId
-                }, function (response) {
+                }, function(response) {
                     // 서버 응답에 따라 UI를 조정
                     if (!response.success) {
                         // 실패 시 원래 상태로 되돌림
@@ -1696,7 +1696,7 @@
             // AJAX 요청으로 북마크 상태 확인
             sendAjaxRequest('/api/post/checkbookmark.action', 'POST', {
                 postId: postId
-            }, function (response) {
+            }, function(response) {
                 console.log("북마크 상태 확인 응답:", response); // 디버깅용
 
                 if (response.success) {
