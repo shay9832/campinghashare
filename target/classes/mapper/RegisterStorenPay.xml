@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mvc.Interface.IRegisterStorenPayDAO">
+
+    <!-- 1. STOREN INSERT -->
+    <insert id="insertStorenEntry" parameterType="com.team.mvc.DTO.RegisterStorenPayDTO">
+        <selectKey keyProperty="storenId" resultType="int" order="BEFORE">
+            SELECT STOREN_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+
+        INSERT INTO STOREN (
+        STOREN_ID,
+        EQUIP_CODE,
+        SIZE_ID,
+        STORE_MONTH,
+        CREATED_DATE
+        ) VALUES (
+        #{storenId},
+        #{equipCode},
+        (SELECT EQUIP_SIZE_ID FROM EQUIP_SIZE WHERE EQUIP_SIZE_NAME = #{equipSize}),
+        #{storageDays},
+        SYSDATE
+        )
+    </insert>
+
+
+    <!-- 2. ADDRESS_LOG INSERT -->
+    <insert id="insertAddressLog" parameterType="com.team.mvc.DTO.RegisterStorenPayDTO">
+        INSERT INTO ADDRESS_LOG (
+            ADDRESS_ID,
+            USER_CODE,
+            ZIPCODE,
+            ADDRESS1,
+            ADDRESS2,
+            LAST_UPDATED_DATE
+        ) VALUES (
+                     ADDRESS_LOG_SEQ.NEXTVAL,
+                     #{userCode},
+                     #{zipcode},
+                     #{address1},
+                     #{address2},
+                     SYSDATE
+                 )
+    </insert>
+
+    <!-- 3. PAY INSERT -->
+    <insert id="insertStorenStoragePayment" parameterType="com.team.mvc.DTO.RegisterStorenPayDTO">
+        INSERT INTO PAY (
+            PAY_ID,
+            PAY_METHOD_ID,
+            STOREN_ID,
+            PAY_AMOUNT,
+            PAY_DATE
+        ) VALUES (
+                     PAY_SEQ.NEXTVAL,
+                     1,
+                     #{storenId},
+                     #{finalStorageCost},
+                     SYSDATE
+                 )
+    </insert>
+
+    <!-- 4. 유저 배송지 조회 -->
+    <select id="getUserAddressInfo" parameterType="int" resultType="com.team.mvc.DTO.RegisterStorenPayDTO">
+        SELECT
+            U.USER_NAME AS userName,
+            U.USER_TEL AS userTel,
+            A.ZIPCODE AS zipcode,
+            A.ADDRESS1 AS address1,
+            A.ADDRESS2 AS address2
+        FROM USERS U
+                 LEFT JOIN (
+            SELECT USER_CODE, ZIPCODE, ADDRESS1, ADDRESS2
+            FROM ADDRESS_LOG
+            WHERE (USER_CODE, LAST_UPDATED_DATE) IN (
+                SELECT USER_CODE, MAX(LAST_UPDATED_DATE)
+                FROM ADDRESS_LOG
+                GROUP BY USER_CODE
+            )
+        ) A ON U.USER_CODE = A.USER_CODE
+        WHERE U.USER_CODE = #{userCode}
+    </select>
+
+</mapper>
