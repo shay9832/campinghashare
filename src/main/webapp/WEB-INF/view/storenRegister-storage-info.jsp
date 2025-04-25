@@ -186,9 +186,9 @@
         <div class="notice-container">
             <div class="notice-title">거래 시 주의사항</div>
             <ul class="notice-list">
-                <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
-                <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
-                <li><strong>OOOOOOOOOOOOOOOOOOOOOOOOO</strong></li>
+                <li><strong>스토렌 신청 시, 신청 즉시 자체 운송으로 수거 진행됩니다.</strong></li>
+                <li><strong>플랫폼 창고 입고 후, 장비 검수 진행 예정입니다.</strong></li>
+                <li><strong>장비 검수 결과, A~E 등급이면 스토렌 서비스 이용 가능하나 F등급일 경우 소유자분께 반환될 예정입니다.</strong></li>
             </ul>
         </div>
     </div>

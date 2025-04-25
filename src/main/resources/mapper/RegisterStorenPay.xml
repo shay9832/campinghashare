@@ -72,13 +72,16 @@
             A.ADDRESS1 AS address1,
             A.ADDRESS2 AS address2
         FROM USERS U
-                 JOIN ADDRESS_LOG A ON U.USER_CODE = A.USER_CODE
-        WHERE U.USER_CODE = #{userCode}
-          AND A.LAST_UPDATED_DATE = (
-            SELECT MAX(LAST_UPDATED_DATE)
+                 LEFT JOIN (
+            SELECT USER_CODE, ZIPCODE, ADDRESS1, ADDRESS2
             FROM ADDRESS_LOG
-            WHERE USER_CODE = #{userCode}
-        )
+            WHERE (USER_CODE, LAST_UPDATED_DATE) IN (
+                SELECT USER_CODE, MAX(LAST_UPDATED_DATE)
+                FROM ADDRESS_LOG
+                GROUP BY USER_CODE
+            )
+        ) A ON U.USER_CODE = A.USER_CODE
+        WHERE U.USER_CODE = #{userCode}
     </select>
 
 </mapper>
